@@ -4,10 +4,20 @@ import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 
 class ButtonWidget extends StatelessWidget {
-  const ButtonWidget({super.key, required this.text, this.onTap});
+  const ButtonWidget({
+    super.key,
+    required this.text,
+    this.onTap,
+    this.color,
+    this.textColor,
+    this.border,
+  });
 
   final String text;
   final Function()? onTap;
+  final Color? color;
+  final Color? textColor;
+  final Border? border;
 
   @override
   Widget build(BuildContext context) {
@@ -19,12 +29,13 @@ class ButtonWidget extends StatelessWidget {
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color: AppColors.primaryColor,
+          color: color ?? AppColors.primaryColor,
+          border: border,
         ),
         child: Text(
           text,
           style: AppTextStyles.font16.copyWith(
-            color: AppColors.whiteColor,
+            color: textColor ?? AppColors.whiteColor,
             fontWeight: FontWeight.w400,
           ),
         ),
