@@ -11,19 +11,23 @@ class TextInputField extends StatelessWidget {
       this.hintText,
       this.suffixIcon,
       this.onTap,
-      this.labelText});
+      this.labelText,
+      this.prefixIcon,
+      this.prefixOnTap});
   final TextEditingController controller;
   final String? hintText;
   final String? labelText;
   final IconData? suffixIcon;
+  final IconData? prefixIcon;
   final Function()? onTap;
+  final Function()? prefixOnTap;
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          labelText!,
+          labelText ?? '',
           style: AppTextStyles.font14.copyWith(
             color: AppColors.textColor,
             fontWeight: FontWeight.w500,
@@ -45,6 +49,12 @@ class TextInputField extends StatelessWidget {
               hintStyle: AppTextStyles.font14
                   .copyWith(color: AppColors.textColor.withOpacity(0.3)),
               border: InputBorder.none,
+              prefixIcon: GestureDetector(
+                  onTap: prefixOnTap,
+                  child: Icon(
+                    prefixIcon,
+                    color: const Color(0xff4F4F4F),
+                  )),
               suffixIcon:
                   GestureDetector(onTap: onTap, child: Icon(suffixIcon)),
             ),

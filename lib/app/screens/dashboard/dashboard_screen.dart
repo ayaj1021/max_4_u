@@ -16,8 +16,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   final pages = [
     const HomeScreen(),
     const TransactionScreen(),
-    const ProfileScreen(),
     const SupportScreen(),
+    const ProfileScreen(),
   ];
   int _selectedIndex = 0;
   changePage(int index) {
