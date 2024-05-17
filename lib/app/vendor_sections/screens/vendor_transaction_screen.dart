@@ -10,19 +10,20 @@ import 'package:max_4_u/app/utils/white_space.dart';
 import 'package:max_4_u/app/widgets/button_widget.dart';
 import 'package:max_4_u/app/widgets/text_input_field.dart';
 
-class TransactionScreen extends StatefulWidget {
-  const TransactionScreen({super.key});
+class VendorTransactionScreen extends StatefulWidget {
+  const VendorTransactionScreen({super.key});
 
   @override
-  State<TransactionScreen> createState() => _TransactionScreenState();
+  State<VendorTransactionScreen> createState() =>
+      _VendorTransactionScreenState();
 }
 
-class _TransactionScreenState extends State<TransactionScreen> {
+class _VendorTransactionScreenState extends State<VendorTransactionScreen> {
   final _searchController = TextEditingController();
 
   Months _selectedMonth = Months.January;
 
-   final categories = [
+  final categories = [
     'All',
     'Added funds',
     'Data',
@@ -39,7 +40,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
   int? categoryIndex;
   int? statusIndex;
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,13 +55,12 @@ class _TransactionScreenState extends State<TransactionScreen> {
                   style: AppTextStyles.font18,
                 ),
                 TextInputField(
-                  controller: _searchController,
-                  hintText: 'Search in transactions',
-                  prefixIcon: const Icon(
+                    controller: _searchController,
+                    hintText: 'Search in transactions',
+                    prefixIcon: const Icon(
                       Icons.search,
                       color: Color(0xff4F4F4F),
-                    ),
-                ),
+                    )),
                 verticalSpace(24),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -131,7 +130,8 @@ class _TransactionScreenState extends State<TransactionScreen> {
           ),
         )));
   }
-    Future<dynamic> filterTransactionBottomSheet(BuildContext context) {
+
+  Future<dynamic> filterTransactionBottomSheet(BuildContext context) {
     return showModalBottomSheet(
         context: context,
         builder: (context) {
@@ -330,7 +330,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
           });
         });
   }
-
 }
 
 String _monthToString(Months month) {

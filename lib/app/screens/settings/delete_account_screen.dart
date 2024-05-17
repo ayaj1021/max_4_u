@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
+import 'package:max_4_u/app/widgets/button_widget.dart';
 
 class DeleteAccountScreen extends StatefulWidget {
   const DeleteAccountScreen({super.key});
@@ -110,7 +111,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                             ],
                           ),
                           verticalSpace(24),
-                          selectedIndex == index -1
+                          selectedIndex == index - 1
                               ? Column(
                                   children: [
                                     Text(
@@ -124,6 +125,84 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                         ],
                       );
                     }),
+              ),
+              verticalSpace(440),
+              ButtonWidget(
+                text: 'Delete Account',
+                color: Colors.red,
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          contentPadding: EdgeInsets.zero,
+                          content: Container(
+                            alignment: Alignment.center,
+                            height: 290.h,
+                            width: MediaQuery.of(context).size.width,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 19, vertical: 14),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: AppColors.whiteColor,
+                            ),
+                            child: Column(children: [
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: GestureDetector(
+                                  onTap: () => Navigator.pop(context),
+                                  child: SizedBox(
+                                      height: 24,
+                                      width: 24,
+                                      child: Image.asset(
+                                        'assets/icons/cancel_icon.png',
+                                      )),
+                                ),
+                              ),
+                              verticalSpace(19),
+                              Text(
+                                'Delete account confirmation',
+                                style: AppTextStyles.font20
+                                    .copyWith(fontWeight: FontWeight.w400),
+                              ),
+                              verticalSpace(12),
+                              Text(
+                                'Are you sure you want to delete this account? Note that this action is irreversible and all your info will be wiped from our record',
+                                style: AppTextStyles.font14.copyWith(
+                                    fontWeight: FontWeight.w400,
+                                    color: const Color(0xff333333)),
+                                textAlign: TextAlign.justify,
+                              ),
+                              verticalSpace(37),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  SizedBox(
+                                    height: 48.h,
+                                    width: 130.w,
+                                    child: ButtonWidget(
+                                      text: 'Cancel',
+                                      color: const Color(0xffEEEFEF),
+                                      textColor: AppColors.primaryColor,
+                                      onTap: () => Navigator.pop(context),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 48.h,
+                                    width: 130.w,
+                                    child: ButtonWidget(
+                                      text: 'Confirm',
+                                      onTap: () => Navigator.pop(context),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ]),
+                          ),
+                        );
+                      });
+                },
               )
             ],
           ),

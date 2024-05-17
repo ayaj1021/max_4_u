@@ -18,7 +18,7 @@ class TextInputField extends StatelessWidget {
   final String? hintText;
   final String? labelText;
   final IconData? suffixIcon;
-  final IconData? prefixIcon;
+  final Widget? prefixIcon;
   final Function()? onTap;
   final Function()? prefixOnTap;
   @override
@@ -35,7 +35,7 @@ class TextInputField extends StatelessWidget {
         ),
         verticalSpace(8),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+        //  padding: const EdgeInsets.symmetric(horizontal: 8),
           height: 52.h,
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
@@ -51,10 +51,12 @@ class TextInputField extends StatelessWidget {
               border: InputBorder.none,
               prefixIcon: GestureDetector(
                   onTap: prefixOnTap,
-                  child: Icon(
-                    prefixIcon,
-                    color: const Color(0xff4F4F4F),
-                  )),
+                  child: prefixIcon ?? const SizedBox(),
+                  //  Icon(
+                  //   prefixIcon,
+                  //   color: const Color(0xff4F4F4F),
+                  // )
+                ),
               suffixIcon:
                   GestureDetector(onTap: onTap, child: Icon(suffixIcon)),
             ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:max_4_u/app/screens/auth/login_screen.dart';
 import 'package:max_4_u/app/screens/auth/sign_up_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
@@ -22,7 +23,7 @@ class OnboardPageOne extends StatelessWidget {
             Column(
               children: [
                 Container(
-                  height: height / 2,
+                  height: height /2.13,
                   width: width,
                   decoration: const BoxDecoration(
                     color: AppColors.whiteColor,
