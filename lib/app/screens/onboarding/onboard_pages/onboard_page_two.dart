@@ -22,7 +22,7 @@ class OnboardPageTwo extends StatelessWidget {
             Column(
               children: [
                 Container(
-                  height: height / 2,
+                  height: height / 2.13,
                   width: width,
                   decoration: const BoxDecoration(
                     color: AppColors.whiteColor,
@@ -53,9 +53,10 @@ class OnboardPageTwo extends StatelessWidget {
                         textAlign: TextAlign.center,
                       ),
                       verticalSpace(106),
-                       ButtonWidget(text: 'Create an account',
-                       onTap: () => nextScreen(context, const SignUpScreen()),
-                       ),
+                      ButtonWidget(
+                        text: 'Create an account',
+                        onTap: () => nextScreen(context, const SignUpScreen()),
+                      ),
                       verticalSpace(10),
                       Center(
                         child: GestureDetector(

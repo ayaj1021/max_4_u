@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
+import 'package:max_4_u/app/utils/screen_navigator.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
+import 'package:max_4_u/app/vendor_sections/screens/fund_wallet/account_no_payment_screen.dart';
+import 'package:max_4_u/app/vendor_sections/screens/fund_wallet/atm_fund_wallet.dart';
 
 class AccountBalanceWidget extends StatefulWidget {
   const AccountBalanceWidget({
@@ -69,15 +72,14 @@ class _AccountBalanceWidgetState extends State<AccountBalanceWidget> {
           ]),
           GestureDetector(
             onTap: () {
-              showDialog(
+              showModalBottomSheet(
                   context: context,
                   builder: (context) {
-                    return AlertDialog(
-                      contentPadding: EdgeInsets.zero,
-                      content: Container(
+                    return StatefulBuilder(builder: (context, setState) {
+                      return Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 32, vertical: 24),
-                        height: 209.h,
+                        height: 250.h,
                         width: MediaQuery.of(context).size.width,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(18),
@@ -93,59 +95,127 @@ class _AccountBalanceWidgetState extends State<AccountBalanceWidget> {
                               ),
                             ),
                             verticalSpace(28),
-                            Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children:
-                                    List.generate(walletType.length, (index) {
-                                  return GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        selectedIndex == index;
-                                      });
-                                    },
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 5, vertical: 16),
-                                      height: 98.h,
-                                      width: 116.2,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          color: selectedIndex == index
-                                              ? AppColors.whiteColor
-                                              : const Color(0xffF6F6F6),
-                                          border: Border.all(
-                                            color: selectedIndex == index
-                                                ? AppColors.primaryColor
-                                                : Colors.transparent,
-                                          )),
-                                      child: Column(
+
+                            SizedBox(
+                              height: 100.h,
+                              width: MediaQuery.of(context).size.width,
+                              child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  shrinkWrap: true,
+                                  itemCount: walletType.length,
+                                  itemBuilder: (_, index) {
+                                    return GestureDetector(
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                        selectedIndex == 0
+                                            ? nextScreen(context,
+                                                const AccountNoPaymentScreen())
+                                            : nextScreen(
+                                                context, const AtmFundWallet());
+
+                                        setState(() {
+                                          selectedIndex = index;
+                                        });
+                                      },
+                                      child: Row(
                                         children: [
-                                          SizedBox(
-                                            height: 20.h,
-                                            width: 20.w,
-                                            child: Image.asset(
-                                                walletType[index]['image']),
-                                          ),
-                                          verticalSpace(19),
-                                          Text(
-                                            walletType[index]['title'],
-                                            style:
-                                                AppTextStyles.font14.copyWith(
-                                              color: const Color(0xff333333),
-                                              fontWeight: FontWeight.w500,
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 5, vertical: 16),
+                                            height: 98.h,
+                                            width: 116.2,
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                color: selectedIndex == index
+                                                    ? AppColors.whiteColor
+                                                    : const Color(0xffF6F6F6),
+                                                border: Border.all(
+                                                  color: selectedIndex == index
+                                                      ? AppColors.primaryColor
+                                                      : Colors.transparent,
+                                                )),
+                                            child: Column(
+                                              children: [
+                                                SizedBox(
+                                                  height: 20.h,
+                                                  width: 20.w,
+                                                  child: Image.asset(
+                                                      walletType[index]
+                                                          ['image']),
+                                                ),
+                                                verticalSpace(19),
+                                                Text(
+                                                  walletType[index]['title'],
+                                                  style: AppTextStyles.font14
+                                                      .copyWith(
+                                                    color:
+                                                        const Color(0xff333333),
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
+                                          horizontalSpace(90)
                                         ],
                                       ),
-                                    ),
-                                  );
-                                })),
+                                    );
+                                  }),
+                            ),
+                            // Row(
+                            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            //     children:
+                            //         List.generate(walletType.length, (index) {
+                            //       return
+                            //       GestureDetector(
+                            //         onTap: () {
+                            //           setState(() {
+                            //             selectedIndex == index;
+                            //           });
+                            //         },
+                            //         child:
+                            //         Container(
+                            //           padding: const EdgeInsets.symmetric(
+                            //               horizontal: 5, vertical: 16),
+                            //           height: 98.h,
+                            //           width: 116.2,
+                            //           decoration: BoxDecoration(
+                            //               borderRadius: BorderRadius.circular(10),
+                            //               color: selectedIndex == index
+                            //                   ? AppColors.whiteColor
+                            //                   : const Color(0xffF6F6F6),
+                            //               border: Border.all(
+                            //                 color: selectedIndex == index
+                            //                     ? AppColors.primaryColor
+                            //                     : Colors.transparent,
+                            //               )),
+                            //           child: Column(
+                            //             children: [
+                            //               SizedBox(
+                            //                 height: 20.h,
+                            //                 width: 20.w,
+                            //                 child: Image.asset(
+                            //                     walletType[index]['image']),
+                            //               ),
+                            //               verticalSpace(19),
+                            //               Text(
+                            //                 walletType[index]['title'],
+                            //                 style: AppTextStyles.font14.copyWith(
+                            //                   color: const Color(0xff333333),
+                            //                   fontWeight: FontWeight.w500,
+                            //                 ),
+                            //               ),
+                            //             ],
+                            //           ),
+                            //         ),
+                            //       );
+
+                            //     })),
                           ],
                         ),
-                      ),
-                    );
+                      );
+                    });
                   });
             },
             child: Container(

@@ -86,7 +86,8 @@ class SupportScreen extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    Row(crossAxisAlignment: CrossAxisAlignment.start,
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
                           height: 20,
@@ -94,25 +95,31 @@ class SupportScreen extends StatelessWidget {
                           child: Image.asset('assets/icons/location_icon.png'),
                         ),
                         horizontalSpace(12),
-                        SizedBox(
-                          width: 299.w,
-                          child: Text(
-                            'No.5 Ajayi avenue. Anifalaje bustop. Akobo. Ibadan, Oyo state',
-                            style: AppTextStyles.font14.copyWith(
-                              fontWeight: FontWeight.w400,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: 299.w,
+                              child: Text(
+                                'No.5 Ajayi avenue. Anifalaje bustop. Akobo. Ibadan, Oyo state',
+                                style: AppTextStyles.font14.copyWith(
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
                             ),
-                          ),
+                            verticalSpace(6),
+                            Text(
+                              'Locate using google map',
+                              style: AppTextStyles.font12.copyWith(
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.primaryColor,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                    verticalSpace(6),
-                      Text(
-                'Locate using google map',
-                style: AppTextStyles.font12.copyWith(
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.primaryColor,
-                ),
-              ),
                   ],
                 ),
               ),
