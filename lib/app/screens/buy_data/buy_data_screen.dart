@@ -173,6 +173,7 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
                   }).toList(),
                 ),
               ),
+           
               verticalSpace(278),
               ButtonWidget(
                 text: 'Continue',

@@ -112,7 +112,7 @@ class _SideDrawerState extends State<SideDrawer> {
                     final userType =
                         Provider.of<VendorCheckProvider>(context, listen: false)
                             .isVendor;
-                    SharedPref().saveUserType(userType);
+                    SecureStorage().saveUserType(userType);
                     Future.delayed(const Duration(seconds: 3), () {
                       nextScreen(context, const BecomeVendorScreen());
                     });

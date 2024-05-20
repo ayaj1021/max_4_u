@@ -7,7 +7,7 @@ import 'package:max_4_u/app/utils/screen_navigator.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
 import 'package:max_4_u/app/vendor_sections/screens/bvn_input_screen.dart';
 import 'package:max_4_u/app/vendor_sections/screens/face_authentication_screen.dart';
-import 'package:max_4_u/app/vendor_sections/screens/upload_idCard_screen.dart';
+import 'package:max_4_u/app/vendor_sections/screens/upload_idcard_screen.dart';
 import 'package:max_4_u/app/widgets/button_widget.dart';
 
 class BecomeVendorScreen extends StatelessWidget {

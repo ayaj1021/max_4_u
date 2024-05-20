@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/enums/month_dropdown_enum.dart';
+import 'package:max_4_u/app/screens/customers_screen.dart/auto_renewal_screen.dart';
 import 'package:max_4_u/app/screens/home/component/transaction_history_component.dart';
 import 'package:max_4_u/app/screens/transaction/transaction_detail_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
@@ -22,7 +24,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
 
   Months _selectedMonth = Months.January;
 
-   final categories = [
+  final categories = [
     'All',
     'Added funds',
     'Data',
@@ -39,6 +41,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
   int? categoryIndex;
   int? statusIndex;
 
+  bool isTapped = false;
 
   @override
   Widget build(BuildContext context) {
@@ -48,90 +51,137 @@ class _TransactionScreenState extends State<TransactionScreen> {
             child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-            child: Column(
+            child: Stack(
               children: [
-                const Text(
-                  'Transactions',
-                  style: AppTextStyles.font18,
-                ),
-                TextInputField(
-                  controller: _searchController,
-                  hintText: 'Search in transactions',
-                  prefixIcon: const Icon(
-                      Icons.search,
-                      color: Color(0xff4F4F4F),
-                    ),
-                ),
-                verticalSpace(24),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Column(
                   children: [
-                    DropdownButton<Months>(
-                      underline: const SizedBox(),
-                      value: _selectedMonth,
-                      items: Months.values.map((Months month) {
-                        return DropdownMenuItem(
-                            value: month,
-                            child: Container(
-                                padding: EdgeInsets.zero,
-                                child: Text(_monthToString(month))));
-                      }).toList(),
-                      onChanged: (newValue) {
-                        setState(() {
-                          _selectedMonth = newValue!;
-                        });
-                      },
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        const Text(
+                          'Transactions',
+                          style: AppTextStyles.font18,
+                        ),
+                        horizontalSpace(120),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isTapped = !isTapped;
+                            });
+                          },
+                          child: Icon(Icons.more_vert),
+                        )
+                      ],
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        filterTransactionBottomSheet(context);
-                      },
-                      child: const Row(
-                        children: [
-                          Text(
-                            'Filter',
-                            style: AppTextStyles.font16,
-                          ),
-                          Icon(Icons.filter_alt_outlined)
-                        ],
+                    TextInputField(
+                      controller: _searchController,
+                      hintText: 'Search in transactions',
+                      prefixIcon: const Icon(
+                        Icons.search,
+                        color: Color(0xff4F4F4F),
                       ),
-                    )
+                    ),
+                    verticalSpace(24),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        DropdownButton<Months>(
+                          underline: const SizedBox(),
+                          value: _selectedMonth,
+                          items: Months.values.map((Months month) {
+                            return DropdownMenuItem(
+                                value: month,
+                                child: Container(
+                                    padding: EdgeInsets.zero,
+                                    child: Text(_monthToString(month))));
+                          }).toList(),
+                          onChanged: (newValue) {
+                            setState(() {
+                              _selectedMonth = newValue!;
+                            });
+                          },
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            filterTransactionBottomSheet(context);
+                          },
+                          child: const Row(
+                            children: [
+                              Text(
+                                'Filter',
+                                style: AppTextStyles.font16,
+                              ),
+                              Icon(Icons.filter_alt_outlined)
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                        height: MediaQuery.of(context).size.height,
+                        width: MediaQuery.of(context).size.width,
+                        child: ListView.builder(
+                            itemCount: 10,
+                            itemBuilder: (_, index) {
+                              return GestureDetector(
+                                onTap: () => nextScreen(
+                                    context, const TransactionDetailsScreen()),
+                                child: Column(
+                                  children: [
+                                    const TransactionSection(
+                                      transactionIcon: Icons.money,
+                                      transactionType: 'Added funds',
+                                      transactionDate: 'Apr 18th, 20:59',
+                                      transactionAmount: '-N35,000.00',
+                                      transactionStatus: 'Successful',
+                                      transactionColor: Color(0xffD6DDFE),
+                                    ),
+                                    verticalSpace(8),
+                                    Divider(
+                                      color:
+                                          AppColors.blackColor.withOpacity(0.1),
+                                    ),
+                                    verticalSpace(8),
+                                  ],
+                                ),
+                              );
+                            }))
                   ],
                 ),
-                SizedBox(
-                    height: MediaQuery.of(context).size.height,
-                    width: MediaQuery.of(context).size.width,
-                    child: ListView.builder(
-                        itemCount: 10,
-                        itemBuilder: (_, index) {
-                          return GestureDetector(
-                            onTap: () => nextScreen(
-                                context, const TransactionDetailsScreen()),
-                            child: Column(
-                              children: [
-                                const TransactionSection(
-                                  transactionIcon: Icons.money,
-                                  transactionType: 'Added funds',
-                                  transactionDate: 'Apr 18th, 20:59',
-                                  transactionAmount: '-N35,000.00',
-                                  transactionStatus: 'Successful',
-                                  transactionColor: Color(0xffD6DDFE),
-                                ),
-                                verticalSpace(8),
-                                Divider(
-                                  color: AppColors.blackColor.withOpacity(0.1),
-                                ),
-                                verticalSpace(8),
-                              ],
+                isTapped
+                    ? Positioned(
+                        right: 0,
+                        top: 30,
+                        child: GestureDetector(
+                          onTap: () =>
+                              nextScreen(context, const AutoRenewalScreen()),
+                          child: Container(
+                            height: 54.h,
+                            width: 158.w,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8),
                             ),
-                          );
-                        }))
+                            child: Text(
+                              'View auto renewals',
+                              style: AppTextStyles.font14.copyWith(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.subTextColor,
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    : const SizedBox()
               ],
             ),
           ),
         )));
   }
-    Future<dynamic> filterTransactionBottomSheet(BuildContext context) {
+
+  Future<dynamic> filterTransactionBottomSheet(BuildContext context) {
     return showModalBottomSheet(
         context: context,
         builder: (context) {
@@ -330,7 +380,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
           });
         });
   }
-
 }
 
 String _monthToString(Months month) {

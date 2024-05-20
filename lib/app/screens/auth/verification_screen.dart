@@ -1,0 +1,135 @@
+import 'package:flutter/material.dart';
+import 'package:max_4_u/app/enums/view_state_enum.dart';
+import 'package:max_4_u/app/provider/auth_provider.dart';
+import 'package:max_4_u/app/screens/auth/registration_screen.dart';
+import 'package:max_4_u/app/styles/app_colors.dart';
+import 'package:max_4_u/app/styles/app_text_styles.dart';
+import 'package:max_4_u/app/utils/busy_overlay.dart';
+import 'package:max_4_u/app/utils/screen_navigator.dart';
+import 'package:max_4_u/app/utils/show_message.dart';
+import 'package:max_4_u/app/utils/white_space.dart';
+import 'package:max_4_u/app/widgets/back_arrow_button.dart';
+import 'package:max_4_u/app/widgets/button_widget.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:provider/provider.dart';
+
+class VerificationScreen extends StatefulWidget {
+  const VerificationScreen({super.key, required this.phoneNumber});
+
+  final String phoneNumber;
+
+  @override
+  State<VerificationScreen> createState() => _VerificationScreenState();
+}
+
+class _VerificationScreenState extends State<VerificationScreen> {
+  @override
+  void dispose() {
+    Provider.of<AuthProviderImpl>(context).otpController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<AuthProviderImpl>(builder: (context, authProv, _) {
+      return BusyOverlay(
+        show: authProv.state == ViewState.Busy,
+        title: authProv.message,
+        child: Scaffold(
+          body: SafeArea(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 41),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    BackArrowButton(
+                      onTap: () => Navigator.pop(context),
+                    ),
+                    verticalSpace(26),
+                    const Text(
+                      'Verification Code',
+                      style: AppTextStyles.font20,
+                    ),
+                    verticalSpace(12),
+                    Text(
+                      'Enter the 6-digit code sent to you at ${authProv.number}',
+                      style: AppTextStyles.font14
+                          .copyWith(color: const Color(0xff475569)),
+                    ),
+                    verticalSpace(24),
+                    PinCodeTextField(
+                      controller: authProv.otpController,
+                      keyboardType: TextInputType.number,
+                      appContext: context,
+                      length: 6,
+                      pinTheme: PinTheme(
+                        inactiveColor: AppColors.borderColor,
+                        fieldHeight: 48,
+                        fieldWidth: 48,
+                        shape: PinCodeFieldShape.box,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    verticalSpace(40),
+                    ButtonWidget(
+                      text: 'Enter',
+                      onTap: () async {
+                        if (authProv.otpController.text.isEmpty) {
+                          showMessage(
+                            context,
+                            'Otp is required',
+                            isError: true,
+                          );
+                          return;
+                        }
+
+                        await authProv.verifyOtp();
+                        if (authProv.state == ViewState.Error &&
+                            context.mounted) {
+                          showMessage(
+                            context,
+                            authProv.message,
+                            isError: true,
+                          );
+                          return;
+                        }
+
+                        if (authProv.state == ViewState.Success &&
+                            context.mounted) {
+                          showMessage(
+                            context,
+                            authProv.message,
+                            // isError: false,
+                          );
+                          nextScreen(context, const RegistrationScreen());
+                        }
+                      },
+                    ),
+                    verticalSpace(24),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          "Didn't get a code? ",
+                          style: AppTextStyles.font14,
+                        ),
+                        horizontalSpace(10),
+                        Text(
+                          "00:30",
+                          style: AppTextStyles.font14
+                              .copyWith(color: AppColors.secondaryColor),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    });
+  }
+}

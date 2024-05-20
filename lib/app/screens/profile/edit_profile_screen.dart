@@ -14,10 +14,8 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  final _firstNameController = TextEditingController();
-  final _lastNameController = TextEditingController();
-  final _phoneNumberController = TextEditingController();
   final _emailController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,7 +72,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           color: AppColors.primaryColor),
                       horizontalSpace(4),
                       Text(
-                        'Edit profile',
+                        'Edit image',
                         style: AppTextStyles.font14.copyWith(
                           color: AppColors.primaryColor,
                           fontWeight: FontWeight.w500,
@@ -95,39 +93,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 color: AppColors.whiteColor,
               ),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   EditProfileComponent(
-                    onTap: () {
-                      editProfileAlertDialog(
-                        context,
-                        title: 'Edit First Name',
-                        controller: _firstNameController,
-                      );
-                    },
+                    editIcon: SizedBox(),
                     title: 'First name',
                     value: 'Praise',
                   ),
                   verticalSpace(32),
                   EditProfileComponent(
-                    onTap: () {
-                      editProfileAlertDialog(
-                        context,
-                        title: 'Edit Last Name',
-                        controller: _lastNameController,
-                      );
-                    },
+                    editIcon: SizedBox(),
                     title: 'Last name',
                     value: 'Adedokun',
                   ),
                   verticalSpace(32),
                   EditProfileComponent(
-                    onTap: () {
-                      editProfileAlertDialog(
-                        context,
-                        title: 'Edit Phone Number',
-                        controller: _phoneNumberController,
-                      );
-                    },
+                    editIcon: SizedBox(),
                     title: 'Phone Number',
                     value: '08169784022',
                   ),
@@ -143,6 +124,33 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     title: 'Email',
                     value: 'tobilobaphilipson@gmail.com',
                   ),
+                  verticalSpace(8),
+                  Container(
+                    alignment: Alignment.center,
+                    height: 23.h,
+                    width: 104.w,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(22),
+                      color: Color(0xffAE8027).withOpacity(0.2),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircleAvatar(
+                          radius: 4,
+                          backgroundColor: Color(0xffAE8027),
+                        ),
+                        horizontalSpace(10),
+                        Text(
+                          'Unverified',
+                          style: AppTextStyles.font12.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xffAE8027),
+                          ),
+                        )
+                      ],
+                    ),
+                  )
                 ],
               ),
             ),
@@ -212,11 +220,13 @@ class EditProfileComponent extends StatelessWidget {
     required this.title,
     required this.value,
     this.onTap,
+    this.editIcon,
   });
 
   final String title;
   final String value;
   final Function()? onTap;
+  final Widget? editIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -243,7 +253,8 @@ class EditProfileComponent extends StatelessWidget {
           height: 16.h,
           width: 16.w,
           child: GestureDetector(
-              onTap: onTap, child: Image.asset('assets/icons/edit_icon.png')),
+              onTap: onTap,
+              child: editIcon ?? Image.asset('assets/icons/edit_icon.png')),
         ),
       ],
     );

@@ -13,14 +13,17 @@ class TextInputField extends StatelessWidget {
       this.onTap,
       this.labelText,
       this.prefixIcon,
-      this.prefixOnTap});
+      this.prefixOnTap, this.obscure = false, this.textInputType});
   final TextEditingController controller;
   final String? hintText;
   final String? labelText;
   final IconData? suffixIcon;
   final Widget? prefixIcon;
+  final bool obscure;
   final Function()? onTap;
   final Function()? prefixOnTap;
+  final TextInputType? textInputType;
+  
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -44,6 +47,8 @@ class TextInputField extends StatelessWidget {
               border: Border.all(color: AppColors.borderColor)),
           child: TextField(
             controller: controller,
+            keyboardType: textInputType,
+            obscureText: obscure,
             decoration: InputDecoration(
               hintText: hintText,
               hintStyle: AppTextStyles.font14
