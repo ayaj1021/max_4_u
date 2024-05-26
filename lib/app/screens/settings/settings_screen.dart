@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max_4_u/app/database/database.dart';
+import 'package:max_4_u/app/screens/auth/login_screen.dart';
 import 'package:max_4_u/app/screens/settings/bio_metric_auth_screen.dart';
 import 'package:max_4_u/app/screens/settings/change_password_screen.dart';
 import 'package:max_4_u/app/screens/settings/delete_account_screen.dart';
@@ -8,6 +10,7 @@ import 'package:max_4_u/app/screens/settings/push_notification_settings.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/screen_navigator.dart';
+import 'package:max_4_u/app/utils/show_message.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
 import 'package:max_4_u/app/widgets/button_widget.dart';
 import 'package:max_4_u/app/widgets/settings_option_section.dart';
@@ -129,7 +132,12 @@ class SettingsScreen extends StatelessWidget {
             verticalSpace(152),
             ButtonWidget(
               text: 'Log out',
-              onTap: () {},
+              onTap: ()async {
+                await SecureStorage().logoutUser();
+                showMessage(context, 'Log out successful');
+                nextScreenReplace(context, LoginScreen());
+                
+              },
             )
           ],
         ),

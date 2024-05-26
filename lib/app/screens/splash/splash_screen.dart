@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:max_4_u/app/database/database.dart';
+import 'package:max_4_u/app/screens/dashboard/dashboard_screen.dart';
 import 'package:max_4_u/app/screens/onboarding/onboard_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/utils/screen_navigator.dart';
@@ -13,13 +15,34 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  String? userId = '';
+
+  getNames() async {
+    final id = await SecureStorage().getUniqueId();
+
+    setState(() {
+      userId = id;
+    });
+  }
+
   @override
   void initState() {
-    Timer(const Duration(seconds: 3), () {
-      nextScreenReplace(context, const OnboardScreen());
-     });
+    getNames();
+    Timer(const Duration(seconds: 3), () async {
+      
+      if (userId == null) {
+        nextScreenReplace(context, const OnboardScreen());
+      } else {
+        nextScreenReplace(
+            context,
+            DashBoardScreen(
+             
+            ));
+      }
+    });
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;

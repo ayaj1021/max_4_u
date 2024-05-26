@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:max_4_u/app/screens/auth/email_template_screen.dart';
+
 import 'package:max_4_u/app/screens/auth/forgot_password_screen1.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
@@ -24,7 +24,7 @@ class _ForgotPasswordScreen2State extends State<ForgotPasswordScreen2> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 92),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 52),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               BackArrowButton(
@@ -49,7 +49,8 @@ class _ForgotPasswordScreen2State extends State<ForgotPasswordScreen2> {
               verticalSpace(40),
               ButtonWidget(
                 text: 'Send code',
-                onTap: () => nextScreen(context, const EmailTemplate()),
+                onTap: () {}
+                // nextScreen(context, const EmailTemplate()),
               ),
               verticalSpace(20),
               GestureDetector(

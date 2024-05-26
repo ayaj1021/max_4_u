@@ -192,85 +192,83 @@ class _CustomerDetailsPageState extends State<CustomerDetailsPage>
                                               width: 117.w,
                                               child: ButtonWidget(
                                                 text: 'Yes, proceed',
-                                                color: Color(0xff219653),
+                                                color: const Color(0xff219653),
                                                 onTap: () {
                                                   showDialog(
-                                                      context: context,
-                                                      builder: (context) {
-                                                        return AlertDialog(
-                                                            contentPadding:
-                                                                EdgeInsets.zero,
-                                                            content: Container(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .symmetric(
-                                                                      vertical:
-                                                                          17,
-                                                                      horizontal:
-                                                                          23),
-                                                              height: 207.h,
-                                                              width:
-                                                                  MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width,
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color: AppColors
-                                                                    .whiteColor,
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            18),
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return AlertDialog(
+                                                        contentPadding:
+                                                            EdgeInsets.zero,
+                                                        content: Container(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                                  vertical: 17,
+                                                                  horizontal:
+                                                                      23),
+                                                          height: 207.h,
+                                                          width: MediaQuery.of(
+                                                                  context)
+                                                              .size
+                                                              .width,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: AppColors
+                                                                .whiteColor,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        18),
+                                                          ),
+                                                          child: Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              SizedBox(
+                                                                height: 67.h,
+                                                                width: 67.w,
+                                                                child: Image.asset(
+                                                                    'assets/icons/verify_icon.png'),
                                                               ),
-                                                              child: Column(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .center,
-                                                                children: [
-                                                                  SizedBox(
-                                                                    height:
-                                                                        67.h,
-                                                                    width: 67.w,
-                                                                    child: Image
-                                                                        .asset(
-                                                                            'assets/icons/verify_icon.png'),
-                                                                  ),
-                                                                  verticalSpace(
-                                                                      10),
-                                                                  Text(
-                                                                    'Removed Successfully',
-                                                                    style: AppTextStyles
+                                                              verticalSpace(10),
+                                                              Text(
+                                                                'Removed Successfully',
+                                                                style:
+                                                                    AppTextStyles
                                                                         .font16
                                                                         .copyWith(
-                                                                      color: AppColors
-                                                                          .mainTextColor,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w600,
-                                                                    ),
-                                                                  ),
-                                                                  verticalSpace(
-                                                                      13),
-                                                                  Text(
-                                                                    'The customer has been successfully removed from your records.',
-                                                                    style: AppTextStyles
+                                                                  color: AppColors
+                                                                      .mainTextColor,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                ),
+                                                              ),
+                                                              verticalSpace(13),
+                                                              Text(
+                                                                'The customer has been successfully removed from your records.',
+                                                                style:
+                                                                    AppTextStyles
                                                                         .font14
                                                                         .copyWith(
-                                                                      color: AppColors
-                                                                          .textColor,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w400,
-                                                                    ),
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .center,
-                                                                  ),
-                                                                ],
+                                                                  color: AppColors
+                                                                      .textColor,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                ),
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
                                                               ),
-                                                            ));
-                                                      });
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                  );
                                                 },
                                               ),
                                             ),
@@ -289,6 +287,8 @@ class _CustomerDetailsPageState extends State<CustomerDetailsPage>
                                       ]),
                                     ));
                               });
+                       
+                       
                         },
                         text: 'Remove Customer',
                         color: AppColors.whiteColor,

@@ -57,7 +57,12 @@ class DataConfirmationScreen extends StatelessWidget {
                   width: 155.w,
                   child: ButtonWidget(
                     text: 'Continue',
-                    onTap: () => nextScreen(context, const DashBoardScreen()),
+                    onTap: ()async {
+
+                      
+                        nextScreen(context,  DashBoardScreen());
+                    }
+                      
                   ),
                 ),
                 SizedBox(

@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:max_4_u/app/screens/auth/login_screen.dart';
-import 'package:max_4_u/app/screens/auth/sign_up_screen.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
-import 'package:max_4_u/app/utils/screen_navigator.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
-import 'package:max_4_u/app/widgets/button_widget.dart';
 
 class OnboardPageTwo extends StatelessWidget {
   const OnboardPageTwo({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
+    //final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     return Scaffold(
       body: SafeArea(
@@ -22,14 +19,19 @@ class OnboardPageTwo extends StatelessWidget {
             Column(
               children: [
                 Container(
-                  height: height / 2.13,
+                  height: 447.h,
                   width: width,
                   decoration: const BoxDecoration(
                     color: AppColors.whiteColor,
                   ),
+                  child: Image.asset(
+                    'assets/images/onboard_image2.jpeg',
+                    fit: BoxFit.cover,
+                  ),
                 ),
                 Container(
-                  height: height / 2,
+                  height: 440.h,
+                  //height / 2,
                   width: width,
                   padding:
                       const EdgeInsets.symmetric(vertical: 40, horizontal: 16),
@@ -51,24 +53,6 @@ class OnboardPageTwo extends StatelessWidget {
                           fontWeight: FontWeight.w300,
                         ),
                         textAlign: TextAlign.center,
-                      ),
-                      verticalSpace(106),
-                      ButtonWidget(
-                        text: 'Create an account',
-                        onTap: () => nextScreen(context, const SignUpScreen()),
-                      ),
-                      verticalSpace(10),
-                      Center(
-                        child: GestureDetector(
-                          onTap: () =>
-                              nextScreenReplace(context, const LoginScreen()),
-                          child: Text(
-                            'Log in',
-                            style: AppTextStyles.font16.copyWith(
-                              color: AppColors.primaryColor,
-                            ),
-                          ),
-                        ),
                       ),
                     ],
                   ),

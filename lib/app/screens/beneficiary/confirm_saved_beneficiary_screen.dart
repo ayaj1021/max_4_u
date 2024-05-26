@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:max_4_u/app/screens/dashboard/dashboard_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
@@ -35,7 +36,11 @@ class ConfirmSavedBeneficiaryScreen extends StatelessWidget {
             verticalSpace(56),
             ButtonWidget(
               text: 'Continue',
-              onTap: () => nextScreen(context, const DashBoardScreen()),
+              onTap: () async{
+            
+                        nextScreen(context,  DashBoardScreen());
+
+              }
             )
           ],
         ),

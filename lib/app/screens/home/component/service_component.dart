@@ -10,15 +10,18 @@ class ServiceComponent extends StatelessWidget {
     required this.serviceName,
     required this.serviceIcon,
     required this.serviceColor,
+    this.margin ,
   });
   final String serviceName;
   final IconData serviceIcon;
   final Color serviceColor;
+  final double? margin;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
+      margin: EdgeInsets.only(right: margin ?? 0),
       alignment: Alignment.center,
       height: 70.h,
       width: 169.w,
@@ -40,7 +43,7 @@ class ServiceComponent extends StatelessWidget {
           ),
           horizontalSpace(12),
           Text(
-            serviceName,
+            serviceName.substring(0).toUpperCase(),
             style: AppTextStyles.font14.copyWith(
               fontWeight: FontWeight.w700,
             ),
@@ -50,3 +53,4 @@ class ServiceComponent extends StatelessWidget {
     );
   }
 }
+
