@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/abstract_class/auth_abstract_class.dart';
 import 'package:max_4_u/app/database/database.dart';
