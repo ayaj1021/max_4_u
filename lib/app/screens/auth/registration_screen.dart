@@ -1,4 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:max_4_u/app/database/database.dart';
+import 'package:max_4_u/app/encryt_data/encrypt_data.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/provider/auth_provider.dart';
 import 'package:max_4_u/app/provider/obscure_text_provider.dart';
@@ -61,6 +65,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     controller: authProv.emailController,
                     labelText: 'Email',
                   ),
+                  verticalSpace(authProv.status == false ? 5 : 0),
+                  authProv.status == false
+                      ? Text(
+                          authProv.existEmail,
+                          //existEmail,
+                          style: AppTextStyles.font12.copyWith(
+                            color: Colors.red,
+                          ),
+                        )
+                      : Text(''),
                   verticalSpace(24),
                   TextInputField(
                     obscure: obscure.isObscure,
@@ -73,6 +87,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       obscure.changeObscure();
                     },
                   ),
+                  authProv.status == false
+                      ? Text(
+                          authProv.wrongPassword,
+
+                          //wrongPassword,
+                          style: AppTextStyles.font12.copyWith(
+                            color: Colors.red,
+                          ),
+                        )
+                      : Text(''),
                   verticalSpace(24),
                   TextInputField(
                     obscure: obscure.isObscure,
@@ -85,6 +109,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       obscure.changeObscure();
                     },
                   ),
+                  verticalSpace(authProv.status == false ? 5 : 0),
+                  authProv.status == false
+                      ? Text(
+                          authProv.wrongPassword,
+                          //wrongPassword,
+                          style: AppTextStyles.font12.copyWith(
+                            color: Colors.red,
+                          ),
+                        )
+                      : Text(''),
                   verticalSpace(28),
                   RichText(
                     text: TextSpan(
@@ -114,7 +148,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   verticalSpace(32),
                   ButtonWidget(
                     onTap: () async {
-                      if (authProv.firstNameController.text.isEmpty || authProv.lastNameController.text.isEmpty || authProv.emailController.text.isEmpty) {
+                      if (authProv.firstNameController.text.isEmpty ||
+                          authProv.lastNameController.text.isEmpty ||
+                          authProv.emailController.text.isEmpty) {
                         showMessage(context, 'All fields are required',
                             isError: true);
                         return;
@@ -124,15 +160,47 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       if (authProv.state == ViewState.Error &&
                           context.mounted) {
                         showMessage(context, authProv.message);
+                        log('${authProv.message}');
                         return;
                       }
 
                       if (authProv.state == ViewState.Success &&
                           context.mounted) {
+                        
                         showMessage(context, authProv.message);
-
-                        nextScreen(context, const DashBoardScreen());
+                        
+                        nextScreen(context,  DashBoardScreen());
                       }
+                      final firstName = EncryptData.decryptAES(
+                          '${authProv.data[0]['first_name']}');
+                      log('first name is $firstName');
+
+                      final lastName = EncryptData.decryptAES(
+                          '${authProv.data[0]['last_name']}');
+                      log('last name is $lastName');
+                      final uniqueId = EncryptData.decryptAES(
+                          '${authProv.data[0]['unique_id']}');
+                      log('uniqueId is $uniqueId');
+                      final email = EncryptData.decryptAES(
+                          '${authProv.data[0]['email']}');
+                      log('uniqueId is $email');
+                      final number = EncryptData.decryptAES(
+                          '${authProv.data[0]['mobile_number']}');
+                      log('number is $number');
+                      final balance = authProv.data[0]['balance'];
+
+                             final userType = authProv.data[0]['level'];
+
+                      await SecureStorage().saveUserType(userType);
+
+                      await SecureStorage()
+                          .saveEncryptedID(authProv.data[0]['unique_id']);
+                      await SecureStorage().saveUserBalance(balance);
+                      await SecureStorage().saveFirstName(firstName);
+                      await SecureStorage().saveLastName(lastName);
+                      await SecureStorage().saveUniqueId(uniqueId);
+                      await SecureStorage().saveEmail(email);
+                      await SecureStorage().savePhoneNumber(number);
                     },
                     text: 'Sign up',
                   ),

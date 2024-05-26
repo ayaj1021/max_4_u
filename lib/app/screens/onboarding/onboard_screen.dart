@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/screens/auth/login_screen.dart';
 import 'package:max_4_u/app/screens/auth/sign_up_screen.dart';

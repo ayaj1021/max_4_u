@@ -108,21 +108,21 @@ class _VerificationScreenState extends State<VerificationScreen> {
                       },
                     ),
                     verticalSpace(24),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          "Didn't get a code? ",
-                          style: AppTextStyles.font14,
-                        ),
-                        horizontalSpace(10),
-                        Text(
-                          "00:30",
-                          style: AppTextStyles.font14
-                              .copyWith(color: AppColors.secondaryColor),
-                        ),
-                      ],
-                    )
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.center,
+                    //   children: [
+                    //     const Text(
+                    //       "Didn't get a code? ",
+                    //       style: AppTextStyles.font14,
+                    //     ),
+                    //     horizontalSpace(10),
+                    //     Text(
+                    //       "00:30",
+                    //       style: AppTextStyles.font14
+                    //           .copyWith(color: AppColors.secondaryColor),
+                    //     ),
+                    //   ],
+                    // )
                   ],
                 ),
               ),

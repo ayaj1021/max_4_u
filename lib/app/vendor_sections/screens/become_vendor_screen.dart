@@ -114,8 +114,11 @@ class BecomeVendorScreen extends StatelessWidget {
                                   height: 48.h,
                                   child: ButtonWidget(
                                     text: 'Done',
-                                    onTap: () => nextScreen(
-                                        context, const DashBoardScreen()),
+                                    onTap: () async{
+                                    
+                                       nextScreen(
+                                        context,  DashBoardScreen());
+                                    },
                                   ),
                                 )
                               ],

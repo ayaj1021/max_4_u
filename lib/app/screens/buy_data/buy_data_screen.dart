@@ -19,7 +19,7 @@ class BuyDataScreen extends StatefulWidget {
 }
 
 class _BuyDataScreenState extends State<BuyDataScreen> {
-  NetworkProvider _selectedNetwork = NetworkProvider.MTN;
+  String _selectedNetwork = networkProvider[0];
 
   DataPeriod _selectedPeriod = DataPeriod.Daily;
   final _phoneNumberController = TextEditingController();
@@ -69,25 +69,26 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
                     color: const Color(0xffCBD5E1),
                   ),
                 ),
-                child: DropdownButton<NetworkProvider>(
+                child: DropdownButton<String>(
+               
                   elevation: 0,
                   borderRadius: BorderRadius.circular(12),
                   underline: const SizedBox(),
                   value: _selectedNetwork,
-                  onChanged: (newValue) {
+                  onChanged: (String? newValue) {
                     setState(() {
                       _selectedNetwork = newValue!;
                     });
                   },
-                  items: NetworkProvider.values.map((NetworkProvider network) {
+                  items: networkProvider.map((String networkProviders) {
                     return DropdownMenuItem(
-                      value: network,
+                      value: networkProviders,
                       child: Container(
-                        margin: const EdgeInsets.only(right: 275),
+                        margin: const EdgeInsets.only(right: 250),
                         child: Container(
                           margin: const EdgeInsets.only(top: 8),
                           child: Text(
-                            _networkToString(network),
+                            networkProviders,
                             style: AppTextStyles.font14.copyWith(
                               fontSize: 14,
                               fontWeight: FontWeight.w400,
@@ -173,7 +174,6 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
                   }).toList(),
                 ),
               ),
-           
               verticalSpace(278),
               ButtonWidget(
                 text: 'Continue',
@@ -206,18 +206,18 @@ String _dataPeriodToString(DataPeriod data) {
   }
 }
 
-String _networkToString(NetworkProvider network) {
-  switch (network) {
-    case NetworkProvider.MTN:
-      return 'MTN';
-    case NetworkProvider.GLO:
-      return 'GLO';
-    case NetworkProvider.Airtel:
-      return 'Airtel';
-    case NetworkProvider.Etisalat:
-      return 'Etisalat';
+// String _networkToString(networkProvider network) {
+//   switch (network) {
+//     case networkProvider.MTN:
+//       return 'MTN';
+//     case networkProvider.GLO:
+//       return 'GLO';
+//     case networkProvider.Airtel:
+//       return 'Airtel';
+//     case networkProvider.Etisalat:
+//       return 'Etisalat';
 
-    default:
-      return '';
-  }
-}
+//     default:
+//       return '';
+//   }
+// }

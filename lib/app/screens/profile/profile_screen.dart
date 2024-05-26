@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/screens/profile/edit_profile_screen.dart';
 import 'package:max_4_u/app/screens/settings/settings_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
@@ -8,9 +9,38 @@ import 'package:max_4_u/app/utils/screen_navigator.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
 import 'package:max_4_u/app/widgets/button_widget.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+
+  String firstName = '';
+ String lastName = '';
+ String userId = '';
+
+
+  @override
+  void initState() {
+    getNames();
+    super.initState();
+  }
+
+  getNames() async {
+    final name = await SecureStorage().getFirstName();
+    final surname = await SecureStorage().getLastName();
+    final id = await SecureStorage().getUniqueId();
+    
+    setState(() {
+      firstName = name;
+      lastName = surname;
+        userId = id;
+        });
+  }
+      
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,17 +65,17 @@ class ProfileScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  width: 4,
+                  width: 2,
                   color: const Color(0xff333333),
                 ),
               ),
               child: ClipOval(
-                child: Image.asset('assets/images/user_profile_image.png'),
+                child: Image.asset('assets/images/profile_avatar.png'),
               ),
             ),
             verticalSpace(12),
             Text(
-              'Adedokun Praise',
+              '$firstName $lastName',
               style:
                   AppTextStyles.font20.copyWith(color: const Color(0xff333333)),
             ),
@@ -54,7 +84,7 @@ class ProfileScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'User ID -1235364',
+                  'User ID -$userId',
                   style: AppTextStyles.font12.copyWith(
                       fontWeight: FontWeight.w500,
                       color: const Color(0xff787878)),

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max_4_u/app/provider/auth_provider.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
+import 'package:provider/provider.dart';
 
 class TransactionHistoryContainer extends StatelessWidget {
   const TransactionHistoryContainer({
@@ -11,42 +13,67 @@ class TransactionHistoryContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 221.h,
-      width: 358.w,
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 20),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8), color: AppColors.whiteColor),
-      child: Column(
-        children: [
-          const TransactionSection(
-            transactionIcon: Icons.call_outlined,
-            transactionType: 'Airtime',
-            transactionDate: 'Apr 18th, 20:59',
-            transactionAmount: '-N35,000.00',
-            transactionStatus: 'Successful', transactionColor: Color(0xffDEEDF7),
-          ),
-          verticalSpace(24),
-          const TransactionSection(
-            transactionIcon: Icons.money,
-            transactionType: 'Added funds',
-            transactionDate: 'Apr 18th, 20:59',
-            transactionAmount: '-N35,000.00',
-            transactionStatus: 'Successful',
-            transactionColor: Color(0xffD6DDFE),
-          ),
-          verticalSpace(24),
-          const TransactionSection(
-            transactionIcon: Icons.network_wifi_outlined,
-            transactionType: 'Data',
-            transactionDate: 'Apr 18th, 20:59',
-            transactionAmount: '-N35,000.00',
-            transactionStatus: 'Successful',
-            transactionColor: Color(0xffE8D6FE),
-          ),
-        ],
-      ),
-    );
+    return Consumer<AuthProviderImpl>(builder: (context, authProv, _) {
+      return Container(
+          height: 221.h,
+          width: 358.w,
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 20),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              color: AppColors.whiteColor),
+          child: authProv.transaction.isEmpty
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                          height: 52.h,
+                          width: 52.w,
+                          child: Image.asset(
+                              'assets/images/no_beneficiary_image.png')),
+                      verticalSpace(24),
+                      Text(
+                        'You have no transaction history',
+                        style: AppTextStyles.font14.copyWith(
+                            color: AppColors.textColor,
+                            fontWeight: FontWeight.w400),
+                      )
+                    ],
+                  ),
+                )
+              : Expanded(
+                  child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: 3,
+                      itemBuilder: (_, index) {
+                        return const TransactionSection(
+                          transactionIcon: Icons.call_outlined,
+                          transactionType: 'Airtime',
+                          transactionDate: 'Apr 18th, 20:59',
+                          transactionAmount: '-N35,000.00',
+                          transactionStatus: 'Successful',
+                          transactionColor: Color(0xffDEEDF7),
+                        );
+                      }),
+                )
+
+          // Column(
+          //     children: [
+          //       const TransactionSection(
+          //         transactionIcon: Icons.call_outlined,
+          //         transactionType: 'Airtime',
+          //         transactionDate: 'Apr 18th, 20:59',
+          //         transactionAmount: '-N35,000.00',
+          //         transactionStatus: 'Successful',
+          //         transactionColor: Color(0xffDEEDF7),
+          //       ),
+          //       verticalSpace(24),
+
+          //     ],
+          //   ),
+          );
+    });
   }
 }
 
@@ -57,7 +84,8 @@ class TransactionSection extends StatelessWidget {
     required this.transactionType,
     required this.transactionDate,
     required this.transactionAmount,
-    required this.transactionStatus, required this.transactionColor,
+    required this.transactionStatus,
+    required this.transactionColor,
   });
   final IconData transactionIcon;
   final String transactionType;
@@ -77,7 +105,7 @@ class TransactionSection extends StatelessWidget {
               height: 40.h,
               width: 40.w,
               alignment: Alignment.center,
-              decoration:  BoxDecoration(
+              decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: transactionColor,
               ),

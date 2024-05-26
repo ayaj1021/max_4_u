@@ -13,7 +13,10 @@ class TextInputField extends StatelessWidget {
       this.onTap,
       this.labelText,
       this.prefixIcon,
-      this.prefixOnTap, this.obscure = false, this.textInputType});
+      this.prefixOnTap,
+      this.obscure = false,
+      this.textInputType,
+      this.onChanged});
   final TextEditingController controller;
   final String? hintText;
   final String? labelText;
@@ -22,8 +25,9 @@ class TextInputField extends StatelessWidget {
   final bool obscure;
   final Function()? onTap;
   final Function()? prefixOnTap;
+  final Function(String?)? onChanged;
   final TextInputType? textInputType;
-  
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -38,7 +42,7 @@ class TextInputField extends StatelessWidget {
         ),
         verticalSpace(8),
         Container(
-        //  padding: const EdgeInsets.symmetric(horizontal: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
           height: 52.h,
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
@@ -49,19 +53,20 @@ class TextInputField extends StatelessWidget {
             controller: controller,
             keyboardType: textInputType,
             obscureText: obscure,
+            onChanged: onChanged,
             decoration: InputDecoration(
               hintText: hintText,
               hintStyle: AppTextStyles.font14
                   .copyWith(color: AppColors.textColor.withOpacity(0.3)),
               border: InputBorder.none,
-              prefixIcon: GestureDetector(
-                  onTap: prefixOnTap,
-                  child: prefixIcon ?? const SizedBox(),
-                  //  Icon(
-                  //   prefixIcon,
-                  //   color: const Color(0xff4F4F4F),
-                  // )
-                ),
+              // prefixIcon: GestureDetector(
+              //     onTap: prefixOnTap,
+              //     child: prefixIcon ?? const SizedBox(),
+              //     //  Icon(
+              //     //   prefixIcon,
+              //     //   color: const Color(0xff4F4F4F),
+              //     // )
+              //   ),
               suffixIcon:
                   GestureDetector(onTap: onTap, child: Icon(suffixIcon)),
             ),

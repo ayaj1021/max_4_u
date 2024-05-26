@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/provider/auth_provider.dart';
+import 'package:max_4_u/app/provider/buy_airtime_provider.dart';
+import 'package:max_4_u/app/provider/change_email_provider.dart';
+import 'package:max_4_u/app/provider/change_password_provider.dart';
 import 'package:max_4_u/app/provider/choose_option_provider.dart';
+import 'package:max_4_u/app/provider/delete_account_provider.dart';
 import 'package:max_4_u/app/provider/obscure_text_provider.dart';
 import 'package:max_4_u/app/provider/vendor_check_provider.dart';
 import 'package:max_4_u/app/screens/splash/splash_screen.dart';
@@ -22,6 +26,10 @@ class MyApp extends StatelessWidget {
           return MultiProvider(
             providers: [
               ChangeNotifierProvider(create: (_) => AuthProviderImpl()),
+              ChangeNotifierProvider(create: (_) => BuyAirtimeProvider()),
+              ChangeNotifierProvider(create: (_) => ChangePasswordProvider()),
+              ChangeNotifierProvider(create: (_) => DeleteAccountProvider()),
+              ChangeNotifierProvider(create: (_) => ChangeEmailProvider()),
               ChangeNotifierProvider(create: (_) => VendorCheckProvider()),
               ChangeNotifierProvider(create: (_) => ChooseOptionsProvider()),
               ChangeNotifierProvider(create: (_) => ObscureTextProvider()),

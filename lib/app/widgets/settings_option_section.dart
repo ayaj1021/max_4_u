@@ -15,28 +15,28 @@ class SettingsOptionSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(children: [
-          SizedBox(height: 24, width: 24, child: Image.asset(icon)),
-          horizontalSpace(10),
-          Text(
-            settingOption,
-            style: AppTextStyles.font14.copyWith(
-              color: const Color(0xff4F4F4F),
-              fontWeight: FontWeight.w400,
-            ),
-          )
-        ]),
-        GestureDetector(
-          onTap: onTap,
-          child: const Icon(
+    return GestureDetector(
+       onTap: onTap,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(children: [
+            SizedBox(height: 24, width: 24, child: Image.asset(icon)),
+            horizontalSpace(10),
+            Text(
+              settingOption,
+              style: AppTextStyles.font14.copyWith(
+                color: const Color(0xff4F4F4F),
+                fontWeight: FontWeight.w400,
+              ),
+            )
+          ]),
+          const Icon(
             Icons.arrow_forward_ios,
             size: 15,
-          ),
-        )
-      ],
+          )
+        ],
+      ),
     );
   }
 }

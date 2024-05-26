@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:max_4_u/app/screens/beneficiary/save_beneficiary_screen.dart';
 import 'package:max_4_u/app/screens/dashboard/dashboard_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
@@ -56,9 +57,12 @@ class AirtimeConfirmationScreen extends StatelessWidget {
                   height: 48.h,
                   width: 155.w,
                   child: ButtonWidget(
-                    text: 'Continue',
-                    onTap: () => nextScreen(context, const DashBoardScreen()),
-                  ),
+                      text: 'Continue',
+                      onTap: () async {
+                       
+                        nextScreen(
+                            context, DashBoardScreen());
+                      }),
                 ),
                 SizedBox(
                   height: 48.h,
