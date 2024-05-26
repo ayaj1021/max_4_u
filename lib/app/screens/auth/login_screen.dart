@@ -31,9 +31,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final passwordController = TextEditingController();
   final emailController = TextEditingController();
-   ResponseDataData  data = ResponseDataData();
 
-   
   @override
   Widget build(BuildContext context) {
     return Consumer2<AuthProviderImpl, ObscureTextProvider>(
@@ -99,9 +97,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         return;
                       }
 
-                      await authProv.loginUser(
+                      final result = await authProv.loginUser(
                           email: emailController.text.trim(),
                           password: passwordController.text.trim());
+                      print(
+                          'Animalllll: ${result.data!.userData![0].firstName}');
                       if (authProv.status == false && context.mounted) {
                         showMessage(context, authProv.message);
                         return;

@@ -1,7 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/database/database.dart';
+import 'package:max_4_u/app/model/user_account_model.dart';
 import 'package:max_4_u/app/provider/auth_provider.dart';
 import 'package:max_4_u/app/provider/vendor_check_provider.dart';
 import 'package:max_4_u/app/screens/buy_airtime/buy_airtime_screen.dart';
@@ -33,7 +33,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     getServices();
     getName();
-    
     super.initState();
   }
 
@@ -54,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   getServices() async {
     final services = await SecureStorage().getUserServices();
-   
+
     setState(() {
       userServices = services;
     });
@@ -131,7 +130,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 return GestureDetector(
                                   onTap: () => nextScreen(
                                     context,
-                                    index == 0 ? BuyDataScreen() : BuyAirtimeScreen(),
+                                    index == 0
+                                        ? BuyDataScreen()
+                                        : BuyAirtimeScreen(),
                                   ),
                                   child: ServiceComponent(
                                     margin: 20,

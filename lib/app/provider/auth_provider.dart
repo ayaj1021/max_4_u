@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/abstract_class/auth_abstract_class.dart';
 import 'package:max_4_u/app/database/database.dart';
@@ -37,8 +35,6 @@ class AuthProviderImpl extends ChangeNotifier
   bool _status = false;
   bool get status => _status;
 
-  UserDatum _userData = UserDatum();
-  UserDatum get userData => _userData;
 
   List<dynamic> _data = [];
   List<dynamic> get data => _data;
@@ -305,69 +301,34 @@ class AuthProviderImpl extends ChangeNotifier
 
 //Login user method
   @override
-  Future<DataResponseModel<ResponseDataData>> loginUser(
+  Future<ResponseModel<DataResponse>> loginUser(
       {required String email, required String password}) async {
     state = ViewState.Busy;
     _message = 'Logging in your account...';
     notifyListeners();
-
     final body = {
       "request_type": "general",
       "action": "login",
       "login_id": email,
       "password": password,
     };
-
     print(body);
-
     final response = await ApiService.instance.authPostRequest(
       body: body,
     );
-
-   // final int statusCode = response.statusCode ?? 000;
      _status = response['data']['status'];
      _message = response['data']['message'];
-   //  statusCode >= 200 && statusCode <= 300
-
     if (_status == true) {
-      return DataResponseModel<ResponseDataData>(
+      return ResponseModel<DataResponse>(
         valid: true,
       // statusCode: statusCode,
         message: _message,
-        data: ResponseDataData.fromJson(response['data']['response_data']),
+        data: DataResponse.fromJson(response['data']['response_data']),
         state: ViewState.Success,
       );
     }
     notifyListeners();
-
-    // if (_status == true) {
-    //   state = ViewState.Success;
-    //   emailController.clear();
-    //   passwordController.clear();
-    //   _message = response['data']['message'];
-    //   //  _userData = UserData.fromJson(res);
-    //   _data = response['data']['response_data']['data']['user_data'];
-    //   _products = response['data']['response_data']['data']['products'];
-    //   await SecureStorage().saveUserProducts(_products);
-    //   _services = response['data']['response_data']['data']['services'];
-    //   //_services = res['data']['response_data']['data']['products'];
-    //   await SecureStorage().saveUserServices(_services);
-    //   _autoRenewal = response['data']['response_data']['data']['auto_renewal'];
-    //   _transaction =
-    //       response['data']['response_data']['data']['transaction_history'];
-    //   _beneficiary =
-    //       response['data']['response_data']['data']['beneficiary_data'];
-    //   notifyListeners();
-    // } else {
-    //   // print(status);
-    //   _message = response['data']['message'];
-    //   state = ViewState.Error;
-    //   log('$_message');
-
-    //   notifyListeners();
-    // }
-
-    return DataResponseModel(
+    return ResponseModel(
       error: ErrorModel.fromJson(response),
      // statusCode: statusCode,
       state: ViewState.Error,
