@@ -1,6 +1,6 @@
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 
-class DataResponseModel<T> {
+class ResponseModel<T> {
   late int? statusCode;
   late ErrorModel? error;
   late bool? valid = false;
@@ -8,7 +8,7 @@ class DataResponseModel<T> {
   late ViewState state;
   late T? data;
 
-  DataResponseModel({valid, message, statusCode, this.data, error, state}) {
+  ResponseModel({valid, message, statusCode, this.data, error, state}) {
     this.valid = valid ?? false;
     this.message = message ?? 'an error occurred please try again';
     this.statusCode = statusCode ?? 000;
