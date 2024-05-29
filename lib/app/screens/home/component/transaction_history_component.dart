@@ -1,15 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/provider/auth_provider.dart';
+import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
 import 'package:provider/provider.dart';
 
-class TransactionHistoryContainer extends StatelessWidget {
+class TransactionHistoryContainer extends StatefulWidget {
   const TransactionHistoryContainer({
     super.key,
   });
+
+  @override
+  State<TransactionHistoryContainer> createState() =>
+      _TransactionHistoryContainerState();
+}
+
+class _TransactionHistoryContainerState
+    extends State<TransactionHistoryContainer> {
+  List getTransactions = [];
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ReloadUserDataProvider>(context, listen: false).reloadUserData();
+    });
+    getAllTransactions();
+    super.initState();
+  }
+
+  getAllTransactions() async {
+    final transactions = await SecureStorage().getUserTransactions();
+    setState(() {
+      getTransactions = transactions;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,12 +48,17 @@ class TransactionHistoryContainer extends StatelessWidget {
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               color: AppColors.whiteColor),
-          child: authProv.transaction.isEmpty
+          child: getTransactions.isEmpty
               ? Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+
+                      ElevatedButton(onPressed: (){
+
+                       print( getTransactions.length);
+                      }, child: Text('click'),),
                       SizedBox(
                           height: 52.h,
                           width: 52.w,

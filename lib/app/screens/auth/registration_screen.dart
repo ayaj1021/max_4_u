@@ -25,6 +25,23 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
+  final emailController = TextEditingController();
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+
+  @override
+  void dispose() {
+    firstNameController.dispose();
+    lastNameController.dispose();
+
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer2<AuthProviderImpl, ObscureTextProvider>(
@@ -52,17 +69,17 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   ),
                   verticalSpace(24),
                   TextInputField(
-                    controller: authProv.firstNameController,
+                    controller: firstNameController,
                     labelText: 'First name',
                   ),
                   verticalSpace(24),
                   TextInputField(
-                    controller: authProv.lastNameController,
+                    controller: lastNameController,
                     labelText: 'Last name',
                   ),
                   verticalSpace(24),
                   TextInputField(
-                    controller: authProv.emailController,
+                    controller: emailController,
                     labelText: 'Email',
                   ),
                   verticalSpace(authProv.status == false ? 5 : 0),
@@ -78,7 +95,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   verticalSpace(24),
                   TextInputField(
                     obscure: obscure.isObscure,
-                    controller: authProv.passwordController,
+                    controller: passwordController,
                     labelText: 'Password',
                     suffixIcon: obscure.isObscure
                         ? Icons.visibility_off_outlined
@@ -100,7 +117,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   verticalSpace(24),
                   TextInputField(
                     obscure: obscure.isObscure,
-                    controller: authProv.confirmPasswordController,
+                    controller: confirmPasswordController,
                     labelText: 'Confirm password',
                     suffixIcon: obscure.isObscure
                         ? Icons.visibility_off_outlined
@@ -148,54 +165,68 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   verticalSpace(32),
                   ButtonWidget(
                     onTap: () async {
-                      if (authProv.firstNameController.text.isEmpty ||
-                          authProv.lastNameController.text.isEmpty ||
-                          authProv.emailController.text.isEmpty) {
+                      if (firstNameController.text.isEmpty ||
+                          lastNameController.text.isEmpty ||
+                          emailController.text.isEmpty ||
+                          passwordController.text.isEmpty ||
+                          confirmPasswordController.text.isEmpty) {
                         showMessage(context, 'All fields are required',
                             isError: true);
                         return;
                       }
 
-                      await authProv.registerUser();
-                      if (authProv.state == ViewState.Error &&
-                          context.mounted) {
+                      final result = await authProv.registerUser(
+                          email: emailController.text.trim(),
+                          firstName: firstNameController.text.trim(),
+                          lastName: lastNameController.text.trim(),
+                          password: passwordController.text.trim(),
+                          confirmPassword:
+                              confirmPasswordController.text.trim());
+                      if (authProv.status == false && context.mounted) {
                         showMessage(context, authProv.message);
                         log('${authProv.message}');
                         return;
                       }
 
-                      if (authProv.state == ViewState.Success &&
-                          context.mounted) {
-                        
+                      if (authProv.status == true && context.mounted) {
                         showMessage(context, authProv.message);
-                        
-                        nextScreen(context,  DashBoardScreen());
+
+                        nextScreen(context, DashBoardScreen());
                       }
+
                       final firstName = EncryptData.decryptAES(
-                          '${authProv.data[0]['first_name']}');
-                      log('first name is $firstName');
+                          '${result.userData![0].firstName}');
+                      await SecureStorage().saveFirstName(firstName);
 
                       final lastName = EncryptData.decryptAES(
-                          '${authProv.data[0]['last_name']}');
+                          '${result.userData![0].lastName}');
                       log('last name is $lastName');
                       final uniqueId = EncryptData.decryptAES(
-                          '${authProv.data[0]['unique_id']}');
+                          '${result.userData![0].uniqueId}');
                       log('uniqueId is $uniqueId');
                       final email = EncryptData.decryptAES(
-                          '${authProv.data[0]['email']}');
+                          '${result.userData![0].email}');
                       log('uniqueId is $email');
                       final number = EncryptData.decryptAES(
-                          '${authProv.data[0]['mobile_number']}');
+                          '${result.userData![0].mobileNumber}');
                       log('number is $number');
-                      final balance = authProv.data[0]['balance'];
+                      final balance = result.userAccount!.balance;
+                      final userType = result.userData![0].level;
 
-                             final userType = authProv.data[0]['level'];
+                      final beneficiary = result.beneficiaryData;
+                      log('user type is $userType');
+                      log('user balance is $balance');
+                      final services = result.services!;
+                      final products = result.products!;
 
-                      await SecureStorage().saveUserType(userType);
-
-                      await SecureStorage()
-                          .saveEncryptedID(authProv.data[0]['unique_id']);
-                      await SecureStorage().saveUserBalance(balance);
+                      await SecureStorage().saveUserEncryptedId(
+                          '${result.userData![0].uniqueId}');
+                      await SecureStorage().saveUserBeneficiary(beneficiary!);
+                      await SecureStorage().saveUserProducts(products);
+                      await SecureStorage().saveUserServices(services);
+                      await SecureStorage().saveUserType(userType.toString());
+                      await SecureStorage().saveEncryptedID(uniqueId);
+                      await SecureStorage().saveUserBalance(balance.toString());
                       await SecureStorage().saveFirstName(firstName);
                       await SecureStorage().saveLastName(lastName);
                       await SecureStorage().saveUniqueId(uniqueId);

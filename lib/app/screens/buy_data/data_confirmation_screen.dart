@@ -9,7 +9,9 @@ import 'package:max_4_u/app/utils/white_space.dart';
 import 'package:max_4_u/app/widgets/button_widget.dart';
 
 class DataConfirmationScreen extends StatelessWidget {
-  const DataConfirmationScreen({super.key});
+  const DataConfirmationScreen({super.key, required this.amount, required this.phoneNumber});
+  final String amount;
+  final String phoneNumber;
 
   @override
   Widget build(BuildContext context) {
@@ -35,14 +37,15 @@ class DataConfirmationScreen extends StatelessWidget {
             ),
             verticalSpace(12),
             Text(
-              'Data of N500 has been successfully sent to',
+              'Data of $amount has been successfully \nsent to',
               style: AppTextStyles.font14.copyWith(
                 color: AppColors.textColor,
                 fontWeight: FontWeight.w400,
               ),
+              textAlign: TextAlign.center,
             ),
             Text(
-              '0815353367',
+              phoneNumber,
               style: AppTextStyles.font14.copyWith(
                 color: AppColors.textColor,
                 fontWeight: FontWeight.w700,
@@ -76,7 +79,7 @@ class DataConfirmationScreen extends StatelessWidget {
                     text: 'Save beneficiary',
                     textColor: AppColors.primaryColor,
                     onTap: () =>
-                        nextScreen(context, const SaveBeneficiaryScreen()),
+                        nextScreen(context, const SaveBeneficiaryScreen(phoneNumber: '',)),
                   ),
                 ),
               ],

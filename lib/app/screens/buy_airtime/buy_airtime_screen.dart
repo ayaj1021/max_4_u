@@ -27,6 +27,7 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
   String? _selectedNetwork = networkProvider[0];
 
   final _amountController = TextEditingController();
+  final _phoneNumber = TextEditingController();
 
   final amount = [
     '100',
@@ -43,6 +44,7 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
   String airtimeAmount = '';
   @override
   void dispose() {
+    _phoneNumber.dispose();
     super.dispose();
   }
 
@@ -65,24 +67,6 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
       codeValues = productCodes;
     });
   }
-
-//   getNetworkList() {
-//     for (String net in networks) {
-
-//       networkProvider myNetwork = stringToNetwork(net);
-//       log('$myNetwork');
-//       log('$networks');
-//       log('$codeValues');
-//     }
-//   }
-
-//   String networkToString(networkProvider network) {
-//   return network.toString().split('.').last;
-// }
-
-// networkProvider stringToNetwork(String String) {
-//   return networkProvider.values.firstWhere((e) => e.toString().split('.').last == networkToString);
-// }
 
   @override
   Widget build(BuildContext context) {
@@ -176,7 +160,7 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
                     Stack(
                       children: [
                         TextInputField(
-                          controller: buyAirtime.phoneNumber,
+                          controller: _phoneNumber,
                           labelText: 'Phone Number',
                           hintText: 'receiver\'s number',
                           textInputType: TextInputType.number,
@@ -269,7 +253,7 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
                     ButtonWidget(
                       text: 'Continue',
                       onTap: () async {
-                        if (buyAirtime.phoneNumber.text.isEmpty) {
+                        if (_phoneNumber.text.isEmpty) {
                           showMessage(context, 'Phone number is required',
                               isError: true);
                           return;
@@ -285,7 +269,7 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
                             context,
                             AirtimeVerificationScreen(
                               network: '${_selectedNetwork}',
-                              phoneNumber: buyAirtime.phoneNumber.text,
+                              phoneNumber: _phoneNumber.text.trim(),
                               amount: airtimeAmount,
                             ));
                       },

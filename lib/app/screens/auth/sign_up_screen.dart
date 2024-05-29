@@ -23,6 +23,13 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  final phoneController = TextEditingController();
+  @override
+  void dispose() {
+    phoneController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer2<AuthProviderImpl, ObscureTextProvider>(
@@ -50,20 +57,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   verticalSpace(24),
                   TextInputField(
-                    controller: stateModel.phoneController,
+                    controller: phoneController,
                     labelText: 'Phone number',
                     textInputType: TextInputType.number,
                   ),
                   verticalSpace(32),
                   ButtonWidget(
                     onTap: () async {
-                      if (stateModel.phoneController.text.isEmpty) {
+                      if (phoneController.text.isEmpty) {
                         showMessage(context, 'Phone number is required',
                             isError: true);
                         return;
                       }
 
-                      await stateModel.signUp();
+                      await stateModel.signUp(
+                          phoneNumber: phoneController.text.trim());
                       if (stateModel.state == ViewState.Error &&
                           context.mounted) {
                         showMessage(context, stateModel.message);

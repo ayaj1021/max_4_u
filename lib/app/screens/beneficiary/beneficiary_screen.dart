@@ -19,7 +19,7 @@ class _BeneficiaryScreenState extends State<BeneficiaryScreen> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<AuthProviderImpl>(context, listen: false).beneficiary;
+      Provider.of<AuthProviderImpl>(context, listen: false);
     });
     super.initState();
   }

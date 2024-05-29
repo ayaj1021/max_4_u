@@ -6,7 +6,7 @@ import 'package:max_4_u/app/enums/data_period_enum.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/provider/buy_airtime_provider.dart';
 import 'package:max_4_u/app/provider/obscure_text_provider.dart';
-import 'package:max_4_u/app/screens/buy_airtime/airtime_confirmation_screen.dart';
+import 'package:max_4_u/app/screens/confirmation/confirmation_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/busy_overlay.dart';
@@ -137,8 +137,7 @@ class _AirtimeVerificationScreenState extends State<AirtimeVerificationScreen> {
                                     fontWeight: FontWeight.w400,
                                   ),
                                 ),
-                                Text(
-                                  'N${widget.amount}',
+                                Text('N${widget.amount}',
                                     style: AppTextStyles.font16.copyWith(
                                       color: AppColors.whiteColor,
                                       fontWeight: FontWeight.w600,
@@ -233,35 +232,38 @@ class _AirtimeVerificationScreenState extends State<AirtimeVerificationScreen> {
                           text: 'Send airtime',
                           onTap: () async {
                             final productCodes = await ProductHelper()
-                                .getProducts(widget.network.toLowerCase());
+                                .getAirtimeProducts(widget.network);
                             log('This is the code ${productCodes.toString()}');
                             log(productCodes.toString());
 
                             await buyAirtime.buyAirtime(
+                              phoneNumber: widget.phoneNumber,
                               amount: widget.amount,
                               productCode: productCodes,
                             );
 
-                            if (buyAirtime.state == ViewState.Error &&
-                                context.mounted) {
+                            if (buyAirtime.status == false && context.mounted) {
                               showMessage(
                                 context,
                                 buyAirtime.message,
                                 isError: true,
                               );
-                              log(buyAirtime.message.toString());
+                             
                               return;
                             }
 
-                            if (buyAirtime.state == ViewState.Success &&
-                                context.mounted) {
+                            if (buyAirtime.status == true && context.mounted) {
                               showMessage(
                                 context,
                                 buyAirtime.message,
                                 // isError: false,
                               );
                               nextScreen(
-                                  context, const AirtimeConfirmationScreen());
+                                  context,
+                                  ConfirmationScreen(
+                                amount: widget.amount,
+                                number: widget.phoneNumber,
+                              ));
                             }
                           })
                     ],

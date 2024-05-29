@@ -23,9 +23,10 @@ class VerificationScreen extends StatefulWidget {
 }
 
 class _VerificationScreenState extends State<VerificationScreen> {
+  final _otpController = TextEditingController();
   @override
   void dispose() {
-    Provider.of<AuthProviderImpl>(context).otpController.dispose();
+    _otpController.dispose();
     super.dispose();
   }
 
@@ -60,7 +61,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                     ),
                     verticalSpace(24),
                     PinCodeTextField(
-                      controller: authProv.otpController,
+                      controller: _otpController,
                       keyboardType: TextInputType.number,
                       appContext: context,
                       length: 6,
@@ -76,7 +77,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                     ButtonWidget(
                       text: 'Enter',
                       onTap: () async {
-                        if (authProv.otpController.text.isEmpty) {
+                        if (_otpController.text.isEmpty) {
                           showMessage(
                             context,
                             'Otp is required',
@@ -85,7 +86,8 @@ class _VerificationScreenState extends State<VerificationScreen> {
                           return;
                         }
 
-                        await authProv.verifyOtp();
+                        await authProv.verifyOtp(
+                            otp: _otpController.text.trim());
                         if (authProv.state == ViewState.Error &&
                             context.mounted) {
                           showMessage(

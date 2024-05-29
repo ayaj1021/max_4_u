@@ -77,7 +77,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                             )
                           ],
                         ),
-                        verticalSpace(authProv.beneficiary.isEmpty ? 250 : 0),
+                        verticalSpace(authProv.transaction.isEmpty ? 250 : 0),
                         authProv.transaction.isEmpty
                             ? Center(
                                 child: Column(

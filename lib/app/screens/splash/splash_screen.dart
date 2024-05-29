@@ -29,15 +29,12 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     getNames();
     Timer(const Duration(seconds: 3), () async {
-      
+      //  ReloadUserDataProvider().reloadUserData();
       if (userId == null) {
         nextScreenReplace(context, const OnboardScreen());
       } else {
-        nextScreenReplace(
-            context,
-            DashBoardScreen(
-             
-            ));
+        
+        nextScreenReplace(context, DashBoardScreen());
       }
     });
     super.initState();
