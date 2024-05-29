@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/encryt_data/encrypt_data.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
-import 'package:max_4_u/app/model/user_account_model.dart';
 import 'package:max_4_u/app/provider/auth_provider.dart';
 import 'package:max_4_u/app/provider/obscure_text_provider.dart';
 import 'package:max_4_u/app/screens/auth/forgot_password_screen1.dart';
@@ -31,6 +30,13 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final passwordController = TextEditingController();
   final emailController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,13 +67,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   TextInputField(
                     controller: emailController,
                     labelText: 'Email',
-                    hintText: 'Input your email',
+                    hintText: 'Enter your email or phone number',
                   ),
                   verticalSpace(24),
                   TextInputField(
                     obscure: obscure.isObscure,
                     controller: passwordController,
                     labelText: 'Password',
+                    hintText: 'Enter your password',
                     suffixIcon: obscure.isObscure
                         ? Icons.visibility_off_outlined
                         : Icons.visibility_outlined,
@@ -100,49 +107,61 @@ class _LoginScreenState extends State<LoginScreen> {
                       final result = await authProv.loginUser(
                           email: emailController.text.trim(),
                           password: passwordController.text.trim());
-                      print(
-                          'Animalllll: ${result.data!.userData![0].firstName}');
+
                       if (authProv.status == false && context.mounted) {
                         showMessage(context, authProv.message);
                         return;
                       }
 
                       print(authProv.message);
-
+                    
                       // final userLevelType = await SecureStorage().getUserType();
                       if (authProv.status == true && context.mounted) {
                         showMessage(context, authProv.message);
-
+                       
                         nextScreen(context, DashBoardScreen());
                       }
-                      // final firstName = EncryptData.decryptAES(
-                      //     '${data.userData}');
+                      final firstName = EncryptData.decryptAES(
+                          '${result.userData![0].firstName}');
+                      // '${result.data!.userData![0].firstName}');
+                      await SecureStorage().saveFirstName(firstName);
 
-                      // final lastName = EncryptData.decryptAES(
-                      //     '${data.lastName}');
-                      // log('last name is $lastName');
-                      // final uniqueId = EncryptData.decryptAES(
-                      //     '${data.uniqueId}');
-                      // log('uniqueId is $uniqueId');
-                      // final email = EncryptData.decryptAES(
-                      //     '${data.email}');
-                      // log('uniqueId is $email');
-                      // final number = EncryptData.decryptAES(
-                      //     '${data.mobileNumber}');
-                      // log('number is $number');
-                      // final balance = data.balance;
-                      // final userType = data.level;
-                      // log('user type is $userType');
-                      // log('user balance is $balance');
-                      // await SecureStorage().saveUserType(userType.toString());
-                      // await SecureStorage()
-                      //     .saveEncryptedID(uniqueId);
-                      // await SecureStorage().saveUserBalance(balance.toString());
-                      // await SecureStorage().saveFirstName(firstName);
-                      // await SecureStorage().saveLastName(lastName);
-                      // await SecureStorage().saveUniqueId(uniqueId);
-                      // await SecureStorage().saveEmail(email);
-                      // await SecureStorage().savePhoneNumber(number);
+                      final lastName = EncryptData.decryptAES(
+                          '${result.userData![0].lastName}');
+                      log('last name is $lastName');
+                      final uniqueId = EncryptData.decryptAES(
+                          '${result.userData![0].uniqueId}');
+                      log('uniqueId is $uniqueId');
+                      final email = EncryptData.decryptAES(
+                          '${result.userData![0].email}');
+                      log('uniqueId is $email');
+                      final number = EncryptData.decryptAES(
+                          '${result.userData![0].mobileNumber}');
+                      log('number is $number');
+                      final balance = result.userAccount!.balance;
+                      final userType = result.userData![0].level;
+
+                      final beneficiary = result.beneficiaryData;
+                      log('user type is $userType');
+                      log('user balance is $balance');
+                      final services = result.services!;
+                      final products = result.products!;
+                      //                  final transactions = result.data.;
+                      // await SecureStorage().saveUserTransactions(transactions);
+
+                      await SecureStorage().saveUserEncryptedId(
+                          '${result.userData![0].uniqueId}');
+                      await SecureStorage().saveUserBeneficiary(beneficiary!);
+                      await SecureStorage().saveUserProducts(products);
+                      await SecureStorage().saveUserServices(services);
+                      await SecureStorage().saveUserType(userType.toString());
+                      await SecureStorage().saveEncryptedID(uniqueId);
+                      await SecureStorage().saveUserBalance(balance.toString());
+                      await SecureStorage().saveFirstName(firstName);
+                      await SecureStorage().saveLastName(lastName);
+                      await SecureStorage().saveUniqueId(uniqueId);
+                      await SecureStorage().saveEmail(email);
+                      await SecureStorage().savePhoneNumber(number);
                     },
                     text: 'Log in',
                   ),

@@ -13,16 +13,16 @@ import 'package:max_4_u/app/widgets/button_widget.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
 
-class VerificationScreen extends StatefulWidget {
-  const VerificationScreen({super.key, required this.phoneNumber});
+class AddCustomerOtpScreen extends StatefulWidget {
+  const AddCustomerOtpScreen({super.key, required this.phoneNumber});
 
   final String phoneNumber;
 
   @override
-  State<VerificationScreen> createState() => _VerificationScreenState();
+  State<AddCustomerOtpScreen> createState() => _AddCustomerOtpScreenState();
 }
 
-class _VerificationScreenState extends State<VerificationScreen> {
+class _AddCustomerOtpScreenState extends State<AddCustomerOtpScreen> {
   final _otpController = TextEditingController();
   @override
   void dispose() {

@@ -7,8 +7,9 @@ class ResponseModel<T> {
   late String? message = '';
   late ViewState state;
   late T? data;
+   void Function()? notifyListeners;
 
-  ResponseModel({valid, message, statusCode, this.data, error, state}) {
+  ResponseModel({valid, message, statusCode, this.data, error, state, this.notifyListeners}) {
     this.valid = valid ?? false;
     this.message = message ?? 'an error occurred please try again';
     this.statusCode = statusCode ?? 000;

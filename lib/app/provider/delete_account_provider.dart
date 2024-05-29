@@ -27,7 +27,9 @@ class DeleteAccountProvider extends ChangeNotifier {
 
     try {
       final response = await ApiService.instance.servicePostRequest(
-        body: body, message: _message,
+        body: body,
+        
+        // message: _message,
       );
       //print(response);
 

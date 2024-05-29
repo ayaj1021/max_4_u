@@ -16,9 +16,9 @@ ResponseData _$ResponseDataFromJson(Map<String, dynamic> json) => ResponseData(
       userData: (json['userData'] as List<dynamic>?)
           ?.map((e) => UserData.fromJson(e as Map<String, dynamic>))
           .toList(),
-      userSettingsData: (json['userSettingsData'] as List<dynamic>?)
-          ?.map((e) => UserSettingsData.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      // userSettingsData: (json['userSettingsData'] as List<dynamic>?)
+      //     ?.map((e) => UserSettingsData.fromJson(e as Map<String, dynamic>))
+      //     .toList(),
       beneficiaryData: json['beneficiaryData'] as List<dynamic>?,
       services: (json['services'] as List<dynamic>?)
           ?.map((e) => Service.fromJson(e as Map<String, dynamic>))
@@ -34,7 +34,7 @@ Map<String, dynamic> _$ResponseDataToJson(ResponseData instance) =>
       'message': instance.message,
       'response_data': instance.responseData,
       'userData': instance.userData,
-      'userSettingsData': instance.userSettingsData,
+    //  'userSettingsData': instance.userSettingsData,
       'beneficiaryData': instance.beneficiaryData,
       'services': instance.services,
       'products': instance.products,

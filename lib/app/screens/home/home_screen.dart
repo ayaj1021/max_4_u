@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/database/database.dart';
-import 'package:max_4_u/app/model/user_account_model.dart';
+
 import 'package:max_4_u/app/provider/auth_provider.dart';
 import 'package:max_4_u/app/provider/vendor_check_provider.dart';
 import 'package:max_4_u/app/screens/buy_airtime/buy_airtime_screen.dart';
@@ -17,6 +17,7 @@ import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/screen_navigator.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
+import 'package:max_4_u/app/vendor_sections/screens/sell_airtime/sell_airtime_screen.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -33,6 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     getServices();
     getName();
+
     super.initState();
   }
 
@@ -146,20 +148,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                 );
                               }),
                         ),
-                        verticalSpace(vendor.isVendor ? 16 : 0),
-                        vendor.isVendor
-                            ? Row(
+                        verticalSpace(vendor.isVendor == '1' ? 0 : 16),
+                        vendor.isVendor == '1'
+                            ? const SizedBox()
+                            : Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   GestureDetector(
                                     onTap: () => nextScreen(
                                       context,
-                                      const BuyAirtimeScreen(),
+                                      const SellAirtimeScreen(),
                                     ),
                                     child: const ServiceComponent(
                                       serviceColor: Color(0xffDEEDF7),
-                                      serviceName: 'Airtime\npurchase',
+                                      serviceName: 'Sell Airtime',
                                       serviceIcon: Icons.call_outlined,
                                     ),
                                   ),
@@ -170,19 +173,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                     child: const ServiceComponent(
                                       serviceColor: Color(0xffE8D6FE),
-                                      serviceName: 'Data\npurchase',
+                                      serviceName: 'Sell Data',
                                       serviceIcon: Icons.network_wifi_outlined,
                                     ),
                                   ),
                                 ],
                               )
-                            : const SizedBox(),
                       ],
                     ),
                     verticalSpace(40),
-                    vendor.isVendor
+                    vendor.isVendor == '1'
                         ? Text(
-                            'Overview',
+                            'Transaction history',
                             style: AppTextStyles.font18.copyWith(
                               fontWeight: FontWeight.w700,
                             ),
@@ -191,7 +193,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Transaction history',
+                                'Overview',
                                 style: AppTextStyles.font18.copyWith(
                                   fontWeight: FontWeight.w700,
                                 ),
@@ -210,9 +212,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             ],
                           ),
                     verticalSpace(17),
-                    vendor.isVendor
-                        ? const OverViewContainer()
-                        : const TransactionHistoryContainer()
+                    vendor.isVendor == '1'
+                        ? const TransactionHistoryContainer()
+                        : const OverViewContainer(),
                   ],
                 ),
               ),

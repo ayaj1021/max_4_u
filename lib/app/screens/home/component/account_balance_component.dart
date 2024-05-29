@@ -31,7 +31,6 @@ class _AccountBalanceWidgetState extends State<AccountBalanceWidget> {
 
   getBalance() async {
     final userBalance = await SecureStorage().getUserBalance();
-
     setState(() {
       balance = userBalance;
     });

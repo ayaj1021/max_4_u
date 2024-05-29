@@ -4,14 +4,14 @@ import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/service/service.dart';
 
-class BuyAirtimeProvider extends ChangeNotifier {
+class BuyDataProvider extends ChangeNotifier {
   ViewState state = ViewState.Idle;
   String _message = '';
   String get message => _message;
   bool _status = false;
   bool get status => _status;
 
-  Future<void> buyAirtime(
+  Future<void> buyData(
       {required String amount,
       required String productCode,
       required String phoneNumber}) async {
@@ -23,7 +23,7 @@ class BuyAirtimeProvider extends ChangeNotifier {
 
     final body = {
       "request_type": "user",
-      "action": "buy_airtime",
+      "action": "buy_data",
       "product_code": productCode,
       "user_id": id,
       "number": phoneNumber,
@@ -31,9 +31,9 @@ class BuyAirtimeProvider extends ChangeNotifier {
     };
     log('$body');
 
-    final encryptedId = await SecureStorage().getUserEncryptedId();
+   // final encryptedId = await SecureStorage().getUserEncryptedId();
 
-    log('this is $encryptedId');
+   // log('this is $encryptedId');
 
     final response = await ApiService.instance.servicePostRequest(
       body: body,

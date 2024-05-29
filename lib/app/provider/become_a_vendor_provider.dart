@@ -1,39 +1,37 @@
 import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/service/service.dart';
 
-class BuyAirtimeProvider extends ChangeNotifier {
+class BecomeAVendorProvider extends ChangeNotifier {
   ViewState state = ViewState.Idle;
   String _message = '';
   String get message => _message;
   bool _status = false;
   bool get status => _status;
 
-  Future<void> buyAirtime(
-      {required String amount,
-      required String productCode,
-      required String phoneNumber}) async {
+  String _bvnMessage = '';
+  String get bvnMessage => _bvnMessage;
+
+  String _ninMessage = '';
+  String get ninMessage => _ninMessage;
+
+  Future<void> uploadNinBvn({
+    required String bvn,
+    required String nin,
+  }) async {
     state = ViewState.Busy;
     _message = 'Processing your request...';
     notifyListeners();
 
-    final id = await SecureStorage().getEncryptedID();
-
     final body = {
       "request_type": "user",
-      "action": "buy_airtime",
-      "product_code": productCode,
-      "user_id": id,
-      "number": phoneNumber,
-      "amount": amount,
+      "action": "submit_nin_bvn",
+      "bvn": bvn,
+      "nin": nin
     };
     log('$body');
-
-    final encryptedId = await SecureStorage().getUserEncryptedId();
-
-    log('this is $encryptedId');
 
     final response = await ApiService.instance.servicePostRequest(
       body: body,
@@ -51,13 +49,14 @@ class BuyAirtimeProvider extends ChangeNotifier {
         state = ViewState.Success;
         _message = response['data']['message'];
 
-        // // statusCode: statusCode,
-
         notifyListeners();
       } else {
         _status = response['data']['status'];
         state = ViewState.Error;
         _message = response['data']['message'];
+        _bvnMessage = response['data']['error_data']['bvn'];
+        _ninMessage = response['data']['error_data']['nin'];
+
         notifyListeners();
       }
     } catch (e) {

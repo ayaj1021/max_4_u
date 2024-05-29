@@ -26,11 +26,11 @@ class SecureStorage {
   }
 
   saveUserType(String level) async {
-    await _storage.write(key: 'user_balance', value: level);
+    await _storage.write(key: 'user_level', value: level);
   }
 
   getUserType() async {
-    String? value = await _storage.read(key: 'user_balance');
+    String? value = await _storage.read(key: 'user_level');
     return value;
   }
 
@@ -97,6 +97,15 @@ class SecureStorage {
     return value;
   }
 
+   saveUserEncryptedId(String encryptedId) async {
+    await _storage.write(key: 'encryptedId', value: encryptedId);
+  }
+
+  getUserEncryptedId() async {
+    String? value = await _storage.read(key: 'encryptedId');
+    return value;
+  }
+
   saveUserEmail(String email) async {
     await _storage.write(key: 'user_email', value: email);
   }
@@ -131,6 +140,24 @@ class SecureStorage {
     return null;
   }
 
+
+
+   saveUserTransactions(List transactions) async {
+    String jsonString = jsonEncode(transactions);
+    await _storage.write(key: 'transaction_list', value: jsonString);
+  }
+
+  getUserTransactions() async {
+    String? jsonString = await _storage.read(key: 'transaction_list');
+
+    if (jsonString != null) {
+      List<dynamic> jsonList = jsonDecode(jsonString);
+      List transactions = jsonList.map((item) => item).toList();
+      return transactions;
+    }
+    return null;
+  }
+
   saveUserProducts(List products) async {
     String jsonString = jsonEncode(products);
     await _storage.write(key: 'products_list', value: jsonString);
@@ -143,6 +170,22 @@ class SecureStorage {
       List<dynamic> jsonList = jsonDecode(jsonString);
       List products = jsonList.map((item) => item).toList();
       return products;
+    }
+    return null;
+  }
+
+    saveUserBeneficiary(List beneficiary)async {
+    String jsonString = jsonEncode(beneficiary);
+    await _storage.write(key: 'beneficiary_list', value: jsonString);
+  }
+
+  getUserBeneficiary() async {
+    String? jsonString = await _storage.read(key: 'beneficiary_list');
+
+    if (jsonString != null) {
+      List<dynamic> jsonList = jsonDecode(jsonString);
+      List beneficiary = jsonList.map((item) => item).toList();
+      return beneficiary;
     }
     return null;
   }

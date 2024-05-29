@@ -1,23 +1,23 @@
-import 'package:max_4_u/app/config/constants.dart';
 
-import 'package:http/http.dart' as http;
+
+
 import 'package:max_4_u/app/database/database.dart';
 
 class AuthService {
-  Future<http.Response> postRequest(String body) async {
-    // Code to send HTTP POST request
-     String url = AppConstants.baseUrl;
+  // Future<http.Response> postRequest(String body) async {
+  //   // Code to send HTTP POST request
+  //    String url = AppConstants.baseUrl;
 
-    final response = await http.post(
-      Uri.parse(url),
-      body: body,
-      headers: {
-        'Content-Type': 'application/json',
-        'Site-From': 'postman',
-      },
-    );
-    return response;
-  }
+  //   final response = await http.post(
+  //     Uri.parse(url),
+  //     body: body,
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       'Site-From': 'postman',
+  //     },
+  //   );
+  //   return response;
+  // }
 
   Future<String> getUserPhone() async {
     // Code to get user phone from secure storage

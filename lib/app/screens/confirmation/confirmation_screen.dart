@@ -13,8 +13,8 @@ import 'package:max_4_u/app/utils/white_space.dart';
 import 'package:max_4_u/app/widgets/button_widget.dart';
 import 'package:provider/provider.dart';
 
-class AirtimeConfirmationScreen extends StatelessWidget {
-  const AirtimeConfirmationScreen(
+class ConfirmationScreen extends StatelessWidget {
+  const ConfirmationScreen(
       {super.key, required this.amount, required this.number});
 
   final String amount;

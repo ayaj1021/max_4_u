@@ -8,14 +8,14 @@ import 'package:max_4_u/app/utils/busy_overlay.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
 import 'package:provider/provider.dart';
 
-class BeneficiaryScreen extends StatefulWidget {
-  const BeneficiaryScreen({super.key});
+class SavedCustomersScreen extends StatefulWidget {
+  const SavedCustomersScreen({super.key});
 
   @override
-  State<BeneficiaryScreen> createState() => _BeneficiaryScreenState();
+  State<SavedCustomersScreen> createState() => _SavedCustomersScreenState();
 }
 
-class _BeneficiaryScreenState extends State<BeneficiaryScreen> {
+class _SavedCustomersScreenState extends State<SavedCustomersScreen> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {

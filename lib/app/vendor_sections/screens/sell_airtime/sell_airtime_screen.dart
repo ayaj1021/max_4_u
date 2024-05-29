@@ -4,7 +4,7 @@ import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/enums/network_dropdown.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/provider/buy_airtime_provider.dart';
-import 'package:max_4_u/app/screens/beneficiary/beneficiary_screen.dart';
+
 import 'package:max_4_u/app/screens/buy_airtime/airtime_verification_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
@@ -12,18 +12,19 @@ import 'package:max_4_u/app/utils/busy_overlay.dart';
 import 'package:max_4_u/app/utils/screen_navigator.dart';
 import 'package:max_4_u/app/utils/show_message.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
+import 'package:max_4_u/app/vendor_sections/screens/saved_customers_screen.dart';
 import 'package:max_4_u/app/widgets/button_widget.dart';
 import 'package:max_4_u/app/widgets/text_input_field.dart';
 import 'package:provider/provider.dart';
 
-class BuyAirtimeScreen extends StatefulWidget {
-  const BuyAirtimeScreen({super.key});
+class SellAirtimeScreen extends StatefulWidget {
+  const SellAirtimeScreen({super.key});
 
   @override
-  State<BuyAirtimeScreen> createState() => _BuyAirtimeScreenState();
+  State<SellAirtimeScreen> createState() => _SellAirtimeScreenState();
 }
 
-class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
+class _SellAirtimeScreenState extends State<SellAirtimeScreen> {
   String? _selectedNetwork = networkProvider[0];
 
   final _amountController = TextEditingController();
@@ -94,7 +95,7 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
                         ),
                         horizontalSpace(104),
                         const Text(
-                          'Buy Airtime',
+                          'Airtime Sales',
                           style: AppTextStyles.font18,
                         )
                       ],
@@ -169,9 +170,9 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
                           right: 0,
                           child: GestureDetector(
                             onTap: () =>
-                                nextScreen(context, const BeneficiaryScreen()),
+                                nextScreen(context, const SavedCustomersScreen()),
                             child: Text(
-                              'select from beneficiary',
+                              'select from customers',
                               style: AppTextStyles.font12.copyWith(
                                 color: AppColors.secondaryColor,
                                 fontWeight: FontWeight.w500,

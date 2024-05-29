@@ -1,39 +1,31 @@
 import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/service/service.dart';
 
-class BuyAirtimeProvider extends ChangeNotifier {
+class SaveBeneficiaryProvider extends ChangeNotifier {
   ViewState state = ViewState.Idle;
   String _message = '';
   String get message => _message;
   bool _status = false;
   bool get status => _status;
 
-  Future<void> buyAirtime(
-      {required String amount,
-      required String productCode,
-      required String phoneNumber}) async {
+  Future<void> saveToBeneficiary({
+    required String phoneNumber,
+    required String beneficiaryName,
+  }) async {
     state = ViewState.Busy;
-    _message = 'Processing your request...';
+    _message = 'Saving your beneficiary...';
     notifyListeners();
-
-    final id = await SecureStorage().getEncryptedID();
 
     final body = {
       "request_type": "user",
-      "action": "buy_airtime",
-      "product_code": productCode,
-      "user_id": id,
-      "number": phoneNumber,
-      "amount": amount,
+      "action": "save_beneficiary",
+      "mobile_number": phoneNumber,
+      "name": beneficiaryName,
     };
     log('$body');
-
-    final encryptedId = await SecureStorage().getUserEncryptedId();
-
-    log('this is $encryptedId');
 
     final response = await ApiService.instance.servicePostRequest(
       body: body,
@@ -50,8 +42,6 @@ class BuyAirtimeProvider extends ChangeNotifier {
         _status = response['data']['status'];
         state = ViewState.Success;
         _message = response['data']['message'];
-
-        // // statusCode: statusCode,
 
         notifyListeners();
       } else {

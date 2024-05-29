@@ -135,8 +135,7 @@ class SettingsScreen extends StatelessWidget {
               onTap: ()async {
                 await SecureStorage().logoutUser();
                 showMessage(context, 'Log out successful');
-                nextScreenReplace(context, LoginScreen());
-                
+                nextScreenReplace(context, LoginScreen());  
               },
             )
           ],

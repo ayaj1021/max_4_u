@@ -22,13 +22,12 @@ dependencies:
   prometheus_client_shelf: ^1.0.0+1
   provider: ^6.1.2
   smooth_page_indicator: ^1.1.0
-  shared_preferences: ^2.2.3
-  http: ^1.2.1
   toastification: ^2.0.0
   flutter_secure_storage: ^9.2.1
   encrypt: ^5.0.3
   dio: ^5.4.3+1
   json_annotation: ^4.8.0
+  image_picker: ^1.1.1
   
 
 

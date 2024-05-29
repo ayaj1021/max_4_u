@@ -114,10 +114,8 @@ class BecomeVendorScreen extends StatelessWidget {
                                   height: 48.h,
                                   child: ButtonWidget(
                                     text: 'Done',
-                                    onTap: () async{
-                                    
-                                       nextScreen(
-                                        context,  DashBoardScreen());
+                                    onTap: () async {
+                                      nextScreen(context, DashBoardScreen());
                                     },
                                   ),
                                 )
@@ -156,47 +154,50 @@ class KycVerificationSection extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
         color: AppColors.whiteColor,
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              SizedBox(
-                height: 24.h,
-                width: 24.w,
-                child: Image.asset(icon),
-              ),
-              horizontalSpace(12),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    kycTask,
-                    style: AppTextStyles.font14.copyWith(
-                      fontWeight: FontWeight.w500,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                SizedBox(
+                  height: 24.h,
+                  width: 24.w,
+                  child: Image.asset(icon),
+                ),
+                horizontalSpace(12),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      kycTask,
+                      style: AppTextStyles.font14.copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
-                  verticalSpace(4),
-                  Text(
-                    '(Not inputed)',
-                    style: AppTextStyles.font12.copyWith(
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.textColor,
+                    verticalSpace(4),
+                    Text(
+                      '(Not inputed)',
+                      style: AppTextStyles.font12.copyWith(
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.textColor,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          GestureDetector(
-            onTap: onTap,
-            child: const Icon(
-              Icons.arrow_forward_ios,
-              size: 14,
-              color: Color(0xff292D32),
+                  ],
+                ),
+              ],
             ),
-          )
-        ],
+            GestureDetector(
+              onTap: onTap,
+              child: const Icon(
+                Icons.arrow_forward_ios,
+                size: 14,
+                color: Color(0xff292D32),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
