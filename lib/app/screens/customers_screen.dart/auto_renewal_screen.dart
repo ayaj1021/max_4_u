@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/provider/auth_provider.dart';
+import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
@@ -23,9 +25,26 @@ class _AutoRenewalScreenState extends State<AutoRenewalScreen>
 
   @override
   void initState() {
+    getAllAutoRenewals();
+       WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ReloadUserDataProvider>(context, listen: false)
+          .reloadUserData();
+    });
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
   }
+List autoRenewals = [];
+
+getAllAutoRenewals()async{
+
+final renewals = await SecureStorage().getUserAutoRenewal();
+setState(() {
+  autoRenewals = renewals;
+});
+
+return renewals;
+
+}
 
   @override
   void dispose() {
@@ -67,8 +86,8 @@ class _AutoRenewalScreenState extends State<AutoRenewalScreen>
                           child: const Icon(Icons.more_vert))
                     ],
                   ),
-                  verticalSpace(authProv.beneficiary.isEmpty ? 250 : 0),
-                  authProv.autoRenewal.isEmpty
+                  verticalSpace(autoRenewals.isEmpty ? 250 : 0),
+                  autoRenewals.isEmpty
                       ? Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -94,7 +113,7 @@ class _AutoRenewalScreenState extends State<AutoRenewalScreen>
                           width: MediaQuery.of(context).size.width,
                           child: ListView.builder(
                             shrinkWrap: true,
-                            itemCount: authProv.autoRenewal.length,
+                            itemCount: autoRenewals.length,
                             itemBuilder: (_, index) {
                               return AutoRenewalTabs();
                             },

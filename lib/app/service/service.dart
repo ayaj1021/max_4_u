@@ -1,11 +1,11 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
+
 import 'package:max_4_u/app/config/constants.dart';
 
 import 'package:max_4_u/app/database/database.dart';
 
-class ApiService extends ChangeNotifier {
+class ApiService  {
   Dio dio = Dio();
 
   ApiService.init();
@@ -14,6 +14,7 @@ class ApiService extends ChangeNotifier {
 
   Future<dynamic> authPostRequest(
       {Map<String, String>? headers,
+      String? message,
       required Map<String, dynamic> body}) async {
     String url = AppConstants.baseUrl;
 
@@ -32,13 +33,20 @@ class ApiService extends ChangeNotifier {
       print('This is this source response ${response.data}');
       return response.data;
     } on DioException catch (e) {
+      //  final errorResponse = await Future.error(ApiError.fromDio(e));
+      //  message = errorResponse;
+      ApiError(errorDescription: message);
+
+      // message = e.response?.data;
       // Server-side error
       print('Server Error: ${e.response?.statusCode} ${e.response?.data}');
+
       return e.response?.data;
-    } on SocketException catch (_) {
-      // state = ViewState.Error;
-      // _message = 'Network error. Please try again later';
-      // notifyListeners();
+    } on SocketException catch (e) {
+      message = 'Network error. Please try again later';
+      return e.toString();
+    } catch (e) {
+      message = e.toString();
     }
   }
 

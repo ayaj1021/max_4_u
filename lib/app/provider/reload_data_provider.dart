@@ -8,6 +8,7 @@ import 'package:max_4_u/app/service/service.dart';
 
 class ReloadUserDataProvider extends ChangeNotifier {
   ViewState state = ViewState.Idle;
+  notifyListeners();
   bool _status = false;
   bool get status => _status;
 
@@ -24,8 +25,9 @@ class ReloadUserDataProvider extends ChangeNotifier {
     );
 
     // _status = response['data']['status'];
+    state = ViewState.Success;
 
-    final userData = response['data']['response_data']['data'];
+    final userData = response['data']['data'];
 
     log('$_status');
     log('$response');
@@ -71,6 +73,7 @@ class ReloadUserDataProvider extends ChangeNotifier {
       await SecureStorage().saveUniqueId(uniqueId);
       await SecureStorage().saveEmail(email);
       await SecureStorage().savePhoneNumber(number);
+      notifyListeners();
     } catch (e) {
       _status = false;
       notifyListeners();

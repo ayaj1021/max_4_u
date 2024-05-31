@@ -85,7 +85,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         nextScreen(
                             context,
                             VerificationScreen(
-                              phoneNumber: stateModel.phoneController.text,
+                              phoneNumber: phoneController.text,
                             ));
                       }
                     },

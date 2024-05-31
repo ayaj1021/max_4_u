@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/database/database.dart';
@@ -42,11 +44,15 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
   int? selectedIndex;
 
   String airtimeAmount = '';
+
+  String beneficiaryNumber = '';
   @override
   void dispose() {
     _phoneNumber.dispose();
     super.dispose();
   }
+
+
 
   var codeValues = [];
   var networks = [];
@@ -157,19 +163,42 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
                       ),
                     ),
                     verticalSpace(30),
+                    ElevatedButton(
+                      onPressed: (){
+                        log(beneficiaryNumber);
+                      },
+                      child: Text(''),
+                    ),
                     Stack(
                       children: [
                         TextInputField(
                           controller: _phoneNumber,
                           labelText: 'Phone Number',
-                          hintText: 'receiver\'s number',
+                          hintText: beneficiaryNumber ?? 'receiver\'s number',
                           textInputType: TextInputType.number,
+                          onChanged: (p0) {
+                            beneficiaryNumber = _phoneNumber.text;
+                          },
                         ),
                         Positioned(
                           right: 0,
                           child: GestureDetector(
-                            onTap: () =>
-                                nextScreen(context, const BeneficiaryScreen()),
+                            onTap: () {
+                              ElevatedButton(
+                      onPressed: (){
+                        log(beneficiaryNumber);
+                      },
+                      child: Text(''),
+                    );
+                              final beneficiary = nextScreen(
+                                  context, const BeneficiaryScreen());
+
+                                  if (beneficiary != null) {
+                                    setState(() {
+                                      beneficiaryNumber = beneficiary;
+                                    });
+                                  }
+                            },
                             child: Text(
                               'select from beneficiary',
                               style: AppTextStyles.font12.copyWith(

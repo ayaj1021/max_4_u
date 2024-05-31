@@ -1,6 +1,5 @@
-import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/abstract_class/auth_abstract_class.dart';
 import 'package:max_4_u/app/database/database.dart';
@@ -12,7 +11,6 @@ class AuthProviderImpl extends ChangeNotifier
     implements AuthenticationProviderUseCase {
   ViewState state = ViewState.Idle;
 
-  final phoneController = TextEditingController();
   final otpController = TextEditingController();
   final emailController = TextEditingController();
   final firstNameController = TextEditingController();
@@ -58,31 +56,6 @@ class AuthProviderImpl extends ChangeNotifier
   String _email = '';
   String get email => _email;
 
-// @override
-//   Future<ResponseModel<dynamic>> register(Map<String, dynamic> data) async {
-//     Response response = await _apiService.runCall(
-//       _apiService.dio.post(Endpoints.register, data: data),
-//     );
-
-//     final int statusCode = response.statusCode ?? 000;
-
-//     if (statusCode >= 200 && statusCode <= 300) {
-//       return ResponseModel<dynamic>(
-//         valid: true,
-//         statusCode: statusCode,
-//         message: response.statusMessage,
-//         data: response.data,
-//       );
-//     }
-
-//     return
-// ResponseModel(
-//       error: ErrorModel.fromJson(response.data),
-//       statusCode: statusCode,
-//       message: response.data['data']['error'],
-//     );
-//   }
-
 //Sign up user
   @override
   Future<void> signUp({required String phoneNumber}) async {
@@ -95,18 +68,17 @@ class AuthProviderImpl extends ChangeNotifier
       "action": "verify_receiving_medium",
       "mobile_number": phoneNumber,
     };
+    print(body);
     await SecureStorage().saveUserPhone(phoneNumber);
 
     final response = await ApiService.instance.authPostRequest(
       body: body,
+      message: _message,
     );
 
-    print('$body');
+    print(body);
 
     _status = response['data']['status'];
-    print('$_status');
-
-    _message = response['data']['message'];
     print('$_status');
 
     try {
@@ -114,13 +86,13 @@ class AuthProviderImpl extends ChangeNotifier
         _message = response['data']['message'];
 
         state = ViewState.Success;
-        phoneController.clear();
 
         notifyListeners();
       } else {
         _status = response['data']['status'];
         state = ViewState.Error;
         _message = response['data']['message'];
+        _message = response['data']['error_data']['mobile_number'];
         notifyListeners();
       }
     } catch (e) {
@@ -161,14 +133,13 @@ class AuthProviderImpl extends ChangeNotifier
         _message = response['data']['message'];
 
         state = ViewState.Success;
-        phoneController.clear();
 
         notifyListeners();
       } else {
+        _message = response['data']['message'];
         _status = response['data']['status'];
         state = ViewState.Error;
-        wrongPassword = response['data']['error_data']['password'];
-        existEmail = response['data']['error_data']['email'];
+
         notifyListeners();
       }
     } catch (e) {
@@ -189,7 +160,7 @@ class AuthProviderImpl extends ChangeNotifier
     required String confirmPassword,
   }) async {
     state = ViewState.Busy;
-    _message = 'Logging in your account...';
+    _message = 'Starting up your account...';
     notifyListeners();
 
     _otp = await SecureStorage().getUserOtp();
@@ -212,35 +183,35 @@ class AuthProviderImpl extends ChangeNotifier
     log(body.toString());
     final response = await ApiService.instance.authPostRequest(
       body: body,
+      message: _message,
     );
-    // log(response);
-    _status = response['data']['status'];
-    _message = response['data']['message'];
 
-    if (_status == true) {
+    try {
       _status = response['data']['status'];
-      _message = response['data']['message'];
-      ViewState.Error;
-      notifyListeners();
-      return ResponseDataData.fromJson(response['data']['response_data']);
-    } else {
-      ViewState.Error;
-      _status = response['data']['status'];
+      if (_status == true) {
+        // _status = response['data']['status'];
+        _message = response['data']['message'];
+        state = ViewState.Success;
+        notifyListeners();
+        final result =
+            ResponseDataData.fromJson(response['response_data']['data']);
+        log('this is the result: $result');
+        return result;
+      } else {
+        _message = response['data']['message'];
+        state = ViewState.Error;
+        _status = response['data']['status'];
 
-      wrongPassword = response['data']['error_data']['password'];
-      existEmail = response['data']['error_data']['email'];
+        wrongPassword = response['data']['error_data']['password'];
+        existEmail = response['data']['error_data']['email'];
+        notifyListeners();
+      }
+    } catch (e) {
+      log(e.toString());
+      _status = false;
       notifyListeners();
     }
-    return ResponseDataData();
-    // notifyListeners();
-
-    // return ResponseModel(
-    //   valid: false,
-    //   error: ErrorModel.fromJson(response),
-    //   // statusCode: statusCode,
-    //   state: ViewState.Error,
-    //   message: _message,
-    // );
+    return response;
   }
 
 //Login user method
@@ -263,20 +234,25 @@ class AuthProviderImpl extends ChangeNotifier
     // log(response);
     _status = response['data']['status'];
     _message = response['data']['message'];
-
-    if (_status == true) {
-      _status = response['data']['status'];
-      _message = response['data']['message'];
-      ViewState.Error;
-      notifyListeners();
-      final result =
-          ResponseDataData.fromJson(response['data']['response_data']['data']);
-      log('this is the result: $result');
-      return result;
-    } else {
-      ViewState.Error;
-      _status = response['data']['status'];
-      _message = response['data']['message'];
+    try {
+      if (_status == true) {
+        _status = response['data']['status'];
+        _message = response['data']['message'];
+        state = ViewState.Success;
+        notifyListeners();
+        final result = ResponseDataData.fromJson(
+            response['data']['response_data']['data']);
+        log('this is the result: $result');
+        return result;
+      } else {
+        state = ViewState.Error;
+        _status = response['data']['status'];
+        _message = response['data']['message'];
+        notifyListeners();
+      }
+    } catch (e) {
+      state = ViewState.Error;
+      _message = e.toString();
       notifyListeners();
     }
     return response;
@@ -296,46 +272,29 @@ class AuthProviderImpl extends ChangeNotifier
     };
 
     _email = emailController.text;
-
     await SecureStorage().saveUserEmail(_email);
-
     _email = await SecureStorage().getUserEmail();
 
     print(body);
 
+    final response = await ApiService.instance.authPostRequest(
+      body: body,
+    );
+    _status = response['data']['status'];
+    _message = response['data']['message'];
+
     try {
-      final response = await ApiService.instance.authPostRequest(
-        body: body,
-      );
-      final res = jsonDecode(response.body);
-      print(res);
-
-      if (response.statusCode == 200) {
-        _status = res['data']['status'];
-        if (_status == true) {
-          state = ViewState.Success;
-          emailController.clear();
-
-          _message = res['data']['message'];
-
-          notifyListeners();
-        } else {
-          // print(status);
-          state = ViewState.Error;
-          _message = res['data']['error_data']['receiving_medium'];
-
-          notifyListeners();
-        }
+      if (_status == true) {
+        state = ViewState.Success;
+        emailController.clear();
+        _message = response['data']['message'];
+        notifyListeners();
       } else {
-        print(res['data']['message']);
-
         state = ViewState.Error;
+        _message = response['data']['error_data']['receiving_medium'];
+
         notifyListeners();
       }
-    } on SocketException catch (_) {
-      state = ViewState.Error;
-      _message = 'Network error. Please try again later';
-      notifyListeners();
     } catch (e) {
       state = ViewState.Error;
       _message = e.toString();
@@ -357,50 +316,35 @@ class AuthProviderImpl extends ChangeNotifier
       "token": otpController.text.trim(),
     };
 
-    // _email = emailController.text;
-
-    // await SecureStorage().saveUserEmail(_email);
-
     _email = await SecureStorage().getUserEmail();
 
     await SecureStorage().saveUserOtp(otpController.text);
 
     print(body);
 
+    final response = await ApiService.instance.authPostRequest(
+      body: body,
+    );
+
+    _message = response['data']['message'];
+
     try {
-      final response = await ApiService.instance.authPostRequest(
-        body: body,
-      );
-      final res = jsonDecode(response.body);
-      print(res);
+      _status = response['data']['status'];
+      if (_status == true) {
+        state = ViewState.Success;
+        otpController.clear();
 
-      if (response.statusCode == 200) {
-        _status = res['data']['status'];
-        if (_status == true) {
-          state = ViewState.Success;
-          otpController.clear();
+        _message = response['data']['message'];
 
-          _message = res['data']['message'];
-
-          notifyListeners();
-        } else {
-          // print(status);
-          state = ViewState.Error;
-          _message = res['data']['message'];
-          //  _message = res['data']['error_data']['receiving_medium'];
-
-          notifyListeners();
-        }
+        notifyListeners();
       } else {
-        print(res['data']['message']);
-
+        // print(status);
         state = ViewState.Error;
+        _message = response['data']['message'];
+        //  _message = res['data']['error_data']['receiving_medium'];
+
         notifyListeners();
       }
-    } on SocketException catch (_) {
-      state = ViewState.Error;
-      _message = 'Network error. Please try again later';
-      notifyListeners();
     } catch (e) {
       state = ViewState.Error;
       _message = e.toString();
@@ -410,7 +354,8 @@ class AuthProviderImpl extends ChangeNotifier
 
 //Change password method
   @override
-  Future<void> changePassword() async {
+  Future<void> changePassword(
+      {required String newPassword, required String confirmNewPassword}) async {
     state = ViewState.Busy;
     _message = 'Changing your password...';
     notifyListeners();
@@ -423,50 +368,39 @@ class AuthProviderImpl extends ChangeNotifier
       "action": "update_password",
       "medium_id": _email,
       "otp_code": _otp,
-      "password": newPasswordController.text.trim(),
-      "confirm_password": confirmNewPasswordController.text.trim()
+      "password": newPassword,
+      "confirm_password": confirmNewPassword
     };
 
     print(body);
 
+    final response = await ApiService.instance.authPostRequest(
+      body: body,
+    );
+
+    _message = response['data']['message'];
+
     try {
-      final response = await ApiService.instance.authPostRequest(
-        body: body,
-      );
-      final res = jsonDecode(response.body);
-      print(res);
+      _status = response['data']['status'];
 
-      if (response.statusCode == 200) {
-        _status = res['data']['status'];
-        if (_status == true) {
-          state = ViewState.Success;
-          newPasswordController.clear();
-          confirmNewPasswordController.clear();
+      if (_status == true) {
+        state = ViewState.Success;
+        newPasswordController.clear();
+        confirmNewPasswordController.clear();
+        _message = response['data']['message'];
 
-          //   _message = res['data']['message'];
-
-          notifyListeners();
-        } else {
-          // print(status);
-          state = ViewState.Error;
-          //  _message = res['data']['message'];
-
-          wrongPassword = res['data']['error_data']['password'];
-          existEmail = res['data']['error_data']['email'];
-          //  _message = res['data']['error_data']['receiving_medium'];
-
-          notifyListeners();
-        }
+        notifyListeners();
       } else {
-        print(res['data']['message']);
-
+        // print(status);
         state = ViewState.Error;
+        _message = response['data']['message'];
+
+        wrongPassword = response['data']['error_data']['password'];
+        existEmail = response['data']['error_data']['email'];
+        //  _message = res['data']['error_data']['receiving_medium'];
+
         notifyListeners();
       }
-    } on SocketException catch (_) {
-      state = ViewState.Error;
-      _message = 'Network error. Please try again later';
-      notifyListeners();
     } catch (e) {
       state = ViewState.Error;
       _message = e.toString();

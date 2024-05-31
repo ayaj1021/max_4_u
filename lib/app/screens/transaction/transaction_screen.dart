@@ -1,7 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/enums/month_dropdown_enum.dart';
-import 'package:max_4_u/app/provider/auth_provider.dart';
+import 'package:max_4_u/app/model/user_response_model.dart';
+import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/screens/customers_screen.dart/auto_renewal_screen.dart';
 import 'package:max_4_u/app/screens/home/component/transaction_history_component.dart';
 import 'package:max_4_u/app/screens/transaction/transaction_detail_screen.dart';
@@ -13,6 +17,8 @@ import 'package:max_4_u/app/widgets/button_widget.dart';
 import 'package:max_4_u/app/widgets/text_input_field.dart';
 import 'package:provider/provider.dart';
 
+
+
 class TransactionScreen extends StatefulWidget {
   const TransactionScreen({super.key});
 
@@ -23,7 +29,29 @@ class TransactionScreen extends StatefulWidget {
 class _TransactionScreenState extends State<TransactionScreen> {
   final _searchController = TextEditingController();
 
+  @override
+  void initState() {
+    getAllTransactions();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ReloadUserDataProvider>(context, listen: false)
+          .reloadUserData();
+    });
+    super.initState();
+  }
+
   Months _selectedMonth = Months.January;
+
+  List allTransactions = [];
+
+  getAllTransactions() async {
+    final transactions = await SecureStorage().getUserTransactionHistory();
+    setState(() {
+      allTransactions = transactions;
+      log('${transactions}');
+    });
+    return transactions;
+  }
 
   final categories = [
     'All',
@@ -44,10 +72,12 @@ class _TransactionScreenState extends State<TransactionScreen> {
 
   bool isTapped = false;
 
+  ResponseDataData respData = ResponseDataData();
+
   @override
   Widget build(BuildContext context) {
-    return Consumer<AuthProviderImpl>(
-      builder: (context, authProv, _) {
+    return Consumer<ReloadUserDataProvider>(
+      builder: (context, reloadData, _) {
         return Scaffold(
           backgroundColor: AppColors.scaffoldBgColor2,
           body: SafeArea(
@@ -77,8 +107,22 @@ class _TransactionScreenState extends State<TransactionScreen> {
                             )
                           ],
                         ),
-                        verticalSpace(authProv.transaction.isEmpty ? 250 : 0),
-                        authProv.transaction.isEmpty
+                        // ElevatedButton(
+                        //     onPressed: () {
+                        //       getAllTransactions();
+                        //       log('${allTransactions.length}');
+                        //     },
+                        //     child: Text('')),
+
+                        verticalSpace(allTransactions.isEmpty ? 250 : 0),
+                        // allTransactions == 0
+                        //     ? Center(
+                        //         child: CircularProgressIndicator(
+                        //           color: AppColors.primaryColor,
+                        //         ),
+                        //       )
+                        //     :
+                        allTransactions.isEmpty
                             ? Center(
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -152,25 +196,33 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                     height: MediaQuery.of(context).size.height,
                                     width: MediaQuery.of(context).size.width,
                                     child: ListView.builder(
-                                      shrinkWrap: true,
-                                      itemCount: authProv.transaction.length,
+                                      itemCount: allTransactions.length,
                                       itemBuilder: (_, index) {
                                         return GestureDetector(
                                           onTap: () => nextScreen(context,
                                               const TransactionDetailsScreen()),
                                           child: Column(
                                             children: [
-                                              const TransactionSection(
-                                                transactionIcon: Icons.money,
-                                                transactionType: 'Added funds',
-                                                transactionDate:
-                                                    'Apr 18th, 20:59',
-                                                transactionAmount:
-                                                    '-N35,000.00',
-                                                transactionStatus: 'Successful',
-                                                transactionColor:
-                                                    Color(0xffD6DDFE),
-                                              ),
+                                              TransactionSection(
+                                                  transactionIcon: Icons.money,
+                                                  transactionType:
+                                                      allTransactions[0]
+                                                          ['sub_type'],
+                                                  transactionDate:
+                                                      'Apr 18th, 20:59',
+                                                  transactionAmount:
+                                                      'N${allTransactions[0]['product_amount']}',
+                                                  transactionStatus:
+                                                      allTransactions[0]
+                                                          ['status'],
+                                                  transactionColor:
+                                                      Color(0xffD6DDFE),
+                                                  transactionStatusColor:
+                                                      allTransactions[0]
+                                                                  ['status'] ==
+                                                              'success'
+                                                          ? Colors.green
+                                                          : Colors.red),
                                               verticalSpace(8),
                                               Divider(
                                                 color: AppColors.blackColor
