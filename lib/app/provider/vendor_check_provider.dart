@@ -2,7 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:max_4_u/app/database/database.dart';
 
 class VendorCheckProvider extends ChangeNotifier {
-  String _isVendor = level;
+    String level = '';
+
+  getUserLevel() async {
+    final userLevel = await SecureStorage().getUserType();
+    level = userLevel;
+    notifyListeners();
+    return userLevel;
+  }
+  var _isVendor = '4';
   //getUserLevel();
   String get isVendor => _isVendor;
 
@@ -11,13 +19,9 @@ class VendorCheckProvider extends ChangeNotifier {
     changeUserLevel(userType);
     notifyListeners();
   }
-}
 
-String level = '';
-getUserLevel() async {
-  return level =   await SecureStorage().getUserType();
-}
 
-changeUserLevel(String level) async {
-  await SecureStorage().saveUserType(level);
+  changeUserLevel(String level) async {
+    await SecureStorage().saveUserType(level);
+  }
 }

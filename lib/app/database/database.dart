@@ -79,6 +79,24 @@ class SecureStorage {
     return value;
   }
 
+  saveCustomerPhoneNumber(String phoneNumber) async {
+    await _storage.write(key: 'customer_number', value: phoneNumber);
+  }
+
+  getCustomerPhoneNumber() async {
+    String? value = await _storage.read(key: 'customer_number');
+    return value;
+  }
+
+  saveCustomerOtp(String otp) async {
+    await _storage.write(key: 'customer_otp', value: otp);
+  }
+
+  getCustomerOtp() async {
+    String? value = await _storage.read(key: 'customer_otp');
+    return value;
+  }
+
   saveUniqueId(String id) async {
     await _storage.write(key: 'unique_id', value: id);
   }
@@ -97,7 +115,7 @@ class SecureStorage {
     return value;
   }
 
-   saveUserEncryptedId(String encryptedId) async {
+  saveUserEncryptedId(String encryptedId) async {
     await _storage.write(key: 'encryptedId', value: encryptedId);
   }
 
@@ -142,7 +160,24 @@ class SecureStorage {
 
 
 
-   saveUserTransactions(List transactions) async {
+ saveUserAutoRenewal(List autoRenewal) async {
+    String jsonString = jsonEncode(autoRenewal);
+    await _storage.write(key: 'auto_renewal_list', value: jsonString);
+  }
+
+  getUserAutoRenewal() async {
+    String? jsonString = await _storage.read(key: 'auto_renewal_list');
+
+    if (jsonString != null) {
+      List<dynamic> jsonList = jsonDecode(jsonString);
+      List services = jsonList.map((item) => item).toList();
+      return services;
+    }
+    return null;
+  }
+
+
+  saveUserTransactions(List transactions) async {
     String jsonString = jsonEncode(transactions);
     await _storage.write(key: 'transaction_list', value: jsonString);
   }
@@ -174,13 +209,29 @@ class SecureStorage {
     return null;
   }
 
-    saveUserBeneficiary(List beneficiary)async {
+  saveUserBeneficiary(List beneficiary) async {
     String jsonString = jsonEncode(beneficiary);
     await _storage.write(key: 'beneficiary_list', value: jsonString);
   }
 
   getUserBeneficiary() async {
     String? jsonString = await _storage.read(key: 'beneficiary_list');
+
+    if (jsonString != null) {
+      List<dynamic> jsonList = jsonDecode(jsonString);
+      List beneficiary = jsonList.map((item) => item).toList();
+      return beneficiary;
+    }
+    return null;
+  }
+
+  saveUserTransactionHistory(List transactionHistory) async {
+    String jsonString = jsonEncode(transactionHistory);
+    await _storage.write(key: 'transaction_history', value: jsonString);
+  }
+
+  getUserTransactionHistory() async {
+    String? jsonString = await _storage.read(key: 'transaction_history');
 
     if (jsonString != null) {
       List<dynamic> jsonList = jsonDecode(jsonString);

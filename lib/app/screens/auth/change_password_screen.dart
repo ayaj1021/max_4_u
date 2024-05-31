@@ -23,6 +23,8 @@ class ChangePassword extends StatefulWidget {
 }
 
 class _ChangePasswordState extends State<ChangePassword> {
+  final _newPasswordController = TextEditingController();
+  final _confirmNewPasswordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Consumer2<AuthProviderImpl, ObscureTextProvider>(
@@ -56,7 +58,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                         verticalSpace(24),
                         TextInputField(
                           obscure: obscure.isObscure,
-                          controller: authProv.newPasswordController,
+                          controller: _newPasswordController,
                           labelText: 'New password',
                           suffixIcon: obscure.isObscure
                               ? Icons.visibility_off_outlined
@@ -78,7 +80,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                         verticalSpace(24),
                         TextInputField(
                           obscure: obscure.isObscure,
-                          controller: authProv.confirmNewPasswordController,
+                          controller: _confirmNewPasswordController,
                           labelText: 'Confirm new password',
                           suffixIcon: obscure.isObscure
                               ? Icons.visibility_off_outlined
@@ -101,30 +103,32 @@ class _ChangePasswordState extends State<ChangePassword> {
                         ButtonWidget(
                             text: 'Reset password',
                             onTap: () async {
-                              if (authProv.newPasswordController.text.isEmpty ||
-                                  authProv.confirmNewPasswordController.text
-                                      .isEmpty) {
+                              if (_newPasswordController.text.isEmpty ||
+                                  _confirmNewPasswordController.text.isEmpty) {
                                 showMessage(context, 'All fields are required',
                                     isError: true);
                                 return;
                               }
 
-                              await authProv.changePassword();
+                              await authProv.changePassword(
+                                  newPassword:
+                                      _newPasswordController.text.trim(),
+                                  confirmNewPassword:
+                                      _confirmNewPasswordController.text
+                                          .trim());
                               if (authProv.state == ViewState.Error &&
                                   context.mounted) {
-
-                                showMessage(context, authProv.message.toString());
+                                showMessage(
+                                    context, authProv.message.toString());
                                 return;
                               }
 
                               if (authProv.state == ViewState.Success &&
                                   context.mounted) {
                                 showMessage(context, authProv.message);
-                             
+
                                 passwordChangeVerifyAlertBox(context);
                               }
-                               
-
                             }),
                       ]),
                 ),

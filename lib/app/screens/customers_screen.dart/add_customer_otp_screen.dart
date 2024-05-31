@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
-import 'package:max_4_u/app/provider/auth_provider.dart';
-import 'package:max_4_u/app/screens/auth/registration_screen.dart';
+import 'package:max_4_u/app/provider/add_customer_provider.dart';
+import 'package:max_4_u/app/screens/customers_screen.dart/add_customer_reg_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/busy_overlay.dart';
@@ -32,10 +32,10 @@ class _AddCustomerOtpScreenState extends State<AddCustomerOtpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AuthProviderImpl>(builder: (context, authProv, _) {
+    return Consumer<AddCustomerProvider>(builder: (context, addCustomer, _) {
       return BusyOverlay(
-        show: authProv.state == ViewState.Busy,
-        title: authProv.message,
+        show: addCustomer.state == ViewState.Busy,
+        title: addCustomer.message,
         child: Scaffold(
           body: SafeArea(
             child: SingleChildScrollView(
@@ -55,7 +55,7 @@ class _AddCustomerOtpScreenState extends State<AddCustomerOtpScreen> {
                     ),
                     verticalSpace(12),
                     Text(
-                      'Enter the 6-digit code sent to you at ${authProv.number}',
+                      'Enter the 6-digit code sent to you at ${widget.phoneNumber}',
                       style: AppTextStyles.font14
                           .copyWith(color: const Color(0xff475569)),
                     ),
@@ -86,26 +86,26 @@ class _AddCustomerOtpScreenState extends State<AddCustomerOtpScreen> {
                           return;
                         }
 
-                        await authProv.verifyOtp(
+                        await addCustomer.verifyCustomerOtp(
                             otp: _otpController.text.trim());
-                        if (authProv.state == ViewState.Error &&
+                        if (addCustomer.state == ViewState.Error &&
                             context.mounted) {
                           showMessage(
                             context,
-                            authProv.message,
+                            addCustomer.message,
                             isError: true,
                           );
                           return;
                         }
 
-                        if (authProv.state == ViewState.Success &&
+                        if (addCustomer.state == ViewState.Success &&
                             context.mounted) {
                           showMessage(
                             context,
-                            authProv.message,
+                            addCustomer.message,
                             // isError: false,
                           );
-                          nextScreen(context, const RegistrationScreen());
+                          nextScreen(context, const AddCustomerRegScreen());
                         }
                       },
                     ),

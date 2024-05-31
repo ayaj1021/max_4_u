@@ -25,7 +25,8 @@ class _TransactionHistoryContainerState
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<ReloadUserDataProvider>(context, listen: false).reloadUserData();
+      Provider.of<ReloadUserDataProvider>(context, listen: false)
+          .reloadUserData();
     });
     getAllTransactions();
     super.initState();
@@ -54,11 +55,12 @@ class _TransactionHistoryContainerState
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-
-                      ElevatedButton(onPressed: (){
-
-                       print( getTransactions.length);
-                      }, child: Text('click'),),
+                      ElevatedButton(
+                        onPressed: () {
+                          print(getTransactions.length);
+                        },
+                        child: Text('click'),
+                      ),
                       SizedBox(
                           height: 52.h,
                           width: 52.w,
@@ -74,17 +76,22 @@ class _TransactionHistoryContainerState
                     ],
                   ),
                 )
-              : Expanded(
+              : SizedBox(
+                  height: MediaQuery.of(context).size.height,
                   child: ListView.builder(
-                      shrinkWrap: true,
                       itemCount: 3,
                       itemBuilder: (_, index) {
-                        return const TransactionSection(
+                        return TransactionSection(
+                          transactionStatusColor:
+                              getTransactions[index]['status'] == 'success'
+                                  ? Colors.green
+                                  : Colors.red,
                           transactionIcon: Icons.call_outlined,
-                          transactionType: 'Airtime',
+                          transactionType: getTransactions[index]['sub_type'],
                           transactionDate: 'Apr 18th, 20:59',
-                          transactionAmount: '-N35,000.00',
-                          transactionStatus: 'Successful',
+                          transactionAmount:
+                              'N${getTransactions[index]['product_amount']}',
+                          transactionStatus: getTransactions[index]['status'],
                           transactionColor: Color(0xffDEEDF7),
                         );
                       }),
@@ -118,65 +125,73 @@ class TransactionSection extends StatelessWidget {
     required this.transactionAmount,
     required this.transactionStatus,
     required this.transactionColor,
+    required this.transactionStatusColor,
   });
   final IconData transactionIcon;
   final String transactionType;
   final String transactionDate;
   final String transactionAmount;
   final String transactionStatus;
+  final Color transactionStatusColor;
   final Color transactionColor;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
       children: [
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-              height: 40.h,
-              width: 40.w,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: transactionColor,
-              ),
-              child: Icon(transactionIcon),
+            Row(
+              children: [
+                Container(
+                  height: 40.h,
+                  width: 40.w,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: transactionColor,
+                  ),
+                  child: Icon(transactionIcon),
+                ),
+                horizontalSpace(9),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      transactionType,
+                      style: AppTextStyles.font14.copyWith(fontWeight: FontWeight.w400),
+
+                    ),
+                    Text(
+                      transactionDate,
+                      style: AppTextStyles.font12.copyWith(
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                  ],
+                )
+              ],
             ),
-            horizontalSpace(9),
             Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  transactionType,
-                  style: AppTextStyles.font14,
+                  transactionAmount,
+                  style: AppTextStyles.font14.copyWith(fontWeight: FontWeight.w500),
                 ),
                 Text(
-                  transactionDate,
+                  transactionStatus,
                   style: AppTextStyles.font12.copyWith(
-                    fontWeight: FontWeight.normal,
+                    fontWeight: FontWeight.w400,
+                    color:transactionStatusColor,
                   ),
                 ),
               ],
             )
           ],
         ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Text(
-              transactionAmount,
-              style: AppTextStyles.font14,
-            ),
-            Text(
-              transactionStatus,
-              style: AppTextStyles.font12.copyWith(
-                fontWeight: FontWeight.normal,
-                color: Colors.green,
-              ),
-            ),
-          ],
-        )
+        verticalSpace(24),
       ],
     );
   }

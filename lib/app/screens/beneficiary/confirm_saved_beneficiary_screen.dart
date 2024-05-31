@@ -12,9 +12,14 @@ import 'package:max_4_u/app/utils/white_space.dart';
 import 'package:max_4_u/app/widgets/button_widget.dart';
 import 'package:provider/provider.dart';
 
-class ConfirmSavedBeneficiaryScreen extends StatelessWidget {
+class ConfirmSavedBeneficiaryScreen extends StatefulWidget {
   const ConfirmSavedBeneficiaryScreen({super.key});
 
+  @override
+  State<ConfirmSavedBeneficiaryScreen> createState() => _ConfirmSavedBeneficiaryScreenState();
+}
+
+class _ConfirmSavedBeneficiaryScreenState extends State<ConfirmSavedBeneficiaryScreen> {
   @override
   Widget build(BuildContext context) {
     return Consumer<ReloadUserDataProvider>(

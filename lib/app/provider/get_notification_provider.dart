@@ -1,10 +1,8 @@
-
 import 'package:flutter/material.dart';
-import 'package:max_4_u/app/encryt_data/encrypt_data.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/service/service.dart';
 
-class GetAllCustomersProvider extends ChangeNotifier {
+class GetNotificationProvider extends ChangeNotifier {
   ViewState state = ViewState.Idle;
   bool _status = false;
   bool get status => _status;
@@ -12,16 +10,11 @@ class GetAllCustomersProvider extends ChangeNotifier {
   List get data => _data;
   String _message = '';
   String get message => _message;
-  String firstName = '';
-  String lastName = '';
-  String mobileNumber = '';
-  String uniqueId = '';
 
-  Future<void> getAllCustomers() async {
+  Future<void> getAllNotification() async {
     final body = {
-      "request_type": "reseller",
-      "action": "load_my_clients",
-      "current_page": 1
+      "request_type": "user",
+      "action": "load_notification",
     };
 
     final response = await ApiService.instance.servicePostRequest(
@@ -33,12 +26,6 @@ class GetAllCustomersProvider extends ChangeNotifier {
     if (_status == true) {
       final userData = response['data']['response_data']['data'];
       state = ViewState.Success;
-
-      firstName = EncryptData.decryptAES('${userData[0]['first_name']}');
-      lastName = EncryptData.decryptAES('${userData[0]['last_name']}');
-      mobileNumber = EncryptData.decryptAES('${userData[0]['mobile_number']}');
-      uniqueId = EncryptData.decryptAES('${userData[0]['unique_id']}');
-    
 
       _data = userData;
       notifyListeners();

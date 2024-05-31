@@ -51,13 +51,12 @@ class BuyAirtimeProvider extends ChangeNotifier {
         state = ViewState.Success;
         _message = response['data']['message'];
 
-        // // statusCode: statusCode,
-
         notifyListeners();
       } else {
         _status = response['data']['status'];
         state = ViewState.Error;
         _message = response['data']['message'];
+        _message = response['data']['error_data']['number'];
         notifyListeners();
       }
     } catch (e) {

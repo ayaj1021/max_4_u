@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/database/database.dart';
 
 import 'package:max_4_u/app/provider/auth_provider.dart';
+import 'package:max_4_u/app/provider/get_all_customers_provider.dart';
 import 'package:max_4_u/app/provider/vendor_check_provider.dart';
 import 'package:max_4_u/app/screens/buy_airtime/buy_airtime_screen.dart';
 import 'package:max_4_u/app/screens/buy_data/buy_data_screen.dart';
@@ -17,7 +18,8 @@ import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/screen_navigator.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
-import 'package:max_4_u/app/vendor_sections/screens/sell_airtime/sell_airtime_screen.dart';
+import 'package:max_4_u/app/vendor_sections/screens/sell_airtime_data/sell_airtime_screen.dart';
+import 'package:max_4_u/app/vendor_sections/screens/sell_airtime_data/sell_data_screen.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -59,11 +61,13 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       userServices = services;
     });
+    return services;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AuthProviderImpl>(builder: (context, authProv, _) {
+    return Consumer2<AuthProviderImpl, GetAllCustomersProvider>(
+        builder: (context, authProv, getCustomers, _) {
       return Scaffold(
         drawer: const SideDrawer(),
         appBar: AppBar(
@@ -169,7 +173,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   GestureDetector(
                                     onTap: () => nextScreen(
                                       context,
-                                      const BuyDataScreen(),
+                                      const SellDataScreen(),
                                     ),
                                     child: const ServiceComponent(
                                       serviceColor: Color(0xffE8D6FE),

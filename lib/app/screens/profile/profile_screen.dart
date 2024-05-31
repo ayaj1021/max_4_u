@@ -8,6 +8,7 @@ import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/screen_navigator.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
 import 'package:max_4_u/app/widgets/button_widget.dart';
+import 'package:clipboard/clipboard.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -17,11 +18,9 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-
   String firstName = '';
- String lastName = '';
- String userId = '';
-
+  String lastName = '';
+  String userId = '';
 
   @override
   void initState() {
@@ -33,14 +32,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final name = await SecureStorage().getFirstName();
     final surname = await SecureStorage().getLastName();
     final id = await SecureStorage().getUniqueId();
-    
+
     setState(() {
       firstName = name;
       lastName = surname;
-        userId = id;
-        });
+      userId = id;
+    });
   }
-      
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,10 +89,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       color: const Color(0xff787878)),
                 ),
                 horizontalSpace(3),
-                const Icon(
-                  Icons.copy,
-                  size: 14,
-                  color: AppColors.primaryColor,
+                InkWell(
+                  onTap: () {
+                    FlutterClipboard.copy(userId).then((value) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Account copied'),
+                        ),
+                      );
+                    });
+                  },
+                  child: const Icon(
+                    Icons.copy,
+                    size: 14,
+                    color: AppColors.primaryColor,
+                  ),
                 )
               ],
             ),

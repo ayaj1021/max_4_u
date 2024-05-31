@@ -1,10 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:max_4_u/app/database/database.dart';
-import 'package:max_4_u/app/encryt_data/encrypt_data.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
-import 'package:max_4_u/app/provider/auth_provider.dart';
+import 'package:max_4_u/app/provider/add_customer_provider.dart';
 import 'package:max_4_u/app/provider/obscure_text_provider.dart';
 import 'package:max_4_u/app/screens/dashboard/dashboard_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
@@ -17,14 +15,14 @@ import 'package:max_4_u/app/widgets/button_widget.dart';
 import 'package:max_4_u/app/widgets/text_input_field.dart';
 import 'package:provider/provider.dart';
 
-class RegistrationScreen extends StatefulWidget {
-  const RegistrationScreen({super.key});
+class AddCustomerRegScreen extends StatefulWidget {
+  const AddCustomerRegScreen({super.key});
 
   @override
-  State<RegistrationScreen> createState() => _RegistrationScreenState();
+  State<AddCustomerRegScreen> createState() => _AddCustomerRegScreenState();
 }
 
-class _RegistrationScreenState extends State<RegistrationScreen> {
+class _AddCustomerRegScreenState extends State<AddCustomerRegScreen> {
   final emailController = TextEditingController();
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
@@ -44,11 +42,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<AuthProviderImpl, ObscureTextProvider>(
-        builder: (context, authProv, obscure, _) {
+    return Consumer2<AddCustomerProvider, ObscureTextProvider>(
+        builder: (context, addCustomer, obscure, _) {
       return BusyOverlay(
-        show: authProv.state == ViewState.Busy,
-        title: authProv.message,
+        show: addCustomer.state == ViewState.Busy,
+        title: addCustomer.message,
         child: Scaffold(
           body: SafeArea(
               child: SingleChildScrollView(
@@ -82,10 +80,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     controller: emailController,
                     labelText: 'Email',
                   ),
-                  verticalSpace(authProv.status == false ? 5 : 0),
-                  authProv.status == false
+                  verticalSpace(addCustomer.status == false ? 5 : 0),
+                  addCustomer.status == false
                       ? Text(
-                          authProv.existEmail,
+                          addCustomer.existEmail,
                           //existEmail,
                           style: AppTextStyles.font12.copyWith(
                             color: Colors.red,
@@ -104,9 +102,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       obscure.changeObscure();
                     },
                   ),
-                  authProv.status == false
+                  addCustomer.status == false
                       ? Text(
-                          authProv.wrongPassword,
+                          addCustomer.wrongPassword,
 
                           //wrongPassword,
                           style: AppTextStyles.font12.copyWith(
@@ -126,10 +124,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       obscure.changeObscure();
                     },
                   ),
-                  verticalSpace(authProv.status == false ? 5 : 0),
-                  authProv.status == false
+                  verticalSpace(addCustomer.status == false ? 5 : 0),
+                  addCustomer.status == false
                       ? Text(
-                          authProv.wrongPassword,
+                          addCustomer.wrongPassword,
                           //wrongPassword,
                           style: AppTextStyles.font12.copyWith(
                             color: Colors.red,
@@ -175,69 +173,24 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         return;
                       }
 
-                      final result = await authProv.registerUser(
+                      await addCustomer.registerCustomer(
                           email: emailController.text.trim(),
                           firstName: firstNameController.text.trim(),
                           lastName: lastNameController.text.trim(),
                           password: passwordController.text.trim(),
                           confirmPassword:
                               confirmPasswordController.text.trim());
-                      if (authProv.status == false && context.mounted) {
-                        showMessage(context, authProv.message);
-                        log('${authProv.message}');
+                      if (addCustomer.status == false && context.mounted) {
+                        showMessage(context, addCustomer.message);
+                        log('${addCustomer.message}');
                         return;
                       }
 
-                      if (authProv.status == true && context.mounted) {
-                        showMessage(context, authProv.message);
+                      if (addCustomer.status == true && context.mounted) {
+                        showMessage(context, addCustomer.message);
 
                         nextScreen(context, DashBoardScreen());
                       }
-
-                     final firstName = EncryptData.decryptAES(
-                          '${result.userData![0].firstName}');
-                      // '${result.data!.userData![0].firstName}');
-                      await SecureStorage().saveFirstName(firstName);
-
-                      final lastName = EncryptData.decryptAES(
-                          '${result.userData![0].lastName}');
-                      log('last name is $lastName');
-                      final uniqueId = EncryptData.decryptAES(
-                          '${result.userData![0].uniqueId}');
-                      log('uniqueId is $uniqueId');
-                      final email = EncryptData.decryptAES(
-                          '${result.userData![0].email}');
-                      log('uniqueId is $email');
-                      final number = EncryptData.decryptAES(
-                          '${result.userData![0].mobileNumber}');
-                      log('number is $number');
-                      final balance = result.userAccount!.balance;
-                      final userType = result.userData![0].level;
-                      final transactionHistory =
-                          result.transactionHistory!.data;
-                      final beneficiary = result.beneficiaryData;
-                      log('user type is $userType');
-                      log('user balance is $balance');
-                      final services = result.services!;
-                      final products = result.products!;
-                      //                  final transactions = result.data.;
-                      // await SecureStorage().saveUserTransactions(transactions);
-
-                      await SecureStorage().saveUserEncryptedId(
-                          '${result.userData![0].uniqueId}');
-                      await SecureStorage()
-                          .saveUserTransactionHistory(transactionHistory!);
-                      await SecureStorage().saveUserBeneficiary(beneficiary!);
-                      await SecureStorage().saveUserProducts(products);
-                      await SecureStorage().saveUserServices(services as List);
-                      await SecureStorage().saveUserType(userType.toString());
-                      await SecureStorage().saveEncryptedID(uniqueId);
-                      await SecureStorage().saveUserBalance(balance.toString());
-                      await SecureStorage().saveFirstName(firstName);
-                      await SecureStorage().saveLastName(lastName);
-                      await SecureStorage().saveUniqueId(uniqueId);
-                      await SecureStorage().saveEmail(email);
-                      await SecureStorage().savePhoneNumber(number);
                     },
                     text: 'Sign up',
                   ),

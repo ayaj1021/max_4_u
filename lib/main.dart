@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max_4_u/app/provider/activate_auto_renewal_provider.dart';
 import 'package:max_4_u/app/provider/add_customer_provider.dart';
 import 'package:max_4_u/app/provider/auth_provider.dart';
 import 'package:max_4_u/app/provider/become_a_vendor_provider.dart';
@@ -10,8 +11,10 @@ import 'package:max_4_u/app/provider/change_password_provider.dart';
 import 'package:max_4_u/app/provider/choose_option_provider.dart';
 import 'package:max_4_u/app/provider/delete_account_provider.dart';
 import 'package:max_4_u/app/provider/get_all_customers_provider.dart';
+import 'package:max_4_u/app/provider/get_notification_provider.dart';
 import 'package:max_4_u/app/provider/obscure_text_provider.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
+import 'package:max_4_u/app/provider/remove_customer_provider.dart';
 import 'package:max_4_u/app/provider/save_beneficiary_provider.dart';
 import 'package:max_4_u/app/provider/vendor_check_provider.dart';
 import 'package:max_4_u/app/screens/splash/splash_screen.dart';
@@ -32,7 +35,10 @@ class MyApp extends StatelessWidget {
           return MultiProvider(
             providers: [
               ChangeNotifierProvider(create: (_) => AuthProviderImpl()),
+              ChangeNotifierProvider(create: (_) => RemoveCustomerProvider()),
+              ChangeNotifierProvider(create: (_) => ActivateAutoRenewalProvider()),
               ChangeNotifierProvider(create: (_) => GetAllCustomersProvider()),
+              ChangeNotifierProvider(create: (_) => GetNotificationProvider()),
               ChangeNotifierProvider(create: (_) => AddCustomerProvider()),
               ChangeNotifierProvider(create: (_) => BecomeAVendorProvider()),
               ChangeNotifierProvider(create: (_) => SaveBeneficiaryProvider()),

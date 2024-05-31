@@ -75,7 +75,7 @@ class ResponseDataData {
     final List<dynamic>? beneficiaryData;
     final List<Service>? services;
     final List<Product>? products;
-    final AutoRenewal? transactionHistory;
+    final TransactionHistory? transactionHistory;
     final AutoRenewal? autoRenewal;
     final List<dynamic>? bankDetails;
 
@@ -98,7 +98,7 @@ class ResponseDataData {
         beneficiaryData: json["beneficiary_data"] == null ? [] : List<dynamic>.from(json["beneficiary_data"]!.map((x) => x)),
         services: json["services"] == null ? [] : List<Service>.from(json["services"]!.map((x) => Service.fromJson(x))),
         products: json["products"] == null ? [] : List<Product>.from(json["products"]!.map((x) => Product.fromJson(x))),
-        transactionHistory: json["transaction_history"] == null ? null : AutoRenewal.fromJson(json["transaction_history"]),
+        transactionHistory: json["transaction_history"] == null ? null : TransactionHistory.fromJson(json["transaction_history"]),
         autoRenewal: json["auto_renewal"] == null ? null : AutoRenewal.fromJson(json["auto_renewal"]),
         bankDetails: json["bank_details"] == null ? [] : List<dynamic>.from(json["bank_details"]!.map((x) => x)),
     );
@@ -115,6 +115,37 @@ class ResponseDataData {
         "bank_details": bankDetails == null ? [] : List<dynamic>.from(bankDetails!.map((x) => x)),
     };
 } 
+
+
+
+class TransactionHistory{
+    final List<Datum>? data;
+    final int? currentPage;
+    final int? totalData;
+    final int? totalResult;
+
+    TransactionHistory({
+        this.data,
+        this.currentPage,
+        this.totalData,
+        this.totalResult,
+    });
+
+    factory TransactionHistory.fromJson(Map<String, dynamic> json) => TransactionHistory(
+        data: json["data"] == null ? [] : List<Datum>.from(json["data"]!.map((x) => Datum.fromJson(x))),
+        currentPage: json["current_page"],
+        totalData: json["total_data"],
+        totalResult: json["total_result"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "data": data == null ? [] : List<dynamic>.from(data!.map((x) => x.toJson())),
+        "current_page": currentPage,
+        "total_data": totalData,
+        "total_result": totalResult,
+    };
+}
+
 
 class AutoRenewal {
     final List<Datum>? data;

@@ -4,32 +4,38 @@ import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
 
 class CustomerDetailsTabScreen extends StatelessWidget {
-  const CustomerDetailsTabScreen({super.key});
+  const CustomerDetailsTabScreen({super.key, required this.firstName, required this.lastName, required this.phoneNumber, required this.uniqueId});
+
+  final String firstName;
+  final String lastName;
+  final String phoneNumber;
+  final String uniqueId;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const CustomerDetailsSection(
+         CustomerDetailsSection(
           title: 'First Name',
-          value: 'Praise',
+          value: firstName,
         ),
         verticalSpace(16),
-        const CustomerDetailsSection(
+         CustomerDetailsSection(
           title: 'Last Name',
-          value: 'Adedokun',
+          value: lastName,
         ),
         verticalSpace(16),
-        const CustomerDetailsSection(
+         CustomerDetailsSection(
           title: 'Phone number',
-          value: '0814568944',
+          value: phoneNumber,
         ),
-        verticalSpace(16),
-        const CustomerDetailsSection(
-          title: 'Email',
-          value: 'tobilobaphilipson@gmail.com',
+           verticalSpace(16),
+          CustomerDetailsSection(
+          title: 'User id:',
+          value: uniqueId,
         ),
+      
       ],
     );
   }

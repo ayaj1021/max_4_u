@@ -21,6 +21,22 @@ class CustomerScreen extends StatefulWidget {
 
 class _CustomerScreenState extends State<CustomerScreen> {
   final _searchController = TextEditingController();
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<GetAllCustomersProvider>(context, listen: false)
+          .getAllCustomers();
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -139,6 +155,12 @@ class _CustomerScreenState extends State<CustomerScreen> {
                           ),
                         ),
                         verticalSpace(17),
+                        // ElevatedButton(
+                        //   onPressed: () {
+                        //     log('${getAllCustomer.data}');
+                        //   },
+                        //   child: Text(''),
+                        // ),
                         getAllCustomer.data.isEmpty
                             ? Center(
                                 child: Column(
@@ -170,16 +192,29 @@ class _CustomerScreenState extends State<CustomerScreen> {
                                       return Column(
                                         children: [
                                           ListTile(
-                                            onTap: () => nextScreen(context,
-                                                const CustomerDetailsPage()),
+                                            onTap: () => nextScreen(
+                                                context,
+                                                CustomerDetailsPage(
+                                                  firstName:
+                                                      '${getAllCustomer.firstName}',
+                                                  lastName:
+                                                      '${getAllCustomer.lastName} ',
+                                                  phoneNumber:
+                                                      '${getAllCustomer.mobileNumber}',
+                                                  uniqueId:
+                                                      '${getAllCustomer.uniqueId}',
+                                                )),
                                             contentPadding: EdgeInsets.zero,
-                                            leading: const CircleAvatar(
-                                              radius: 30,
-                                              backgroundImage: AssetImage(
-                                                  'assets/images/user_profile_image.png'),
-                                            ),
+                                            // leading: Text(
+                                            //   getAllCustomer.firstName,
+                                            //   style:
+                                            //       AppTextStyles.font14.copyWith(
+                                            //     color: AppColors.textColor,
+                                            //     fontWeight: FontWeight.w400,
+                                            //   ),
+                                            // ),
                                             title: Text(
-                                              'Peace Adedokun',
+                                              '${getAllCustomer.firstName} ${getAllCustomer.lastName} ',
                                               style:
                                                   AppTextStyles.font14.copyWith(
                                                 color: AppColors.textColor,
@@ -187,7 +222,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                                               ),
                                             ),
                                             subtitle: Text(
-                                              '93395853348',
+                                              '${getAllCustomer.mobileNumber}',
                                               style:
                                                   AppTextStyles.font16.copyWith(
                                                 color: AppColors.subTextColor,

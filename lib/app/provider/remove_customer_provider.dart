@@ -4,26 +4,24 @@ import 'package:flutter/material.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/service/service.dart';
 
-class SaveBeneficiaryProvider extends ChangeNotifier {
+class RemoveCustomerProvider extends ChangeNotifier {
   ViewState state = ViewState.Idle;
   String _message = '';
   String get message => _message;
   bool _status = false;
   bool get status => _status;
 
-  Future<void> saveToBeneficiary({
-    required String phoneNumber,
-    required String beneficiaryName,
+  Future<void> removeCustomer({
+    required String userId,
   }) async {
     state = ViewState.Busy;
-    _message = 'Saving your beneficiary...';
+    _message = 'Removing your customer...';
     notifyListeners();
 
     final body = {
-      "request_type": "user",
-      "action": "save_beneficiary",
-      "mobile_number": phoneNumber,
-      "name": beneficiaryName,
+      "request_type": "reseller",
+      "action": "remove_client",
+      "beneficiary_id": userId,
     };
     log('$body');
 
@@ -32,12 +30,12 @@ class SaveBeneficiaryProvider extends ChangeNotifier {
       // message: _message,
     );
 
+    _status = response['data']['status'];
     _message = response['data']['message'];
 
     log('$_status');
     log('$response');
     try {
-    _status = response['data']['status'];
       if (_status == true) {
         _status = response['data']['status'];
         state = ViewState.Success;
@@ -48,6 +46,8 @@ class SaveBeneficiaryProvider extends ChangeNotifier {
         _status = response['data']['status'];
         state = ViewState.Error;
         _message = response['data']['message'];
+        //  _message = response['data']['error_data']['mobile_number'];
+
         notifyListeners();
       }
     } catch (e) {

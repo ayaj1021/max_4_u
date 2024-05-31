@@ -58,6 +58,7 @@ class BuyDataProvider extends ChangeNotifier {
         _status = response['data']['status'];
         state = ViewState.Error;
         _message = response['data']['message'];
+         _message = response['data']['error_data']['number'];
         notifyListeners();
       }
     } catch (e) {

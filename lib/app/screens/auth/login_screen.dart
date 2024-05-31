@@ -114,11 +114,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       }
 
                       print(authProv.message);
-                    
+
                       // final userLevelType = await SecureStorage().getUserType();
                       if (authProv.status == true && context.mounted) {
                         showMessage(context, authProv.message);
-                       
+
                         nextScreen(context, DashBoardScreen());
                       }
                       final firstName = EncryptData.decryptAES(
@@ -140,20 +140,25 @@ class _LoginScreenState extends State<LoginScreen> {
                       log('number is $number');
                       final balance = result.userAccount!.balance;
                       final userType = result.userData![0].level;
-
+                      final transactionHistory =
+                          result.transactionHistory!.data;
                       final beneficiary = result.beneficiaryData;
                       log('user type is $userType');
                       log('user balance is $balance');
                       final services = result.services!;
                       final products = result.products!;
+                      final autoRenewal = result.autoRenewal!.data;
                       //                  final transactions = result.data.;
                       // await SecureStorage().saveUserTransactions(transactions);
 
                       await SecureStorage().saveUserEncryptedId(
                           '${result.userData![0].uniqueId}');
+                      await SecureStorage()
+                          .saveUserTransactionHistory(transactionHistory!);
                       await SecureStorage().saveUserBeneficiary(beneficiary!);
+                      await SecureStorage().saveUserAutoRenewal(autoRenewal!);
                       await SecureStorage().saveUserProducts(products);
-                      await SecureStorage().saveUserServices(services);
+                      await SecureStorage().saveUserServices(services as List);
                       await SecureStorage().saveUserType(userType.toString());
                       await SecureStorage().saveEncryptedID(uniqueId);
                       await SecureStorage().saveUserBalance(balance.toString());

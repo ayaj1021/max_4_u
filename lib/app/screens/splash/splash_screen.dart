@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/database/database.dart';
+
 import 'package:max_4_u/app/screens/dashboard/dashboard_screen.dart';
 import 'package:max_4_u/app/screens/onboarding/onboard_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/utils/screen_navigator.dart';
+
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -29,6 +31,8 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     getNames();
     Timer(const Duration(seconds: 3), () async {
+        // await reloadData.reloadUserData();
+       // Provider.of<ReloadUserDataProvider>(context).reloadUserData();
       //  ReloadUserDataProvider().reloadUserData();
       if (userId == null) {
         nextScreenReplace(context, const OnboardScreen());

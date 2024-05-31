@@ -211,19 +211,18 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                                             child: ButtonWidget(
                                               text: 'Confirm',
                                               onTap: () async {
-                                                // Navigator.pop(context);
+                                                Navigator.pop(context);
                                                 await deleteAcct
                                                     .deleteAccount();
-                                                if (deleteAcct.state ==
-                                                        ViewState.Error &&
+                                                if (deleteAcct.status ==
+                                                        false &&
                                                     context.mounted) {
                                                   showMessage(context,
                                                       deleteAcct.message);
                                                   return;
                                                 }
 
-                                                if (deleteAcct.state ==
-                                                        ViewState.Success &&
+                                                if (deleteAcct.status == true &&
                                                     context.mounted) {
                                                   showMessage(context,
                                                       deleteAcct.message);

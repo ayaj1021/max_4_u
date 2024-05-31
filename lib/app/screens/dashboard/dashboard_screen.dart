@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:max_4_u/app/admin_section/requests_screen.dart';
 import 'package:max_4_u/app/admin_section/users_screen.dart';
 import 'package:max_4_u/app/database/database.dart';
+import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/provider/vendor_check_provider.dart';
 import 'package:max_4_u/app/screens/customers_screen.dart/customer_screen.dart';
 import 'package:max_4_u/app/screens/home/home_screen.dart';
@@ -9,7 +10,6 @@ import 'package:max_4_u/app/screens/profile/profile_screen.dart';
 import 'package:max_4_u/app/screens/support/support_screen.dart';
 import 'package:max_4_u/app/screens/transaction/transaction_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
-import 'package:max_4_u/app/vendor_sections/screens/vendor_transaction_screen.dart';
 import 'package:provider/provider.dart';
 
 class DashBoardScreen extends StatefulWidget {
@@ -20,6 +20,19 @@ class DashBoardScreen extends StatefulWidget {
 }
 
 class _DashBoardScreenState extends State<DashBoardScreen> {
+
+
+   @override
+  void initState() {
+
+getUserType();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ReloadUserDataProvider>(context, listen: false)
+          .reloadUserData();
+    });
+    super.initState();
+  }
+  
   final userPages = [
     const HomeScreen(),
     const TransactionScreen(),
@@ -30,7 +43,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   final vendorPages = [
     const HomeScreen(),
     const CustomerScreen(),
-    const VendorTransactionScreen(),
+    const TransactionScreen(),
     const SupportScreen(),
     const ProfileScreen(),
   ];
@@ -38,7 +51,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   final adminPages = [
     const HomeScreen(),
     const UserScreen(),
-    const VendorTransactionScreen(),
+    const TransactionScreen(),
     const RequestsScreen(),
     const ProfileScreen(),
   ];
@@ -52,10 +65,11 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   String userType = '';
 
   getUserType() async {
-    return userType = await SecureStorage().getUserType();
-    // setState(() {
-    //   userType = user;
-    // });
+    final user = await SecureStorage().getUserType();
+    setState(() {
+      userType = user;
+    });
+    return user;
   }
 
   @override

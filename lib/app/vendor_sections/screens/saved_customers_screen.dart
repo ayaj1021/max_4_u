@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
-import 'package:max_4_u/app/provider/auth_provider.dart';
+import 'package:max_4_u/app/provider/get_all_customers_provider.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/busy_overlay.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
+import 'package:max_4_u/app/widgets/text_input_field.dart';
 import 'package:provider/provider.dart';
 
 class SavedCustomersScreen extends StatefulWidget {
@@ -18,18 +19,17 @@ class SavedCustomersScreen extends StatefulWidget {
 class _SavedCustomersScreenState extends State<SavedCustomersScreen> {
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<AuthProviderImpl>(context, listen: false);
-    });
     super.initState();
   }
 
+  final _searchController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    return Consumer<AuthProviderImpl>(
-      builder: (context, authProv, _) {
+    return Consumer<GetAllCustomersProvider>(
+      builder: (context, getAllCustomer, _) {
         return BusyOverlay(
-          show: authProv.state == ViewState.Busy,
+          show: getAllCustomer.state == ViewState.Busy,
           title: 'loading',
           child: Scaffold(
             body: SafeArea(
@@ -47,13 +47,22 @@ class _SavedCustomersScreenState extends State<SavedCustomersScreen> {
                       ),
                       horizontalSpace(104),
                       const Text(
-                        'Beneficiary List',
+                        'Customers',
                         style: AppTextStyles.font18,
                       ),
                     ],
                   ),
-                  verticalSpace(authProv.beneficiary.isEmpty ? 250 : 38),
-                  authProv.beneficiary.isEmpty
+                  verticalSpace(24),
+                  TextInputField(
+                    controller: _searchController,
+                    hintText: 'Enter customer’s name or phone number',
+                    prefixIcon: const Icon(
+                      Icons.search,
+                      color: Color(0xff4F4F4F),
+                    ),
+                  ),
+                  verticalSpace(getAllCustomer.data.isEmpty ? 220 : 38),
+                  getAllCustomer.data.isEmpty
                       ? Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -66,7 +75,7 @@ class _SavedCustomersScreenState extends State<SavedCustomersScreen> {
                                       'assets/images/no_beneficiary_image.png')),
                               verticalSpace(24),
                               Text(
-                                'You have no saved beneficiary',
+                                'You have no customers yet',
                                 style: AppTextStyles.font14.copyWith(
                                     color: AppColors.textColor,
                                     fontWeight: FontWeight.w400),
@@ -76,8 +85,7 @@ class _SavedCustomersScreenState extends State<SavedCustomersScreen> {
                         )
                       : Expanded(
                           child: ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: authProv.beneficiary.length,
+                              itemCount: getAllCustomer.data.length,
                               itemBuilder: (_, index) {
                                 return Center(
                                   child: Column(

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/provider/auth_provider.dart';
 import 'package:max_4_u/app/provider/obscure_text_provider.dart';
+import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/screen_navigator.dart';
@@ -26,6 +27,9 @@ class _AccountBalanceWidgetState extends State<AccountBalanceWidget> {
   @override
   void initState() {
     getBalance();
+     WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ReloadUserDataProvider>(context, listen: false).reloadUserData();
+    });
     super.initState();
   }
 
@@ -34,6 +38,7 @@ class _AccountBalanceWidgetState extends State<AccountBalanceWidget> {
     setState(() {
       balance = userBalance;
     });
+    return userBalance;
   }
 
   List walletType = [
