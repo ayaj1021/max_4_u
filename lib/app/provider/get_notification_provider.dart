@@ -17,7 +17,7 @@ class GetNotificationProvider extends ChangeNotifier {
       "action": "load_notification",
     };
 
-    final response = await ApiService.instance.servicePostRequest(
+    final response = await ApiService().servicePostRequest(
       body: body,
       // message: _message,
     );

@@ -160,7 +160,7 @@ class TransactionSection extends StatelessWidget {
                   children: [
                     Text(
                       transactionType,
-                      style: AppTextStyles.font14.copyWith(fontWeight: FontWeight.w400),
+                      style: AppTextStyles.font18.copyWith(fontWeight: FontWeight.w400),
 
                     ),
                     Text(

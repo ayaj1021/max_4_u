@@ -28,7 +28,7 @@ class AddCustomerProvider extends ChangeNotifier {
     };
     log('$body');
     await SecureStorage().saveCustomerPhoneNumber(phoneNumber);
-    final response = await ApiService.instance.servicePostRequest(
+    final response = await ApiService().servicePostRequest(
       body: body,
       // message: _message,
     );
@@ -74,7 +74,7 @@ class AddCustomerProvider extends ChangeNotifier {
     };
     log('$body');
 
-    final response = await ApiService.instance.servicePostRequest(
+    final response = await ApiService().servicePostRequest(
       body: body,
       // message: _message,
     );
@@ -125,7 +125,7 @@ class AddCustomerProvider extends ChangeNotifier {
     await SecureStorage().saveCustomerOtp(otp);
     log('$body');
 
-    final response = await ApiService.instance.authPostRequest(
+    final response = await ApiService().authPostRequest(
       body: body,
       // message: _message,
     );
@@ -184,7 +184,7 @@ class AddCustomerProvider extends ChangeNotifier {
     
 
     log(body.toString());
-    final response = await ApiService.instance.servicePostRequest(
+    final response = await ApiService().servicePostRequest(
       body: body,
       // message: _message,
     );

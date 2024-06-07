@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max_4_u/app/database/database.dart';
 
 import 'package:max_4_u/app/enums/network_dropdown.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
@@ -39,23 +38,23 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
 
   var codeValues = [];
   var networks = [];
-  getProductCodeValues() async {
-    final code = await SecureStorage().getUserProducts();
-    final network = code
-        .where((code) => code['name'] == 'mtn')
-        .map((code) => code['code'])
-        .toList();
+  // getProductCodeValues() async {
+  //   final code = await SecureStorage().getUserProducts();
+  //   final network = code
+  //       .where((code) => code['name'] == 'mtn')
+  //       .map((code) => code['code'])
+  //       .toList();
 
-    final productCodes = code
-        .where((code) => code['category'] == 'airtime')
-        .map((code) => code['code'])
-        .toList();
+  //   final productCodes = code
+  //       .where((code) => code['category'] == 'airtime')
+  //       .map((code) => code['code'])
+  //       .toList();
 
-    setState(() {
-      networks = network;
-      codeValues = productCodes;
-    });
-  }
+  //   setState(() {
+  //     networks = network;
+  //     codeValues = productCodes;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {

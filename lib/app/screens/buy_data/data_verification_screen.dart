@@ -312,8 +312,8 @@ class _DataVerificationScreenState extends State<DataVerificationScreen> {
                           phoneNumber: widget.phoneNumber,
                           productCode: productCodes,
                           amount: widget.amount,
-                          startDate: _startDate!,
-                          endDate: _endDate!,
+                          // startDate: _startDate!,
+                          // endDate: _endDate!,
                           intervalDaily: _selectedValidity,
                         );
 

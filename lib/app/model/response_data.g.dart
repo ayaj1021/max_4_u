@@ -23,9 +23,7 @@ ResponseData _$ResponseDataFromJson(Map<String, dynamic> json) => ResponseData(
       services: (json['services'] as List<dynamic>?)
           ?.map((e) => Service.fromJson(e as Map<String, dynamic>))
           .toList(),
-      products: (json['products'] as List<dynamic>?)
-          ?.map((e) => Product.fromJson(e as Map<String, dynamic>))
-          .toList(),
+    
     );
 
 Map<String, dynamic> _$ResponseDataToJson(ResponseData instance) =>
@@ -37,5 +35,5 @@ Map<String, dynamic> _$ResponseDataToJson(ResponseData instance) =>
     //  'userSettingsData': instance.userSettingsData,
       'beneficiaryData': instance.beneficiaryData,
       'services': instance.services,
-      'products': instance.products,
+   
     };

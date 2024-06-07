@@ -18,8 +18,8 @@ import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/screen_navigator.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
-import 'package:max_4_u/app/vendor_sections/screens/sell_airtime_data/sell_airtime_screen.dart';
-import 'package:max_4_u/app/vendor_sections/screens/sell_airtime_data/sell_data_screen.dart';
+import 'package:max_4_u/app/screens/vendor_sections/screens/sell_airtime_data/sell_airtime_screen.dart';
+import 'package:max_4_u/app/screens/vendor_sections/screens/sell_airtime_data/sell_data_screen.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {

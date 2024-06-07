@@ -140,6 +140,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       log('number is $number');
                       final balance = result.userAccount!.balance;
                       final userType = result.userData![0].level;
+                      // context.read();
                       final transactionHistory =
                           result.transactionHistory!.data;
                       final beneficiary = result.beneficiaryData;

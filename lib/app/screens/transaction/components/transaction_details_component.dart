@@ -23,7 +23,7 @@ class TransactionDetailsSection extends StatelessWidget {
           title,
           style: AppTextStyles.font14.copyWith(color: const Color(0xff666666)),
         ),
-        horizontalSpace(100),
+       horizontalSpace(120),
         Row(
           children: [
             Text(

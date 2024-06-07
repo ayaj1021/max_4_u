@@ -4,34 +4,41 @@ import 'package:flutter/material.dart';
 import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/encryt_data/encrypt_data.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
+import 'package:max_4_u/app/model/load_data_model.dart';
 import 'package:max_4_u/app/service/service.dart';
 
 class ReloadUserDataProvider extends ChangeNotifier {
   ViewState state = ViewState.Idle;
-  notifyListeners();
+
+  bool isLoading = false;
   bool _status = false;
   bool get status => _status;
-
-  Future<void> reloadUserData() async {
+  LoadDataData loadData = LoadDataData();
+  Future reloadUserData() async {
+  isLoading = true;
+    notifyListeners();
     final body = {
       "request_type": "user",
       "action": "load_user_data",
     };
     log('$body');
 
-    final response = await ApiService.instance.servicePostRequest(
+    final response = await ApiService().servicePostRequest(
       body: body,
       // message: _message,
     );
 
     // _status = response['data']['status'];
-    state = ViewState.Success;
+   
 
     final userData = response['data']['data'];
 
     log('$_status');
     log('$response');
     try {
+     
+      isLoading = false;
+       loadData = LoadDataData.fromJson(response['data']['data']);
       final firstName =
           EncryptData.decryptAES('${userData['user_data'][0]['first_name']}');
       await SecureStorage().saveFirstName(firstName);
@@ -74,7 +81,9 @@ class ReloadUserDataProvider extends ChangeNotifier {
       await SecureStorage().saveEmail(email);
       await SecureStorage().savePhoneNumber(number);
       notifyListeners();
+      return loadData;
     } catch (e) {
+      isLoading = false;
       _status = false;
       notifyListeners();
     }

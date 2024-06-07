@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:max_4_u/app/screens/transaction/components/transaction_details_component.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
@@ -8,10 +9,22 @@ import 'package:max_4_u/app/widgets/back_arrow_button.dart';
 import 'package:max_4_u/app/widgets/button_widget.dart';
 
 class TransactionDetailsScreen extends StatelessWidget {
-  const TransactionDetailsScreen({super.key});
+  const TransactionDetailsScreen(
+      {super.key,
+      required this.amount,
+      required this.referenceId,
+      required this.status, required this.date, required this.type});
+  final String amount;
+  final String referenceId;
+  final String status;
+   final String date;
+   final String type;
 
   @override
   Widget build(BuildContext context) {
+    DateTime dateTime = DateTime.parse(date);
+     DateFormat dateFormat = DateFormat('MMMM d, yyyy h:mm a'); 
+      String formattedDate = dateFormat.format(dateTime);
     return Scaffold(
       backgroundColor: AppColors.scaffoldBgColor2,
       body: SafeArea(
@@ -43,24 +56,24 @@ class TransactionDetailsScreen extends StatelessWidget {
                   color: AppColors.whiteColor,
                 ),
                 child: Column(children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        height: 24,
-                        width: 24,
-                        child: Image.asset('assets/logo/mtn_logo.png'),
-                      ),
-                      horizontalSpace(5),
-                      const Text(
-                        'MTN',
-                        style: AppTextStyles.font14,
-                      )
-                    ],
-                  ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   children: [
+                  //     SizedBox(
+                  //       height: 24,
+                  //       width: 24,
+                  //       child: Image.asset('assets/logo/mtn_logo.png'),
+                  //     ),
+                  //     horizontalSpace(5),
+                  //     const Text(
+                  //       'MTN',
+                  //       style: AppTextStyles.font14,
+                  //     )
+                  //   ],
+                  // ),
                   verticalSpace(16),
-                  const Text(
-                    '-#35,000.00',
+                  Text(
+                    'N$amount',
                     style: AppTextStyles.font20,
                   ),
                   verticalSpace(16),
@@ -70,50 +83,56 @@ class TransactionDetailsScreen extends StatelessWidget {
                       SizedBox(
                         height: 16,
                         width: 16,
-                        child: Image.asset('assets/icons/success_icon.png'),
+                        child: status == 'success'
+                            ? Image.asset('assets/icons/success_icon.png')
+                            : SizedBox.shrink(),
                       ),
                       horizontalSpace(5),
                       Text(
-                        'Successful',
-                        style:
-                            AppTextStyles.font12.copyWith(color: Colors.green),
+                        '$status',
+                        style: AppTextStyles.font12.copyWith(
+                            color: status == 'success'
+                                ? Colors.green
+                                : status == 'pending'
+                                    ? Color(0xffA6B309)
+                                    : Colors.red),
                       )
                     ],
                   ),
                   verticalSpace(46),
-                  const TransactionDetailsSection(
-                    title: 'Recipient',
-                    value: '08169784011',
-                  ),
-                  verticalSpace(24),
-                  const Row(
+                  // const TransactionDetailsSection(
+                  //   title: 'Recipient',
+                  //   value: '08169784011',
+                  // ),
+                  // verticalSpace(24),
+                  Row(
                     children: [
                       TransactionDetailsSection(
                         title: 'Transaction ID',
-                        value: '7809767313589100',
+                        value: '$referenceId',
                         iconData: Icons.copy,
                       ),
                     ],
                   ),
                   verticalSpace(24),
-                  const TransactionDetailsSection(
+                   TransactionDetailsSection(
                     title: 'Transaction Type',
-                    value: 'Airtime',
+                    value: '$type',
                   ),
+                  // verticalSpace(24),
+                  // const TransactionDetailsSection(
+                  //   title: 'Transaction Means',
+                  //   value: 'Wallet',
+                  // ),
+                  // verticalSpace(24),
+                  // const TransactionDetailsSection(
+                  //   title: 'Payment method',
+                  //   value: 'Wallet',
+                  // ),
                   verticalSpace(24),
-                  const TransactionDetailsSection(
-                    title: 'Transaction Means',
-                    value: 'Wallet',
-                  ),
-                  verticalSpace(24),
-                  const TransactionDetailsSection(
-                    title: 'Payment method',
-                    value: 'Wallet',
-                  ),
-                  verticalSpace(24),
-                  const TransactionDetailsSection(
+                   TransactionDetailsSection(
                     title: 'Date',
-                    value: 'Apr 18th,2024 20:59ß',
+                    value: '$formattedDate',
                   ),
                 ]),
               ),
@@ -218,13 +237,13 @@ class TransactionDetailsScreen extends StatelessWidget {
                                   child: Align(
                                     alignment: Alignment.topRight,
                                     child: GestureDetector(
-                                      onTap: () => Navigator.pop(context),
-                                      child: SizedBox(
-                                        height: 16,
-                                        width: 16,
-                                        child: Image.asset('assets/icons/cancel_icon.png'),
-                                      )
-                                    ),
+                                        onTap: () => Navigator.pop(context),
+                                        child: SizedBox(
+                                          height: 16,
+                                          width: 16,
+                                          child: Image.asset(
+                                              'assets/icons/cancel_icon.png'),
+                                        )),
                                   ),
                                 ),
                                 verticalSpace(18),

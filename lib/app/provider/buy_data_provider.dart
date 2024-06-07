@@ -35,7 +35,7 @@ class BuyDataProvider extends ChangeNotifier {
 
    // log('this is $encryptedId');
 
-    final response = await ApiService.instance.servicePostRequest(
+    final response = await ApiService().servicePostRequest(
       body: body,
       // message: _message,
     );

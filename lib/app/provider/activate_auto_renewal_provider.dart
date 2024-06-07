@@ -13,8 +13,8 @@ class ActivateAutoRenewalProvider extends ChangeNotifier {
     required String phoneNumber,
     required String productCode,
     required String amount,
-    required DateTime startDate,
-    required DateTime endDate,
+     DateTime? startDate,
+     DateTime? endDate,
     required String intervalDaily,
   }) async {
     final userId = await SecureStorage().getUniqueId();
@@ -30,7 +30,7 @@ class ActivateAutoRenewalProvider extends ChangeNotifier {
       "user_id": userId,
     };
 
-    final response = await ApiService.instance.servicePostRequest(
+    final response = await ApiService().servicePostRequest(
       body: body,
       // message: _message,
     );
