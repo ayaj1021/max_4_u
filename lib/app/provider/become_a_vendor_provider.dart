@@ -33,7 +33,7 @@ class BecomeAVendorProvider extends ChangeNotifier {
     };
     log('$body');
 
-    final response = await ApiService.instance.servicePostRequest(
+    final response = await ApiService().servicePostRequest(
       body: body,
       // message: _message,
     );

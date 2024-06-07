@@ -24,7 +24,7 @@ class GetAllCustomersProvider extends ChangeNotifier {
       "current_page": 1
     };
 
-    final response = await ApiService.instance.servicePostRequest(
+    final response = await ApiService().servicePostRequest(
       body: body,
       // message: _message,
     );

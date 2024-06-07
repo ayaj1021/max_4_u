@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:max_4_u/app/admin_section/requests_screen.dart';
-import 'package:max_4_u/app/admin_section/users_screen.dart';
+import 'package:max_4_u/app/screens/admin_section/requests_screen.dart';
+import 'package:max_4_u/app/screens/admin_section/users_screen.dart';
 import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/provider/vendor_check_provider.dart';
-import 'package:max_4_u/app/screens/customers_screen.dart/customer_screen.dart';
+import 'package:max_4_u/app/screens/customers_section/customer_screen.dart';
 import 'package:max_4_u/app/screens/home/home_screen.dart';
 import 'package:max_4_u/app/screens/profile/profile_screen.dart';
 import 'package:max_4_u/app/screens/support/support_screen.dart';
@@ -20,19 +20,16 @@ class DashBoardScreen extends StatefulWidget {
 }
 
 class _DashBoardScreenState extends State<DashBoardScreen> {
-
-
-   @override
+  @override
   void initState() {
-
-getUserType();
+    getUserType();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<ReloadUserDataProvider>(context, listen: false)
           .reloadUserData();
     });
     super.initState();
   }
-  
+
   final userPages = [
     const HomeScreen(),
     const TransactionScreen(),
@@ -103,6 +100,21 @@ getUserType();
           break;
 
         case '4':
+          pages = adminPages;
+          pageItems = [
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.people_outline), label: 'Users'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.receipt_long_outlined), label: 'Transaction'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.support_agent_outlined), label: 'Requests'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.person_outline), label: 'Profile'),
+          ];
+          break;
+
+        case '5':
           pages = adminPages;
           pageItems = [
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),

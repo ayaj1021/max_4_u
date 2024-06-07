@@ -229,43 +229,44 @@ class _AirtimeVerificationScreenState extends State<AirtimeVerificationScreen> {
 
                       verticalSpace(297),
                       ButtonWidget(
-                          text: 'Send airtime',
-                          onTap: () async {
-                            final productCodes = await ProductHelper()
-                                .getAirtimeProducts(widget.network);
-                            log('This is the code ${productCodes.toString()}');
-                            log(productCodes.toString());
+                        text: 'Send airtime',
+                        onTap: () async {
+                          final productCodes = await ProductHelper()
+                              .getAirtimeProducts(widget.network);
+                          log('This is the code ${productCodes.toString()}');
+                          log(productCodes.toString());
 
-                            await buyAirtime.buyAirtime(
-                              phoneNumber: widget.phoneNumber,
-                              amount: widget.amount,
-                              productCode: productCodes,
+                          await buyAirtime.buyAirtime(
+                            phoneNumber: widget.phoneNumber,
+                            amount: widget.amount,
+                            productCode: productCodes,
+                          );
+
+                          if (buyAirtime.status == false && context.mounted) {
+                            showMessage(
+                              context,
+                              buyAirtime.message,
+                              isError: true,
                             );
 
-                            if (buyAirtime.status == false && context.mounted) {
-                              showMessage(
-                                context,
-                                buyAirtime.message,
-                                isError: true,
-                              );
-                             
-                              return;
-                            }
+                            return;
+                          }
 
-                            if (buyAirtime.status == true && context.mounted) {
-                              showMessage(
+                          if (buyAirtime.status == true && context.mounted) {
+                            showMessage(
+                              context,
+                              buyAirtime.message,
+                              // isError: false,
+                            );
+                            nextScreen(
                                 context,
-                                buyAirtime.message,
-                                // isError: false,
-                              );
-                              nextScreen(
-                                  context,
-                                  ConfirmationScreen(
-                                amount: widget.amount,
-                                number: widget.phoneNumber,
-                              ));
-                            }
-                          })
+                                ConfirmationScreen(
+                                  amount: widget.amount,
+                                  number: widget.phoneNumber,
+                                ));
+                          }
+                        },
+                      )
                     ],
                   ),
                 ),

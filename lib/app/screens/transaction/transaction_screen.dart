@@ -4,20 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/enums/month_dropdown_enum.dart';
+
 import 'package:max_4_u/app/model/user_response_model.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
-import 'package:max_4_u/app/screens/customers_screen.dart/auto_renewal_screen.dart';
+import 'package:max_4_u/app/screens/customers_section/auto_renewal_screen.dart';
 import 'package:max_4_u/app/screens/home/component/transaction_history_component.dart';
 import 'package:max_4_u/app/screens/transaction/transaction_detail_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
+
 import 'package:max_4_u/app/utils/screen_navigator.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
 import 'package:max_4_u/app/widgets/button_widget.dart';
 import 'package:max_4_u/app/widgets/text_input_field.dart';
 import 'package:provider/provider.dart';
-
-
 
 class TransactionScreen extends StatefulWidget {
   const TransactionScreen({super.key});
@@ -76,6 +76,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Consumer<ReloadUserDataProvider>(
       builder: (context, reloadData, _) {
         return Scaffold(
@@ -107,136 +108,177 @@ class _TransactionScreenState extends State<TransactionScreen> {
                             )
                           ],
                         ),
-                        // ElevatedButton(
-                        //     onPressed: () {
-                        //       getAllTransactions();
-                        //       log('${allTransactions.length}');
-                        //     },
-                        //     child: Text('')),
 
-                        verticalSpace(allTransactions.isEmpty ? 250 : 0),
-                        // allTransactions == 0
-                        //     ? Center(
-                        //         child: CircularProgressIndicator(
-                        //           color: AppColors.primaryColor,
-                        //         ),
-                        //       )
-                        //     :
-                        allTransactions.isEmpty
+                        // verticalSpace(allTransactions.isEmpty ? 250 : 0),
+
+                        reloadData.isLoading
                             ? Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                        height: 92.h,
-                                        width: 92.w,
-                                        child: Image.asset(
-                                            'assets/images/no_beneficiary_image.png')),
-                                    verticalSpace(24),
-                                    Text(
-                                      'You have no transaction yet',
+                                child: CircularProgressIndicator(
+                                    color: AppColors.primaryColor))
+                            : reloadData.loadData.transactionHistory!.data ==
+                                    null
+                                ? Center(
+                                    child: Text(
+                                      'No data',
                                       style: AppTextStyles.font14.copyWith(
                                           color: AppColors.textColor,
                                           fontWeight: FontWeight.w400),
-                                    )
-                                  ],
-                                ),
-                              )
-                            : Column(
-                                children: [
-                                  TextInputField(
-                                    controller: _searchController,
-                                    hintText: 'Search in transactions',
-                                    prefixIcon: const Icon(
-                                      Icons.search,
-                                      color: Color(0xff4F4F4F),
                                     ),
-                                  ),
-                                  verticalSpace(24),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      DropdownButton<Months>(
-                                        underline: const SizedBox(),
-                                        value: _selectedMonth,
-                                        items:
-                                            Months.values.map((Months month) {
-                                          return DropdownMenuItem(
-                                              value: month,
-                                              child: Container(
-                                                  padding: EdgeInsets.zero,
-                                                  child: Text(
-                                                      _monthToString(month))));
-                                        }).toList(),
-                                        onChanged: (newValue) {
-                                          setState(() {
-                                            _selectedMonth = newValue!;
-                                          });
-                                        },
-                                      ),
-                                      GestureDetector(
-                                        onTap: () {
-                                          filterTransactionBottomSheet(context);
-                                        },
-                                        child: const Row(
+                                  )
+                                : reloadData.loadData.transactionHistory!.data!
+                                        .isEmpty
+                                    ? Center(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
                                           children: [
+                                            SizedBox(
+                                                height: 92.h,
+                                                width: 92.w,
+                                                child: Image.asset(
+                                                    'assets/images/no_beneficiary_image.png')),
+                                            verticalSpace(24),
                                             Text(
-                                              'Filter',
-                                              style: AppTextStyles.font16,
-                                            ),
-                                            Icon(Icons.filter_alt_outlined)
+                                              'You have no transaction yet',
+                                              style: AppTextStyles.font14
+                                                  .copyWith(
+                                                      color:
+                                                          AppColors.textColor,
+                                                      fontWeight:
+                                                          FontWeight.w400),
+                                            )
                                           ],
                                         ),
                                       )
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: MediaQuery.of(context).size.height,
-                                    width: MediaQuery.of(context).size.width,
-                                    child: ListView.builder(
-                                      itemCount: allTransactions.length,
-                                      itemBuilder: (_, index) {
-                                        return GestureDetector(
-                                          onTap: () => nextScreen(context,
-                                              const TransactionDetailsScreen()),
-                                          child: Column(
+                                    : Column(
+                                        children: [
+                                          TextInputField(
+                                            controller: _searchController,
+                                            hintText: 'Search in transactions',
+                                            prefixIcon: const Icon(
+                                              Icons.search,
+                                              color: Color(0xff4F4F4F),
+                                            ),
+                                          ),
+                                          verticalSpace(24),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
-                                              TransactionSection(
-                                                  transactionIcon: Icons.money,
-                                                  transactionType:
-                                                      allTransactions[0]
-                                                          ['sub_type'],
-                                                  transactionDate:
-                                                      'Apr 18th, 20:59',
-                                                  transactionAmount:
-                                                      'N${allTransactions[0]['product_amount']}',
-                                                  transactionStatus:
-                                                      allTransactions[0]
-                                                          ['status'],
-                                                  transactionColor:
-                                                      Color(0xffD6DDFE),
-                                                  transactionStatusColor:
-                                                      allTransactions[0]
-                                                                  ['status'] ==
-                                                              'success'
-                                                          ? Colors.green
-                                                          : Colors.red),
-                                              verticalSpace(8),
-                                              Divider(
-                                                color: AppColors.blackColor
-                                                    .withOpacity(0.1),
+                                              DropdownButton<Months>(
+                                                underline: const SizedBox(),
+                                                value: _selectedMonth,
+                                                items: Months.values
+                                                    .map((Months month) {
+                                                  return DropdownMenuItem(
+                                                      value: month,
+                                                      child: Container(
+                                                          padding:
+                                                              EdgeInsets.zero,
+                                                          child: Text(
+                                                              _monthToString(
+                                                                  month))));
+                                                }).toList(),
+                                                onChanged: (newValue) {
+                                                  setState(() {
+                                                    _selectedMonth = newValue!;
+                                                  });
+                                                },
                                               ),
-                                              verticalSpace(8),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  filterTransactionBottomSheet(
+                                                      context);
+                                                },
+                                                child: const Row(
+                                                  children: [
+                                                    Text(
+                                                      'Filter',
+                                                      style:
+                                                          AppTextStyles.font16,
+                                                    ),
+                                                    Icon(Icons
+                                                        .filter_alt_outlined)
+                                                  ],
+                                                ),
+                                              )
                                             ],
                                           ),
-                                        );
-                                      },
-                                    ),
-                                  )
-                                ],
-                              ),
+                                          SizedBox(
+                                            height: MediaQuery.of(context)
+                                                .size
+                                                .height,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            child: Column(
+                                              children: List.generate(
+                                                
+                                                reloadData
+                                                    .loadData
+                                                    .transactionHistory!
+                                                    .data!
+                                                    .length,
+                                                (index) {
+                                                  final data = reloadData
+                                                      .loadData
+                                                      .transactionHistory!
+                                                      .data![index];
+                                                  return GestureDetector(
+                                                    onTap: () => nextScreen(
+                                                        context,
+                                                        TransactionDetailsScreen(
+                                                          amount:
+                                                              '${data.amountPaid}',
+                                                          referenceId:
+                                                              '${data.referenceId}',
+                                                          status:
+                                                              '${data.status}', date: '${data.regDate}', type: '${data.type}',
+                                                        )),
+                                                    child: Column(
+                                                      children: [
+                                                        TransactionSection(
+                                                            transactionIcon:
+                                                                Icons.money,
+                                                            transactionType:
+                                                                '${data.subType}',
+                                                            transactionDate:
+                                                                 '${data.regDate}',
+                                                            transactionAmount:
+                                                                'N${data.amountPaid}',
+                                                            transactionStatus:
+                                                                '${data.status}',
+                                                            transactionColor:
+                                                                Color(
+                                                                    0xffD6DDFE),
+                                                            transactionStatusColor: data
+                                                                        .status ==
+                                                                    'success'
+                                                                ? Colors.green
+                                                                : data.status ==
+                                                                        'pending'
+                                                                    ? Color(
+                                                                        0xffA6B309)
+                                                                    : Colors
+                                                                        .red),
+                                                        verticalSpace(8),
+                                                        Divider(
+                                                          color: AppColors
+                                                              .blackColor
+                                                              .withOpacity(0.1),
+                                                        ),
+                                                        verticalSpace(8),
+                                                      ],
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
                       ],
                     ),
                     isTapped

@@ -8,8 +8,8 @@ import 'package:max_4_u/app/database/database.dart';
 class ApiService  {
   Dio dio = Dio();
 
-  ApiService.init();
-  static final ApiService instance = ApiService.init();
+  // ApiService.init();
+  // static final ApiService instance = ApiService.init();
   //  ViewState state = ViewState.Idle;
 
   Future<dynamic> authPostRequest(

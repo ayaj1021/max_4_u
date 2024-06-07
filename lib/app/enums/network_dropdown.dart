@@ -7,6 +7,25 @@ List<String> networkProvider = [
   '9mobile',
 ];
 
+List<String> selectUser = [
+  'Vendor',
+  'Customer',
+];
+
+List<String> services = [
+  'Airtime',
+  'Data',
+];
+
+List<String> dataPrices = [
+  '1GB',
+  '2GB - 5GB',
+  '6GB - 10GB',
+  '10GB - 15GB',
+  '16GB - 20GB',
+  '25GB & more',
+];
+
 List<String> dataValidityProvider = [
   'Daily',
   'Weekly',

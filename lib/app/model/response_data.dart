@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:max_4_u/app/model/product_model.dart';
+//import 'package:max_4_u/app/model/product_model.dart';
 import 'package:max_4_u/app/model/service_model.dart';
 import 'package:max_4_u/app/model/user_data.dart';
 
@@ -15,7 +15,7 @@ class ResponseData {
  // final List<UserSettingsData>? userSettingsData;
   final List<dynamic>? beneficiaryData;
   final List<Service>? services;
-  final List<Product>? products;
+  //final List<Product>? products;
 
   ResponseData({
     this.status,
@@ -25,7 +25,7 @@ class ResponseData {
     //this.userSettingsData,
     this.beneficiaryData,
     this.services,
-    this.products,
+   // this.products,
   });
 
   factory ResponseData.fromJson(Map<String, dynamic> json) => _$ResponseDataFromJson(json);

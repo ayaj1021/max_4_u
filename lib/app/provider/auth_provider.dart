@@ -71,7 +71,7 @@ class AuthProviderImpl extends ChangeNotifier
     print(body);
     await SecureStorage().saveUserPhone(phoneNumber);
 
-    final response = await ApiService.instance.authPostRequest(
+    final response = await ApiService().authPostRequest(
       body: body,
       message: _message,
     );
@@ -120,7 +120,7 @@ class AuthProviderImpl extends ChangeNotifier
 
     await SecureStorage().saveUserOtp(otp);
 
-    final response = await ApiService.instance.authPostRequest(
+    final response = await ApiService().authPostRequest(
       body: body,
     );
     _status = response['data']['status'];
@@ -181,7 +181,7 @@ class AuthProviderImpl extends ChangeNotifier
     await SecureStorage().saveUserName(_userName);
 
     log(body.toString());
-    final response = await ApiService.instance.authPostRequest(
+    final response = await ApiService().authPostRequest(
       body: body,
       message: _message,
     );
@@ -228,7 +228,7 @@ class AuthProviderImpl extends ChangeNotifier
       "password": password,
     };
     print(body);
-    final response = await ApiService.instance.authPostRequest(
+    final response = await ApiService().authPostRequest(
       body: body,
     );
     // log(response);
@@ -239,10 +239,11 @@ class AuthProviderImpl extends ChangeNotifier
         _status = response['data']['status'];
         _message = response['data']['message'];
         state = ViewState.Success;
-        notifyListeners();
         final result = ResponseDataData.fromJson(
             response['data']['response_data']['data']);
         log('this is the result: $result');
+     //   context.read<ResponseDataData>().;
+        notifyListeners();
         return result;
       } else {
         state = ViewState.Error;
@@ -277,7 +278,7 @@ class AuthProviderImpl extends ChangeNotifier
 
     print(body);
 
-    final response = await ApiService.instance.authPostRequest(
+    final response = await ApiService().authPostRequest(
       body: body,
     );
     _status = response['data']['status'];
@@ -322,7 +323,7 @@ class AuthProviderImpl extends ChangeNotifier
 
     print(body);
 
-    final response = await ApiService.instance.authPostRequest(
+    final response = await ApiService().authPostRequest(
       body: body,
     );
 
@@ -374,7 +375,7 @@ class AuthProviderImpl extends ChangeNotifier
 
     print(body);
 
-    final response = await ApiService.instance.authPostRequest(
+    final response = await ApiService().authPostRequest(
       body: body,
     );
 

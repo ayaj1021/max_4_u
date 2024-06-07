@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max_4_u/app/screens/admin_section/audit_log_screen.dart';
+import 'package:max_4_u/app/screens/super_admin_section/set_up_new_data_prices_screen.dart';
 import 'package:max_4_u/app/database/database.dart';
+import 'package:max_4_u/app/provider/vendor_check_provider.dart';
 import 'package:max_4_u/app/screens/profile/edit_profile_screen.dart';
 import 'package:max_4_u/app/screens/settings/settings_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
@@ -9,6 +12,7 @@ import 'package:max_4_u/app/utils/screen_navigator.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
 import 'package:max_4_u/app/widgets/button_widget.dart';
 import 'package:clipboard/clipboard.dart';
+import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -42,127 +46,166 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-          child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-        child: Column(
-          children: [
-            Center(
-              child: Text(
-                'Profile',
-                style: AppTextStyles.font18.copyWith(
-                  color: AppColors.mainTextColor,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-            verticalSpace(33),
-            Container(
-              height: 90.h,
-              width: 90.w,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  width: 2,
-                  color: const Color(0xff333333),
-                ),
-              ),
-              child: ClipOval(
-                child: Image.asset('assets/images/profile_avatar.png'),
-              ),
-            ),
-            verticalSpace(12),
-            Text(
-              '$firstName $lastName',
-              style:
-                  AppTextStyles.font20.copyWith(color: const Color(0xff333333)),
-            ),
-            verticalSpace(2),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+    return Consumer<VendorCheckProvider>(
+      builder: (context, vendor, _) {
+        return Scaffold(
+          body: SafeArea(
+              child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+            child: Column(
               children: [
-                Text(
-                  'User ID -$userId',
-                  style: AppTextStyles.font12.copyWith(
+                Center(
+                  child: Text(
+                    'Profile',
+                    style: AppTextStyles.font18.copyWith(
+                      color: AppColors.mainTextColor,
                       fontWeight: FontWeight.w500,
-                      color: const Color(0xff787878)),
-                ),
-                horizontalSpace(3),
-                InkWell(
-                  onTap: () {
-                    FlutterClipboard.copy(userId).then((value) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Account copied'),
-                        ),
-                      );
-                    });
-                  },
-                  child: const Icon(
-                    Icons.copy,
-                    size: 14,
-                    color: AppColors.primaryColor,
+                    ),
                   ),
-                )
+                ),
+                verticalSpace(33),
+                Container(
+                  height: 90.h,
+                  width: 90.w,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      width: 2,
+                      color: const Color(0xff333333),
+                    ),
+                  ),
+                  child: ClipOval(
+                    child: Image.asset('assets/images/profile_avatar.png'),
+                  ),
+                ),
+                verticalSpace(12),
+                Text(
+                  '$firstName $lastName',
+                  style: AppTextStyles.font20
+                      .copyWith(color: const Color(0xff333333)),
+                ),
+                verticalSpace(2),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'User ID -$userId',
+                      style: AppTextStyles.font12.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: const Color(0xff787878)),
+                    ),
+                    horizontalSpace(3),
+                    InkWell(
+                      onTap: () {
+                        FlutterClipboard.copy(userId).then(
+                          (value) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Account copied'),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      child: const Icon(
+                        Icons.copy,
+                        size: 14,
+                        color: AppColors.primaryColor,
+                      ),
+                    )
+                  ],
+                ),
+                verticalSpace(32),
+                ListTile(
+                  onTap: () => nextScreen(
+                    context,
+                    const EditProfileScreen(),
+                  ),
+                  leading: SizedBox(
+                      height: 24,
+                      width: 24,
+                      child: Image.asset('assets/icons/profile_icon.png')),
+                  title: Text(
+                    'Edit profile',
+                    style: AppTextStyles.font16
+                        .copyWith(fontWeight: FontWeight.w500),
+                  ),
+                ),
+                ListTile(
+                  onTap: () => nextScreen(context, const SettingsScreen()),
+                  leading: SizedBox(
+                      height: 24,
+                      width: 24,
+                      child: Image.asset('assets/icons/setting_icon.png')),
+                  title: Text(
+                    'Settings',
+                    style: AppTextStyles.font16
+                        .copyWith(fontWeight: FontWeight.w500),
+                  ),
+                ),
+                vendor.isVendor == '5'
+                    ? ListTile(
+                        onTap: () =>
+                            nextScreen(context, const AuditLogScreen()),
+                        leading: SizedBox(
+                            height: 24,
+                            width: 24,
+                            child: Image.asset('assets/icons/audit_icon.png')),
+                        title: Text(
+                          'Audit log',
+                          style: AppTextStyles.font16
+                              .copyWith(fontWeight: FontWeight.w500),
+                        ),
+                      )
+                    : SizedBox(),
+                vendor.isVendor == '5'
+                    ? ListTile(
+                        onTap: () => nextScreen(
+                            context, const SetupNewDataPricesScreen()),
+                        leading: SizedBox(
+                            height: 24,
+                            width: 24,
+                            child: Image.asset(
+                                'assets/icons/setup_prices_icon.png')),
+                        title: Text(
+                          'Set Up Prices',
+                          style: AppTextStyles.font16
+                              .copyWith(fontWeight: FontWeight.w500),
+                        ),
+                      )
+                    : SizedBox(),
+                vendor.isVendor == '1'
+                    ? ListTile(
+                        onTap: () {
+                          removeVendorBottomSheet(context);
+                        },
+                        leading: SizedBox(
+                            height: 23,
+                            width: 31,
+                            child: Image.asset('assets/icons/vendor_icon.png')),
+                        title: Text(
+                          'Vendor',
+                          style: AppTextStyles.font16
+                              .copyWith(fontWeight: FontWeight.w500),
+                        ),
+                      )
+                    : ListTile(
+                        leading: SizedBox(
+                            height: 24,
+                            width: 24,
+                            child:
+                                Image.asset('assets/icons/support_icon.png')),
+                        title: Text(
+                          'Contact support',
+                          style: AppTextStyles.font16
+                              .copyWith(fontWeight: FontWeight.w500),
+                        ),
+                      ),
               ],
             ),
-            verticalSpace(32),
-            ListTile(
-              onTap: () => nextScreen(
-                context,
-                const EditProfileScreen(),
-              ),
-              leading: SizedBox(
-                  height: 24,
-                  width: 24,
-                  child: Image.asset('assets/icons/profile_icon.png')),
-              title: Text(
-                'Edit profile',
-                style:
-                    AppTextStyles.font16.copyWith(fontWeight: FontWeight.w500),
-              ),
-            ),
-            ListTile(
-              onTap: () => nextScreen(context, const SettingsScreen()),
-              leading: SizedBox(
-                  height: 24,
-                  width: 24,
-                  child: Image.asset('assets/icons/setting_icon.png')),
-              title: Text(
-                'Settings',
-                style:
-                    AppTextStyles.font16.copyWith(fontWeight: FontWeight.w500),
-              ),
-            ),
-            ListTile(
-              onTap: () {
-                removeVendorBottomSheet(context);
-              },
-              leading: SizedBox(
-                  height: 23,
-                  width: 31,
-                  child: Image.asset('assets/icons/vendor_icon.png')),
-              title: Text(
-                'Vendor',
-                style:
-                    AppTextStyles.font16.copyWith(fontWeight: FontWeight.w500),
-              ),
-            ),
-            // ListTile(
-            //   leading: SizedBox(
-            //       height: 24,
-            //       width: 24,
-            //       child: Image.asset('assets/icons/support_icon.png')),
-            //   title: Text(
-            //     'Contact support',
-            //     style:
-            //         AppTextStyles.font16.copyWith(fontWeight: FontWeight.w500),
-            //   ),
-            // ),
-          ],
-        ),
-      )),
+          )),
+        );
+      },
     );
   }
 
