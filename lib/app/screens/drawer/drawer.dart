@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/database/database.dart';
+import 'package:max_4_u/app/provider/auth_provider.dart';
 import 'package:max_4_u/app/provider/vendor_check_provider.dart';
 import 'package:max_4_u/app/screens/auth/login_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/screen_navigator.dart';
-import 'package:max_4_u/app/utils/selecting_user_type.dart';
 import 'package:max_4_u/app/utils/show_message.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
 import 'package:max_4_u/app/screens/vendor_sections/screens/become_vendor_screen.dart';
@@ -27,6 +27,7 @@ class _SideDrawerState extends State<SideDrawer> {
   @override
   void initState() {
     getNames();
+    getUserType();
     super.initState();
   }
 
@@ -41,14 +42,23 @@ class _SideDrawerState extends State<SideDrawer> {
       userId = id;
     });
   }
+ String? userType;
 
+  getUserType() async {
+    final user = await SecureStorage().getUserType();
+    setState(() {
+      userType = user;
+    });
+    return user;
+  }
   bool isClicked = false;
   @override
   Widget build(BuildContext context) {
     //  final vendor = Provider.of<VendorCheckProvider>(context);
     // final userType = UserType.selectUserType(vendor.isVendor);
-    return Consumer<VendorCheckProvider>(
-      builder: (context, vendor, _) {
+    return Consumer2<VendorCheckProvider, AuthProviderImpl>(
+      builder: (context, vendor, authProv, _) {
+        
         return Drawer(
           backgroundColor: AppColors.whiteColor,
           child: ListView(
@@ -124,60 +134,60 @@ class _SideDrawerState extends State<SideDrawer> {
                 ),
               ),
               verticalSpace(342),
-              Consumer<VendorCheckProvider>(builder: (context, vendor, _) {
-                return Container(
-                  height: 56.h,
-                  width: 288.w,
-                  decoration: BoxDecoration(
-                      color: vendor.isVendor == '1'
-                          ? AppColors.secondaryColor
-                          : Colors.transparent,
-                      borderRadius: BorderRadius.circular(8)),
-                  child: ListTile(
-                    onTap: () {
-                      vendor.changeVendor('2');
-                      // final userType =
-                      //     Provider.of<VendorCheckProvider>(context, listen: false)
-                      //         .isVendor;
-                      // SecureStorage().saveUserType(userType);
-                      Future.delayed(const Duration(seconds: 1), () {
-                        nextScreen(context, const BecomeVendorScreen());
-                      });
-                    },
-                    leading: SizedBox(
-                        height: 24,
-                        width: 24,
-                        child: vendor.isVendor == '1'
-                            ? SizedBox(
-                                height: 24,
-                                width: 24,
-                                child:
-                                    Image.asset('assets/icons/user_icon.png'))
-                            : Image.asset(vendor.isVendor == '1'
-                                ? 'assets/icons/vendor_white_icon.png'
-                                : 'assets/icons/vendor_icon.png')),
-                    // subtitle: ElevatedButton(
-                    //   onPressed: () {
-                    //     log(userType);
-                    //    // log('${vendor.isVendor}');
-                    //   },
-                    //   child: Text('press'),
-                    // ),
-                    title: Text(
-                      userLevel,
-                      // vendor.isVendor == '1'
-                      //     ? 'Become a user'
-                      //     : 'Become a vendor',
-                      style: AppTextStyles.font16.copyWith(
-                        fontWeight: FontWeight.w500,
-                        color: vendor.isVendor == '1'
-                            ? AppColors.whiteColor
-                            : AppColors.blackColor,
-                      ),
+              Container(
+                height: 56.h,
+                width: 288.w,
+                decoration: BoxDecoration(
+                    color: userType == '1'
+                        ? AppColors.secondaryColor
+                        : Colors.transparent,
+                    borderRadius: BorderRadius.circular(8)),
+                child: ListTile(
+                  onTap: () {
+                    vendor.changeVendor('2');
+                    // final userType =
+                    //     Provider.of<VendorCheckProvider>(context, listen: false)
+                    //         .isVendor;
+                    // SecureStorage().saveUserType(userType);
+                    Future.delayed(const Duration(seconds: 1), () {
+                      nextScreen(context, const BecomeVendorScreen());
+                    });
+                  },
+                  leading: SizedBox(
+                      height: 24,
+                      width: 24,
+                      child:
+                          // vendor.isVendor == '1'
+                          userType == '1'
+                              ? SizedBox(
+                                  height: 24,
+                                  width: 24,
+                                  child:
+                                      Image.asset('assets/icons/user_icon.png'))
+                              : userType == '5' ? SizedBox.shrink() :  Image.asset(userType == '1' 
+                                  ? 'assets/icons/vendor_white_icon.png'
+                                  : 'assets/icons/vendor_icon.png')),
+                  // subtitle: ElevatedButton(
+                  //   onPressed: () {
+                  //     log(userType);
+                  //    // log('${vendor.isVendor}');
+                  //   },
+                  //   child: Text('press'),
+                  // ),
+                  title: Text(
+                    // userLevel,
+
+                    // vendor.isVendor == '1'
+                    userType == '1' ? 'Become a user' :  userType == '5'? '' :  'Become a vendor',
+                    style: AppTextStyles.font16.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: userType == '1'
+                          ? AppColors.whiteColor
+                          : userType == '5'? Colors.transparent : AppColors.blackColor,
                     ),
                   ),
-                );
-              }),
+                ),
+              ),
               ListTile(
                 onTap: () async {
                   await SecureStorage().logoutUser();

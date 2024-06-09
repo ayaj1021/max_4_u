@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max_4_u/app/database/database.dart';
+import 'package:max_4_u/app/provider/reload_data_provider.dart';
+import 'package:max_4_u/app/screens/admin_section/components/admin_component.dart';
 import 'package:max_4_u/app/screens/admin_section/components/consumer_component.dart';
 import 'package:max_4_u/app/screens/admin_section/components/vendor_component.dart';
 import 'package:max_4_u/app/provider/admin_section/get_all_users_provider.dart';
@@ -23,21 +26,38 @@ class _UserScreenState extends State<UserScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final _searchController = TextEditingController();
+  String? userType;
   @override
   void initState() {
+    getUserType();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<GetAllAppUsers>(context, listen: false).getAllUsers();
     });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ReloadUserDataProvider>(context, listen: false)
+          .reloadUserData();
+    });
 
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController =
+        TabController(length: userType == '5' ? 3 : 2, vsync: this);
+  }
+
+  getUserType() async {
+    final user = await SecureStorage().getUserType();
+    setState(() {
+      userType = user;
+    });
+    return user;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<GetAllAppUsers>(
-      builder: (context, getAllAppUsers, _) {
-       // final users = getAllAppUsers.getAllUsers();
+    return Consumer2<GetAllAppUsers, ReloadUserDataProvider>(
+      builder: (context, getAllAppUsers, reloadData, _) {
+        // final users = getAllAppUsers.getAllUsers();
+
+        // final level = reloadData.loadData.userData![0].level;
 
         return Scaffold(
           body: SafeArea(
@@ -87,7 +107,9 @@ class _UserScreenState extends State<UserScreen>
                                 ),
                                 horizontalSpace(24),
                                 UsersStatsWidget(
-                                    title: 'Active Users', number: '${getAllAppUsers.allAppUsers.totalActiveConsumer}'),
+                                    title: 'Active Users',
+                                    number:
+                                        '${getAllAppUsers.allAppUsers.totalActiveConsumer}'),
                                 horizontalSpace(27),
                                 SizedBox(
                                   height: 34,
@@ -95,7 +117,9 @@ class _UserScreenState extends State<UserScreen>
                                 ),
                                 horizontalSpace(24),
                                 UsersStatsWidget(
-                                    title: 'Inactive Users', number: '${getAllAppUsers.allAppUsers.totalInactiveConsumer}'),
+                                    title: 'Inactive Users',
+                                    number:
+                                        '${getAllAppUsers.allAppUsers.totalInactiveConsumer}'),
                               ],
                             ),
                           ),
@@ -118,7 +142,7 @@ class _UserScreenState extends State<UserScreen>
                         children: [
                           Container(
                             height: 38.h,
-                            width: 333.w,
+                            width: 350.w,
                             alignment: Alignment.center,
                             padding: const EdgeInsets.symmetric(vertical: 3),
                             decoration: BoxDecoration(
@@ -143,7 +167,7 @@ class _UserScreenState extends State<UserScreen>
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       const Text('Consumers'),
-                                      horizontalSpace(7),
+                                      horizontalSpace(userType == '5' ? 0 : 7),
                                       Container(
                                         height: 12.h,
                                         width: 17.w,
@@ -193,6 +217,44 @@ class _UserScreenState extends State<UserScreen>
                                     ],
                                   ),
                                 ),
+                                userType == '5'
+                                    ? Container(
+                                        height: 31.h,
+                                        width: 182.w,
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(6)),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const Text('Admins'),
+                                            horizontalSpace(7),
+                                            Container(
+                                              height: 12.h,
+                                              width: 17.w,
+                                              alignment: Alignment.center,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(17),
+                                                  color:
+                                                      AppColors.subTextColor),
+                                              child: Text(
+                                                '${getAllAppUsers.allAppAdmins.totalData}',
+                                                style: AppTextStyles.font12
+                                                    .copyWith(
+                                                        fontSize: 10,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: AppColors
+                                                            .whiteColor),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      )
+                                    : SizedBox.shrink()
                               ],
                             ),
                           ),
@@ -203,6 +265,9 @@ class _UserScreenState extends State<UserScreen>
                               children: [
                                 CustomersComponent(),
                                 VendorsComponent(),
+                                userType == '5'
+                                    ? AdminsComponent()
+                                    : SizedBox.shrink(),
                               ],
                             ),
                           ),

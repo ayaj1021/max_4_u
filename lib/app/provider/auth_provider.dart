@@ -32,23 +32,9 @@ class AuthProviderImpl extends ChangeNotifier
   bool _status = false;
   bool get status => _status;
 
-  List<dynamic> _data = [];
-  List<dynamic> get data => _data;
+ 
 
-  List<dynamic> _beneficiary = [];
-  List<dynamic> get beneficiary => _beneficiary;
-
-  List<dynamic> _transaction = [];
-  List<dynamic> get transaction => _transaction;
-
-  List<dynamic> _autoRenewal = [];
-  List<dynamic> get autoRenewal => _autoRenewal;
-
-  List<dynamic> _services = [];
-  List<dynamic> get services => _services;
-
-  List<dynamic> _products = [];
-  List<dynamic> get products => _products;
+  ResponseDataData resDataData = ResponseDataData();
 
   String _userName = '';
   String get userName => _userName;
@@ -193,10 +179,10 @@ class AuthProviderImpl extends ChangeNotifier
         _message = response['data']['message'];
         state = ViewState.Success;
         notifyListeners();
-        final result =
+         resDataData =
             ResponseDataData.fromJson(response['response_data']['data']);
-        log('this is the result: $result');
-        return result;
+        log('this is the result: $resDataData');
+        return resDataData;
       } else {
         _message = response['data']['message'];
         state = ViewState.Error;
@@ -216,7 +202,7 @@ class AuthProviderImpl extends ChangeNotifier
 
 //Login user method
   @override
-  Future<ResponseDataData> loginUser(
+  Future loginUser(
       {required String email, required String password}) async {
     state = ViewState.Busy;
     _message = 'Logging in your account...';
@@ -239,16 +225,17 @@ class AuthProviderImpl extends ChangeNotifier
         _status = response['data']['status'];
         _message = response['data']['message'];
         state = ViewState.Success;
-        final result = ResponseDataData.fromJson(
+         resDataData = ResponseDataData.fromJson(
             response['data']['response_data']['data']);
-        log('this is the result: $result');
+        log('this is the resData: $resDataData');
      //   context.read<ResponseDataData>().;
         notifyListeners();
-        return result;
+        return resDataData;
       } else {
         state = ViewState.Error;
         _status = response['data']['status'];
         _message = response['data']['message'];
+       // _message = response['data']['error_data']['login_id'];
         notifyListeners();
       }
     } catch (e) {
@@ -256,7 +243,7 @@ class AuthProviderImpl extends ChangeNotifier
       _message = e.toString();
       notifyListeners();
     }
-    return response;
+    //return response;
   }
 
 //Forgot password user method

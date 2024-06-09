@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max_4_u/app/provider/auth_provider.dart';
 import 'package:max_4_u/app/screens/admin_section/audit_log_screen.dart';
 import 'package:max_4_u/app/screens/super_admin_section/set_up_new_data_prices_screen.dart';
 import 'package:max_4_u/app/database/database.dart';
@@ -29,7 +30,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     getNames();
+    getUserType();
     super.initState();
+  }
+
+  String? userType;
+
+  getUserType() async {
+    final user = await SecureStorage().getUserType();
+    setState(() {
+      userType = user;
+    });
+    return user;
   }
 
   getNames() async {
@@ -46,8 +58,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<VendorCheckProvider>(
-      builder: (context, vendor, _) {
+    return Consumer2<VendorCheckProvider, AuthProviderImpl>(
+      builder: (context, vendor, authProv, _) {
+    
         return Scaffold(
           body: SafeArea(
               child: Padding(
@@ -143,7 +156,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         .copyWith(fontWeight: FontWeight.w500),
                   ),
                 ),
-                vendor.isVendor == '5'
+                // vendor.isVendor == '5'
+                userType == '5'
                     ? ListTile(
                         onTap: () =>
                             nextScreen(context, const AuditLogScreen()),
@@ -158,7 +172,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       )
                     : SizedBox(),
-                vendor.isVendor == '5'
+                //   vendor.isVendor == '5'
+                userType == '5'
                     ? ListTile(
                         onTap: () => nextScreen(
                             context, const SetupNewDataPricesScreen()),
@@ -174,7 +189,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       )
                     : SizedBox(),
-                vendor.isVendor == '1'
+                // vendor.isVendor == '1'
+                userType == '1'
                     ? ListTile(
                         onTap: () {
                           removeVendorBottomSheet(context);

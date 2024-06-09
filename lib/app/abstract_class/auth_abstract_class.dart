@@ -10,7 +10,7 @@ abstract class AuthenticationProviderUseCase extends ChangeNotifier {
       required String firstName,
       required String lastName,
       required String confirmPassword});
-  Future<ResponseDataData> loginUser(
+  Future loginUser(
       {required String email, required String password});
   Future<void> forgotPassword();
   Future<void> verifyForgotPasswordOtp();

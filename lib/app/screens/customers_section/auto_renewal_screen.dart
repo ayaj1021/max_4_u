@@ -26,25 +26,24 @@ class _AutoRenewalScreenState extends State<AutoRenewalScreen>
   @override
   void initState() {
     getAllAutoRenewals();
-       WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<ReloadUserDataProvider>(context, listen: false)
           .reloadUserData();
     });
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
   }
-List autoRenewals = [];
 
-getAllAutoRenewals()async{
+  List autoRenewals = [];
 
-final renewals = await SecureStorage().getUserAutoRenewal();
-setState(() {
-  autoRenewals = renewals;
-});
+  getAllAutoRenewals() async {
+    final renewals = await SecureStorage().getUserAutoRenewal();
+    setState(() {
+      autoRenewals = renewals;
+    });
 
-return renewals;
-
-}
+    return renewals;
+  }
 
   @override
   void dispose() {
@@ -54,7 +53,8 @@ return renewals;
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AuthProviderImpl>(builder: (context, authProv, _) {
+    return Consumer2<AuthProviderImpl, ReloadUserDataProvider>(
+        builder: (context, authProv, reloadData, _) {
       return Scaffold(
         body: SafeArea(
             child: Padding(
@@ -86,8 +86,8 @@ return renewals;
                           child: const Icon(Icons.more_vert))
                     ],
                   ),
-                  verticalSpace(autoRenewals.isEmpty ? 250 : 0),
-                  autoRenewals.isEmpty
+                  verticalSpace(reloadData.loadData.autoRenewal!.data!.isEmpty ? 250 : 0),
+                reloadData.loadData.autoRenewal!.data!.isEmpty
                       ? Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -113,7 +113,7 @@ return renewals;
                           width: MediaQuery.of(context).size.width,
                           child: ListView.builder(
                             shrinkWrap: true,
-                            itemCount: autoRenewals.length,
+                            itemCount: reloadData.loadData.autoRenewal!.data!.length,
                             itemBuilder: (_, index) {
                               return AutoRenewalTabs();
                             },

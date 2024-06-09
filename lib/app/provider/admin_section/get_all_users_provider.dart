@@ -18,8 +18,13 @@ class GetAllAppUsers extends ChangeNotifier {
   String vendorLastName = '';
   String vendorPhoneNumber = '';
 
+    String adminFirstName = '';
+  String adminLastName = '';
+  String adminPhoneNumber = '';
+
   AllAppUsersResponseData allAppUsers = AllAppUsersResponseData();
   AllAppVendorsResponseData allAppVendors = AllAppVendorsResponseData();
+  AllAppVendorsResponseData allAppAdmins = AllAppVendorsResponseData();
 
   Future getAllUsers() async {
     isLoading = true;
@@ -108,6 +113,57 @@ class GetAllAppUsers extends ChangeNotifier {
 
         notifyListeners();
         return allAppUsers;
+      } else {
+        _status = response['data']['status'];
+        isLoading = false;
+
+        notifyListeners();
+      }
+    } catch (e) {
+      log(e.toString());
+      _status = false;
+      notifyListeners();
+    }
+  }
+
+
+   Future getAllAdmins() async {
+    isLoading = true;
+    notifyListeners();
+
+    final body = {
+      "request_type": "grand_admin",
+      "action": "load_admins",
+      "current_page": 1,
+      "search_param": {
+        "status": "", // '', active OR inactive
+        "name": ""
+      }
+    };
+    log('$body');
+
+    final response = await ApiService().servicePostRequest(
+      body: body,
+      // message: _message,
+    );
+    _status = response['data']['status'];
+    log('this is all user response $response');
+    try {
+      if (_status == true) {
+        _status = response['data']['status'];
+
+        allAppAdmins =
+            AllAppVendorsResponseData.fromJson(response['data']['response_data']);
+        isLoading = false;
+
+        adminFirstName = EncryptData.decryptAES('${allAppAdmins.data![0].firstName}');
+        adminLastName = EncryptData.decryptAES('${allAppAdmins.data![0].lastName}');
+        adminPhoneNumber =
+            EncryptData.decryptAES('${allAppAdmins.data![0].mobileNumber}');
+        log('This is $allAppVendors');
+
+        notifyListeners();
+        return allAppAdmins;
       } else {
         _status = response['data']['status'];
         isLoading = false;

@@ -31,7 +31,7 @@ class DeleteAccountProvider extends ChangeNotifier {
       //print(response);
 
       _status = response['data']['status'];
-       _message = response['data']['message'];
+      // _message = response['data']['message'];
 
       if (_status == true) {
         _status = response['data']['status'];

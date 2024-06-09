@@ -103,9 +103,9 @@ class _AtmFundWalletState extends State<AtmFundWallet> {
                   ButtonWidget(
                       text: 'Fund account',
                       onTap: () async {
-
                         if (_amountController.text.isEmpty) {
-                            showMessage(context,'Amount is required', isError: true);
+                          showMessage(context, 'Amount is required',
+                              isError: true);
 
                           return;
                         }
@@ -126,7 +126,12 @@ class _AtmFundWalletState extends State<AtmFundWallet> {
                             // isError: false,
                           );
 
-                          nextScreen(context,  PaymentGatewayScreen(paymentUrl: fundAcct.paymentUrl,));
+                          nextScreen(
+                              context,
+                              PaymentGatewayScreen(
+                                paymentUrl: fundAcct.paymentUrl,
+                                token: fundAcct.token,
+                              ));
                         }
                       }),
                 ],

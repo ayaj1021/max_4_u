@@ -34,162 +34,185 @@ class _RequestsScreenState extends State<RequestsScreen>
   @override
   Widget build(BuildContext context) {
     return Consumer<GetAllVendorRequestsProvider>(
-      builder: (context, getAllVendorRequest, _) {
-        return Scaffold(
-          body: SafeArea(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 30),
-                child: Column(
-                  children: [
-                    Center(
-                      child: const Text(
-                        'Requests',
-                        style: AppTextStyles.font18,
-                      ),
+        builder: (context, getAllVendorRequest, _) {
+      return Scaffold(
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 30),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(
+                    child: const Text(
+                      'Requests',
+                      style: AppTextStyles.font18,
                     ),
-                 
-                    verticalSpace(29),
-                    Container(
-                      height: MediaQuery.of(context).size.height,
-                      width: MediaQuery.of(context).size.width,
-                      padding: EdgeInsets.all(13),
-                      decoration: BoxDecoration(
-                        color: Color(0xffE8E8E8),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Column(
-                        children: [
-                          Container(
-                            height: 38.h,
-                            width: 345.w,
-                            alignment: Alignment.center,
-                            //  padding: const EdgeInsets.symmetric(vertical: 3),
-                            decoration: BoxDecoration(
-                              color: Color(0xffDADBDD),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: TabBar(
-                              indicator: BoxDecoration(
-                                  color: const Color(0xffB0D3EB),
-                                  borderRadius: BorderRadius.circular(6)),
-                              controller: _tabController,
-                              indicatorColor: Colors.transparent,
-                              labelColor: AppColors.blackColor,
-                              tabs: [
-                                Container(
-                                  height: 31.h,
-                                  width: 94.w,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(6)),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const Text('Pending'),
-                                      horizontalSpace(7),
-                                      Container(
-                                        height: 12.h,
-                                        width: 17.w,
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(17),
-                                            color: AppColors.subTextColor),
-                                        child: Text(
-                                          '${getAllVendorRequest.allVendorRequest.totalData}',
-                                          //  '${getAllAppUsers.allAppUsers.totalConsumer}',
-                                          style: AppTextStyles.font12.copyWith(
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.w500,
-                                              color: AppColors.whiteColor),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  height: 31.h,
-                                  width: 94.w,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(6)),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const Text('Approved'),
-                                      horizontalSpace(4),
-                                      Container(
-                                        height: 12.h,
-                                        width: 17.w,
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(17),
-                                            color: AppColors.subTextColor),
-                                        child: Text(
-                                          '${getAllVendorRequest.allVendorRequest.totalData}',
-                                          // '${getAllAppUsers.allAppUsers.totalVendor}',
-                                          style: AppTextStyles.font12.copyWith(
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.w500,
-                                              color: AppColors.whiteColor),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  height: 31.h,
-                                  width: 94.w,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(6)),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const Text('Denied'),
-                                      horizontalSpace(7),
-                                      Container(
-                                        height: 12.h,
-                                        width: 17.w,
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(17),
-                                            color: AppColors.subTextColor),
-                                        child: Text(
-                                          '${getAllVendorRequest.allVendorRequest.totalData}',
-                                          style: AppTextStyles.font12.copyWith(
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.w500,
-                                              color: AppColors.whiteColor),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
+                  ),
+                  verticalSpace(29),
+                  getAllVendorRequest.isLoading
+                      ? Center(
+                          child: CircularProgressIndicator(
+                            color: AppColors.primaryColor,
                           ),
-                          verticalSpace(23),
-                          Expanded(
-                            child: TabBarView(
-                              controller: _tabController,
-                              children: [
-                                PendingComponent(),
-                                ApprovedComponent(),
-                                DeniedComponent()
-                              ],
-                            ),
+                        )
+                      : Container(
+                          height: MediaQuery.of(context).size.height,
+                          width: MediaQuery.of(context).size.width,
+                          padding: EdgeInsets.all(13),
+                          decoration: BoxDecoration(
+                            color: Color(0xffE8E8E8),
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                          child: Column(
+                            children: [
+                              Container(
+                                height: 38.h,
+                                width: 345.w,
+                                alignment: Alignment.center,
+                                //  padding: const EdgeInsets.symmetric(vertical: 3),
+                                decoration: BoxDecoration(
+                                  color: Color(0xffDADBDD),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: TabBar(
+                                  indicator: BoxDecoration(
+                                      color: const Color(0xffB0D3EB),
+                                      borderRadius: BorderRadius.circular(6)),
+                                  controller: _tabController,
+                                  indicatorColor: Colors.transparent,
+                                  labelColor: AppColors.blackColor,
+                                  tabs: [
+                                    Container(
+                                      height: 31.h,
+                                      width: 94.w,
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(6)),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          const Text('Pending'),
+                                          horizontalSpace(7),
+                                          Container(
+                                            height: 12.h,
+                                            width: 17.w,
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(17),
+                                                color: AppColors.subTextColor),
+                                            child: Text(
+                                              '${getAllVendorRequest.allVendorRequest.totalData}',
+                                              //  '${getAllAppUsers.allAppUsers.totalConsumer}',
+                                              style: AppTextStyles.font12
+                                                  .copyWith(
+                                                      fontSize: 10,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color:
+                                                          AppColors.whiteColor),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    Container(
+                                      height: 31.h,
+                                      width: 94.w,
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(6)),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          const Text('Approved'),
+                                          horizontalSpace(4),
+                                          Container(
+                                            height: 12.h,
+                                            width: 17.w,
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(17),
+                                                color: AppColors.subTextColor),
+                                            child: Text(
+                                              '${getAllVendorRequest.allVendorRequest.totalData}',
+                                              // '${getAllAppUsers.allAppUsers.totalVendor}',
+                                              style: AppTextStyles.font12
+                                                  .copyWith(
+                                                      fontSize: 10,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color:
+                                                          AppColors.whiteColor),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    Container(
+                                      height: 31.h,
+                                      width: 94.w,
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(6)),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          const Text('Denied'),
+                                          horizontalSpace(7),
+                                          Container(
+                                            height: 12.h,
+                                            width: 17.w,
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(17),
+                                                color: AppColors.subTextColor),
+                                            child: Text(
+                                              '${getAllVendorRequest.allVendorRequest.totalData}',
+                                              style: AppTextStyles.font12
+                                                  .copyWith(
+                                                      fontSize: 10,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color:
+                                                          AppColors.whiteColor),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              verticalSpace(23),
+                              Expanded(
+                                child: TabBarView(
+                                  controller: _tabController,
+                                  children: [
+                                    PendingComponent(),
+                                    ApprovedComponent(),
+                                    DeniedComponent()
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                ],
               ),
             ),
           ),
-        );
-      }
-    );
+        ),
+      );
+    });
   }
 }

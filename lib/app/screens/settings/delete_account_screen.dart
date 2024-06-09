@@ -224,10 +224,10 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
 
                                                 if (deleteAcct.status == true &&
                                                     context.mounted) {
-                                                  showMessage(context,
+                                                  showMessage(context, 
                                                       deleteAcct.message);
 
-                                                  nextScreen(context,
+                                                  nextScreen(context, 
                                                       const SignUpScreen());
                                                 }
                                               },
