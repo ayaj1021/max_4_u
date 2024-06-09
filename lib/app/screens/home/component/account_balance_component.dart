@@ -141,9 +141,10 @@ class _AccountBalanceWidgetState extends State<AccountBalanceWidget> {
                                           Navigator.pop(context);
                                           selectedIndex == 0
                                               ? nextScreen(context,
-                                                  const AccountNoPaymentScreen())
+                                                  const AtmFundWallet())
                                               : nextScreen(context,
-                                                  const AtmFundWallet());
+                                                  const AccountNoPaymentScreen());
+                                                
 
                                           setState(() {
                                             selectedIndex = index;

@@ -53,7 +53,8 @@ class LoadDataData {
     final List<Product>? products;
     final AutoRenewal? transactionHistory;
     final AutoRenewal? autoRenewal;
-    final List<dynamic>? bankDetails;
+    final SiteData? siteData;
+    final List<SubService>? subServices;
 
     LoadDataData({
         this.userData,
@@ -64,7 +65,8 @@ class LoadDataData {
         this.products,
         this.transactionHistory,
         this.autoRenewal,
-        this.bankDetails,
+        this.siteData,
+        this.subServices,
     });
 
     factory LoadDataData.fromJson(Map<String, dynamic> json) => LoadDataData(
@@ -76,7 +78,8 @@ class LoadDataData {
         products: json["products"] == null ? [] : List<Product>.from(json["products"]!.map((x) => Product.fromJson(x))),
         transactionHistory: json["transaction_history"] == null ? null : AutoRenewal.fromJson(json["transaction_history"]),
         autoRenewal: json["auto_renewal"] == null ? null : AutoRenewal.fromJson(json["auto_renewal"]),
-        bankDetails: json["bank_details"] == null ? [] : List<dynamic>.from(json["bank_details"]!.map((x) => x)),
+        siteData: json["site_data"] == null ? null : SiteData.fromJson(json["site_data"]),
+        subServices: json["sub_services"] == null ? [] : List<SubService>.from(json["sub_services"]!.map((x) => SubService.fromJson(x))),
     );
 
     Map<String, dynamic> toJson() => {
@@ -88,7 +91,8 @@ class LoadDataData {
         "products": products == null ? [] : List<dynamic>.from(products!.map((x) => x.toJson())),
         "transaction_history": transactionHistory?.toJson(),
         "auto_renewal": autoRenewal?.toJson(),
-        "bank_details": bankDetails == null ? [] : List<dynamic>.from(bankDetails!.map((x) => x)),
+        "site_data": siteData?.toJson(),
+        "sub_services": subServices == null ? [] : List<dynamic>.from(subServices!.map((x) => x.toJson())),
     };
 }
 
@@ -122,20 +126,21 @@ class AutoRenewal {
 
 class TransactionHistory {
     final String? referenceId;
-    final String? number;
-    final String? type;
-    final String? subType;
-    final String? purchaseType;
-    final String? productCode;
-    final String? productAmount;
+    final dynamic number;
+    final Type? type;
+    final SubType? subType;
+    final PurchaseType? purchaseType;
+    final dynamic productCode;
+    final dynamic productAmount;
     final String? amountPaid;
     final String? discount;
     final String? commissionEarn;
-    final String? status;
+    final DatumStatus? status;
     final DateTime? regDate;
-    final String? uniqueId;
-    final String? lastName;
-    final String? firstName;
+    final UniqueId? uniqueId;
+    final LastName? lastName;
+    final FirstName? firstName;
+    final String? level;
 
     TransactionHistory({
         this.referenceId,
@@ -153,44 +158,103 @@ class TransactionHistory {
         this.uniqueId,
         this.lastName,
         this.firstName,
+        this.level,
     });
 
     factory TransactionHistory.fromJson(Map<String, dynamic> json) => TransactionHistory(
         referenceId: json["reference_id"],
         number: json["number"],
-        type: json["type"],
-        subType: json["sub_type"],
-        purchaseType: json["purchase_type"],
+        type: typeValues.map[json["type"]]!,
+        subType: subTypeValues.map[json["sub_type"]]!,
+        purchaseType: purchaseTypeValues.map[json["purchase_type"]]!,
         productCode: json["product_code"],
         productAmount: json["product_amount"],
         amountPaid: json["amount_paid"],
         discount: json["discount"],
         commissionEarn: json["commission_earn"],
-        status: json["status"],
+        status: datumStatusValues.map[json["status"]]!,
         regDate: json["reg_date"] == null ? null : DateTime.parse(json["reg_date"]),
-        uniqueId: json["unique_id"],
-        lastName: json["last_name"],
-        firstName: json["first_name"],
+        uniqueId: uniqueIdValues.map[json["unique_id"]]!,
+        lastName: lastNameValues.map[json["last_name"]]!,
+        firstName: firstNameValues.map[json["first_name"]]!,
+        level: json["level"],
     );
 
     Map<String, dynamic> toJson() => {
         "reference_id": referenceId,
         "number": number,
-        "type": type,
-        "sub_type": subType,
-        "purchase_type": purchaseType,
+        "type": typeValues.reverse[type],
+        "sub_type": subTypeValues.reverse[subType],
+        "purchase_type": purchaseTypeValues.reverse[purchaseType],
         "product_code": productCode,
         "product_amount": productAmount,
         "amount_paid": amountPaid,
         "discount": discount,
         "commission_earn": commissionEarn,
-        "status": status,
+        "status": datumStatusValues.reverse[status],
         "reg_date": regDate?.toIso8601String(),
-        "unique_id": uniqueId,
-        "last_name": lastName,
-        "first_name": firstName,
+        "unique_id": uniqueIdValues.reverse[uniqueId],
+        "last_name": lastNameValues.reverse[lastName],
+        "first_name": firstNameValues.reverse[firstName],
+        "level": level,
     };
 }
+
+enum FirstName {
+    M_P_FQQK_QKTU_QYQ_TBQMT_YN_HW
+}
+
+final firstNameValues = EnumValues({
+    "mPFqqkQktuQYQTbqmtYnHw==": FirstName.M_P_FQQK_QKTU_QYQ_TBQMT_YN_HW
+});
+
+enum LastName {
+    WST_LX0_CJV8_NU8_XUS3_R_BX_VG
+}
+
+final lastNameValues = EnumValues({
+    "WstLx0cjv8NU8xus3rBxVg==": LastName.WST_LX0_CJV8_NU8_XUS3_R_BX_VG
+});
+
+enum PurchaseType {
+    ONE_TIME
+}
+
+final purchaseTypeValues = EnumValues({
+    "one_time": PurchaseType.ONE_TIME
+});
+
+enum DatumStatus {
+    PENDING
+}
+
+final datumStatusValues = EnumValues({
+    "pending": DatumStatus.PENDING
+});
+
+enum SubType {
+    CARD
+}
+
+final subTypeValues = EnumValues({
+    "card": SubType.CARD
+});
+
+enum Type {
+    FUNDING
+}
+
+final typeValues = EnumValues({
+    "funding": Type.FUNDING
+});
+
+enum UniqueId {
+    KYUS_DX_S9_I_IF_QNR_XFX_L5_QG
+}
+
+final uniqueIdValues = EnumValues({
+    "KYUSDxS9IIfQnrXfx+L5Qg==": UniqueId.KYUS_DX_S9_I_IF_QNR_XFX_L5_QG
+});
 
 class BeneficiaryDatum {
     final String? phone;
@@ -212,14 +276,14 @@ class Product {
     final String? name;
     final String? code;
     final String? serviceName;
-    final String? category;
+    final Category? category;
     final String? price;
     final String? consumerDiscount;
     final String? vendorDiscount;
     final String? serviceFee;
     final String? logo;
     final String? duration;
-    final String? status;
+    final ProductStatus? status;
 
     Product({
         this.name,
@@ -239,44 +303,114 @@ class Product {
         name: json["name"],
         code: json["code"],
         serviceName: json["service_name"],
-        category: json["category"],
+        category: categoryValues.map[json["category"]]!,
         price: json["price"],
         consumerDiscount: json["consumer_discount"],
         vendorDiscount: json["vendor_discount"],
         serviceFee: json["service_fee"],
         logo: json["logo"],
         duration: json["duration"],
-        status: json["status"],
+        status: productStatusValues.map[json["status"]]!,
     );
 
     Map<String, dynamic> toJson() => {
         "name": name,
         "code": code,
         "service_name": serviceName,
-        "category": category,
+        "category": categoryValues.reverse[category],
         "price": price,
         "consumer_discount": consumerDiscount,
         "vendor_discount": vendorDiscount,
         "service_fee": serviceFee,
         "logo": logo,
         "duration": duration,
-        "status": status,
+        "status": productStatusValues.reverse[status],
     };
 }
 
+enum Category {
+    AIRTIME,
+    DATA
+}
+
+final categoryValues = EnumValues({
+    "airtime": Category.AIRTIME,
+    "data": Category.DATA
+});
+
+enum ProductStatus {
+    ACTIVE
+}
+
+final productStatusValues = EnumValues({
+    "active": ProductStatus.ACTIVE
+});
+
 class Service {
-    final String? category;
+    final Category? category;
 
     Service({
         this.category,
     });
 
     factory Service.fromJson(Map<String, dynamic> json) => Service(
-        category: json["category"],
+        category: categoryValues.map[json["category"]]!,
     );
 
     Map<String, dynamic> toJson() => {
-        "category": category,
+        "category": categoryValues.reverse[category],
+    };
+}
+
+class SiteData {
+    final String? idCardUrl;
+    final String? userImageUrl;
+
+    SiteData({
+        this.idCardUrl,
+        this.userImageUrl,
+    });
+
+    factory SiteData.fromJson(Map<String, dynamic> json) => SiteData(
+        idCardUrl: json["id_card_url"],
+        userImageUrl: json["user_image_url"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "id_card_url": idCardUrl,
+        "user_image_url": userImageUrl,
+    };
+}
+
+class SubService {
+    final int? id;
+    final String? name;
+    final String? code;
+    final Category? category;
+    final ProductStatus? status;
+
+    SubService({
+        this.id,
+        this.name,
+        this.code,
+        this.category,
+        this.status,
+    });
+
+    factory SubService.fromJson(Map<String, dynamic> json) => SubService(
+        id: json["id"],
+        name: json["name"],
+        code: json["code"],
+        category: categoryValues.map[json["category"]]!,
+        status: productStatusValues.map[json["status"]]!,
+    );
+
+    Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "code": code,
+        "category": categoryValues.reverse[category],
+        "status": productStatusValues.reverse[status],
     };
 }
 
@@ -297,13 +431,13 @@ class UserAccount {
 }
 
 class UserDatum {
-    final String? uniqueId;
-    final String? firstName;
-    final String? lastName;
+    final UniqueId? uniqueId;
+    final FirstName? firstName;
+    final LastName? lastName;
     final String? email;
     final String? mobileNumber;
     final String? level;
-    final String? status;
+    final ProductStatus? status;
     final String? emailStatus;
     final DateTime? regDate;
 
@@ -320,25 +454,25 @@ class UserDatum {
     });
 
     factory UserDatum.fromJson(Map<String, dynamic> json) => UserDatum(
-        uniqueId: json["unique_id"],
-        firstName: json["first_name"],
-        lastName: json["last_name"],
+        uniqueId: uniqueIdValues.map[json["unique_id"]]!,
+        firstName: firstNameValues.map[json["first_name"]]!,
+        lastName: lastNameValues.map[json["last_name"]]!,
         email: json["email"],
         mobileNumber: json["mobile_number"],
         level: json["level"],
-        status: json["status"],
+        status: productStatusValues.map[json["status"]]!,
         emailStatus: json["email_status"],
         regDate: json["reg_date"] == null ? null : DateTime.parse(json["reg_date"]),
     );
 
     Map<String, dynamic> toJson() => {
-        "unique_id": uniqueId,
-        "first_name": firstName,
-        "last_name": lastName,
+        "unique_id": uniqueIdValues.reverse[uniqueId],
+        "first_name": firstNameValues.reverse[firstName],
+        "last_name": lastNameValues.reverse[lastName],
         "email": email,
         "mobile_number": mobileNumber,
         "level": level,
-        "status": status,
+        "status": productStatusValues.reverse[status],
         "email_status": emailStatus,
         "reg_date": regDate?.toIso8601String(),
     };
@@ -366,4 +500,16 @@ class UserSettingsDatum {
         "email": email,
         "push_notification": pushNotification,
     };
+}
+
+class EnumValues<T> {
+    Map<String, T> map;
+    late Map<T, String> reverseMap;
+
+    EnumValues(this.map);
+
+    Map<T, String> get reverse {
+            reverseMap = map.map((k, v) => MapEntry(v, k));
+            return reverseMap;
+    }
 }

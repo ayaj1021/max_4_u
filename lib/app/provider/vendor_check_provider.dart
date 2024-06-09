@@ -4,15 +4,16 @@ import 'package:max_4_u/app/database/database.dart';
 class VendorCheckProvider extends ChangeNotifier {
   String level = '';
 
-  getUserLevel() async {
-    final userLevel = await SecureStorage().getUserType();
+  getUserLevel(BuildContext context) async {
+   final userLevel = await SecureStorage().getUserType();
+   // final userLevel = Provider.of<AuthProviderImpl>(context).resDataData;
     level = userLevel;
     notifyListeners();
     return userLevel;
   }
 
   var _isVendor = '5';
-  //getUserLevel();
+ 
   String get isVendor => _isVendor;
 
   void changeVendor(String userType) async {

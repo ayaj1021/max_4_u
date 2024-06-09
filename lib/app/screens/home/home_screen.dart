@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/database/database.dart';
@@ -36,8 +38,18 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     getServices();
     getName();
-
+    getUserType();
     super.initState();
+  }
+
+  String? userType;
+
+  getUserType() async {
+    final user = await SecureStorage().getUserType();
+    setState(() {
+      userType = user;
+    });
+    return user;
   }
 
   getName() async {
@@ -152,8 +164,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                 );
                               }),
                         ),
-                        verticalSpace(vendor.isVendor == '1' ? 0 : 16),
-                        vendor.isVendor == '1'
+                        verticalSpace(
+                            //  vendor.isVendor == '1'
+                            userType == '1' ? 0 : 16),
+                        //    vendor.isVendor == '1'
+                        userType == '1'
                             ? const SizedBox()
                             : Row(
                                 mainAxisAlignment:
@@ -186,7 +201,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                     verticalSpace(40),
-                    vendor.isVendor == '1'
+                    //   vendor.isVendor == '1'
+
+                    userType == '1'
                         ? Text(
                             'Transaction history',
                             style: AppTextStyles.font18.copyWith(
@@ -216,9 +233,15 @@ class _HomeScreenState extends State<HomeScreen> {
                             ],
                           ),
                     verticalSpace(17),
-                    vendor.isVendor == '1'
+                    // vendor.isVendor == '1'
+                    userType == '1'
                         ? const TransactionHistoryContainer()
                         : const OverViewContainer(),
+
+                    // ElevatedButton(onPressed: (){
+                    //   final level =  authProv.resDataData.userData![0].level;
+                    //   log('this is level: $level');
+                    // }, child: Text('Get level'))
                   ],
                 ),
               ),

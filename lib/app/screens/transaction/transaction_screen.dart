@@ -76,7 +76,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    
     return Consumer<ReloadUserDataProvider>(
       builder: (context, reloadData, _) {
         return Scaffold(
@@ -115,8 +114,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                             ? Center(
                                 child: CircularProgressIndicator(
                                     color: AppColors.primaryColor))
-                            : reloadData.loadData.transactionHistory!.data ==
-                                    null
+                            : reloadData.loadData.transactionHistory == null
                                 ? Center(
                                     child: Text(
                                       'No data',
@@ -206,75 +204,69 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                               )
                                             ],
                                           ),
-                                          SizedBox(
-                                            height: MediaQuery.of(context)
-                                                .size
-                                                .height,
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                            child: Column(
-                                              children: List.generate(
-                                                
-                                                reloadData
+                                         
+                                          Column(
+                                            children: List.generate(
+                                              reloadData.loadData.autoRenewal!
+                                                  .data!.length,
+                                              (index) {
+                                                final data = reloadData
                                                     .loadData
                                                     .transactionHistory!
-                                                    .data!
-                                                    .length,
-                                                (index) {
-                                                  final data = reloadData
-                                                      .loadData
-                                                      .transactionHistory!
-                                                      .data![index];
-                                                  return GestureDetector(
-                                                    onTap: () => nextScreen(
-                                                        context,
-                                                        TransactionDetailsScreen(
-                                                          amount:
-                                                              '${data.amountPaid}',
-                                                          referenceId:
-                                                              '${data.referenceId}',
-                                                          status:
-                                                              '${data.status}', date: '${data.regDate}', type: '${data.type}',
-                                                        )),
-                                                    child: Column(
-                                                      children: [
-                                                        TransactionSection(
-                                                            transactionIcon:
-                                                                Icons.money,
-                                                            transactionType:
-                                                                '${data.subType}',
-                                                            transactionDate:
-                                                                 '${data.regDate}',
-                                                            transactionAmount:
-                                                                'N${data.amountPaid}',
-                                                            transactionStatus:
-                                                                '${data.status}',
-                                                            transactionColor:
-                                                                Color(
-                                                                    0xffD6DDFE),
-                                                            transactionStatusColor: data
-                                                                        .status ==
-                                                                    'success'
-                                                                ? Colors.green
-                                                                : data.status ==
-                                                                        'pending'
-                                                                    ? Color(
-                                                                        0xffA6B309)
-                                                                    : Colors
-                                                                        .red),
-                                                        verticalSpace(8),
-                                                        Divider(
-                                                          color: AppColors
-                                                              .blackColor
-                                                              .withOpacity(0.1),
-                                                        ),
-                                                        verticalSpace(8),
-                                                      ],
-                                                    ),
-                                                  );
-                                                },
-                                              ),
+                                                    .data![index];
+                                                return GestureDetector(
+                                                  onTap: () => nextScreen(
+                                                      context,
+                                                      TransactionDetailsScreen(
+                                                        amount:
+                                                            '${data.amountPaid}',
+                                                        referenceId:
+                                                            '${data.referenceId}',
+                                                        status:
+                                                            '${data.status}',
+                                                        date: '${data.regDate}',
+                                                        type: '${data.type}',
+                                                      )),
+                                                  child: Column(
+                                                    children: [
+                                                       ElevatedButton(
+                                              onPressed: () {
+                                                log('${reloadData.loadData.autoRenewal!.data![0].level}');
+                                              },
+                                              child: Text('')),
+                                                      TransactionSection(
+                                                          transactionIcon:
+                                                              Icons.money,
+                                                          transactionType:
+                                                              '${data.subType}',
+                                                          transactionDate:
+                                                              '${data.regDate}',
+                                                          transactionAmount:
+                                                              'N${data.amountPaid}',
+                                                          transactionStatus:
+                                                              '${data.status}',
+                                                          transactionColor:
+                                                              Color(0xffD6DDFE),
+                                                          transactionStatusColor: data
+                                                                      .status ==
+                                                                  'success'
+                                                              ? Colors.green
+                                                              : data.status ==
+                                                                      'pending'
+                                                                  ? Color(
+                                                                      0xffA6B309)
+                                                                  : Colors.red),
+                                                      verticalSpace(8),
+                                                      Divider(
+                                                        color: AppColors
+                                                            .blackColor
+                                                            .withOpacity(0.1),
+                                                      ),
+                                                      verticalSpace(8),
+                                                    ],
+                                                  ),
+                                                );
+                                              },
                                             ),
                                           )
                                         ],

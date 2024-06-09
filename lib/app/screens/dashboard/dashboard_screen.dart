@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:max_4_u/app/provider/auth_provider.dart';
 import 'package:max_4_u/app/screens/admin_section/requests_screen.dart';
 import 'package:max_4_u/app/screens/admin_section/users_screen.dart';
 import 'package:max_4_u/app/database/database.dart';
@@ -29,7 +30,15 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     });
     super.initState();
   }
+ String? userType;
 
+  getUserType() async {
+    final user = await SecureStorage().getUserType();
+    setState(() {
+      userType = user;
+    });
+    return user;
+  }
   final userPages = [
     const HomeScreen(),
     const TransactionScreen(),
@@ -59,148 +68,148 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     });
   }
 
-  String userType = '';
-
-  getUserType() async {
-    final user = await SecureStorage().getUserType();
-    setState(() {
-      userType = user;
-    });
-    return user;
-  }
+ 
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<VendorCheckProvider>(builder: (context, vendor, _) {
-      var pages = userPages;
-      var pageItems = [
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.receipt_long_outlined), label: 'Transaction'),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.support_agent_outlined), label: 'Support'),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline), label: 'Profile'),
-      ];
+    return Consumer3<VendorCheckProvider, AuthProviderImpl, ReloadUserDataProvider>(
+      builder: (context, vendor, authProv,reloadData, _) {
+        var pages = userPages;
+        var pageItems = [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.receipt_long_outlined), label: 'Transaction'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.support_agent_outlined), label: 'Support'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.person_outline), label: 'Profile'),
+        ];
 
-      switch (vendor.isVendor) {
-        case '2':
-          pages = vendorPages;
-          pageItems = [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.people_outline), label: 'Customers'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.receipt_long_outlined), label: 'Transaction'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.support_agent_outlined), label: 'Support'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.person_outline), label: 'Profile'),
-          ];
-          break;
+        // final userLevel = authProv.resDataData.userData![0].level;
+        // final level = reloadData.loadData.userData![0].level;
 
-        case '4':
-          pages = adminPages;
-          pageItems = [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.people_outline), label: 'Users'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.receipt_long_outlined), label: 'Transaction'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.support_agent_outlined), label: 'Requests'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.person_outline), label: 'Profile'),
-          ];
-          break;
+        switch (userType) {
+          case '2':
+            pages = vendorPages;
+            pageItems = [
+              BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.people_outline), label: 'Customers'),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.receipt_long_outlined),
+                  label: 'Transaction'),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.support_agent_outlined), label: 'Support'),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.person_outline), label: 'Profile'),
+            ];
+            break;
 
-        case '5':
-          pages = adminPages;
-          pageItems = [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.people_outline), label: 'Users'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.receipt_long_outlined), label: 'Transaction'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.support_agent_outlined), label: 'Requests'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.person_outline), label: 'Profile'),
-          ];
-          break;
-        default:
-          pages;
-          pageItems;
-          break;
-      }
-      return Scaffold(
-        body: pages[_selectedIndex],
-        bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          selectedItemColor: AppColors.primaryColor,
-          currentIndex: _selectedIndex,
-          onTap: changePage,
-          items: pageItems,
+          case '4':
+            pages = adminPages;
+            pageItems = [
+              BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.people_outline), label: 'Users'),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.receipt_long_outlined),
+                  label: 'Transaction'),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.support_agent_outlined), label: 'Requests'),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.person_outline), label: 'Profile'),
+            ];
+            break;
 
-          // userType == '2'
-          //     ? const [
-          //         BottomNavigationBarItem(
-          //             icon: Icon(Icons.home), label: 'Home'),
-          //         BottomNavigationBarItem(
-          //             icon: Icon(Icons.people_outline), label: 'Customers'),
-          //         BottomNavigationBarItem(
-          //             icon: Icon(Icons.receipt_long_outlined),
-          //             label: 'Transaction'),
-          //         BottomNavigationBarItem(
-          //             icon: Icon(Icons.support_agent_outlined),
-          //             label: 'Support'),
-          //         BottomNavigationBarItem(
-          //             icon: Icon(Icons.person_outline), label: 'Profile'),
-          //       ]
-          //     :
-          //     // userType == '1' ?
+          case '5':
+            pages = adminPages;
+            pageItems = [
+              BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.people_outline), label: 'Users'),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.receipt_long_outlined),
+                  label: 'Transaction'),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.support_agent_outlined), label: 'Requests'),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.person_outline), label: 'Profile'),
+            ];
+            break;
+          default:
+            pages;
+            pageItems;
+            break;
+        }
+        return Scaffold(
+          body:  pages[_selectedIndex],
+          bottomNavigationBar: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            selectedItemColor: AppColors.primaryColor,
+            currentIndex: _selectedIndex,
+            onTap: changePage,
+            items: pageItems,
 
-          //     // const [
-          //     //     BottomNavigationBarItem(
-          //     //         icon: Icon(Icons.home), label: 'Home'),
-          //     //     BottomNavigationBarItem(
-          //     //         icon: Icon(Icons.receipt_long_outlined),
-          //     //         label: 'Transaction'),
-          //     //     BottomNavigationBarItem(
-          //     //         icon: Icon(Icons.support_agent_outlined),
-          //     //         label: 'Support'),
-          //     //     BottomNavigationBarItem(
-          //     //         icon: Icon(Icons.person_outline), label: 'Profile'),
-          //     //   ]
-          //     userType == '4'
-          //         ? const [
-          //             BottomNavigationBarItem(
-          //                 icon: Icon(Icons.home), label: 'Home'),
-          //             BottomNavigationBarItem(
-          //                 icon: Icon(Icons.people_outline), label: 'Users'),
-          //             BottomNavigationBarItem(
-          //                 icon: Icon(Icons.receipt_long_outlined),
-          //                 label: 'Transaction'),
-          //             BottomNavigationBarItem(
-          //                 icon: Icon(Icons.support_agent_outlined),
-          //                 label: 'Requests'),
-          //             BottomNavigationBarItem(
-          //                 icon: Icon(Icons.person_outline), label: 'Profile'),
-          //           ]
-          //         : [
-          //             BottomNavigationBarItem(
-          //                 icon: Icon(Icons.home), label: 'Home'),
-          //             BottomNavigationBarItem(
-          //                 icon: Icon(Icons.receipt_long_outlined),
-          //                 label: 'Transaction'),
-          //             BottomNavigationBarItem(
-          //                 icon: Icon(Icons.support_agent_outlined),
-          //                 label: 'Support'),
-          //             BottomNavigationBarItem(
-          //                 icon: Icon(Icons.person_outline), label: 'Profile'),
-          //           ],
-        ),
-      );
-    });
+            // userType == '2'
+            //     ? const [
+            //         BottomNavigationBarItem(
+            //             icon: Icon(Icons.home), label: 'Home'),
+            //         BottomNavigationBarItem(
+            //             icon: Icon(Icons.people_outline), label: 'Customers'),
+            //         BottomNavigationBarItem(
+            //             icon: Icon(Icons.receipt_long_outlined),
+            //             label: 'Transaction'),
+            //         BottomNavigationBarItem(
+            //             icon: Icon(Icons.support_agent_outlined),
+            //             label: 'Support'),
+            //         BottomNavigationBarItem(
+            //             icon: Icon(Icons.person_outline), label: 'Profile'),
+            //       ]
+            //     :
+            //     // userType == '1' ?
+
+            //     // const [
+            //     //     BottomNavigationBarItem(
+            //     //         icon: Icon(Icons.home), label: 'Home'),
+            //     //     BottomNavigationBarItem(
+            //     //         icon: Icon(Icons.receipt_long_outlined),
+            //     //         label: 'Transaction'),
+            //     //     BottomNavigationBarItem(
+            //     //         icon: Icon(Icons.support_agent_outlined),
+            //     //         label: 'Support'),
+            //     //     BottomNavigationBarItem(
+            //     //         icon: Icon(Icons.person_outline), label: 'Profile'),
+            //     //   ]
+            //     userType == '4'
+            //         ? const [
+            //             BottomNavigationBarItem(
+            //                 icon: Icon(Icons.home), label: 'Home'),
+            //             BottomNavigationBarItem(
+            //                 icon: Icon(Icons.people_outline), label: 'Users'),
+            //             BottomNavigationBarItem(
+            //                 icon: Icon(Icons.receipt_long_outlined),
+            //                 label: 'Transaction'),
+            //             BottomNavigationBarItem(
+            //                 icon: Icon(Icons.support_agent_outlined),
+            //                 label: 'Requests'),
+            //             BottomNavigationBarItem(
+            //                 icon: Icon(Icons.person_outline), label: 'Profile'),
+            //           ]
+            //         : [
+            //             BottomNavigationBarItem(
+            //                 icon: Icon(Icons.home), label: 'Home'),
+            //             BottomNavigationBarItem(
+            //                 icon: Icon(Icons.receipt_long_outlined),
+            //                 label: 'Transaction'),
+            //             BottomNavigationBarItem(
+            //                 icon: Icon(Icons.support_agent_outlined),
+            //                 label: 'Support'),
+            //             BottomNavigationBarItem(
+            //                 icon: Icon(Icons.person_outline), label: 'Profile'),
+            //           ],
+          ),
+        );
+      },
+    );
   }
 }

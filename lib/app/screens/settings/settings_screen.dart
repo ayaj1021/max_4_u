@@ -20,127 +20,130 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-          child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-        child: Column(
-          children: [
-            Row(
+   
+    
+        return Scaffold(
+          body: SafeArea(
+              child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+            child: Column(
               children: [
-                GestureDetector(
-                  onTap: () => Navigator.pop(context),
-                  child: const Icon(
-                    Icons.arrow_back,
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: const Icon(
+                        Icons.arrow_back,
+                      ),
+                    ),
+                    horizontalSpace(119),
+                    const Text(
+                      'Settings',
+                      style: AppTextStyles.font18,
+                    )
+                  ],
+                ),
+                verticalSpace(25),
+                Container(
+                  alignment: Alignment.center,
+                  height: 116.h,
+                  width: MediaQuery.of(context).size.width,
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: AppColors.whiteColor,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SettingsOptionSection(
+                        onTap: () =>
+                            nextScreen(context, const ChangePasswordScreen()),
+                        icon: 'assets/icons/profile_icon.png',
+                        settingOption: 'Change password',
+                      ),
+                      verticalSpace(20),
+                      SettingsOptionSection(
+                        onTap: () =>
+                            nextScreen(context, const BiometricAuthScreen()),
+                        icon: 'assets/icons/setting_icon.png',
+                        settingOption: 'Biometric Authentication',
+                      ),
+                    ],
                   ),
                 ),
-                horizontalSpace(119),
-                const Text(
-                  'Settings',
-                  style: AppTextStyles.font18,
+                verticalSpace(25),
+                Container(
+                  alignment: Alignment.center,
+                  height: 116.h,
+                  width: MediaQuery.of(context).size.width,
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: AppColors.whiteColor,
+                  ),
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SettingsOptionSection(
+                          onTap: () => nextScreen(
+                              context, const PushNotificationSettingsScreen()),
+                          icon: 'assets/icons/profile_icon.png',
+                          settingOption: 'Push notification settings',
+                        ),
+                        verticalSpace(20),
+                        SettingsOptionSection(
+                          onTap: () => nextScreen(
+                              context, const EmailNotificationSettingsScreen()),
+                          icon: 'assets/icons/setting_icon.png',
+                          settingOption: 'Email notification settings',
+                        ),
+                      ]),
+                ),
+                verticalSpace(25),
+                Container(
+                  alignment: Alignment.center,
+                  height: 56.h,
+                  width: MediaQuery.of(context).size.width,
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: AppColors.whiteColor,
+                  ),
+                  child: const SettingsOptionSection(
+                    icon: 'assets/icons/profile_icon.png',
+                    settingOption: 'About Max4u',
+                  ),
+                ),
+                verticalSpace(25),
+                Container(
+                  alignment: Alignment.center,
+                  height: 56.h,
+                  width: MediaQuery.of(context).size.width,
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: AppColors.whiteColor,
+                  ),
+                  child: SettingsOptionSection(
+                    onTap: () => nextScreen(context, const DeleteAccountScreen()),
+                    icon: 'assets/icons/setting_icon.png',
+                    settingOption: 'Delete account',
+                  ),
+                ),
+                verticalSpace(152),
+                ButtonWidget(
+                  text: 'Log out',
+                  onTap: ()async {
+                    await SecureStorage().logoutUser();
+                    showMessage(context, 'Log out successful');
+                    nextScreenReplace(context, LoginScreen());  
+                  },
                 )
               ],
             ),
-            verticalSpace(25),
-            Container(
-              alignment: Alignment.center,
-              height: 116.h,
-              width: MediaQuery.of(context).size.width,
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: AppColors.whiteColor,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SettingsOptionSection(
-                    onTap: () =>
-                        nextScreen(context, const ChangePasswordScreen()),
-                    icon: 'assets/icons/profile_icon.png',
-                    settingOption: 'Change password',
-                  ),
-                  verticalSpace(20),
-                  SettingsOptionSection(
-                    onTap: () =>
-                        nextScreen(context, const BiometricAuthScreen()),
-                    icon: 'assets/icons/setting_icon.png',
-                    settingOption: 'Biometric Authentication',
-                  ),
-                ],
-              ),
-            ),
-            verticalSpace(25),
-            Container(
-              alignment: Alignment.center,
-              height: 116.h,
-              width: MediaQuery.of(context).size.width,
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: AppColors.whiteColor,
-              ),
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SettingsOptionSection(
-                      onTap: () => nextScreen(
-                          context, const PushNotificationSettingsScreen()),
-                      icon: 'assets/icons/profile_icon.png',
-                      settingOption: 'Push notification settings',
-                    ),
-                    verticalSpace(20),
-                    SettingsOptionSection(
-                      onTap: () => nextScreen(
-                          context, const EmailNotificationSettingsScreen()),
-                      icon: 'assets/icons/setting_icon.png',
-                      settingOption: 'Email notification settings',
-                    ),
-                  ]),
-            ),
-            verticalSpace(25),
-            Container(
-              alignment: Alignment.center,
-              height: 56.h,
-              width: MediaQuery.of(context).size.width,
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: AppColors.whiteColor,
-              ),
-              child: const SettingsOptionSection(
-                icon: 'assets/icons/profile_icon.png',
-                settingOption: 'About Max4u',
-              ),
-            ),
-            verticalSpace(25),
-            Container(
-              alignment: Alignment.center,
-              height: 56.h,
-              width: MediaQuery.of(context).size.width,
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: AppColors.whiteColor,
-              ),
-              child: SettingsOptionSection(
-                onTap: () => nextScreen(context, const DeleteAccountScreen()),
-                icon: 'assets/icons/setting_icon.png',
-                settingOption: 'Delete account',
-              ),
-            ),
-            verticalSpace(152),
-            ButtonWidget(
-              text: 'Log out',
-              onTap: ()async {
-                await SecureStorage().logoutUser();
-                showMessage(context, 'Log out successful');
-                nextScreenReplace(context, LoginScreen());  
-              },
-            )
-          ],
-        ),
-      )),
-    );
+          )),
+        );
+     
   }
 }

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max_4_u/app/screens/admin_section/components/requests_details_screen.dart';
 import 'package:max_4_u/app/provider/admin_section/get_all_vendors_requests_model.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
-import 'package:max_4_u/app/utils/screen_navigator.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
 import 'package:provider/provider.dart';
 
@@ -21,20 +19,20 @@ class PendingComponent extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    nextScreen(
-                      context,
-                      RequestsDetailsScreen(
-                        name:
-                            '${getAllVendorRequest.firstName} ${getAllVendorRequest.lastName}',
-                        phoneNumber: '${getAllVendorRequest.phoneNumber}',
-                        uniqueId: '${getAllVendorRequest.phoneNumber}',
-                      ),
-                    );
-                  },
-                  child: Text('Request details screen'),
-                ),
+                // ElevatedButton(
+                //   onPressed: () {
+                //     nextScreen(
+                //       context,
+                //       RequestsDetailsScreen(
+                //         name:
+                //             '${getAllVendorRequest.firstName} ${getAllVendorRequest.lastName}',
+                //         phoneNumber: '${getAllVendorRequest.phoneNumber}',
+                //         uniqueId: '${getAllVendorRequest.phoneNumber}',
+                //       ),
+                //     );
+                //   },
+                //   child: Text('Request details screen'),
+                // ),
                 SizedBox(
                   height: 56.h,
                   width: 56.w,
