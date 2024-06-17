@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -52,8 +51,6 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
     super.dispose();
   }
 
-
-
   var codeValues = [];
   var networks = [];
   getProductCodeValues() async {
@@ -99,7 +96,7 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
                           ),
                         ),
                         horizontalSpace(104),
-                        const Text(
+                         Text(
                           'Buy Airtime',
                           style: AppTextStyles.font18,
                         )
@@ -163,41 +160,34 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
                       ),
                     ),
                     verticalSpace(30),
-                    ElevatedButton(
-                      onPressed: (){
-                        log(beneficiaryNumber);
-                      },
-                      child: Text(''),
-                    ),
+
                     Stack(
                       children: [
                         TextInputField(
                           controller: _phoneNumber,
                           labelText: 'Phone Number',
-                          hintText: beneficiaryNumber ?? 'receiver\'s number',
+                          hintText: 'receiver\'s number',
                           textInputType: TextInputType.number,
-                          onChanged: (p0) {
-                            beneficiaryNumber = _phoneNumber.text;
-                          },
                         ),
+                          // ElevatedButton(
+                          //       onPressed: () {
+                          //         log(beneficiaryNumber);
+                          //       },
+                          //       child: Text('Press'),
+                          //     ),
                         Positioned(
                           right: 0,
                           child: GestureDetector(
                             onTap: () {
-                              ElevatedButton(
-                      onPressed: (){
-                        log(beneficiaryNumber);
-                      },
-                      child: Text(''),
-                    );
+                            
                               final beneficiary = nextScreen(
                                   context, const BeneficiaryScreen());
 
-                                  if (beneficiary != null) {
-                                    setState(() {
-                                      beneficiaryNumber = beneficiary;
-                                    });
-                                  }
+                              if (beneficiary != null) {
+                                setState(() {
+                                  _phoneNumber.text = beneficiary;
+                                });
+                              }
                             },
                             child: Text(
                               'select from beneficiary',
@@ -284,6 +274,12 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
                       onTap: () async {
                         if (_phoneNumber.text.isEmpty) {
                           showMessage(context, 'Phone number is required',
+                              isError: true);
+                          return;
+                        }
+                        if (_phoneNumber.text.length < 10 ||
+                            _phoneNumber.text.length > 11) {
+                          showMessage(context, 'Enter a valid phone number',
                               isError: true);
                           return;
                         }

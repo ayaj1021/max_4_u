@@ -11,15 +11,6 @@ class AuthProviderImpl extends ChangeNotifier
     implements AuthenticationProviderUseCase {
   ViewState state = ViewState.Idle;
 
-  final otpController = TextEditingController();
-  final emailController = TextEditingController();
-  final firstNameController = TextEditingController();
-  final lastNameController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
-  final newPasswordController = TextEditingController();
-  final confirmNewPasswordController = TextEditingController();
-
   String wrongPassword = '';
   String existEmail = '';
 
@@ -32,8 +23,6 @@ class AuthProviderImpl extends ChangeNotifier
   bool _status = false;
   bool get status => _status;
 
- 
-
   ResponseDataData resDataData = ResponseDataData();
 
   String _userName = '';
@@ -41,6 +30,15 @@ class AuthProviderImpl extends ChangeNotifier
 
   String _email = '';
   String get email => _email;
+
+  String _userLevel = '';
+
+  String get userLevel => _userLevel;
+
+  void updateNumber(String newUserLevel) {
+    _userLevel = newUserLevel;
+    notifyListeners();
+  }
 
 //Sign up user
   @override
@@ -56,34 +54,48 @@ class AuthProviderImpl extends ChangeNotifier
     };
     print(body);
     await SecureStorage().saveUserPhone(phoneNumber);
-
-    final response = await ApiService().authPostRequest(
-      body: body,
-      message: _message,
-    );
-
-    print(body);
-
-    _status = response['data']['status'];
-    print('$_status');
-
     try {
-      if (_status == true) {
+      final response = await ApiService().authPostRequest(
+        body: body,
+        message: _message,
+      );
+
+      print(body);
+
+      _status = response['data']['status'];
+      print('$_status');
+
+      if (response != null && response['data'] != null) {
         _message = response['data']['message'];
-
-        state = ViewState.Success;
-
-        notifyListeners();
-      } else {
         _status = response['data']['status'];
+        print('$_status');
+
+        if (_status == true) {
+          _message = response['data']['message'];
+
+          state = ViewState.Success;
+
+          notifyListeners();
+        } else {
+          _status = response['data']['status'];
+          state = ViewState.Error;
+          _message = response['data']['error_data']['mobile_number'];
+          _message = response['data']['message'];
+          notifyListeners();
+        }
+      } else {
+        _status = false;
         state = ViewState.Error;
-        _message = response['data']['message'];
-        _message = response['data']['error_data']['mobile_number'];
+        _message = 'Invalid response from server';
         notifyListeners();
       }
     } catch (e) {
       log(e.toString());
+
+      state = ViewState.Error;
       _status = false;
+      _message = 'An error occurred during sign-up';
+      // _message = '$e';
       notifyListeners();
     }
   }
@@ -105,16 +117,15 @@ class AuthProviderImpl extends ChangeNotifier
     print(body);
 
     await SecureStorage().saveUserOtp(otp);
-
-    final response = await ApiService().authPostRequest(
-      body: body,
-    );
-    _status = response['data']['status'];
-    print(response);
-
-    _message = response['data']['message'];
-
     try {
+      final response = await ApiService().authPostRequest(
+        body: body,
+      );
+      _status = response['data']['status'];
+      print(response);
+
+      _message = response['data']['message'];
+
       if (_status == true) {
         _message = response['data']['message'];
 
@@ -130,6 +141,7 @@ class AuthProviderImpl extends ChangeNotifier
       }
     } catch (e) {
       state = ViewState.Error;
+      _status = false;
       _message = e.toString();
       notifyListeners();
     }
@@ -138,7 +150,7 @@ class AuthProviderImpl extends ChangeNotifier
   //To fully register a user
 
   @override
-  Future<ResponseDataData> registerUser({
+  Future registerUser({
     required String email,
     required String password,
     required String firstName,
@@ -167,20 +179,26 @@ class AuthProviderImpl extends ChangeNotifier
     await SecureStorage().saveUserName(_userName);
 
     log(body.toString());
-    final response = await ApiService().authPostRequest(
-      body: body,
-      message: _message,
-    );
 
     try {
+      final response = await ApiService().authPostRequest(
+        body: body,
+        message: _message,
+      );
+
+      log(response);
+
       _status = response['data']['status'];
+      _message = response['data']['message'];
       if (_status == true) {
         // _status = response['data']['status'];
         _message = response['data']['message'];
         state = ViewState.Success;
         notifyListeners();
-         resDataData =
+        resDataData =
             ResponseDataData.fromJson(response['response_data']['data']);
+        _userLevel = resDataData.userData![0].level!;
+        updateNumber(_userLevel);
         log('this is the result: $resDataData');
         return resDataData;
       } else {
@@ -188,22 +206,21 @@ class AuthProviderImpl extends ChangeNotifier
         state = ViewState.Error;
         _status = response['data']['status'];
 
-        wrongPassword = response['data']['error_data']['password'];
-        existEmail = response['data']['error_data']['email'];
+        _message = response['data']['error_data']['password'];
+        _message = response['data']['error_data']['email'];
         notifyListeners();
       }
     } catch (e) {
       log(e.toString());
       _status = false;
+      _message = message;
       notifyListeners();
     }
-    return response;
   }
 
 //Login user method
   @override
-  Future loginUser(
-      {required String email, required String password}) async {
+  Future loginUser({required String email, required String password}) async {
     state = ViewState.Busy;
     _message = 'Logging in your account...';
     notifyListeners();
@@ -214,32 +231,35 @@ class AuthProviderImpl extends ChangeNotifier
       "password": password,
     };
     print(body);
-    final response = await ApiService().authPostRequest(
-      body: body,
-    );
-    // log(response);
-    _status = response['data']['status'];
-    _message = response['data']['message'];
     try {
+      final response = await ApiService().authPostRequest(
+        body: body,
+      );
+      // log(response);
+      _status = response['data']['status'];
+      // _message = response['data']['message'];
+
       if (_status == true) {
         _status = response['data']['status'];
         _message = response['data']['message'];
         state = ViewState.Success;
-         resDataData = ResponseDataData.fromJson(
-            response['data']['response_data']['data']);
-        log('this is the resData: $resDataData');
-     //   context.read<ResponseDataData>().;
+        resDataData =
+            ResponseDataData.fromJson(response['data']['response_data']);
+        _userLevel = resDataData.userData![0].level!;
+        updateNumber(_userLevel);
+
         notifyListeners();
         return resDataData;
       } else {
         state = ViewState.Error;
         _status = response['data']['status'];
         _message = response['data']['message'];
-       // _message = response['data']['error_data']['login_id'];
+        // _message = response['data']['error_data']['login_id'];
         notifyListeners();
       }
     } catch (e) {
       state = ViewState.Error;
+      _status = false;
       _message = e.toString();
       notifyListeners();
     }
@@ -248,7 +268,7 @@ class AuthProviderImpl extends ChangeNotifier
 
 //Forgot password user method
   @override
-  Future<void> forgotPassword() async {
+  Future<void> forgotPassword({required String email}) async {
     state = ViewState.Busy;
     _message = 'Verifying your email...';
     notifyListeners();
@@ -256,25 +276,24 @@ class AuthProviderImpl extends ChangeNotifier
     final body = {
       "request_type": "general",
       "action": "verify_receiving_medium",
-      "receiving_medium": emailController.text.trim()
+      "receiving_medium": email
     };
 
-    _email = emailController.text;
+    _email = email;
     await SecureStorage().saveUserEmail(_email);
     _email = await SecureStorage().getUserEmail();
 
     print(body);
-
-    final response = await ApiService().authPostRequest(
-      body: body,
-    );
-    _status = response['data']['status'];
-    _message = response['data']['message'];
-
     try {
+      final response = await ApiService().authPostRequest(
+        body: body,
+      );
+      _status = response['data']['status'];
+      _message = response['data']['message'];
+
       if (_status == true) {
         state = ViewState.Success;
-        emailController.clear();
+
         _message = response['data']['message'];
         notifyListeners();
       } else {
@@ -285,6 +304,7 @@ class AuthProviderImpl extends ChangeNotifier
       }
     } catch (e) {
       state = ViewState.Error;
+      _status = false;
       _message = e.toString();
       notifyListeners();
     }
@@ -292,7 +312,7 @@ class AuthProviderImpl extends ChangeNotifier
 
   //Verify otp forgot password method
   @override
-  Future<void> verifyForgotPasswordOtp() async {
+  Future<void> verifyForgotPasswordOtp({required String otp}) async {
     state = ViewState.Busy;
     _message = 'Verifying your otp...';
     notifyListeners();
@@ -301,26 +321,24 @@ class AuthProviderImpl extends ChangeNotifier
       "request_type": "general",
       "action": "verify_otp",
       "medium_id": _email,
-      "token": otpController.text.trim(),
+      "token": otp,
     };
 
     _email = await SecureStorage().getUserEmail();
 
-    await SecureStorage().saveUserOtp(otpController.text);
+    await SecureStorage().saveUserOtp(otp);
 
     print(body);
-
-    final response = await ApiService().authPostRequest(
-      body: body,
-    );
-
-    _message = response['data']['message'];
-
     try {
+      final response = await ApiService().authPostRequest(
+        body: body,
+      );
+
+      _message = response['data']['message'];
+
       _status = response['data']['status'];
       if (_status == true) {
         state = ViewState.Success;
-        otpController.clear();
 
         _message = response['data']['message'];
 
@@ -335,6 +353,7 @@ class AuthProviderImpl extends ChangeNotifier
       }
     } catch (e) {
       state = ViewState.Error;
+      _status = false;
       _message = e.toString();
       notifyListeners();
     }
@@ -361,20 +380,18 @@ class AuthProviderImpl extends ChangeNotifier
     };
 
     print(body);
-
-    final response = await ApiService().authPostRequest(
-      body: body,
-    );
-
-    _message = response['data']['message'];
-
     try {
+      final response = await ApiService().authPostRequest(
+        body: body,
+      );
+
+      _message = response['data']['message'];
+
       _status = response['data']['status'];
 
       if (_status == true) {
         state = ViewState.Success;
-        newPasswordController.clear();
-        confirmNewPasswordController.clear();
+
         _message = response['data']['message'];
 
         notifyListeners();
@@ -391,6 +408,7 @@ class AuthProviderImpl extends ChangeNotifier
       }
     } catch (e) {
       state = ViewState.Error;
+      _status = false;
       _message = e.toString();
       notifyListeners();
     }

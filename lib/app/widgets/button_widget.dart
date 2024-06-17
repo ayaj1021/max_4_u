@@ -34,7 +34,7 @@ class ButtonWidget extends StatelessWidget {
         ),
         child: Text(
           text,
-          style: AppTextStyles.font16.copyWith(
+          style: AppTextStyles.font18.copyWith(
             color: textColor ?? AppColors.whiteColor,
             fontWeight: FontWeight.w600,
           ),

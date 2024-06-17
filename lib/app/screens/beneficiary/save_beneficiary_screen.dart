@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
+import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/provider/save_beneficiary_provider.dart';
 import 'package:max_4_u/app/screens/beneficiary/confirm_saved_beneficiary_screen.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
@@ -31,7 +32,8 @@ class _SaveBeneficiaryScreenState extends State<SaveBeneficiaryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<SaveBeneficiaryProvider>(builder: (context, saveBen, _) {
+    return Consumer2<SaveBeneficiaryProvider, ReloadUserDataProvider>(
+        builder: (context, saveBen, reloadData, _) {
       return BusyOverlay(
         show: saveBen.state == ViewState.Busy,
         title: saveBen.message,
@@ -51,7 +53,7 @@ class _SaveBeneficiaryScreenState extends State<SaveBeneficiaryScreen> {
                         ),
                       ),
                       horizontalSpace(104),
-                      const Text(
+                       Text(
                         'Save Beneficiary',
                         style: AppTextStyles.font18,
                       )
@@ -109,7 +111,7 @@ class _SaveBeneficiaryScreenState extends State<SaveBeneficiaryScreen> {
 
                         if (saveBen.status == true && context.mounted) {
                           showMessage(context, saveBen.message);
-
+                          await reloadData.reloadUserData();
                           nextScreen(
                               context, const ConfirmSavedBeneficiaryScreen());
                         }

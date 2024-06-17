@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max_4_u/app/database/database.dart';
-import 'package:max_4_u/app/provider/auth_provider.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
@@ -18,7 +16,7 @@ class BeneficiaryScreen extends StatefulWidget {
 class _BeneficiaryScreenState extends State<BeneficiaryScreen> {
   @override
   void initState() {
-    getBeneficiaryList();
+    
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<ReloadUserDataProvider>(context, listen: false)
           .reloadUserData();
@@ -26,21 +24,12 @@ class _BeneficiaryScreenState extends State<BeneficiaryScreen> {
     super.initState();
   }
 
-  List beneficiaryList = [];
-
-  getBeneficiaryList() async {
-    final beneficiary = await SecureStorage().getUserBeneficiary();
-    setState(() {
-      beneficiaryList = beneficiary;
-    });
-
-    return beneficiary;
-  }
-
+  
+int? selectedIndex;
   @override
   Widget build(BuildContext context) {
-    return Consumer<AuthProviderImpl>(
-      builder: (context, authProv, _) {
+    return Consumer<ReloadUserDataProvider>(
+      builder: (context, reloadData, _) {
         return Scaffold(
           body: SafeArea(
               child: Padding(
@@ -56,14 +45,15 @@ class _BeneficiaryScreenState extends State<BeneficiaryScreen> {
                       ),
                     ),
                     horizontalSpace(104),
-                    const Text(
+                     Text(
                       'Beneficiary List',
                       style: AppTextStyles.font18,
                     ),
                   ],
                 ),
-                verticalSpace(beneficiaryList.isEmpty ? 250 : 38),
-                beneficiaryList.isEmpty
+                verticalSpace(
+                    reloadData.loadData.beneficiaryData!.isEmpty ? 250 : 38),
+                reloadData.loadData.beneficiaryData!.isEmpty
                     ? Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -85,33 +75,35 @@ class _BeneficiaryScreenState extends State<BeneficiaryScreen> {
                         ),
                       )
                     : Expanded(
-                        child: ListView.builder(
-                            itemCount: beneficiaryList.length,
-                            itemBuilder: (_, index) {
-                              return GestureDetector(
-                                onTap: () => Navigator.pop(context, index),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    // Text(
-                                    //   beneficiaryList[0]['phone'],
-                                    //   style: AppTextStyles.font14.copyWith(
-                                    //       color: AppColors.textColor,
-                                    //       fontWeight: FontWeight.w400),
-                                    // ),
-                                    verticalSpace(4),
-                                    Text(
-                                      beneficiaryList[index]['phone'],
-                                      style: AppTextStyles.font18,
-                                    ),
-                                    verticalSpace(16),
-                                    Divider(
-                                        color: AppColors.blackColor
-                                            .withOpacity(0.05))
-                                  ],
-                                ),
-                              );
-                            }),
+                        child: Column(
+                          children: List.generate(
+                              reloadData.loadData.beneficiaryData!.length,
+                              (index) {
+                            final data =
+                                reloadData.loadData.beneficiaryData![index];
+                            return GestureDetector(
+                              onTap: () { 
+                                setState(() {
+                                  selectedIndex = index;
+                                });
+                                Navigator.pop(context, selectedIndex);},
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  verticalSpace(4),
+                                  Text(
+                                    '${data.phone}',
+                                    style: AppTextStyles.font18,
+                                  ),
+                                  verticalSpace(16),
+                                  Divider(
+                                      color: AppColors.blackColor
+                                          .withOpacity(0.05))
+                                ],
+                              ),
+                            );
+                          }),
+                        ),
                       )
               ],
             ),

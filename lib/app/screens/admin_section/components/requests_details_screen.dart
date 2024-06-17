@@ -3,9 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/provider/admin_section/approve_vendor_request_provider.dart';
 import 'package:max_4_u/app/provider/admin_section/deny_vendor_request_provider.dart';
+import 'package:max_4_u/app/screens/dashboard/dashboard_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/busy_overlay.dart';
+import 'package:max_4_u/app/utils/screen_navigator.dart';
 import 'package:max_4_u/app/utils/show_message.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
 import 'package:max_4_u/app/widgets/button_widget.dart';
@@ -17,11 +19,21 @@ class RequestsDetailsScreen extends StatelessWidget {
     required this.name,
     required this.phoneNumber,
     required this.uniqueId,
+    required this.bvnNo,
+    required this.ninNo,
+    required this.selfiePhoto,
+    required this.idPhoto,
+    required this.userType,
   });
 
   final String name;
   final String phoneNumber;
   final String uniqueId;
+  final String bvnNo;
+  final String ninNo;
+  final String selfiePhoto;
+  final String idPhoto;
+  final String userType;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +58,7 @@ class RequestsDetailsScreen extends StatelessWidget {
                               onTap: () => Navigator.pop(context),
                               child: Icon(Icons.arrow_back)),
                           horizontalSpace(125),
-                          const Text(
+                           Text(
                             'Details',
                             style: AppTextStyles.font18,
                           ),
@@ -73,7 +85,7 @@ class RequestsDetailsScreen extends StatelessWidget {
                               ),
                               verticalSpace(6),
                               Text(
-                               phoneNumber,
+                                phoneNumber,
                                 style: AppTextStyles.font16.copyWith(
                                   fontWeight: FontWeight.w500,
                                   color: Color(0xff1A1A1A),
@@ -113,7 +125,7 @@ class RequestsDetailsScreen extends StatelessWidget {
                                 ),
                                 horizontalSpace(11),
                                 Text(
-                                  '99999999999999',
+                                  bvnNo,
                                   style: AppTextStyles.font14.copyWith(
                                     fontWeight: FontWeight.w400,
                                     color: AppColors.mainTextColor,
@@ -133,7 +145,7 @@ class RequestsDetailsScreen extends StatelessWidget {
                                 ),
                                 horizontalSpace(11),
                                 Text(
-                                  '99999999999999',
+                                  ninNo,
                                   style: AppTextStyles.font14.copyWith(
                                     fontWeight: FontWeight.w400,
                                     color: AppColors.mainTextColor,
@@ -160,6 +172,12 @@ class RequestsDetailsScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8),
                           color: Color(0xffE8E8E8),
                         ),
+                        child: ClipRRect(
+                          child: Image.network(
+                            selfiePhoto,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
                       verticalSpace(24),
                       Text(
@@ -177,78 +195,88 @@ class RequestsDetailsScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8),
                           color: Color(0xffE8E8E8),
                         ),
+                        child: ClipRRect(
+                          child: Image.network(
+                            idPhoto,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
                     ],
                   ),
                 ),
-                Positioned(
-                  bottom: 0,
-                  child: Container(
-                    height: 76.h,
-                    width: MediaQuery.of(context).size.width,
-                    padding: EdgeInsets.all(16),
-                    decoration: BoxDecoration(color: AppColors.whiteColor),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SizedBox(
-                          height: 44.h,
-                          width: 160.w,
-                          child: ButtonWidget(
-                            onTap: () async {
-                              await denyVendor.denyVendorRequest(
-                                  userId: uniqueId);
+                userType == 'approved'
+                    ? SizedBox.shrink()
+                    : Positioned(
+                        bottom: 0,
+                        child: Container(
+                          height: 76.h,
+                          width: MediaQuery.of(context).size.width,
+                          padding: EdgeInsets.all(16),
+                          decoration:
+                              BoxDecoration(color: AppColors.whiteColor),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(
+                                height: 44.h,
+                                width: 160.w,
+                                child: ButtonWidget(
+                                  onTap: () async {
+                                    await denyVendor.denyVendorRequest(
+                                        userId: uniqueId);
 
-                              if (denyVendor.status == false &&
-                                  context.mounted) {
-                                showMessage(context, denyVendor.message,
-                                    isError: true);
-                                return;
-                              }
-                              if (denyVendor.status == true &&
-                                  context.mounted) {
-                                showMessage(
-                                  context,
-                                  denyVendor.message,
-                                );
-                              }
-                            },
-                            text: 'Deny request',
-                            color: Color(0xffE6E6E6),
-                            textColor: Color(0xffFF0000),
+                                    if (denyVendor.status == false &&
+                                        context.mounted) {
+                                      showMessage(context, denyVendor.message,
+                                          isError: true);
+                                      return;
+                                    }
+                                    if (denyVendor.status == true &&
+                                        context.mounted) {
+                                      showMessage(
+                                        context,
+                                        denyVendor.message,
+                                      );
+                                    }
+                                  },
+                                  text: 'Deny request',
+                                  color: Color(0xffE6E6E6),
+                                  textColor: Color(0xffFF0000),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 44.h,
+                                width: 160.w,
+                                child: ButtonWidget(
+                                  onTap: () async {
+                                    await approveRequest.approveVendorRequest(
+                                        userId: uniqueId);
+
+                                    if (approveRequest.status == false &&
+                                        context.mounted) {
+                                      showMessage(context, denyVendor.message,
+                                          isError: true);
+                                      return;
+                                    }
+                                    if (approveRequest.status == true &&
+                                        context.mounted) {
+                                      showMessage(
+                                        context,
+                                        denyVendor.message,
+                                      );
+                                      nextScreen(context, DashBoardScreen());
+                                    }
+                                  },
+                                  text: 'Approve request',
+                                  color: Color(0xffE6E6E6),
+                                  textColor: AppColors.primaryColor,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        SizedBox(
-                          height: 44.h,
-                          width: 160.w,
-                          child: ButtonWidget(
-                            onTap: () async {
-                              await approveRequest.approveVendorRequest(
-                                  userId: uniqueId);
-
-                              if (approveRequest.status == false &&
-                                  context.mounted) {
-                                showMessage(context, denyVendor.message,
-                                    isError: true);
-                                return;
-                              }
-                              if (approveRequest.status == true &&
-                                  context.mounted) {
-                                showMessage(
-                                  context,
-                                  denyVendor.message,
-                                );
-                              }
-                            },
-                            text: 'Approve request',
-                            color: Color(0xffE6E6E6),
-                            textColor: AppColors.primaryColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                )
+                      )
               ],
             ),
           ),

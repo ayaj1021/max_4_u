@@ -5,7 +5,14 @@ import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
 
 class GenerateAccountNumberScreen extends StatelessWidget {
-  const GenerateAccountNumberScreen({super.key});
+  const GenerateAccountNumberScreen(
+      {super.key,
+      required this.bankName,
+      required this.accountName,
+      required this.accountNumber});
+  final String bankName;
+  final String accountName;
+  final String accountNumber;
 
   @override
   Widget build(BuildContext context) {
@@ -24,70 +31,88 @@ class GenerateAccountNumberScreen extends StatelessWidget {
                     Icons.arrow_back,
                   ),
                 ),
-                horizontalSpace(48),
-                const Text(
+                horizontalSpace(80),
+                Text(
                   'Bank Account(Fund Wallet)',
                   style: AppTextStyles.font18,
                 ),
               ],
             ),
             verticalSpace(80),
-            Container(
-              height: 200.h,
-              width: 331.w,
-              alignment: Alignment.center,
-              padding: const EdgeInsets.symmetric(vertical: 29, horizontal: 20),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: const Color(0xffDEDEDE),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'BANK NAME',
-                    style: AppTextStyles.font12.copyWith(
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.textColor,
-                    ),
-                  ),
-                  Text(
-                    'Wema Bank',
-                    style: AppTextStyles.font18.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.textColor,
-                    ),
-                  ),
-                  verticalSpace(30),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        children: [
-                          Text(
-                            'ACCOUNT NUMBER',
-                            style: AppTextStyles.font12.copyWith(
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.textColor,
-                            ),
-                          ),
-                          Text(
-                            '0303837382',
-                            style: AppTextStyles.font18.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.textColor,
-                            ),
-                          ),
-                        ],
+            Center(
+              child: Container(
+                height: 200.h,
+                width: 331.w,
+                alignment: Alignment.center,
+                padding:
+                    const EdgeInsets.symmetric(vertical: 29, horizontal: 20),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: const Color(0xffDEDEDE),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'BANK NAME',
+                      style: AppTextStyles.font12.copyWith(
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.textColor,
                       ),
-                      const Icon(
-                        Icons.copy,
-                        color: AppColors.primaryColor,
-                        size: 18,
-                      )
-                    ],
-                  )
-                ],
+                    ),
+                    Text(
+                      bankName,
+                      style: AppTextStyles.font18.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textColor,
+                      ),
+                    ),
+                    verticalSpace(30),
+                    Text(
+                      'ACCOUNT NAME',
+                      style: AppTextStyles.font12.copyWith(
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.textColor,
+                      ),
+                    ),
+                    Text(
+                      accountName,
+                      style: AppTextStyles.font18.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textColor,
+                      ),
+                    ),
+                    verticalSpace(30),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          children: [
+                            Text(
+                              'ACCOUNT NUMBER',
+                              style: AppTextStyles.font12.copyWith(
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.textColor,
+                              ),
+                            ),
+                            Text(
+                              accountNumber,
+                              style: AppTextStyles.font18.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.textColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Icon(
+                          Icons.copy,
+                          color: AppColors.primaryColor,
+                          size: 18,
+                        )
+                      ],
+                    )
+                  ],
+                ),
               ),
             ),
             verticalSpace(56),

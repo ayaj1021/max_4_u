@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/provider/add_customer_provider.dart';
-import 'package:max_4_u/app/screens/customers_section/add_customer_reg_screen.dart';
+import 'package:max_4_u/app/screens/vendor_sections/customers_section/add_customer_reg_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/busy_overlay.dart';
@@ -49,7 +49,7 @@ class _AddCustomerOtpScreenState extends State<AddCustomerOtpScreen> {
                       onTap: () => Navigator.pop(context),
                     ),
                     verticalSpace(26),
-                    const Text(
+                     Text(
                       'Verification Code',
                       style: AppTextStyles.font20,
                     ),

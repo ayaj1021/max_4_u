@@ -49,7 +49,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                       onTap: () => Navigator.pop(context),
                     ),
                     verticalSpace(26),
-                    const Text(
+                     Text(
                       'Verification Code',
                       style: AppTextStyles.font20,
                     ),

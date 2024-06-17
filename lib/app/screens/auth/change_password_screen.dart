@@ -45,7 +45,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                           onTap: () => Navigator.pop(context),
                         ),
                         verticalSpace(26),
-                        const Text(
+                         Text(
                           'Reset password?',
                           style: AppTextStyles.font20,
                         ),
@@ -163,12 +163,12 @@ class _ChangePasswordState extends State<ChangePassword> {
                     child: Image.asset('assets/images/verify_image.png'),
                   ),
                   verticalSpace(28),
-                  const Text(
+                   Text(
                     'Password reset successfully',
                     style: AppTextStyles.font20,
                   ),
                   verticalSpace(13),
-                  const Text(
+                   Text(
                     'Log in to access your account',
                     style: AppTextStyles.font14,
                   ),

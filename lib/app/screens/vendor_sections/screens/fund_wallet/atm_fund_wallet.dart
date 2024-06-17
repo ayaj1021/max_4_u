@@ -43,7 +43,7 @@ class _AtmFundWalletState extends State<AtmFundWallet> {
                         ),
                       ),
                       horizontalSpace(50),
-                      const Text(
+                       Text(
                         'ATM Card (Fund Wallet)',
                         style: AppTextStyles.font18,
                       )

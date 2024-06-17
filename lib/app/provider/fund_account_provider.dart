@@ -3,12 +3,15 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/service/service.dart';
-import 'package:max_4_u/app/utils/display_payment_transaction_title.dart';
+
 
 class FundAccountProvider extends ChangeNotifier {
   ViewState state = ViewState.Idle;
   bool _status = false;
   bool get status => _status;
+
+  bool _isLoading =false;
+  bool get isLoading => _isLoading;
 
   String _message = '';
   String get message => _message;
@@ -60,8 +63,8 @@ class FundAccountProvider extends ChangeNotifier {
 
   Future<void> verifyPayment(
       {required String paymentToken, required BuildContext context}) async {
-    state = ViewState.Busy;
-    _message = 'Funding account...';
+    _isLoading = true;
+   
     notifyListeners();
 
     final body = {
@@ -80,10 +83,10 @@ class FundAccountProvider extends ChangeNotifier {
     try {
       if (_status == true) {
         _status = response['data']['status'];
-        displayPaymentTransactionStatus(context, response['data']['message']);
+      //  displayPaymentTransactionStatus(context, response['data']['message']);
 
         _message = response['data']['message'];
-        state = ViewState.Success;
+       _isLoading = false;
         paymentUrl = response['data']['response_data']['payment_link'];
         log('this is payment url $paymentUrl');
 
@@ -91,7 +94,7 @@ class FundAccountProvider extends ChangeNotifier {
       } else {
         _message = response['data']['message'];
         _status = response['data']['status'];
-        state = ViewState.Error;
+       _isLoading = false;
         notifyListeners();
       }
     } catch (e) {

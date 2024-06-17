@@ -55,7 +55,7 @@ class _AddCustomerRegScreenState extends State<AddCustomerRegScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                   Text(
                     'Set up your profile',
                     style: AppTextStyles.font20,
                   ),

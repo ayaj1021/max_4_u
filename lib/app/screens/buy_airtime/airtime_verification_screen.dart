@@ -61,7 +61,7 @@ class _AirtimeVerificationScreenState extends State<AirtimeVerificationScreen> {
                             ),
                           ),
                           horizontalSpace(104),
-                          const Text(
+                           Text(
                             'Confirmation',
                             style: AppTextStyles.font18,
                           ),

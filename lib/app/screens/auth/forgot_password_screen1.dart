@@ -20,6 +20,12 @@ class ForgotPasswordScreen1 extends StatefulWidget {
 }
 
 class _ForgotPasswordScreen1State extends State<ForgotPasswordScreen1> {
+  final _emailController= TextEditingController();
+  @override
+  void dispose() {
+   _emailController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +45,7 @@ class _ForgotPasswordScreen1State extends State<ForgotPasswordScreen1> {
                       onTap: () => Navigator.pop(context),
                     ),
                     verticalSpace(26),
-                    const Text(
+                     Text(
                       'Forgot your password?',
                       style: AppTextStyles.font20,
                     ),
@@ -51,20 +57,20 @@ class _ForgotPasswordScreen1State extends State<ForgotPasswordScreen1> {
                     ),
                     verticalSpace(24),
                     TextInputField(
-                      controller: authProv.emailController,
+                      controller: _emailController,
                       labelText: 'Email',
                     ),
                     verticalSpace(40),
                     ButtonWidget(
                       text: 'Send code',
                       onTap: ()async {
-                          if (authProv.emailController.text.isEmpty) {
+                          if (_emailController.text.isEmpty) {
                         showMessage(context, 'Email is required',
                             isError: true);
                         return;
                       }
 
-                      await authProv.forgotPassword();
+                      await authProv.forgotPassword(email: _emailController.text.trim());
                       if (authProv.state == ViewState.Error &&
                           context.mounted) {
                         showMessage(context, authProv.message);

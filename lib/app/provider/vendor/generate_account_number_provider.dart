@@ -1,35 +1,27 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
+import 'package:max_4_u/app/model/vendor/generate_account_model.dart';
 import 'package:max_4_u/app/service/service.dart';
 
-class BecomeAVendorProvider extends ChangeNotifier {
+class GenerateAccountProvider extends ChangeNotifier {
   ViewState state = ViewState.Idle;
-  String _message = '';
-  String get message => _message;
   bool _status = false;
   bool get status => _status;
 
-  String _bvnMessage = '';
-  String get bvnMessage => _bvnMessage;
+  String _message = '';
+  String get message => _message;
 
-  String _ninMessage = '';
-  String get ninMessage => _ninMessage;
+  BankData bankData = BankData();
 
-  Future<void> uploadNinBvn({
-    required String bvn,
-    required String nin,
-  }) async {
+  Future generateAccount() async {
     state = ViewState.Busy;
-    _message = 'Processing your request...';
+    _message = 'Generating account details...';
     notifyListeners();
 
     final body = {
-      "request_type": "user",
-      "action": "submit_nin_bvn",
-      "bvn": bvn,
-      "nin": nin
+      "request_type": "reseller",
+      "action": "generate_bank_account"
     };
     log('$body');
 
@@ -37,31 +29,28 @@ class BecomeAVendorProvider extends ChangeNotifier {
       body: body,
       // message: _message,
     );
-
     _status = response['data']['status'];
-    _message = response['data']['message'];
-
-    log('$_status');
-    log('$response');
+    log('this is all user response $response');
     try {
       if (_status == true) {
         _status = response['data']['status'];
-        state = ViewState.Success;
+
+        bankData = BankData.fromJson(response['data']['response_data']);
         _message = response['data']['message'];
+        state = ViewState.Success;
 
         notifyListeners();
+        return bankData;
       } else {
+        _message = response['data']['message'];
         _status = response['data']['status'];
         state = ViewState.Error;
-        _message = response['data']['message'];
-        _bvnMessage = response['data']['error_data']['bvn'];
-        _ninMessage = response['data']['error_data']['nin'];
-
         notifyListeners();
       }
     } catch (e) {
       log(e.toString());
       _status = false;
+      state = ViewState.Error;
       notifyListeners();
     }
   }

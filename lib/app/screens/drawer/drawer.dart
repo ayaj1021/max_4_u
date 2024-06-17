@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/database/database.dart';
+import 'package:max_4_u/app/encryt_data/encrypt_data.dart';
 import 'package:max_4_u/app/provider/auth_provider.dart';
-import 'package:max_4_u/app/provider/vendor_check_provider.dart';
+import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/screens/auth/login_screen.dart';
+import 'package:max_4_u/app/screens/profile/profile_screen.dart';
+import 'package:max_4_u/app/screens/settings/settings_screen.dart';
+import 'package:max_4_u/app/screens/support/support_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/screen_navigator.dart';
@@ -42,7 +46,8 @@ class _SideDrawerState extends State<SideDrawer> {
       userId = id;
     });
   }
- String? userType;
+
+  String? userType;
 
   getUserType() async {
     final user = await SecureStorage().getUserType();
@@ -51,14 +56,16 @@ class _SideDrawerState extends State<SideDrawer> {
     });
     return user;
   }
+
   bool isClicked = false;
   @override
   Widget build(BuildContext context) {
-    //  final vendor = Provider.of<VendorCheckProvider>(context);
-    // final userType = UserType.selectUserType(vendor.isVendor);
-    return Consumer2<VendorCheckProvider, AuthProviderImpl>(
-      builder: (context, vendor, authProv, _) {
-        
+    return Consumer2<AuthProviderImpl, ReloadUserDataProvider>(
+      builder: (context, authProv, reloadData, _) {
+        final firstName = EncryptData.decryptAES(
+            authProv.resDataData.userData![0].firstName.toString());
+        final userId = EncryptData.decryptAES(
+            authProv.resDataData.userData![0].uniqueId.toString());
         return Drawer(
           backgroundColor: AppColors.whiteColor,
           child: ListView(
@@ -101,6 +108,7 @@ class _SideDrawerState extends State<SideDrawer> {
               ),
               verticalSpace(24),
               ListTile(
+                onTap: () => nextScreen(context, ProfileScreen()),
                 leading: SizedBox(
                     height: 24,
                     width: 24,
@@ -112,6 +120,7 @@ class _SideDrawerState extends State<SideDrawer> {
                 ),
               ),
               ListTile(
+                onTap: () => nextScreen(context, SettingsScreen()),
                 leading: SizedBox(
                     height: 24,
                     width: 24,
@@ -123,6 +132,7 @@ class _SideDrawerState extends State<SideDrawer> {
                 ),
               ),
               ListTile(
+                onTap: () => nextScreen(context, SupportScreen()),
                 leading: SizedBox(
                     height: 24,
                     width: 24,
@@ -138,52 +148,100 @@ class _SideDrawerState extends State<SideDrawer> {
                 height: 56.h,
                 width: 288.w,
                 decoration: BoxDecoration(
-                    color: userType == '1'
+                    color: authProv.userLevel == '1'
                         ? AppColors.secondaryColor
                         : Colors.transparent,
                     borderRadius: BorderRadius.circular(8)),
                 child: ListTile(
                   onTap: () {
-                    vendor.changeVendor('2');
-                    // final userType =
-                    //     Provider.of<VendorCheckProvider>(context, listen: false)
-                    //         .isVendor;
-                    // SecureStorage().saveUserType(userType);
-                    Future.delayed(const Duration(seconds: 1), () {
-                      nextScreen(context, const BecomeVendorScreen());
-                    });
+                    reloadData.loadData.verificationStatus!.status ==
+                            'incomplete'
+                        ? nextScreen(context, const BecomeVendorScreen())
+                        : reloadData.loadData.verificationStatus!.status ==
+                                'pending'
+                            ? showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                      contentPadding: EdgeInsets.zero,
+                                      content: Container(
+                                        height: 255.h,
+                                        width: 356.w,
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 22, horizontal: 18),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(18),
+                                          color: AppColors.whiteColor,
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            Align(
+                                              alignment: Alignment.topRight,
+                                              child: GestureDetector(
+                                                onTap: () =>
+                                                    Navigator.pop(context),
+                                                child: Icon(
+                                                    Icons.cancel_outlined,
+                                                    color: Color(0xff292D32)),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 67.h,
+                                              width: 67.w,
+                                              child: Image.asset(
+                                                  'assets/images/vendor_pending_image.png'),
+                                            ),
+                                            verticalSpace(10),
+                                            Text(
+                                              'Pending Review',
+                                              style:
+                                                  AppTextStyles.font18.copyWith(
+                                                fontWeight: FontWeight.w600,
+                                                color: AppColors.subTextColor,
+                                              ),
+                                            ),
+                                            verticalSpace(15),
+                                            Text(
+                                              'Your application is under review, you will be notified once it is approved',
+                                              style:
+                                                  AppTextStyles.font14.copyWith(
+                                                fontWeight: FontWeight.w400,
+                                                color: AppColors.textColor,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ],
+                                        ),
+                                      ));
+                                })
+                            : SizedBox.shrink();
                   },
                   leading: SizedBox(
                       height: 24,
                       width: 24,
-                      child:
-                          // vendor.isVendor == '1'
-                          userType == '1'
-                              ? SizedBox(
-                                  height: 24,
-                                  width: 24,
-                                  child:
-                                      Image.asset('assets/icons/user_icon.png'))
-                              : userType == '5' ? SizedBox.shrink() :  Image.asset(userType == '1' 
-                                  ? 'assets/icons/vendor_white_icon.png'
-                                  : 'assets/icons/vendor_icon.png')),
-                  // subtitle: ElevatedButton(
-                  //   onPressed: () {
-                  //     log(userType);
-                  //    // log('${vendor.isVendor}');
-                  //   },
-                  //   child: Text('press'),
-                  // ),
+                      child: authProv.userLevel == '1'
+                          ? SizedBox(
+                              height: 24,
+                              width: 24,
+                              child: Image.asset('assets/icons/user_icon.png'))
+                          : authProv.userLevel == '5'
+                              ? SizedBox.shrink()
+                              : userType == '1'?  Image.asset(
+                                   'assets/icons/vendor_white_icon.png'
+                  ): SizedBox.shrink()
+                  ),
                   title: Text(
-                    // userLevel,
-
-                    // vendor.isVendor == '1'
-                    userType == '1' ? 'Become a user' :  userType == '5'? '' :  'Become a vendor',
+                    authProv.userLevel == '1'
+                        ? 'Become a vendor'
+                        : '',
                     style: AppTextStyles.font16.copyWith(
                       fontWeight: FontWeight.w500,
-                      color: userType == '1'
+                      color: authProv.userLevel == '1'
                           ? AppColors.whiteColor
-                          : userType == '5'? Colors.transparent : AppColors.blackColor,
+                          : authProv.userLevel == '5'
+                              ? Colors.transparent
+                              : AppColors.blackColor,
                     ),
                   ),
                 ),

@@ -5,12 +5,11 @@ import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/screens/admin_section/components/admin_component.dart';
 import 'package:max_4_u/app/screens/admin_section/components/consumer_component.dart';
 import 'package:max_4_u/app/screens/admin_section/components/vendor_component.dart';
-import 'package:max_4_u/app/provider/admin_section/get_all_users_provider.dart';
+import 'package:max_4_u/app/provider/admin_section/get_all_app_users_provider.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
-import 'package:max_4_u/app/widgets/search_input_widget.dart';
 import 'package:max_4_u/app/widgets/user_stats_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -25,7 +24,7 @@ class UserScreen extends StatefulWidget {
 class _UserScreenState extends State<UserScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  final _searchController = TextEditingController();
+  //final _searchController = TextEditingController();
   String? userType;
   @override
   void initState() {
@@ -36,6 +35,9 @@ class _UserScreenState extends State<UserScreen>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<ReloadUserDataProvider>(context, listen: false)
           .reloadUserData();
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<GetAllAppUsers>(context, listen: false).getAllAdmins();
     });
 
     super.initState();
@@ -70,7 +72,7 @@ class _UserScreenState extends State<UserScreen>
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        const Text(
+                         Text(
                           'Users',
                           style: AppTextStyles.font18,
                         ),
@@ -123,12 +125,12 @@ class _UserScreenState extends State<UserScreen>
                               ],
                             ),
                           ),
-                    verticalSpace(16),
-                    SearchInputWidget(
-                      controller: _searchController,
-                      hintText: 'Search for a user',
-                      prefixIcon: Icon(Icons.search),
-                    ),
+                    // verticalSpace(16),
+                    // SearchInputWidget(
+                    //   controller: _searchController,
+                    //   hintText: 'Search for a user',
+                    //   prefixIcon: Icon(Icons.search),
+                    // ),
                     verticalSpace(20),
                     Container(
                       height: 562.h,
@@ -166,8 +168,11 @@ class _UserScreenState extends State<UserScreen>
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      const Text('Consumers'),
-                                      horizontalSpace(userType == '5' ? 0 : 7),
+                                       Text(
+                                        'Consumers',
+                                        style: AppTextStyles.font12,
+                                      ),
+                                      horizontalSpace(4),
                                       Container(
                                         height: 12.h,
                                         width: 17.w,
@@ -177,7 +182,11 @@ class _UserScreenState extends State<UserScreen>
                                                 BorderRadius.circular(17),
                                             color: AppColors.subTextColor),
                                         child: Text(
-                                          '${getAllAppUsers.allAppUsers.totalConsumer}',
+                                          getAllAppUsers.allAppUsers
+                                                      .totalConsumer ==
+                                                  null
+                                              ? ''
+                                              : '${getAllAppUsers.allAppUsers.totalConsumer}',
                                           style: AppTextStyles.font12.copyWith(
                                               fontSize: 10,
                                               fontWeight: FontWeight.w500,
@@ -196,7 +205,10 @@ class _UserScreenState extends State<UserScreen>
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      const Text('Vendors'),
+                                       Text(
+                                        'Vendors',
+                                        style: AppTextStyles.font12,
+                                      ),
                                       horizontalSpace(7),
                                       Container(
                                         height: 12.h,
@@ -207,7 +219,11 @@ class _UserScreenState extends State<UserScreen>
                                                 BorderRadius.circular(17),
                                             color: AppColors.subTextColor),
                                         child: Text(
-                                          '${getAllAppUsers.allAppUsers.totalVendor}',
+                                          getAllAppUsers.allAppUsers
+                                                      .totalVendor ==
+                                                  null
+                                              ? ''
+                                              : '${getAllAppUsers.allAppUsers.totalVendor}',
                                           style: AppTextStyles.font12.copyWith(
                                               fontSize: 10,
                                               fontWeight: FontWeight.w500,
@@ -229,7 +245,10 @@ class _UserScreenState extends State<UserScreen>
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
-                                            const Text('Admins'),
+                                             Text(
+                                              'Admins',
+                                              style: AppTextStyles.font12,
+                                            ),
                                             horizontalSpace(7),
                                             Container(
                                               height: 12.h,
@@ -241,7 +260,11 @@ class _UserScreenState extends State<UserScreen>
                                                   color:
                                                       AppColors.subTextColor),
                                               child: Text(
-                                                '${getAllAppUsers.allAppAdmins.totalData}',
+                                                getAllAppUsers.allAppAdmins
+                                                            .totalData ==
+                                                        null
+                                                    ? ''
+                                                    : '${getAllAppUsers.allAppAdmins.totalData}',
                                                 style: AppTextStyles.font12
                                                     .copyWith(
                                                         fontSize: 10,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/provider/auth_provider.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
@@ -41,61 +42,72 @@ class _TransactionHistoryContainerState
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AuthProviderImpl>(builder: (context, authProv, _) {
+    DateFormat dateFormat = DateFormat('MMMM d, yyyy h:mm a');
+    return Consumer2<AuthProviderImpl, ReloadUserDataProvider>(
+        builder: (context, authProv, reloadData, _) {
       return Container(
-          height: 221.h,
+          height: 241.h,
           width: 358.w,
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 20),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               color: AppColors.whiteColor),
-          child: getTransactions.isEmpty
+          child: reloadData.isLoading
               ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          print(getTransactions.length);
-                        },
-                        child: Text('click'),
-                      ),
-                      SizedBox(
-                          height: 52.h,
-                          width: 52.w,
-                          child: Image.asset(
-                              'assets/images/no_beneficiary_image.png')),
-                      verticalSpace(24),
-                      Text(
-                        'You have no transaction history',
-                        style: AppTextStyles.font14.copyWith(
-                            color: AppColors.textColor,
-                            fontWeight: FontWeight.w400),
-                      )
-                    ],
+                  child: CircularProgressIndicator(
+                    color: AppColors.primaryColor,
                   ),
                 )
-              : SizedBox(
-                  height: MediaQuery.of(context).size.height,
-                  child: ListView.builder(
-                      itemCount: 3,
-                      itemBuilder: (_, index) {
-                        return TransactionSection(
-                          transactionStatusColor:
-                              getTransactions[index]['status'] == 'success'
+              : reloadData.loadData.transactionHistory!.data!.isEmpty
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                              height: 52.h,
+                              width: 52.w,
+                              child: Image.asset(
+                                  'assets/images/no_beneficiary_image.png')),
+                          verticalSpace(24),
+                          Text(
+                            'You have no transaction history',
+                            style: AppTextStyles.font14.copyWith(
+                                color: AppColors.textColor,
+                                fontWeight: FontWeight.w400),
+                          )
+                        ],
+                      ),
+                    )
+                  : Column(
+                      children: List.generate(
+                        3,
+                        (index) {
+                          if (index <
+                              reloadData
+                                  .loadData.transactionHistory!.data!.length) {
+                            final data = reloadData
+                                .loadData.transactionHistory!.data![index];
+                            return TransactionSection(
+                              transactionStatusColor: data.status == 'success'
                                   ? Colors.green
-                                  : Colors.red,
-                          transactionIcon: Icons.call_outlined,
-                          transactionType: getTransactions[index]['sub_type'],
-                          transactionDate: 'Apr 18th, 20:59',
-                          transactionAmount:
-                              'N${getTransactions[index]['product_amount']}',
-                          transactionStatus: getTransactions[index]['status'],
-                          transactionColor: Color(0xffDEEDF7),
-                        );
-                      }),
-                )
+                                  : data.status == 'pending'
+                                      ? Color(0xffA6B309)
+                                      : Colors.red,
+                              transactionIcon: Icons.call_outlined,
+                              transactionType: data.subType.toString(),
+                              transactionDate:
+                                  '${dateFormat.format(data.regDate!)}',
+                              transactionAmount: 'N${data.productAmount ?? 0}',
+                              transactionStatus: data.status.toString(),
+                              transactionColor: Color(0xffDEEDF7),
+                            );
+                          } else {
+                            return SizedBox();
+                          }
+                        },
+                      ),
+                    )
 
           // Column(
           //     children: [
@@ -160,8 +172,8 @@ class TransactionSection extends StatelessWidget {
                   children: [
                     Text(
                       transactionType,
-                      style: AppTextStyles.font18.copyWith(fontWeight: FontWeight.w400),
-
+                      style: AppTextStyles.font18
+                          .copyWith(fontWeight: FontWeight.w400),
                     ),
                     Text(
                       transactionDate,
@@ -178,13 +190,14 @@ class TransactionSection extends StatelessWidget {
               children: [
                 Text(
                   transactionAmount,
-                  style: AppTextStyles.font14.copyWith(fontWeight: FontWeight.w500),
+                  style: AppTextStyles.font14
+                      .copyWith(fontWeight: FontWeight.w500),
                 ),
                 Text(
                   transactionStatus,
                   style: AppTextStyles.font12.copyWith(
                     fontWeight: FontWeight.w400,
-                    color:transactionStatusColor,
+                    color: transactionStatusColor,
                   ),
                 ),
               ],

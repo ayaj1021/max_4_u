@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/provider/get_all_customers_provider.dart';
-import 'package:max_4_u/app/screens/customers_section/add_customer_id_screen.dart';
-import 'package:max_4_u/app/screens/customers_section/add_customer_number_screen.dart';
-import 'package:max_4_u/app/screens/customers_section/customer_details_page.dart';
+import 'package:max_4_u/app/screens/vendor_sections/customers_section/add_customer_id_screen.dart';
+import 'package:max_4_u/app/screens/vendor_sections/customers_section/add_customer_number_screen.dart';
+import 'package:max_4_u/app/screens/vendor_sections/customers_section/customer_details_page.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/busy_overlay.dart';
 import 'package:max_4_u/app/utils/screen_navigator.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
-import 'package:max_4_u/app/widgets/text_input_field.dart';
 import 'package:provider/provider.dart';
 
 class CustomerScreen extends StatefulWidget {
@@ -46,20 +45,21 @@ class _CustomerScreenState extends State<CustomerScreen> {
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
+               Text(
                 'Customers',
                 style: AppTextStyles.font18,
               ),
-              verticalSpace(25),
-              TextInputField(
-                controller: _searchController,
-                hintText: 'Search for a customer',
-                prefixIcon: const Icon(
-                  Icons.search,
-                  color: Color(0xff4F4F4F),
-                ),
-              ),
+              // verticalSpace(25),
+              // TextInputField(
+              //   controller: _searchController,
+              //   hintText: 'Search for a customer',
+              //   prefixIcon: const Icon(
+              //     Icons.search,
+              //     color: Color(0xff4F4F4F),
+              //   ),
+              // ),
               verticalSpace(25),
               Consumer<GetAllCustomersProvider>(
                   builder: (context, getAllCustomer, _) {

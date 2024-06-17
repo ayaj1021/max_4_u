@@ -16,33 +16,29 @@ class OverViewContainer extends StatefulWidget {
 }
 
 class _OverViewContainerState extends State<OverViewContainer> {
-
- @override
+  @override
   void initState() {
     getAllTransactions();
-     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<ReloadUserDataProvider>(context, listen: false).reloadUserData();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ReloadUserDataProvider>(context, listen: false)
+          .reloadUserData();
     });
     super.initState();
   }
 
-
-
- List allTransactions = [];
-  getAllTransactions()async{
-
-   final transactions =  await SecureStorage().getUserTransactionHistory();
-   setState(() {
-     allTransactions = transactions;
-
-   });
-  return transactions;
+  List allTransactions = [];
+  getAllTransactions() async {
+    final transactions = await SecureStorage().getUserTransactionHistory();
+    setState(() {
+      allTransactions = transactions;
+    });
+    return transactions;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<GetAllCustomersProvider>(
-        builder: (context, getCustomers, _) {
+    return Consumer2<GetAllCustomersProvider, ReloadUserDataProvider>(
+        builder: (context, getCustomers, reloadData, _) {
       return Container(
         height: 103.h,
         width: MediaQuery.of(context).size.width,
@@ -64,7 +60,7 @@ class _OverViewContainerState extends State<OverViewContainer> {
                 ),
                 verticalSpace(12),
                 Text(
-                  '${allTransactions.length}',
+                  '${reloadData.loadData.transactionHistory!.data!.length}',
                   style: AppTextStyles.font16.copyWith(
                       fontWeight: FontWeight.w600,
                       color: const Color(0xff333333)),

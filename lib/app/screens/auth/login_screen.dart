@@ -7,6 +7,7 @@ import 'package:max_4_u/app/encryt_data/encrypt_data.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/provider/auth_provider.dart';
 import 'package:max_4_u/app/provider/obscure_text_provider.dart';
+import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/screens/auth/forgot_password_screen1.dart';
 import 'package:max_4_u/app/screens/auth/sign_up_screen.dart';
 import 'package:max_4_u/app/screens/dashboard/dashboard_screen.dart';
@@ -40,8 +41,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<AuthProviderImpl, ObscureTextProvider>(
-        builder: (context, authProv, obscure, _) {
+    return Consumer3<AuthProviderImpl, ObscureTextProvider,
+            ReloadUserDataProvider>(
+        builder: (context, authProv, obscure, reloadData, _) {
       return BusyOverlay(
         show: authProv.state == ViewState.Busy,
         title: authProv.message,
@@ -53,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                   Text(
                     'Welcome back',
                     style: AppTextStyles.font20,
                   ),
@@ -66,7 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   verticalSpace(26),
                   TextInputField(
                     controller: emailController,
-                    labelText: 'Email',
+                    labelText: 'Email/Phone number',
                     hintText: 'Enter your email or phone number',
                   ),
                   verticalSpace(24),
@@ -95,8 +97,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   verticalSpace(32),
                   ButtonWidget(
                     onTap: () async {
-                      // print('this is encrypt value $value');
-                      //  print('this is decrypt value  $newValue');
                       if (passwordController.text.isEmpty ||
                           emailController.text.isEmpty) {
                         showMessage(context, 'All fields are required',
@@ -104,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         return;
                       }
 
-                      final result = await authProv.loginUser(
+                      await authProv.loginUser(
                           email: emailController.text.trim(),
                           password: passwordController.text.trim());
 
@@ -118,42 +118,43 @@ class _LoginScreenState extends State<LoginScreen> {
                       // final userLevelType = await SecureStorage().getUserType();
                       if (authProv.status == true && context.mounted) {
                         showMessage(context, authProv.message);
-
+                        await reloadData.reloadUserData();
                         nextScreen(context, DashBoardScreen());
                       }
                       final firstName = EncryptData.decryptAES(
-                          '${result.userData![0].firstName}');
+                          '${authProv.resDataData.userData![0].firstName}');
                       // '${result.data!.userData![0].firstName}');
                       await SecureStorage().saveFirstName(firstName);
 
                       final lastName = EncryptData.decryptAES(
-                          '${result.userData![0].lastName}');
+                          '${authProv.resDataData.userData![0].lastName}');
                       log('last name is $lastName');
                       final uniqueId = EncryptData.decryptAES(
-                          '${result.userData![0].uniqueId}');
+                          '${authProv.resDataData.userData![0].uniqueId}');
                       log('uniqueId is $uniqueId');
                       final email = EncryptData.decryptAES(
-                          '${result.userData![0].email}');
+                          '${authProv.resDataData.userData![0].email}');
                       log('uniqueId is $email');
                       final number = EncryptData.decryptAES(
-                          '${result.userData![0].mobileNumber}');
+                          '${authProv.resDataData.userData![0].mobileNumber}');
                       log('number is $number');
-                      final balance = result.userAccount!.balance;
-                      final userType = result.userData![0].level;
+                      final balance = authProv.resDataData.userAccount!.balance;
+                      final userType = authProv.resDataData.userData![0].level;
                       // context.read();
                       final transactionHistory =
-                          result.transactionHistory!.data;
-                      final beneficiary = result.beneficiaryData;
+                          authProv.resDataData.transactionHistory!.data;
+                      final beneficiary = authProv.resDataData.beneficiaryData;
                       log('user type is $userType');
                       log('user balance is $balance');
-                      final services = result.services!;
-                      final products = result.products!;
-                      final autoRenewal = result.autoRenewal!.data;
+                      final services = authProv.resDataData.services!;
+                      final products = authProv.resDataData.products!;
+                      final autoRenewal =
+                          authProv.resDataData.autoRenewal!.data;
                       //                  final transactions = result.data.;
                       // await SecureStorage().saveUserTransactions(transactions);
 
                       await SecureStorage().saveUserEncryptedId(
-                          '${result.userData![0].uniqueId}');
+                          '${authProv.resDataData.userData![0].uniqueId}');
                       await SecureStorage()
                           .saveUserTransactionHistory(transactionHistory!);
                       await SecureStorage().saveUserBeneficiary(beneficiary!);

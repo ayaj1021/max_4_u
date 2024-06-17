@@ -28,7 +28,7 @@ class NotificationDetailsScreen extends StatelessWidget {
                     ),
                   ),
                   horizontalSpace(85),
-                  const Text(
+                   Text(
                     'Notification details',
                     style: AppTextStyles.font18,
                   ),
@@ -54,14 +54,14 @@ class NotificationDetailsScreen extends StatelessWidget {
                         child: Image.asset('assets/logo/mtn_logo.png'),
                       ),
                       horizontalSpace(5),
-                      const Text(
+                       Text(
                         'MTN',
                         style: AppTextStyles.font14,
                       )
                     ],
                   ),
                   verticalSpace(16),
-                  const Text(
+                   Text(
                     '-#35,000.00',
                     style: AppTextStyles.font20,
                   ),
@@ -132,7 +132,7 @@ class NotificationDetailsScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                     Text(
                       'Any issue with this transaction?',
                       style: AppTextStyles.font14,
                     ),
@@ -303,7 +303,7 @@ class NotificationDetailsScreen extends StatelessWidget {
                                     alignment: Alignment.topRight,
                                     child: GestureDetector(
                                       onTap: () => Navigator.pop(context),
-                                      child: const Text(
+                                      child:  Text(
                                         'X',
                                         style: AppTextStyles.font20,
                                       ),

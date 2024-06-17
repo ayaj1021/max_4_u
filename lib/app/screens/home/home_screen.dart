@@ -1,12 +1,8 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/database/database.dart';
-
 import 'package:max_4_u/app/provider/auth_provider.dart';
 import 'package:max_4_u/app/provider/get_all_customers_provider.dart';
-import 'package:max_4_u/app/provider/vendor_check_provider.dart';
 import 'package:max_4_u/app/screens/buy_airtime/buy_airtime_screen.dart';
 import 'package:max_4_u/app/screens/buy_data/buy_data_screen.dart';
 import 'package:max_4_u/app/screens/drawer/drawer.dart';
@@ -84,10 +80,26 @@ class _HomeScreenState extends State<HomeScreen> {
         drawer: const SideDrawer(),
         appBar: AppBar(
           backgroundColor: Colors.transparent,
-          // leading: SizedBox(
-          //   height: 21.h,
-          //   width: 29.w,
-          //   child: GestureDetector(
+          leading: Builder(builder: (context) {
+            return IconButton(
+              icon: Image.asset(
+                'assets/icons/side_bar_icon.png',
+                scale: 4,
+              ), // Replace with your image path
+              onPressed: () {
+                Scaffold.of(context).openDrawer(); // Open the drawer
+              },
+            );
+          }),
+
+          // GestureDetector(
+          //   onTap: () {
+          //     log('tapped');
+          //     Scaffold.of(context).openDrawer();
+          //   },
+          //   child: SizedBox(
+          //     height: 21.h,
+          //     width: 29.w,
           //     child: Image.asset(
           //       'assets/icons/side_bar_icon.png',
           //       scale: 4,
@@ -112,8 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         body: SafeArea(
-          child: Consumer2<VendorCheckProvider, AuthProviderImpl>(
-              builder: (context, vendor, authProv, _) {
+          child: Consumer<AuthProviderImpl>(builder: (context, authProv, _) {
             return SingleChildScrollView(
               child: Padding(
                 padding:
@@ -166,9 +177,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         verticalSpace(
                             //  vendor.isVendor == '1'
-                            userType == '1' ? 0 : 16),
+                            authProv.resDataData.userData![0].level == '1'
+                                ? 0
+                                : 16),
                         //    vendor.isVendor == '1'
-                        userType == '1'
+                        authProv.resDataData.userData![0].level == '1'
                             ? const SizedBox()
                             : Row(
                                 mainAxisAlignment:
@@ -203,18 +216,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     verticalSpace(40),
                     //   vendor.isVendor == '1'
 
-                    userType == '1'
-                        ? Text(
-                            'Transaction history',
-                            style: AppTextStyles.font18.copyWith(
-                              fontWeight: FontWeight.w700,
-                            ),
-                          )
-                        : Row(
+                    authProv.resDataData.userData![0].level == '1'
+                        ? Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Overview',
+                                'Transaction history',
                                 style: AppTextStyles.font18.copyWith(
                                   fontWeight: FontWeight.w700,
                                 ),
@@ -231,10 +238,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                             ],
+                          )
+                        : Text(
+                          'Overview',
+                          style: AppTextStyles.font18.copyWith(
+                            fontWeight: FontWeight.w700,
                           ),
+                        ),
                     verticalSpace(17),
                     // vendor.isVendor == '1'
-                    userType == '1'
+                    authProv.resDataData.userData![0].level == '1'
                         ? const TransactionHistoryContainer()
                         : const OverViewContainer(),
 

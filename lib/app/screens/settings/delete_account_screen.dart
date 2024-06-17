@@ -53,7 +53,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                             ),
                           ),
                           horizontalSpace(87),
-                          const Text(
+                           Text(
                             'Delete Account',
                             style: AppTextStyles.font18,
                           )

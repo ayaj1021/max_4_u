@@ -94,7 +94,7 @@ class _SellAirtimeScreenState extends State<SellAirtimeScreen> {
                           ),
                         ),
                         horizontalSpace(104),
-                        const Text(
+                         Text(
                           'Airtime Sales',
                           style: AppTextStyles.font18,
                         )
