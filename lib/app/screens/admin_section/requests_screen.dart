@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/screens/admin_section/components/approved_component.dart';
 import 'package:max_4_u/app/screens/admin_section/components/denied_component.dart';
 import 'package:max_4_u/app/screens/admin_section/components/pending_component.dart';
-import 'package:max_4_u/app/provider/admin_section/get_all_vendors_requests_model.dart';
+import 'package:max_4_u/app/provider/admin_section/get_all_vendors_requests_provider.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
@@ -44,7 +44,7 @@ class _RequestsScreenState extends State<RequestsScreen>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Center(
-                    child: const Text(
+                    child:  Text(
                       'Requests',
                       style: AppTextStyles.font18,
                     ),
@@ -105,7 +105,7 @@ class _RequestsScreenState extends State<RequestsScreen>
                                                     BorderRadius.circular(17),
                                                 color: AppColors.subTextColor),
                                             child: Text(
-                                              '${getAllVendorRequest.allVendorRequest.totalData}',
+                                              '${getAllVendorRequest.allVendorRequest.totalPending}',
                                               //  '${getAllAppUsers.allAppUsers.totalConsumer}',
                                               style: AppTextStyles.font12
                                                   .copyWith(
@@ -141,7 +141,7 @@ class _RequestsScreenState extends State<RequestsScreen>
                                                     BorderRadius.circular(17),
                                                 color: AppColors.subTextColor),
                                             child: Text(
-                                              '${getAllVendorRequest.allVendorRequest.totalData}',
+                                              '${getAllVendorRequest.allVendorRequest.totalConfirmed}',
                                               // '${getAllAppUsers.allAppUsers.totalVendor}',
                                               style: AppTextStyles.font12
                                                   .copyWith(
@@ -177,7 +177,7 @@ class _RequestsScreenState extends State<RequestsScreen>
                                                     BorderRadius.circular(17),
                                                 color: AppColors.subTextColor),
                                             child: Text(
-                                              '${getAllVendorRequest.allVendorRequest.totalData}',
+                                              '${getAllVendorRequest.allVendorRequest.totalIncomplete}',
                                               style: AppTextStyles.font12
                                                   .copyWith(
                                                       fontSize: 10,

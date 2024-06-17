@@ -24,7 +24,7 @@ class EmailNotificationSettingsScreen extends StatelessWidget {
                   ),
                 ),
                 horizontalSpace(60),
-                const Text(
+                 Text(
                   'Email Notification Settings',
                   style: AppTextStyles.font18,
                 )

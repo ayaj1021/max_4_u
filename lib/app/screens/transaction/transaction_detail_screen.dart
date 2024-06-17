@@ -1,30 +1,48 @@
+import 'dart:developer';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
+
 import 'package:max_4_u/app/screens/transaction/components/transaction_details_component.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
 import 'package:max_4_u/app/widgets/back_arrow_button.dart';
 import 'package:max_4_u/app/widgets/button_widget.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
 
-class TransactionDetailsScreen extends StatelessWidget {
+import 'package:share_plus/share_plus.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+
+import 'package:flutter/services.dart';
+
+class TransactionDetailsScreen extends StatefulWidget {
   const TransactionDetailsScreen(
       {super.key,
       required this.amount,
       required this.referenceId,
-      required this.status, required this.date, required this.type});
+      required this.status,
+      required this.date,
+      required this.type});
   final String amount;
   final String referenceId;
   final String status;
-   final String date;
-   final String type;
+  final String date;
+  final String type;
 
   @override
+  State<TransactionDetailsScreen> createState() =>
+      _TransactionDetailsScreenState();
+}
+
+class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
+  final GlobalKey _globalKey = GlobalKey();
+  @override
   Widget build(BuildContext context) {
-    DateTime dateTime = DateTime.parse(date);
-     DateFormat dateFormat = DateFormat('MMMM d, yyyy h:mm a'); 
-      String formattedDate = dateFormat.format(dateTime);
     return Scaffold(
       backgroundColor: AppColors.scaffoldBgColor2,
       body: SafeArea(
@@ -38,103 +56,22 @@ class TransactionDetailsScreen extends StatelessWidget {
                   BackArrowButton(
                     onTap: () => Navigator.pop(context),
                   ),
-                  horizontalSpace(120),
-                  const Text(
+                  horizontalSpace(140),
+                   Text(
                     'Details',
                     style: AppTextStyles.font18,
                   ),
                 ],
               ),
               verticalSpace(27),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 20),
-                height: 438.h,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: AppColors.whiteColor,
-                ),
-                child: Column(children: [
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.center,
-                  //   children: [
-                  //     SizedBox(
-                  //       height: 24,
-                  //       width: 24,
-                  //       child: Image.asset('assets/logo/mtn_logo.png'),
-                  //     ),
-                  //     horizontalSpace(5),
-                  //     const Text(
-                  //       'MTN',
-                  //       style: AppTextStyles.font14,
-                  //     )
-                  //   ],
-                  // ),
-                  verticalSpace(16),
-                  Text(
-                    'N$amount',
-                    style: AppTextStyles.font20,
-                  ),
-                  verticalSpace(16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        height: 16,
-                        width: 16,
-                        child: status == 'success'
-                            ? Image.asset('assets/icons/success_icon.png')
-                            : SizedBox.shrink(),
-                      ),
-                      horizontalSpace(5),
-                      Text(
-                        '$status',
-                        style: AppTextStyles.font12.copyWith(
-                            color: status == 'success'
-                                ? Colors.green
-                                : status == 'pending'
-                                    ? Color(0xffA6B309)
-                                    : Colors.red),
-                      )
-                    ],
-                  ),
-                  verticalSpace(46),
-                  // const TransactionDetailsSection(
-                  //   title: 'Recipient',
-                  //   value: '08169784011',
-                  // ),
-                  // verticalSpace(24),
-                  Row(
-                    children: [
-                      TransactionDetailsSection(
-                        title: 'Transaction ID',
-                        value: '$referenceId',
-                        iconData: Icons.copy,
-                      ),
-                    ],
-                  ),
-                  verticalSpace(24),
-                   TransactionDetailsSection(
-                    title: 'Transaction Type',
-                    value: '$type',
-                  ),
-                  // verticalSpace(24),
-                  // const TransactionDetailsSection(
-                  //   title: 'Transaction Means',
-                  //   value: 'Wallet',
-                  // ),
-                  // verticalSpace(24),
-                  // const TransactionDetailsSection(
-                  //   title: 'Payment method',
-                  //   value: 'Wallet',
-                  // ),
-                  verticalSpace(24),
-                   TransactionDetailsSection(
-                    title: 'Date',
-                    value: '$formattedDate',
-                  ),
-                ]),
+              RepaintBoundary(
+                key: _globalKey,
+                child: TransactionsDetailsWidget(
+                    amount: widget.amount,
+                    status: widget.status,
+                    referenceId: widget.referenceId,
+                    type: widget.type,
+                    date: widget.date),
               ),
               verticalSpace(20),
               Container(
@@ -149,7 +86,7 @@ class TransactionDetailsScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                     Text(
                       'Any issue with this transaction?',
                       style: AppTextStyles.font14,
                     ),
@@ -206,7 +143,7 @@ class TransactionDetailsScreen extends StatelessWidget {
                     alignment: Alignment.topRight,
                     child: GestureDetector(
                       onTap: () => Navigator.pop(context),
-                      child: const Text(
+                      child:  Text(
                         'X',
                         style: AppTextStyles.font20,
                       ),
@@ -247,10 +184,16 @@ class TransactionDetailsScreen extends StatelessWidget {
                                   ),
                                 ),
                                 verticalSpace(18),
-                                Text(
-                                  'PDF',
-                                  style: AppTextStyles.font14.copyWith(
-                                    color: const Color(0xff333333),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                    _generateAndDownloadPDF();
+                                  },
+                                  child: Text(
+                                    'PDF',
+                                    style: AppTextStyles.font14.copyWith(
+                                      color: const Color(0xff333333),
+                                    ),
                                   ),
                                 ),
                                 verticalSpace(15),
@@ -258,10 +201,16 @@ class TransactionDetailsScreen extends StatelessWidget {
                                   color: AppColors.blackColor.withOpacity(0.1),
                                 ),
                                 verticalSpace(15),
-                                Text(
-                                  'Image',
-                                  style: AppTextStyles.font14.copyWith(
-                                    color: const Color(0xff333333),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                    _captureAndDownloadImage();
+                                  },
+                                  child: Text(
+                                    'Image',
+                                    style: AppTextStyles.font14.copyWith(
+                                      color: const Color(0xff333333),
+                                    ),
                                   ),
                                 ),
                               ],
@@ -315,7 +264,7 @@ class TransactionDetailsScreen extends StatelessWidget {
                                     alignment: Alignment.topRight,
                                     child: GestureDetector(
                                       onTap: () => Navigator.pop(context),
-                                      child: const Text(
+                                      child:  Text(
                                         'X',
                                         style: AppTextStyles.font20,
                                       ),
@@ -323,10 +272,15 @@ class TransactionDetailsScreen extends StatelessWidget {
                                   ),
                                 ),
                                 verticalSpace(18),
-                                Text(
-                                  'PDF',
-                                  style: AppTextStyles.font14.copyWith(
-                                    color: const Color(0xff333333),
+                                GestureDetector(
+                                  onTap: () {
+                                    _generateAndSharePDF();
+                                  },
+                                  child: Text(
+                                    'PDF',
+                                    style: AppTextStyles.font14.copyWith(
+                                      color: const Color(0xff333333),
+                                    ),
                                   ),
                                 ),
                                 verticalSpace(15),
@@ -334,10 +288,15 @@ class TransactionDetailsScreen extends StatelessWidget {
                                   color: AppColors.blackColor.withOpacity(0.1),
                                 ),
                                 verticalSpace(15),
-                                Text(
-                                  'Image',
-                                  style: AppTextStyles.font14.copyWith(
-                                    color: const Color(0xff333333),
+                                GestureDetector(
+                                  onTap: () {
+                                    _captureAndShareImage();
+                                  },
+                                  child: Text(
+                                    'Image',
+                                    style: AppTextStyles.font14.copyWith(
+                                      color: const Color(0xff333333),
+                                    ),
                                   ),
                                 ),
                               ],
@@ -366,5 +325,417 @@ class TransactionDetailsScreen extends StatelessWidget {
             ),
           );
         });
+  }
+
+//Function to save and download data as image
+
+  Future<void> _captureAndDownloadImage() async {
+    try {
+      RenderRepaintBoundary boundary = _globalKey.currentContext!
+          .findRenderObject() as RenderRepaintBoundary;
+      var image = await boundary.toImage(pixelRatio: 3.0);
+      ByteData? byteData = await image.toByteData(format: ImageByteFormat.png);
+      Uint8List pngBytes = byteData!.buffer.asUint8List();
+
+      // Save the image to a file
+      final tempDir = await getTemporaryDirectory();
+      final file =
+          await File('${tempDir.path}/transaction_details.png').create();
+      await file.writeAsBytes(pngBytes);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Image downloaded to ${file.path}'),
+        ),
+      );
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  //function to save and download data as pdf
+
+  Future<void> _generateAndDownloadPDF() async {
+    final iconData = await rootBundle.load('assets/icons/success_icon.png');
+    final iconImage = pw.MemoryImage(iconData.buffer.asUint8List());
+    final pdf = pw.Document();
+
+    pdf.addPage(
+      pw.Page(
+          build: (pw.Context context) => pw.Container(
+                padding:
+                    const pw.EdgeInsets.symmetric(horizontal: 14, vertical: 20),
+                height: 438.h,
+                width: double.infinity,
+                //MediaQuery.of(context).size.width,
+                decoration: pw.BoxDecoration(
+                  borderRadius: pw.BorderRadius.circular(8),
+                  color: PdfColors.white,
+                ),
+                child: pw.Column(children: [
+                  pw.SizedBox(height: 16),
+
+                  //    verticalSpace(16),
+                  pw.Text('N${widget.amount}',
+                      style: pw.TextStyle(
+                          fontSize: 20, fontWeight: pw.FontWeight.bold)
+                      //AppTextStyles.font20,
+                      ),
+                  pw.SizedBox(height: 16),
+                  // verticalSpace(16),
+                  pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.center,
+                    children: [
+                      if (widget.status == 'success')
+                        pw.SizedBox(
+                          height: 16,
+                          width: 16,
+                          child: pw.Image(iconImage),
+                          // pw.Image(
+                          //             pw.MemoryImage((await rootBundle.load('assets/icons/success_icon.png')).buffer.asUint8List()),
+                          //           ),
+                          // status == 'success'
+                          //     ? Image.asset('assets/icons/success_icon.png')
+                          //     : SizedBox.shrink(),
+                        ),
+                      pw.SizedBox(width: 5),
+                      //   horizontalSpace(5),
+                      pw.Text(
+                        '${widget.status}',
+                        style: pw.TextStyle(
+                          fontSize: 12,
+                          color: widget.status == 'success'
+                              ? PdfColors.green
+                              : widget.status == 'pending'
+                                  ? PdfColor.fromHex('#A6B309')
+                                  : PdfColors.red,
+                        ),
+
+                        // AppTextStyles.font12.copyWith(
+                        //     color: status == 'success'
+                        //         ? Colors.green
+                        //         : status == 'pending'
+                        //             ? Color(0xffA6B309)
+                        //             : Colors.red),
+                      )
+                    ],
+                  ),
+
+                  pw.SizedBox(height: 46),
+                  // verticalSpace(46),
+                  // const TransactionDetailsSection(
+                  //   title: 'Recipient',
+                  //   value: '08169784011',
+                  // ),
+                  // verticalSpace(24),
+                  // pw.Row(
+                  //   children: [
+                  // TransactionDetailsSection(
+                  //   title: 'Transaction ID',
+                  //   value: '$referenceId',
+                  //   iconData: Icons.copy,
+                  // ),
+                  //   ],
+                  // ),
+                  _transactionDetailsSection(
+                      'Transaction ID', widget.referenceId, Icons.copy),
+                  pw.SizedBox(height: 24),
+                  // verticalSpace(24),
+                  _transactionDetailsSection('Transaction Type', widget.type),
+                  // TransactionDetailsSection(
+                  //   title: 'Transaction Type',
+                  //   value: '$type',
+                  // ),
+                  // verticalSpace(24),
+                  // const TransactionDetailsSection(
+                  //   title: 'Transaction Means',
+                  //   value: 'Wallet',
+                  // ),
+                  // verticalSpace(24),
+                  // const TransactionDetailsSection(
+                  //   title: 'Payment method',
+                  //   value: 'Wallet',
+                  // ),
+                  // verticalSpace(24),
+                  pw.SizedBox(height: 24),
+                  _transactionDetailsSection('Date', widget.date),
+                  // TransactionDetailsSection(
+                  //   title: 'Date',
+                  //   value: date,
+                  // ),
+                ]),
+              )),
+    );
+
+    final bytes = await pdf.save();
+    await _downloadPDF(bytes);
+  }
+
+  Future<void> _downloadPDF(Uint8List bytes) async {
+    final tempDir = await getTemporaryDirectory();
+    final file = File('${tempDir.path}/transaction_details.pdf');
+    await file.writeAsBytes(bytes);
+    log('download done');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('PDF downloaded to ${file.path}'),
+      ),
+    );
+  }
+
+  //function to save and share data as image
+  Future<void> _captureAndShareImage() async {
+    try {
+      // Capture the widget as an image
+      RenderRepaintBoundary boundary = _globalKey.currentContext!
+          .findRenderObject() as RenderRepaintBoundary;
+      var image = await boundary.toImage(pixelRatio: 3.0);
+      ByteData? byteData = await image.toByteData(format: ImageByteFormat.png);
+      Uint8List pngBytes = byteData!.buffer.asUint8List();
+
+      // Save the image to a file
+      final tempDir = await getTemporaryDirectory();
+      final file = await File('${tempDir.path}/shared_image.png').create();
+      await file.writeAsBytes(pngBytes);
+
+      // Share the image
+      await Share.shareXFiles([XFile(file.path)], text: 'Transaction details');
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  //function to save and share data as pdf
+  Future<void> _generateAndSharePDF() async {
+    final iconData = await rootBundle.load('assets/icons/success_icon.png');
+    final iconImage = pw.MemoryImage(iconData.buffer.asUint8List());
+    final pdf = pw.Document();
+
+    pdf.addPage(
+      pw.Page(
+          build: (pw.Context context) => pw.Container(
+                padding:
+                    const pw.EdgeInsets.symmetric(horizontal: 14, vertical: 20),
+                height: 438.h,
+                width: double.infinity,
+                //MediaQuery.of(context).size.width,
+                decoration: pw.BoxDecoration(
+                  borderRadius: pw.BorderRadius.circular(8),
+                  color: PdfColors.white,
+                ),
+                child: pw.Column(children: [
+                  pw.SizedBox(height: 16),
+
+                  //    verticalSpace(16),
+                  pw.Text('N${widget.amount}',
+                      style: pw.TextStyle(
+                          fontSize: 20, fontWeight: pw.FontWeight.bold)
+                      //AppTextStyles.font20,
+                      ),
+                  pw.SizedBox(height: 16),
+                  // verticalSpace(16),
+                  pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.center,
+                    children: [
+                      if (widget.status == 'success')
+                        pw.SizedBox(
+                          height: 16,
+                          width: 16,
+                          child: pw.Image(iconImage),
+                          // pw.Image(
+                          //             pw.MemoryImage((await rootBundle.load('assets/icons/success_icon.png')).buffer.asUint8List()),
+                          //           ),
+                          // status == 'success'
+                          //     ? Image.asset('assets/icons/success_icon.png')
+                          //     : SizedBox.shrink(),
+                        ),
+                      pw.SizedBox(width: 5),
+                      //   horizontalSpace(5),
+                      pw.Text(
+                        '${widget.status}',
+                        style: pw.TextStyle(
+                          fontSize: 12,
+                          color: widget.status == 'success'
+                              ? PdfColors.green
+                              : widget.status == 'pending'
+                                  ? PdfColor.fromHex('#A6B309')
+                                  : PdfColors.red,
+                        ),
+
+                        // AppTextStyles.font12.copyWith(
+                        //     color: status == 'success'
+                        //         ? Colors.green
+                        //         : status == 'pending'
+                        //             ? Color(0xffA6B309)
+                        //             : Colors.red),
+                      )
+                    ],
+                  ),
+
+                  pw.SizedBox(height: 46),
+                  // verticalSpace(46),
+                  // const TransactionDetailsSection(
+                  //   title: 'Recipient',
+                  //   value: '08169784011',
+                  // ),
+                  // verticalSpace(24),
+                  // pw.Row(
+                  //   children: [
+                  // TransactionDetailsSection(
+                  //   title: 'Transaction ID',
+                  //   value: '$referenceId',
+                  //   iconData: Icons.copy,
+                  // ),
+                  //   ],
+                  // ),
+                  _transactionDetailsSection(
+                      'Transaction ID', widget.referenceId),
+                  pw.SizedBox(height: 24),
+                  // verticalSpace(24),
+                  _transactionDetailsSection('Transaction Type', widget.type),
+                  // TransactionDetailsSection(
+                  //   title: 'Transaction Type',
+                  //   value: '$type',
+                  // ),
+                  // verticalSpace(24),
+                  // const TransactionDetailsSection(
+                  //   title: 'Transaction Means',
+                  //   value: 'Wallet',
+                  // ),
+                  // verticalSpace(24),
+                  // const TransactionDetailsSection(
+                  //   title: 'Payment method',
+                  //   value: 'Wallet',
+                  // ),
+                  // verticalSpace(24),
+                  pw.SizedBox(height: 24),
+                  _transactionDetailsSection('Date', widget.date),
+                  // TransactionDetailsSection(
+                  //   title: 'Date',
+                  //   value: date,
+                  // ),
+                ]),
+              )),
+    );
+
+    final bytes = await pdf.save();
+    await _sharePDF(bytes);
+  }
+
+  pw.Widget _transactionDetailsSection(String title, String value,
+      [IconData? iconData]) {
+    return pw.Row(
+      children: [
+        pw.Expanded(
+          child: pw.Text(
+            '$title: $value',
+            style: pw.TextStyle(fontSize: 12),
+          ),
+        ),
+        if (iconData != null)
+          pw.Icon(pw.IconData(iconData.codePoint), size: 16),
+      ],
+    );
+  }
+
+  Future<void> _sharePDF(Uint8List bytes) async {
+    final tempDir = await getTemporaryDirectory();
+    final file = File('${tempDir.path}/transaction details');
+    await file.writeAsBytes(bytes);
+
+    // await Share.shareFiles([file.path], text: 'Here is a PDF file');
+    await Share.shareXFiles([XFile(file.path)], text: 'Here is a PDF file');
+  }
+}
+
+class TransactionsDetailsWidget extends StatelessWidget {
+  const TransactionsDetailsWidget({
+    super.key,
+    required this.amount,
+    required this.status,
+    required this.referenceId,
+    required this.type,
+    required this.date,
+  });
+
+  final String amount;
+  final String status;
+  final String referenceId;
+  final String type;
+  final String date;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 20),
+      height: 438.h,
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: AppColors.whiteColor,
+      ),
+      child: Column(children: [
+        verticalSpace(16),
+        Text(
+          'N$amount',
+          style: AppTextStyles.font20,
+        ),
+        verticalSpace(16),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              height: 16,
+              width: 16,
+              child: status == 'success'
+                  ? Image.asset('assets/icons/success_icon.png')
+                  : SizedBox.shrink(),
+            ),
+            horizontalSpace(5),
+            Text(
+              '$status',
+              style: AppTextStyles.font14.copyWith(
+                fontWeight: FontWeight.w400,
+                  color: status == 'success'
+                      ? Colors.green
+                      : status == 'pending'
+                          ? Color(0xffA6B309)
+                          : Colors.red),
+            )
+          ],
+        ),
+        verticalSpace(46),
+        // const TransactionDetailsSection(
+        //   title: 'Recipient',
+        //   value: '08169784011',
+        // ),
+        // verticalSpace(24),
+        TransactionDetailsSection(
+          title: 'Transaction ID',
+          value: '$referenceId',
+         // iconData: Icons.copy,
+        ),
+        verticalSpace(24),
+        TransactionDetailsSection(
+          title: 'Transaction Type',
+          value: '$type',
+        ),
+        // verticalSpace(24),
+        // const TransactionDetailsSection(
+        //   title: 'Transaction Means',
+        //   value: 'Wallet',
+        // ),
+        // verticalSpace(24),
+        // const TransactionDetailsSection(
+        //   title: 'Payment method',
+        //   value: 'Wallet',
+        // ),
+        verticalSpace(24),
+        TransactionDetailsSection(
+          title: 'Date',
+          value: date,
+        ),
+      ]),
+    );
   }
 }

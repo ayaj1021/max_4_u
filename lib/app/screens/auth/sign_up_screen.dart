@@ -33,10 +33,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Consumer2<AuthProviderImpl, ObscureTextProvider>(
-        builder: (context, stateModel, obscure, _) {
+        builder: (context, authProv, obscure, _) {
       return BusyOverlay(
-        show: stateModel.state == ViewState.Busy,
-        title: stateModel.message,
+        show: authProv.state == ViewState.Busy,
+        title: authProv.message,
         child: Scaffold(
           body: SafeArea(
               child: SingleChildScrollView(
@@ -45,7 +45,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                   Text(
                     'Welcome to Max4u!',
                     style: AppTextStyles.font20,
                   ),
@@ -70,17 +70,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         return;
                       }
 
-                      await stateModel.signUp(
+                      await authProv.signUp(
                           phoneNumber: phoneController.text.trim());
-                      if (stateModel.state == ViewState.Error &&
+                      if (authProv.status == false &&
                           context.mounted) {
-                        showMessage(context, stateModel.message);
+                        showMessage(context, authProv.message);
                         return;
                       }
 
-                      if (stateModel.state == ViewState.Success &&
+                      if (authProv.status == true &&
                           context.mounted) {
-                        showMessage(context, stateModel.message);
+                        showMessage(context, authProv.message);
 
                         nextScreen(
                             context,

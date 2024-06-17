@@ -1,11 +1,6 @@
-
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:max_4_u/app/provider/fund_account_provider.dart';
-import 'package:max_4_u/app/screens/dashboard/dashboard_screen.dart';
+import 'package:max_4_u/app/screens/vendor_sections/screens/fund_wallet/fund_account_validation_screen.dart';
 import 'package:max_4_u/app/utils/screen_navigator.dart';
-import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class PaymentGatewayScreen extends StatefulWidget {
@@ -36,11 +31,18 @@ class _PaymentGatewayScreenState extends State<PaymentGatewayScreen> {
           },
           onPageStarted: (String url) {},
           onPageFinished: (String url) {
-           // Future.delayed(Duration(seconds: 10), () {
-              Provider.of<FundAccountProvider>(context, listen: false)
-                  .verifyPayment(paymentToken: widget.token, context: context).then((value) => nextScreen(context, DashBoardScreen()));
-              log(widget.token);
-          //  }).then((value) => nextScreen(context, DashBoardScreen()));
+            // Future.delayed(Duration(seconds: 10), () {
+            // Provider.of<FundAccountProvider>(context, listen: false)
+            //     .verifyPayment(paymentToken: widget.token, context: context).then((value) => nextScreen(context, DashBoardScreen()));
+            // log(widget.token);
+            //  }).then((value) => nextScreen(context, DashBoardScreen()));
+          },
+          onNavigationRequest: (request) {
+            if (request.url.startsWith('https://www.youtube.com/')) {
+              return NavigationDecision.prevent;
+            }
+           nextScreen(context, FundAccountValidationScreen(token: widget.token,));
+            return NavigationDecision.navigate;
           },
           onWebResourceError: (WebResourceError error) {},
           // onNavigationRequest: (NavigationRequest request) {

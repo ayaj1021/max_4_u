@@ -79,7 +79,7 @@ class _SellDataScreenState extends State<SellDataScreen> {
                         ),
                       ),
                       horizontalSpace(74),
-                      const Text(
+                       Text(
                         'Data Bundle Sales',
                         style: AppTextStyles.font18,
                       )

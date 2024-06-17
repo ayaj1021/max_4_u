@@ -43,7 +43,7 @@ class _AddCustomerIdScreenState extends State<AddCustomerIdScreen> {
                           ),
                         ),
                         horizontalSpace(120),
-                        const Text(
+                         Text(
                           'User ID',
                           style: AppTextStyles.font18,
                         ),

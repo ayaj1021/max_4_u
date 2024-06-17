@@ -72,7 +72,7 @@ class _CustomerTransactionScreenState extends State<CustomerTransactionScreen> {
                       );
                     });
               },
-              child: const Row(
+              child:  Row(
                 children: [
                   Text(
                     'Filter',

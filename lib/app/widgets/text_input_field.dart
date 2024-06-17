@@ -59,14 +59,7 @@ class TextInputField extends StatelessWidget {
               hintStyle: AppTextStyles.font14
                   .copyWith(color: AppColors.textColor.withOpacity(0.3)),
               border: InputBorder.none,
-              // prefixIcon: GestureDetector(
-              //     onTap: prefixOnTap,
-              //     child: prefixIcon ?? const SizedBox(),
-              //     //  Icon(
-              //     //   prefixIcon,
-              //     //   color: const Color(0xff4F4F4F),
-              //     // )
-              //   ),
+           
               suffixIcon:
                   GestureDetector(onTap: onTap, child: Icon(suffixIcon)),
             ),

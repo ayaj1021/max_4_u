@@ -2,11 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/screens/auth/login_screen.dart';
-import 'package:max_4_u/app/screens/settings/bio_metric_auth_screen.dart';
 import 'package:max_4_u/app/screens/settings/change_password_screen.dart';
 import 'package:max_4_u/app/screens/settings/delete_account_screen.dart';
-import 'package:max_4_u/app/screens/settings/email_notification_settings.dart';
-import 'package:max_4_u/app/screens/settings/push_notification_settings.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/screen_navigator.dart';
@@ -20,12 +17,12 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   
     
+       
         return Scaffold(
           body: SafeArea(
               child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 44),
             child: Column(
               children: [
                 Row(
@@ -36,8 +33,8 @@ class SettingsScreen extends StatelessWidget {
                         Icons.arrow_back,
                       ),
                     ),
-                    horizontalSpace(119),
-                    const Text(
+                    horizontalSpace(129),
+                     Text(
                       'Settings',
                       style: AppTextStyles.font18,
                     )
@@ -46,7 +43,7 @@ class SettingsScreen extends StatelessWidget {
                 verticalSpace(25),
                 Container(
                   alignment: Alignment.center,
-                  height: 116.h,
+                  height: 75.h,
                   width: MediaQuery.of(context).size.width,
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
                   decoration: BoxDecoration(
@@ -63,43 +60,44 @@ class SettingsScreen extends StatelessWidget {
                         settingOption: 'Change password',
                       ),
                       verticalSpace(20),
-                      SettingsOptionSection(
-                        onTap: () =>
-                            nextScreen(context, const BiometricAuthScreen()),
-                        icon: 'assets/icons/setting_icon.png',
-                        settingOption: 'Biometric Authentication',
-                      ),
+                      // SettingsOptionSection(
+                      //   onTap: () =>
+                      //       nextScreen(context, const BiometricAuthScreen()),
+                      //   icon: 'assets/icons/setting_icon.png',
+                      //   settingOption: 'Biometric Authentication',
+                      // ),
                     ],
                   ),
                 ),
-                verticalSpace(25),
-                Container(
-                  alignment: Alignment.center,
-                  height: 116.h,
-                  width: MediaQuery.of(context).size.width,
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: AppColors.whiteColor,
-                  ),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SettingsOptionSection(
-                          onTap: () => nextScreen(
-                              context, const PushNotificationSettingsScreen()),
-                          icon: 'assets/icons/profile_icon.png',
-                          settingOption: 'Push notification settings',
-                        ),
-                        verticalSpace(20),
-                        SettingsOptionSection(
-                          onTap: () => nextScreen(
-                              context, const EmailNotificationSettingsScreen()),
-                          icon: 'assets/icons/setting_icon.png',
-                          settingOption: 'Email notification settings',
-                        ),
-                      ]),
-                ),
+                // verticalSpace(25),
+                // Container(
+                //   alignment: Alignment.center,
+                //   height: 116.h,
+                //   width: MediaQuery.of(context).size.width,
+                //   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+                //   decoration: BoxDecoration(
+                //     borderRadius: BorderRadius.circular(8),
+                //     color: AppColors.whiteColor,
+                //   ),
+                //   child: Column(
+                //       mainAxisAlignment: MainAxisAlignment.center,
+                //       children: [
+                //         SettingsOptionSection(
+                //           onTap: () => nextScreen(
+                //               context, const PushNotificationSettingsScreen()),
+                //           icon: 'assets/icons/profile_icon.png',
+                //           settingOption: 'Push notification settings',
+                //         ),
+                //         verticalSpace(20),
+                //         SettingsOptionSection(
+                //           onTap: () => nextScreen(
+                //               context, const EmailNotificationSettingsScreen()),
+                //           icon: 'assets/icons/setting_icon.png',
+                //           settingOption: 'Email notification settings',
+                //         ),
+                //       ]),
+                // ),
+                
                 verticalSpace(25),
                 Container(
                   alignment: Alignment.center,
@@ -134,10 +132,10 @@ class SettingsScreen extends StatelessWidget {
                 verticalSpace(152),
                 ButtonWidget(
                   text: 'Log out',
-                  onTap: ()async {
+                  onTap: () async {
                     await SecureStorage().logoutUser();
                     showMessage(context, 'Log out successful');
-                    nextScreenReplace(context, LoginScreen());  
+                    nextScreenReplace(context, LoginScreen());
                   },
                 )
               ],

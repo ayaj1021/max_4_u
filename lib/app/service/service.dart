@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:dio/dio.dart';
 
@@ -5,7 +6,7 @@ import 'package:max_4_u/app/config/constants.dart';
 
 import 'package:max_4_u/app/database/database.dart';
 
-class ApiService  {
+class ApiService {
   Dio dio = Dio();
 
   // ApiService.init();
@@ -24,69 +25,42 @@ class ApiService  {
         data: body,
         options: Options(
           headers: {
-            'Content-Type': 'application/json',
+           'Content-Type': 'application/json',
             'Site-From': 'postman',
           },
         ),
       );
 
-      print('This is this source response ${response.data}');
-      return response.data;
+    //  if (response.statusCode == 200) {
+        print('This is this source response ${response.data}');
+        return response.data;
+      // } else {
+      //   throw Exception('Failed to authenticate: ${response.statusCode}');
+      // }
     } on DioException catch (e) {
+
+  final statusCode = e.response?.statusCode ?? 'No Status Code';
+    final data = e.response?.data ?? 'No Data';
+    print('Server Error: $statusCode $data');
+    return Future.error('Server error: $statusCode $data');
+
+
+
       //  final errorResponse = await Future.error(ApiError.fromDio(e));
       //  message = errorResponse;
-      ApiError(errorDescription: message);
+      // ApiError(errorDescription: message);
 
       // message = e.response?.data;
       // Server-side error
-      print('Server Error: ${e.response?.statusCode} ${e.response?.data}');
-
-      return e.response?.data;
-    } on SocketException catch (e) {
-      message = 'Network error. Please try again later';
-      return e.toString();
+      // print('Server Error: ${e.response?.statusCode} ${e.response?.data}');
+      // return Future.error(e.response?.data);
+      // return e.response?.data;
     } catch (e) {
       message = e.toString();
+        print('General Error: $e');
+    return Future.error(e.toString());
     }
   }
-
-  //AUTH NOT WORKING
-  // Future<dynamic> authPostRequest(
-  //     {Map<String, String>? headers,
-  //     required Map<String, dynamic> body,
-  //     String? message}) async {
-  //   String url = AppConstants.baseUrl;
-
-  //   try {
-  //     final response = await dio.post(
-  //       url,
-  //       data: body,
-  //       options: Options(
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //           'Site-From': 'postman',
-  //         },
-  //       ),
-  //     );
-
-  //     log(response.data);
-
-  //     notifyListeners();
-  //     return response;
-
-  //     //  print('This is this source response ${response.data}');
-  //   } on DioException catch (e) {
-  //     // Server-side error
-  //     final errorResponse = Future.error(ApiError.fromDio(e));
-  //     print(errorResponse);
-  //     print('Server Error: ${e.response?.statusCode} ${e.response?.data}');
-  //     return e.response?.data;
-  //   } on SocketException catch (_) {
-  //     // state = ViewState.Error;
-  //     // _message = 'Network error. Please try again later';
-  //     notifyListeners();
-  //   }
-  // }
 
   Future<dynamic> servicePostRequest(
       {Map<String, String>? headers,
@@ -120,61 +94,43 @@ class ApiService  {
       // notifyListeners();
     }
   }
+
+  Future<dynamic> uploadFileServicePostRequest(
+      {Map<String, String>? headers, required FormData data}) async {
+    String url = AppConstants.baseUrl;
+
+    final encryptedId = await SecureStorage().getUserEncryptedId();
+
+    try {
+      final response = await dio.post(
+        url,
+        data: data,
+        onSendProgress: (count, total) {
+          log('count: $count, total $total');
+        },
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'Site-From': 'postman',
+            'User-Key': encryptedId
+          },
+          contentType: Headers.jsonContentType,
+        ),
+      );
+
+      print('This is this source response ${response.data}');
+      return response.data;
+    } on DioException catch (e) {
+      // Server-side error
+      print('Server Error: ${e.response?.statusCode} ${e.response?.data}');
+      return e.response?.data;
+    } on SocketException catch (_) {
+      // state = ViewState.Error;
+      // _message = 'Network error. Please try again later';
+      // notifyListeners();
+    }
+  }
 }
-
-//SERVICE POST NOT WORKING
-//   Future<dynamic> servicePostRequest(
-//       {Map<String, String>? headers,
-//       required String message,
-//       required Map<String, dynamic> body}) async {
-//     String url = AppConstants.baseUrl;
-
-//     final encryptedId = await SecureStorage().getUserEncryptedId();
-
-//     final response = await dio.post(
-//       url,
-//       data: body,
-//       options: Options(
-//         headers: {
-//           'Content-Type': 'application/json',
-//           'Site-From': 'postman',
-//           'User-Key': encryptedId
-//         },
-//       ),
-//     );
-
-//     log(response.data);
-
-//     try {
-//       // if (response.statusCode == 200) {
-//       //   return response.data;
-//       // } else {
-//       //   message = response.data;
-
-//       //   // return response.data;
-//       // }
-//       print('This is this source response ${response.data}');
-
-//       return response;
-//     } on DioException catch (e) {
-//       // Server-side error
-//       final errorResponse = Future.error(ApiError.fromDio(e));
-//       print(errorResponse);
-//       print('Server Error: ${e.response?.statusCode} ${e.response?.data}');
-//       return e.response?.data;
-//     } on SocketException catch (_) {
-//       // state = ViewState.Error;
-//       message = 'Network error. Please try again later';
-//       notifyListeners();
-//     }
-//     //
-//     //  catch (e) {
-//     //   // state = ViewState.Error;
-//     //   message = e.toString();
-//     //   notifyListeners();
-//     // }
-//   }
-// }
 
 class ApiError {
   late String? errorDescription;

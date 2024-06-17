@@ -241,7 +241,10 @@ class SecureStorage {
     return null;
   }
 
+
   logoutUser() async {
+
     await _storage.deleteAll();
+    //await _storage.deleteAll();
   }
 }

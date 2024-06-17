@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:max_4_u/app/model/user_response_model.dart';
 
 abstract class AuthenticationProviderUseCase extends ChangeNotifier {
   Future<void> signUp({required String phoneNumber});
   Future<void> verifyOtp({required String otp});
-  Future<ResponseDataData> registerUser(
+  Future registerUser(
       {required String email,
       required String password,
       required String firstName,
@@ -12,8 +11,8 @@ abstract class AuthenticationProviderUseCase extends ChangeNotifier {
       required String confirmPassword});
   Future loginUser(
       {required String email, required String password});
-  Future<void> forgotPassword();
-  Future<void> verifyForgotPasswordOtp();
+  Future<void> forgotPassword({required String email});
+  Future<void> verifyForgotPasswordOtp({required String otp});
   Future<void> changePassword(
       {required String newPassword, required String confirmNewPassword});
 }

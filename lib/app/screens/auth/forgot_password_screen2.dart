@@ -31,7 +31,7 @@ class _ForgotPasswordScreen2State extends State<ForgotPasswordScreen2> {
                 onTap: () => Navigator.pop(context),
               ),
               verticalSpace(26),
-              const Text(
+               Text(
                 'Forgot your password?',
                 style: AppTextStyles.font20,
               ),

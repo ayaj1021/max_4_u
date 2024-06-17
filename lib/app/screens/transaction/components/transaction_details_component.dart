@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
-import 'package:max_4_u/app/utils/white_space.dart';
 
 class TransactionDetailsSection extends StatelessWidget {
   const TransactionDetailsSection({
@@ -21,23 +20,14 @@ class TransactionDetailsSection extends StatelessWidget {
       children: [
         Text(
           title,
-          style: AppTextStyles.font14.copyWith(color: const Color(0xff666666)),
+          style: AppTextStyles.font18.copyWith(color: const Color(0xff666666)),
         ),
-       horizontalSpace(120),
-        Row(
-          children: [
-            Text(
-              value,
-              style: AppTextStyles.font14.copyWith(
-                color: const Color(0xff666666),
-              ),
-            ),
-            Icon(
-              iconData,
-              color: const Color(0xff0072BF),
-              size: 14,
-            )
-          ],
+      // horizontalSpace(120),
+        Text(
+          value,
+          style: AppTextStyles.font16.copyWith(
+            color: const Color(0xff666666),
+          ),
         ),
       ],
     );

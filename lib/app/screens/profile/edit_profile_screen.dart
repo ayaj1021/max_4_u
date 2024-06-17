@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/database/database.dart';
+import 'package:max_4_u/app/encryt_data/encrypt_data.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/provider/change_email_provider.dart';
+import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/busy_overlay.dart';
@@ -52,7 +54,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ChangeEmailProvider>(builder: (context, changeEmail, _) {
+    return Consumer2<ChangeEmailProvider, ReloadUserDataProvider>(
+        builder: (context, changeEmail, reloadData, _) {
+          final phoneNumber = EncryptData.decryptAES('${reloadData.loadData.userData![0].mobileNumber}');
+          final firstName = EncryptData.decryptAES('${reloadData.loadData.userData![0].firstName}');
+          final lastName = EncryptData.decryptAES('${reloadData.loadData.userData![0].lastName}');
+          final email = EncryptData.decryptAES('${reloadData.loadData.userData![0].email}');
       return BusyOverlay(
         show: changeEmail.state == ViewState.Busy,
         title: changeEmail.message,
@@ -72,7 +79,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
                     ),
                     horizontalSpace(109),
-                    const Text(
+                     Text(
                       'Edit profile',
                       style: AppTextStyles.font18,
                     )
@@ -106,17 +113,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         ),
                       ),
                       horizontalSpace(16),
-                      Row(
-                        children: [
-                          Text(
-                            'Edit image',
-                            style: AppTextStyles.font14.copyWith(
-                              color: AppColors.primaryColor,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          )
-                        ],
-                      )
+                      // Row(
+                      //   children: [
+                      //     Text(
+                      //       'Edit image',
+                      //       style: AppTextStyles.font14.copyWith(
+                      //         color: AppColors.primaryColor,
+                      //         fontWeight: FontWeight.w500,
+                      //       ),
+                      //     )
+                      //   ],
+                      // )
                     ],
                   ),
                 ),
@@ -163,32 +170,33 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         value: email,
                       ),
                       verticalSpace(8),
-                      Container(
-                        alignment: Alignment.center,
-                        height: 23.h,
-                        width: 104.w,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(22),
-                          color: Color(0xffAE8027).withOpacity(0.2),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CircleAvatar(
-                              radius: 4,
-                              backgroundColor: Color(0xffAE8027),
-                            ),
-                            horizontalSpace(10),
-                            Text(
-                              'Unverified',
-                              style: AppTextStyles.font12.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xffAE8027),
-                              ),
-                            )
-                          ],
-                        ),
-                      )
+                      // Container(
+                      //   alignment: Alignment.center,
+                      //   height: 23.h,
+                      //   width: 104.w,
+                      //   decoration: BoxDecoration(
+                      //     borderRadius: BorderRadius.circular(22),
+                      //     color: Color(0xffAE8027).withOpacity(0.2),
+                      //   ),
+                      //   child: Row(
+                      //     mainAxisAlignment: MainAxisAlignment.center,
+                      //     children: [
+                      //       CircleAvatar(
+                      //         radius: 4,
+                      //         backgroundColor: Color(0xffAE8027),
+                      //       ),
+                      //       horizontalSpace(10),
+                      //       Text(
+                      //         'Unverified',
+                      //         style: AppTextStyles.font12.copyWith(
+                      //           fontWeight: FontWeight.w600,
+                      //           color: Color(0xffAE8027),
+                      //         ),
+                      //       )
+                      //     ],
+                      //   ),
+                      // )
+                   
                     ],
                   ),
                 ),
@@ -255,14 +263,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           return;
                         }
                         Navigator.pop(context);
-              
+
                         await changeEmail.changeEmail();
                         if (changeEmail.state == ViewState.Error &&
                             context.mounted) {
                           showMessage(context, changeEmail.message);
                           return;
                         }
-              
+
                         if (changeEmail.state == ViewState.Success &&
                             context.mounted) {}
                       },
@@ -300,13 +308,13 @@ class EditProfileComponent extends StatelessWidget {
           children: [
             Text(
               title,
-              style: AppTextStyles.font14.copyWith(
+              style: AppTextStyles.font20.copyWith(
                   color: const Color(0xff333333), fontWeight: FontWeight.w400),
             ),
             verticalSpace(8),
             Text(
               value,
-              style: AppTextStyles.font14.copyWith(
+              style: AppTextStyles.font16.copyWith(
                   color: AppColors.mainTextColor, fontWeight: FontWeight.w400),
             )
           ],

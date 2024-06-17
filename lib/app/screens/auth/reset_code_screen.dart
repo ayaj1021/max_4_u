@@ -21,6 +21,7 @@ class ResetCodeScreen extends StatefulWidget {
 }
 
 class _ResetCodeScreenState extends State<ResetCodeScreen> {
+  final _otpController = TextEditingController();
   // int _minutes = 00;
   // int _seconds = 30;
   // Timer? _timer;
@@ -83,7 +84,7 @@ class _ResetCodeScreenState extends State<ResetCodeScreen> {
                       onTap: () => Navigator.pop(context),
                     ),
                     verticalSpace(26),
-                    const Text(
+                     Text(
                       'Reset Code',
                       style: AppTextStyles.font20,
                     ),
@@ -95,7 +96,7 @@ class _ResetCodeScreenState extends State<ResetCodeScreen> {
                     ),
                     verticalSpace(24),
                     PinCodeTextField(
-                      controller: authProv.otpController,
+                      controller: _otpController,
                       keyboardType: TextInputType.number,
                       appContext: context,
                       length: 6,
@@ -111,13 +112,13 @@ class _ResetCodeScreenState extends State<ResetCodeScreen> {
                     ButtonWidget(
                       text: 'Enter',
                       onTap: () async {
-                        if (authProv.otpController.text.isEmpty) {
+                        if (_otpController.text.isEmpty) {
                           showMessage(context, 'Otp fields are required',
                               isError: true);
                           return;
                         }
 
-                        await authProv.verifyForgotPasswordOtp();
+                        await authProv.verifyForgotPasswordOtp(otp: _otpController.text.trim());
                         if (authProv.state == ViewState.Error &&
                             context.mounted) {
                           showMessage(context, authProv.message);

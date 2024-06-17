@@ -6,6 +6,7 @@ import 'package:max_4_u/app/encryt_data/encrypt_data.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/provider/auth_provider.dart';
 import 'package:max_4_u/app/provider/obscure_text_provider.dart';
+import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/screens/dashboard/dashboard_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
@@ -44,8 +45,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<AuthProviderImpl, ObscureTextProvider>(
-        builder: (context, authProv, obscure, _) {
+    return Consumer3<AuthProviderImpl, ObscureTextProvider,
+            ReloadUserDataProvider>(
+        builder: (context, authProv, obscure, reloadData, _) {
       return BusyOverlay(
         show: authProv.state == ViewState.Busy,
         title: authProv.message,
@@ -57,7 +59,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                   Text(
                     'Set up your profile',
                     style: AppTextStyles.font20,
                   ),
@@ -190,11 +192,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
                       if (authProv.status == true && context.mounted) {
                         showMessage(context, authProv.message);
+                        await reloadData.reloadUserData();
 
                         nextScreen(context, DashBoardScreen());
                       }
 
-                     final firstName = EncryptData.decryptAES(
+                      final firstName = EncryptData.decryptAES(
                           '${result.userData![0].firstName}');
                       // '${result.data!.userData![0].firstName}');
                       await SecureStorage().saveFirstName(firstName);

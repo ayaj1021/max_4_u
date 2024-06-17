@@ -24,7 +24,7 @@ class BiometricAuthScreen extends StatelessWidget {
                   ),
                 ),
                 horizontalSpace(60),
-                const Text(
+                 Text(
                   'Biometric Authentication',
                   style: AppTextStyles.font18,
                 )

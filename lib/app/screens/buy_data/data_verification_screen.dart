@@ -89,7 +89,7 @@ class _DataVerificationScreenState extends State<DataVerificationScreen> {
                           ),
                         ),
                         horizontalSpace(104),
-                        const Text(
+                         Text(
                           'Confirmation',
                           style: AppTextStyles.font18,
                         ),

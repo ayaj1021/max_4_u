@@ -79,7 +79,7 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
                         ),
                       ),
                       horizontalSpace(113),
-                      const Text(
+                       Text(
                         'Buy Data',
                         style: AppTextStyles.font18,
                       )
@@ -119,7 +119,7 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
                         return DropdownMenuItem(
                           value: networkProviders,
                           child: Container(
-                            margin: const EdgeInsets.only(right: 250),
+                            margin: const EdgeInsets.only(right: 270),
                             child: Container(
                               margin: const EdgeInsets.only(top: 8),
                               child: Text(
@@ -193,7 +193,7 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
                         return DropdownMenuItem(
                           value: dataValidity,
                           child: Container(
-                            margin: const EdgeInsets.only(right: 250),
+                            margin: const EdgeInsets.only(right: 260),
                             child: Container(
                               margin: const EdgeInsets.only(top: 8),
                               child: Text(
@@ -242,7 +242,7 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
                         return DropdownMenuItem(
                           value: dataBundleType,
                           child: Container(
-                            margin: const EdgeInsets.only(right: 159),
+                            margin: const EdgeInsets.only(right: 185),
                             child: Container(
                               margin: const EdgeInsets.only(top: 8),
                               child: Text(

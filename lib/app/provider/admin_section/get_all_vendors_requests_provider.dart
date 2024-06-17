@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/encryt_data/encrypt_data.dart';
-import 'package:max_4_u/app/model/admin/get_all_vendor_requests_model.dart';
+import 'package:max_4_u/app/model/admin/get_all_requests_model.dart';
 import 'package:max_4_u/app/service/service.dart';
 
 class GetAllVendorRequestsProvider extends ChangeNotifier {
@@ -14,7 +14,7 @@ class GetAllVendorRequestsProvider extends ChangeNotifier {
   String phoneNumber = '';
   String uniqueId = '';
 
-  VendorsRequestResponseData allVendorRequest = VendorsRequestResponseData();
+  VendorRequestResponseData allVendorRequest = VendorRequestResponseData();
 
   Future getAllVendorsRequests() async {
     isLoading = true;
@@ -40,7 +40,7 @@ class GetAllVendorRequestsProvider extends ChangeNotifier {
       if (_status == true) {
         _status = response['data']['status'];
 
-        allVendorRequest = VendorsRequestResponseData.fromJson(
+        allVendorRequest = VendorRequestResponseData.fromJson(
             response['data']['response_data']);
         isLoading = false;
 
@@ -48,8 +48,7 @@ class GetAllVendorRequestsProvider extends ChangeNotifier {
             EncryptData.decryptAES('${allVendorRequest.data![0].firstName}');
         lastName =
             EncryptData.decryptAES('${allVendorRequest.data![0].lastName}');
-        phoneNumber =
-            EncryptData.decryptAES('${allVendorRequest.data![0].mobileNumber}');
+    
         uniqueId =
             EncryptData.decryptAES('${allVendorRequest.data![0].uniqueId}');
         log('This is $allVendorRequest');

@@ -1,408 +1,330 @@
-// To parse this JSON data, do
-//
-//     final responseModel = responseModelFromJson(jsonString);
 
-import 'dart:convert';
-
-ResponseModel responseModelFromJson(String str) => ResponseModel.fromJson(json.decode(str));
-
-String responseModelToJson(ResponseModel data) => json.encode(data.toJson());
 
 class ResponseModel {
-    final ResponseModelData? data;
+  final bool? status;
+  final String? message;
+  final ResponseDataData? responseData;
+  final List<dynamic>? errorData;
 
-    ResponseModel({
-        this.data,
-    });
+  ResponseModel({this.status, this.message, this.responseData, this.errorData});
 
-    factory ResponseModel.fromJson(Map<String, dynamic> json) => ResponseModel(
-        data: json["data"] == null ? null : ResponseModelData.fromJson(json["data"]),
+  factory ResponseModel.fromJson(Map<String, dynamic> json) {
+    return ResponseModel(
+      status: json['status'] as bool?,
+      message: json['message'] as String?,
+      responseData: json['response_data'] != null ? ResponseDataData.fromJson(json['response_data']) : null,
+      errorData: json['error_data'] as List<dynamic>?,
     );
-
-    Map<String, dynamic> toJson() => {
-        "data": data?.toJson(),
-    };
-}
-
-class ResponseModelData {
-    final bool? status;
-    final String? message;
-    final ResponseData? responseData;
-    final List<dynamic>? errorData;
-
-    ResponseModelData({
-        this.status,
-        this.message,
-        this.responseData,
-        this.errorData,
-    });
-
-    factory ResponseModelData.fromJson(Map<String, dynamic> json) => ResponseModelData(
-        status: json["status"],
-        message: json["message"],
-        responseData: json["response_data"] == null ? null : ResponseData.fromJson(json["response_data"]),
-        errorData: json["error_data"] == null ? [] : List<dynamic>.from(json["error_data"]!.map((x) => x)),
-    );
-
-    Map<String, dynamic> toJson() => {
-        "status": status,
-        "message": message,
-        "response_data": responseData?.toJson(),
-        "error_data": errorData == null ? [] : List<dynamic>.from(errorData!.map((x) => x)),
-    };
-}
-
-class ResponseData {
-    final ResponseDataData? data;
-
-    ResponseData({
-        this.data,
-    });
-
-    factory ResponseData.fromJson(Map<String, dynamic> json) => ResponseData(
-        data: json["data"] == null ? null : ResponseDataData.fromJson(json["data"]),
-    );
-
-    Map<String, dynamic> toJson() => {
-        "data": data?.toJson(),
-    };
+  }
 }
 
 class ResponseDataData {
-    final List<UserDatum>? userData;
-    final UserAccount? userAccount;
-    final List<UserSettingsDatum>? userSettingsData;
-    final List<dynamic>? beneficiaryData;
-    final List<Service>? services;
-    final List<Product>? products;
-    final TransactionHistory? transactionHistory;
-    final AutoRenewal? autoRenewal;
-    final List<dynamic>? bankDetails;
+  final List<UserData>? userData;
+  final UserAccount? userAccount;
+  final List<UserSettingsData>? userSettingsData;
+  final List<dynamic>? beneficiaryData;
+  final List<Service>? services;
+  final List<Product>? products;
+  final TransactionHistory? transactionHistory;
+  final AutoRenewal? autoRenewal;
+  final SiteData? siteData;
+  final List<SubService>? subServices;
+  final List<dynamic>? vendingCode;
 
-    ResponseDataData({
-        this.userData,
-        this.userAccount,
-        this.userSettingsData,
-        this.beneficiaryData,
-        this.services,
-        this.products,
-        this.transactionHistory,
-        this.autoRenewal,
-        this.bankDetails,
-    });
+  ResponseDataData({
+    this.userData,
+    this.userAccount,
+    this.userSettingsData,
+    this.beneficiaryData,
+    this.services,
+    this.products,
+    this.transactionHistory,
+    this.autoRenewal,
+    this.siteData,
+    this.subServices,
+    this.vendingCode,
+  });
 
-    factory ResponseDataData.fromJson(Map<String, dynamic> json) => ResponseDataData(
-        userData: json["user_data"] == null ? [] : List<UserDatum>.from(json["user_data"]!.map((x) => UserDatum.fromJson(x))),
-        userAccount: json["user_account"] == null ? null : UserAccount.fromJson(json["user_account"]),
-        userSettingsData: json["user_settings_data"] == null ? [] : List<UserSettingsDatum>.from(json["user_settings_data"]!.map((x) => UserSettingsDatum.fromJson(x))),
-        beneficiaryData: json["beneficiary_data"] == null ? [] : List<dynamic>.from(json["beneficiary_data"]!.map((x) => x)),
-        services: json["services"] == null ? [] : List<Service>.from(json["services"]!.map((x) => Service.fromJson(x))),
-        products: json["products"] == null ? [] : List<Product>.from(json["products"]!.map((x) => Product.fromJson(x))),
-        transactionHistory: json["transaction_history"] == null ? null : TransactionHistory.fromJson(json["transaction_history"]),
-        autoRenewal: json["auto_renewal"] == null ? null : AutoRenewal.fromJson(json["auto_renewal"]),
-        bankDetails: json["bank_details"] == null ? [] : List<dynamic>.from(json["bank_details"]!.map((x) => x)),
+  factory ResponseDataData.fromJson(Map<String, dynamic> json) {
+    return ResponseDataData(
+      userData: (json['user_data'] as List<dynamic>?)
+          ?.map((e) => UserData.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      userAccount: json['user_account'] != null ? UserAccount.fromJson(json['user_account']) : null,
+      userSettingsData: (json['user_settings_data'] as List<dynamic>?)
+          ?.map((e) => UserSettingsData.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      beneficiaryData: json['beneficiary_data'] as List<dynamic>?,
+      services: (json['services'] as List<dynamic>?)
+          ?.map((e) => Service.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      products: (json['products'] as List<dynamic>?)
+          ?.map((e) => Product.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      transactionHistory: json['transaction_history'] != null
+          ? TransactionHistory.fromJson(json['transaction_history'])
+          : null,
+      autoRenewal: json['auto_renewal'] != null ? AutoRenewal.fromJson(json['auto_renewal']) : null,
+      siteData: json['site_data'] != null ? SiteData.fromJson(json['site_data']) : null,
+      subServices: (json['sub_services'] as List<dynamic>?)
+          ?.map((e) => SubService.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      vendingCode: json['vending_code'] as List<dynamic>?,
     );
-
-    Map<String, dynamic> toJson() => {
-        "user_data": userData == null ? [] : List<dynamic>.from(userData!.map((x) => x.toJson())),
-        "user_account": userAccount?.toJson(),
-        "user_settings_data": userSettingsData == null ? [] : List<dynamic>.from(userSettingsData!.map((x) => x.toJson())),
-        "beneficiary_data": beneficiaryData == null ? [] : List<dynamic>.from(beneficiaryData!.map((x) => x)),
-        "services": services == null ? [] : List<dynamic>.from(services!.map((x) => x.toJson())),
-        "products": products == null ? [] : List<dynamic>.from(products!.map((x) => x.toJson())),
-        "transaction_history": transactionHistory?.toJson(),
-        "auto_renewal": autoRenewal?.toJson(),
-        "bank_details": bankDetails == null ? [] : List<dynamic>.from(bankDetails!.map((x) => x)),
-    };
-} 
-
-
-
-class TransactionHistory{
-    final List<Datum>? data;
-    final int? currentPage;
-    final int? totalData;
-    final int? totalResult;
-
-    TransactionHistory({
-        this.data,
-        this.currentPage,
-        this.totalData,
-        this.totalResult,
-    });
-
-    factory TransactionHistory.fromJson(Map<String, dynamic> json) => TransactionHistory(
-        data: json["data"] == null ? [] : List<Datum>.from(json["data"]!.map((x) => Datum.fromJson(x))),
-        currentPage: json["current_page"],
-        totalData: json["total_data"],
-        totalResult: json["total_result"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "data": data == null ? [] : List<dynamic>.from(data!.map((x) => x.toJson())),
-        "current_page": currentPage,
-        "total_data": totalData,
-        "total_result": totalResult,
-    };
+  }
 }
 
+class UserData {
+  final String? uniqueId;
+  final String? firstName;
+  final String? lastName;
+  final String? email;
+  final String? mobileNumber;
+  final String? level;
+  final String? status;
+  final String? emailStatus;
+  final String? regDate;
 
-class AutoRenewal {
-    final List<Datum>? data;
-    final int? currentPage;
-    final int? totalData;
-    final int? totalResult;
+  UserData({
+    this.uniqueId,
+    this.firstName,
+    this.lastName,
+    this.email,
+    this.mobileNumber,
+    this.level,
+    this.status,
+    this.emailStatus,
+    this.regDate,
+  });
 
-    AutoRenewal({
-        this.data,
-        this.currentPage,
-        this.totalData,
-        this.totalResult,
-    });
-
-    factory AutoRenewal.fromJson(Map<String, dynamic> json) => AutoRenewal(
-        data: json["data"] == null ? [] : List<Datum>.from(json["data"]!.map((x) => Datum.fromJson(x))),
-        currentPage: json["current_page"],
-        totalData: json["total_data"],
-        totalResult: json["total_result"],
+  factory UserData.fromJson(Map<String, dynamic> json) {
+    return UserData(
+      uniqueId: json['unique_id'] as String?,
+      firstName: json['first_name'] as String?,
+      lastName: json['last_name'] as String?,
+      email: json['email'] as String?,
+      mobileNumber: json['mobile_number'] as String?,
+      level: json['level'] as String?,
+      status: json['status'] as String?,
+      emailStatus: json['email_status'] as String?,
+      regDate: json['reg_date'] as String?,
     );
-
-    Map<String, dynamic> toJson() => {
-        "data": data == null ? [] : List<dynamic>.from(data!.map((x) => x.toJson())),
-        "current_page": currentPage,
-        "total_data": totalData,
-        "total_result": totalResult,
-    };
-}
-
-class Datum {
-    final String? referenceId;
-    final String? number;
-    final String? type;
-    final String? subType;
-    final String? purchaseType;
-    final String? productCode;
-    final String? productAmount;
-    final String? amountPaid;
-    final String? discount;
-    final String? commissionEarn;
-    final String? status;
-    final DateTime? regDate;
-    final String? uniqueId;
-    final String? lastName;
-    final String? firstName;
-
-    Datum({
-        this.referenceId,
-        this.number,
-        this.type,
-        this.subType,
-        this.purchaseType,
-        this.productCode,
-        this.productAmount,
-        this.amountPaid,
-        this.discount,
-        this.commissionEarn,
-        this.status,
-        this.regDate,
-        this.uniqueId,
-        this.lastName,
-        this.firstName,
-    });
-
-    factory Datum.fromJson(Map<String, dynamic> json) => Datum(
-        referenceId: json["reference_id"],
-        number: json["number"],
-        type: json["type"],
-        subType: json["sub_type"],
-        purchaseType: json["purchase_type"],
-        productCode: json["product_code"],
-        productAmount: json["product_amount"],
-        amountPaid: json["amount_paid"],
-        discount: json["discount"],
-        commissionEarn: json["commission_earn"],
-        status: json["status"],
-        regDate: json["reg_date"] == null ? null : DateTime.parse(json["reg_date"]),
-        uniqueId: json["unique_id"],
-        lastName: json["last_name"],
-        firstName: json["first_name"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "reference_id": referenceId,
-        "number": number,
-        "type": type,
-        "sub_type": subType,
-        "purchase_type": purchaseType,
-        "product_code": productCode,
-        "product_amount": productAmount,
-        "amount_paid": amountPaid,
-        "discount": discount,
-        "commission_earn": commissionEarn,
-        "status": status,
-        "reg_date": regDate?.toIso8601String(),
-        "unique_id": uniqueId,
-        "last_name": lastName,
-        "first_name": firstName,
-    };
-}
-
-class Product {
-    final String? name;
-    final String? code;
-    final String? serviceName;
-    final String? category;
-    final String? price;
-    final String? consumerDiscount;
-    final String? vendorDiscount;
-    final String? serviceFee;
-    final String? logo;
-    final String? duration;
-    final String? status;
-
-    Product({
-        this.name,
-        this.code,
-        this.serviceName,
-        this.category,
-        this.price,
-        this.consumerDiscount,
-        this.vendorDiscount,
-        this.serviceFee,
-        this.logo,
-        this.duration,
-        this.status,
-    });
-
-    factory Product.fromJson(Map<String, dynamic> json) => Product(
-        name: json["name"],
-        code: json["code"],
-        serviceName: json["service_name"],
-        category: json["category"],
-        price: json["price"],
-        consumerDiscount: json["consumer_discount"],
-        vendorDiscount: json["vendor_discount"],
-        serviceFee: json["service_fee"],
-        logo: json["logo"],
-        duration: json["duration"],
-        status: json["status"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "name": name,
-        "code": code,
-        "service_name": serviceName,
-        "category": category,
-        "price": price,
-        "consumer_discount": consumerDiscount,
-        "vendor_discount": vendorDiscount,
-        "service_fee": serviceFee,
-        "logo": logo,
-        "duration": duration,
-        "status": status,
-    };
-}
-
-class Service {
-    final String? category;
-
-    Service({
-        this.category,
-    });
-
-    factory Service.fromJson(Map<String, dynamic> json) => Service(
-        category: json["category"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "category": category,
-    };
+  }
 }
 
 class UserAccount {
-    final int? balance;
+  final int? balance;
 
-    UserAccount({
-        this.balance,
-    });
+  UserAccount({this.balance});
 
-    factory UserAccount.fromJson(Map<String, dynamic> json) => UserAccount(
-        balance: json["balance"],
+  factory UserAccount.fromJson(Map<String, dynamic> json) {
+    return UserAccount(
+      balance: json['balance'] as int?,
     );
-
-    Map<String, dynamic> toJson() => {
-        "balance": balance,
-    };
+  }
 }
 
-class UserDatum {
-    final String? uniqueId;
-    final String? firstName;
-    final String? lastName;
-    final String? email;
-    final String? mobileNumber;
-    final String? level;
-    final String? status;
-    final String? emailStatus;
-    final DateTime? regDate;
+class UserSettingsData {
+  final String? sms;
+  final String? email;
+  final String? pushNotification;
 
-    UserDatum({
-        this.uniqueId,
-        this.firstName,
-        this.lastName,
-        this.email,
-        this.mobileNumber,
-        this.level,
-        this.status,
-        this.emailStatus,
-        this.regDate,
-    });
+  UserSettingsData({this.sms, this.email, this.pushNotification});
 
-    factory UserDatum.fromJson(Map<String, dynamic> json) => UserDatum(
-        uniqueId: json["unique_id"],
-        firstName: json["first_name"],
-        lastName: json["last_name"],
-        email: json["email"],
-        mobileNumber: json["mobile_number"],
-        level: json["level"],
-        status: json["status"],
-        emailStatus: json["email_status"],
-        regDate: json["reg_date"] == null ? null : DateTime.parse(json["reg_date"]),
+  factory UserSettingsData.fromJson(Map<String, dynamic> json) {
+    return UserSettingsData(
+      sms: json['sms'] as String?,
+      email: json['email'] as String?,
+      pushNotification: json['push_notification'] as String?,
     );
-
-    Map<String, dynamic> toJson() => {
-        "unique_id": uniqueId,
-        "first_name": firstName,
-        "last_name": lastName,
-        "email": email,
-        "mobile_number": mobileNumber,
-        "level": level,
-        "status": status,
-        "email_status": emailStatus,
-        "reg_date": regDate?.toIso8601String(),
-    };
+  }
 }
 
-class UserSettingsDatum {
-    final String? sms;
-    final String? email;
-    final String? pushNotification;
+class Service {
+  final String? category;
 
-    UserSettingsDatum({
-        this.sms,
-        this.email,
-        this.pushNotification,
-    });
+  Service({this.category});
 
-    factory UserSettingsDatum.fromJson(Map<String, dynamic> json) => UserSettingsDatum(
-        sms: json["sms"],
-        email: json["email"],
-        pushNotification: json["push_notification"],
+  factory Service.fromJson(Map<String, dynamic> json) {
+    return Service(
+      category: json['category'] as String?,
     );
+  }
+}
 
-    Map<String, dynamic> toJson() => {
-        "sms": sms,
-        "email": email,
-        "push_notification": pushNotification,
+class Product {
+  final String? name;
+  final String? code;
+  final String? serviceName;
+  final String? category;
+  final String? price;
+  final String? consumerDiscount;
+  final String? vendorDiscount;
+  final String? serviceFee;
+  final String? logo;
+  final String? duration;
+  final String? status;
+
+  Product({
+    this.name,
+    this.code,
+    this.serviceName,
+    this.category,
+    this.price,
+    this.consumerDiscount,
+    this.vendorDiscount,
+    this.serviceFee,
+    this.logo,
+    this.duration,
+    this.status,
+  });
+
+  factory Product.fromJson(Map<String, dynamic> json) {
+    return Product(
+      name: json['name'] as String?,
+      code: json['code'] as String?,
+      serviceName: json['service_name'] as String?,
+      category: json['category'] as String?,
+      price: json['price'] as String?,
+      consumerDiscount: json['consumer_discount'] as String?,
+      vendorDiscount: json['vendor_discount'] as String?,
+      serviceFee: json['service_fee'] as String?,
+      logo: json['logo'] as String?,
+      duration: json['duration'] as String?,
+      status: json['status'] as String?,
+    );
+  }
+}
+
+class TransactionHistory {
+  final List<Transaction>? data;
+  final int? currentPage;
+  final int? totalData;
+  final int? totalResult;
+
+  TransactionHistory({
+    this.data,
+    this.currentPage,
+    this.totalData,
+    this.totalResult,
+  });
+
+  factory TransactionHistory.fromJson(Map<String, dynamic> json) {
+    return TransactionHistory(
+      data: (json['data'] as List<dynamic>?)
+          ?.map((e) => Transaction.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      currentPage: json['current_page'] as int?,
+      totalData: json['total_data'] as int?,
+      totalResult: json['total_result'] as int?,
+    );
+  }
+}
+
+class Transaction {
+  final String? referenceId;
+  final String? number;
+  final String? type;
+  final String? subType;
+  final String? purchaseType;
+  final String? productCode;
+  final String? productAmount;
+  final String? amountPaid;
+  final String? discount;
+  final String? commissionEarn;
+  final String? status;
+  final String? regDate;
+  final String? uniqueId;
+  final String? lastName;
+  final String? firstName;
+  final String? level;
+
+  Transaction({
+    this.referenceId,
+    this.number,
+    this.type,
+    this.subType,
+    this.purchaseType,
+    this.productCode,
+    this.productAmount,
+    this.amountPaid,
+    this.discount,
+    this.commissionEarn,
+    this.status,
+    this.regDate,
+    this.uniqueId,
+    this.lastName,
+    this.firstName,
+    this.level,
+  });
+
+  factory Transaction.fromJson(Map<String, dynamic> json) {
+    return Transaction(
+      referenceId: json['reference_id'] as String?,
+      number: json['number'] as String?,
+      type: json['type'] as String?,
+      subType: json['sub_type'] as String?,
+      purchaseType: json['purchase_type'] as String?,
+      productCode: json['product_code'] as String?,
+      productAmount: json['product_amount'] as String?,
+      amountPaid: json['amount_paid'] as String?,
+      discount: json['discount'] as String?,
+      commissionEarn: json['commission_earn'] as String?,
+      status: json['status'] as String?,
+      regDate: json['reg_date'] as String?,
+      uniqueId: json['unique_id'] as String?,
+      lastName: json['last_name'] as String?,
+      firstName: json['first_name'] as String?,
+      level: json['level'] as String?,
+    );
+  }
+}
+
+class AutoRenewal {
+  final List<dynamic>? data;
+  final int? currentPage;
+  final int? totalData;
+  final int? totalResult;
+
+  AutoRenewal({this.data, this.currentPage, this.totalData, this.totalResult});
+
+  factory AutoRenewal.fromJson(Map<String, dynamic> json) {
+    return AutoRenewal(
+      data: json['data'] as List<dynamic>?,
+      currentPage: json['current_page'] as int?,
+      totalData: json['total_data'] as int?,
+      totalResult: json['total_result'] as int?,
+    );
+  }
+}
+class SiteData {
+  final String? idCardUrl;
+  final String? userImageUrl;
+
+  SiteData({this.idCardUrl, this.userImageUrl});
+
+  factory SiteData.fromJson(Map<String, dynamic> json) {
+    return SiteData(
+      idCardUrl: json['id_card_url'] as String?,
+      userImageUrl: json['user_image_url'] as String?,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id_card_url': idCardUrl,
+      'user_image_url': userImageUrl,
     };
+  }
+}
+class SubService {
+  final String? category;
+
+  SubService({this.category});
+
+  factory SubService.fromJson(Map<String, dynamic> json) {
+    return SubService(
+      category: json['category'] as String?,
+    );
+  }
 }

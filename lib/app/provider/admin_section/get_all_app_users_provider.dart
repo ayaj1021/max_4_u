@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/encryt_data/encrypt_data.dart';
+import 'package:max_4_u/app/model/admin/get_all_app_admins_model.dart';
 import 'package:max_4_u/app/model/admin/get_all_app_users_model.dart';
 import 'package:max_4_u/app/model/admin/get_all_app_vendors_model.dart';
 import 'package:max_4_u/app/service/service.dart';
@@ -13,18 +14,19 @@ class GetAllAppUsers extends ChangeNotifier {
   String firstName = '';
   String lastName = '';
   String phoneNumber = '';
+  String email = '';
 
-    String vendorFirstName = '';
+  String vendorFirstName = '';
   String vendorLastName = '';
   String vendorPhoneNumber = '';
 
-    String adminFirstName = '';
+  String adminFirstName = '';
   String adminLastName = '';
   String adminPhoneNumber = '';
 
   AllAppUsersResponseData allAppUsers = AllAppUsersResponseData();
   AllAppVendorsResponseData allAppVendors = AllAppVendorsResponseData();
-  AllAppVendorsResponseData allAppAdmins = AllAppVendorsResponseData();
+  AllAppAdminsResponseData allAppAdmins = AllAppAdminsResponseData();
 
   Future getAllUsers() async {
     isLoading = true;
@@ -59,6 +61,7 @@ class GetAllAppUsers extends ChangeNotifier {
         lastName = EncryptData.decryptAES('${allAppUsers.data![0].lastName}');
         phoneNumber =
             EncryptData.decryptAES('${allAppUsers.data![0].mobileNumber}');
+        email = EncryptData.decryptAES('${allAppUsers.data![0].email}');
         log('This is $allAppUsers');
 
         notifyListeners();
@@ -101,12 +104,14 @@ class GetAllAppUsers extends ChangeNotifier {
       if (_status == true) {
         _status = response['data']['status'];
 
-        allAppVendors =
-            AllAppVendorsResponseData.fromJson(response['data']['response_data']);
+        allAppVendors = AllAppVendorsResponseData.fromJson(
+            response['data']['response_data']);
         isLoading = false;
 
-        vendorFirstName = EncryptData.decryptAES('${allAppVendors.data![0].firstName}');
-        vendorLastName = EncryptData.decryptAES('${allAppVendors.data![0].lastName}');
+        vendorFirstName =
+            EncryptData.decryptAES('${allAppVendors.data![0].firstName}');
+        vendorLastName =
+            EncryptData.decryptAES('${allAppVendors.data![0].lastName}');
         vendorPhoneNumber =
             EncryptData.decryptAES('${allAppVendors.data![0].mobileNumber}');
         log('This is $allAppVendors');
@@ -126,8 +131,7 @@ class GetAllAppUsers extends ChangeNotifier {
     }
   }
 
-
-   Future getAllAdmins() async {
+  Future getAllAdmins() async {
     isLoading = true;
     notifyListeners();
 
@@ -147,20 +151,22 @@ class GetAllAppUsers extends ChangeNotifier {
       // message: _message,
     );
     _status = response['data']['status'];
-    log('this is all user response $response');
+    log('this is all admin response $response');
     try {
       if (_status == true) {
         _status = response['data']['status'];
 
-        allAppAdmins =
-            AllAppVendorsResponseData.fromJson(response['data']['response_data']);
+        allAppAdmins = AllAppAdminsResponseData.fromJson(
+            response['data']['response_data']);
         isLoading = false;
 
-        adminFirstName = EncryptData.decryptAES('${allAppAdmins.data![0].firstName}');
-        adminLastName = EncryptData.decryptAES('${allAppAdmins.data![0].lastName}');
+        adminFirstName =
+            EncryptData.decryptAES('${allAppAdmins.data![0].firstName}');
+        adminLastName =
+            EncryptData.decryptAES('${allAppAdmins.data![0].lastName}');
         adminPhoneNumber =
             EncryptData.decryptAES('${allAppAdmins.data![0].mobileNumber}');
-        log('This is $allAppVendors');
+        log('This is $allAppAdmins');
 
         notifyListeners();
         return allAppAdmins;

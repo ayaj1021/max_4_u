@@ -46,7 +46,7 @@ class _SavedCustomersScreenState extends State<SavedCustomersScreen> {
                         ),
                       ),
                       horizontalSpace(104),
-                      const Text(
+                       Text(
                         'Customers',
                         style: AppTextStyles.font18,
                       ),
@@ -99,7 +99,7 @@ class _SavedCustomersScreenState extends State<SavedCustomersScreen> {
                                             fontWeight: FontWeight.w400),
                                       ),
                                       verticalSpace(4),
-                                      const Text(
+                                       Text(
                                         '93395853348',
                                         style: AppTextStyles.font18,
                                       ),

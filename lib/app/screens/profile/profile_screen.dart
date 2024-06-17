@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max_4_u/app/encryt_data/encrypt_data.dart';
 import 'package:max_4_u/app/provider/auth_provider.dart';
+import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/screens/admin_section/audit_log_screen.dart';
 import 'package:max_4_u/app/screens/super_admin_section/set_up_new_data_prices_screen.dart';
 import 'package:max_4_u/app/database/database.dart';
-import 'package:max_4_u/app/provider/vendor_check_provider.dart';
 import 'package:max_4_u/app/screens/profile/edit_profile_screen.dart';
 import 'package:max_4_u/app/screens/settings/settings_screen.dart';
+import 'package:max_4_u/app/screens/support/support_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/screen_navigator.dart';
@@ -30,18 +32,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     getNames();
-    getUserType();
+
     super.initState();
-  }
-
-  String? userType;
-
-  getUserType() async {
-    final user = await SecureStorage().getUserType();
-    setState(() {
-      userType = user;
-    });
-    return user;
   }
 
   getNames() async {
@@ -58,9 +50,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<VendorCheckProvider, AuthProviderImpl>(
-      builder: (context, vendor, authProv, _) {
-    
+    return Consumer2<AuthProviderImpl, ReloadUserDataProvider>(
+      builder: (context, authProv, reloadData, _) {
+        final firstName = EncryptData.decryptAES(authProv.resDataData.userData![0].firstName.toString());
+        final userId = EncryptData.decryptAES(authProv.resDataData.userData![0].uniqueId.toString());
         return Scaffold(
           body: SafeArea(
               child: Padding(
@@ -157,7 +150,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
                 // vendor.isVendor == '5'
-                userType == '5'
+                authProv.userLevel == '5'
                     ? ListTile(
                         onTap: () =>
                             nextScreen(context, const AuditLogScreen()),
@@ -173,7 +166,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       )
                     : SizedBox(),
                 //   vendor.isVendor == '5'
-                userType == '5'
+                authProv.userLevel == '5'
                     ? ListTile(
                         onTap: () => nextScreen(
                             context, const SetupNewDataPricesScreen()),
@@ -190,7 +183,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       )
                     : SizedBox(),
                 // vendor.isVendor == '1'
-                userType == '1'
+                authProv.userLevel == '1'
                     ? ListTile(
                         onTap: () {
                           removeVendorBottomSheet(context);
@@ -206,6 +199,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       )
                     : ListTile(
+                        onTap: () => nextScreen(context, SupportScreen()),
                         leading: SizedBox(
                             height: 24,
                             width: 24,
@@ -229,139 +223,177 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return showModalBottomSheet(
         context: context,
         builder: (context) {
-          return Container(
-            height: 321.h,
-            width: MediaQuery.of(context).size.width,
-            padding: const EdgeInsets.symmetric(vertical: 21, horizontal: 18),
-            decoration: const BoxDecoration(
-                color: AppColors.whiteColor,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(24),
-                  topRight: Radius.circular(24),
-                )),
-            child: Column(
-              children: [
-                Align(
-                  alignment: Alignment.topRight,
-                  child: GestureDetector(
-                    onTap: () => Navigator.pop(context),
-                    child: SizedBox(
-                      height: 24,
-                      width: 24,
-                      child: Image.asset('assets/icons/cancel_icon.png'),
-                    ),
-                  ),
-                ),
-                Text(
-                  'Vendor',
-                  style: AppTextStyles.font14
-                      .copyWith(fontWeight: FontWeight.w500),
-                ),
-                verticalSpace(20),
-                CircleAvatar(
-                    radius: 40,
-                    child: ClipOval(
-                      child:
-                          Image.asset('assets/images/user_profile_image.png'),
-                    )),
-                verticalSpace(10),
-                Text(
-                  'Julian Mike',
-                  style: AppTextStyles.font14.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.mainTextColor,
-                  ),
-                ),
-                verticalSpace(4),
-                Text(
-                  '09169784011',
-                  style: AppTextStyles.font14
-                      .copyWith(fontWeight: FontWeight.w400),
-                ),
-                verticalSpace(20),
-                ButtonWidget(
-                  text: 'Remove Vendor',
-                  onTap: () {
-                    Navigator.pop(context);
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            contentPadding: EdgeInsets.zero,
-                            content: Container(
-                              height: 290.h,
-                              width: MediaQuery.of(context).size.width,
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 14, horizontal: 23),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                color: AppColors.whiteColor,
-                              ),
-                              child: Column(
-                                children: [
-                                  Align(
-                                    alignment: Alignment.topRight,
-                                    child: GestureDetector(
-                                      onTap: () => Navigator.pop(context),
-                                      child: SizedBox(
-                                        height: 24,
-                                        width: 24,
-                                        child: Image.asset(
-                                            'assets/icons/cancel_icon.png'),
-                                      ),
-                                    ),
-                                  ),
-                                  verticalSpace(19),
-                                  Text(
-                                    'Remove Vendor',
-                                    style: AppTextStyles.font20.copyWith(
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                  verticalSpace(12),
-                                  Text(
-                                    'You will not be registered under this vendor anymore. Are you sure you want to remove the vendor?',
-                                    style: AppTextStyles.font14.copyWith(
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                    softWrap: true,
-                                  ),
-                                  verticalSpace(37),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      SizedBox(
-                                          height: 48.h,
-                                          width: 126.w,
-                                          child: ButtonWidget(
-                                            text: 'Cancel',
-                                            color: const Color(0xffEEEFEF),
-                                            onTap: () {},
-                                            textColor: AppColors.primaryColor,
-                                          )),
-                                      SizedBox(
-                                          height: 48.h,
-                                          width: 126.w,
-                                          child: ButtonWidget(
-                                            text: 'Confirm',
-                                            onTap: () {
-                                              Navigator.pop(context);
-                                            },
-                                          ))
-                                    ],
-                                  )
-                                ],
+          return Consumer<ReloadUserDataProvider>(
+              builder: (context, reloadData, _) {
+            return Container(
+              height: 321.h,
+              width: MediaQuery.of(context).size.width,
+              padding: const EdgeInsets.symmetric(vertical: 21, horizontal: 18),
+              decoration: const BoxDecoration(
+                  color: AppColors.whiteColor,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(24),
+                    topRight: Radius.circular(24),
+                  )),
+              child: Column(
+                children: [
+                  reloadData.loadData.myVendor!.isEmpty
+                      ? Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                  height: 92.h,
+                                  width: 92.w,
+                                  child: Image.asset(
+                                      'assets/images/no_beneficiary_image.png')),
+                              verticalSpace(24),
+                              Text(
+                                'You have no vendor yet',
+                                style: AppTextStyles.font14.copyWith(
+                                    color: AppColors.textColor,
+                                    fontWeight: FontWeight.w400),
+                              )
+                            ],
+                          ),
+                        )
+                      : Column(
+                          children: [
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: GestureDetector(
+                                onTap: () => Navigator.pop(context),
+                                child: SizedBox(
+                                  height: 24,
+                                  width: 24,
+                                  child: Image.asset(
+                                      'assets/icons/cancel_icon.png'),
+                                ),
                               ),
                             ),
-                          );
-                        });
-                  },
-                )
-              ],
-            ),
-          );
+                            Text(
+                              'Vendor',
+                              style: AppTextStyles.font14
+                                  .copyWith(fontWeight: FontWeight.w500),
+                            ),
+                            verticalSpace(20),
+                            CircleAvatar(
+                                radius: 40,
+                                child: ClipOval(
+                                  child: Image.asset(
+                                      'assets/images/user_profile_image.png'),
+                                )),
+                            verticalSpace(10),
+                            Text(
+                              'Julian Mike',
+                              style: AppTextStyles.font14.copyWith(
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.mainTextColor,
+                              ),
+                            ),
+                            verticalSpace(4),
+                            Text(
+                              '09169784011',
+                              style: AppTextStyles.font14
+                                  .copyWith(fontWeight: FontWeight.w400),
+                            ),
+                            verticalSpace(20),
+                            ButtonWidget(
+                              text: 'Remove Vendor',
+                              onTap: () {
+                                Navigator.pop(context);
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        contentPadding: EdgeInsets.zero,
+                                        content: Container(
+                                          height: 290.h,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 14, horizontal: 23),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            color: AppColors.whiteColor,
+                                          ),
+                                          child: Column(
+                                            children: [
+                                              Align(
+                                                alignment: Alignment.topRight,
+                                                child: GestureDetector(
+                                                  onTap: () =>
+                                                      Navigator.pop(context),
+                                                  child: SizedBox(
+                                                    height: 24,
+                                                    width: 24,
+                                                    child: Image.asset(
+                                                        'assets/icons/cancel_icon.png'),
+                                                  ),
+                                                ),
+                                              ),
+                                              verticalSpace(19),
+                                              Text(
+                                                'Remove Vendor',
+                                                style: AppTextStyles.font20
+                                                    .copyWith(
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                              verticalSpace(12),
+                                              Text(
+                                                'You will not be registered under this vendor anymore. Are you sure you want to remove the vendor?',
+                                                style: AppTextStyles.font14
+                                                    .copyWith(
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                                softWrap: true,
+                                              ),
+                                              verticalSpace(37),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  SizedBox(
+                                                      height: 48.h,
+                                                      width: 126.w,
+                                                      child: ButtonWidget(
+                                                        text: 'Cancel',
+                                                        color: const Color(
+                                                            0xffEEEFEF),
+                                                        onTap: () {},
+                                                        textColor: AppColors
+                                                            .primaryColor,
+                                                      )),
+                                                  SizedBox(
+                                                      height: 48.h,
+                                                      width: 126.w,
+                                                      child: ButtonWidget(
+                                                        text: 'Confirm',
+                                                        onTap: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                      ))
+                                                ],
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    });
+                              },
+                            )
+                          ],
+                        ),
+                ],
+              ),
+            );
+          });
         });
   }
 }

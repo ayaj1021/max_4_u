@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
-import 'package:max_4_u/app/provider/become_a_vendor_provider.dart';
+import 'package:max_4_u/app/provider/vendor/become_a_vendor_provider.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/busy_overlay.dart';
 import 'package:max_4_u/app/utils/screen_navigator.dart';
@@ -52,7 +52,7 @@ class _BvnNinInputScreenState extends State<BvnNinInputScreen> {
                         ),
                       ),
                       horizontalSpace(99),
-                      const Text(
+                       Text(
                         'KYC Verification',
                         style: AppTextStyles.font18,
                       )

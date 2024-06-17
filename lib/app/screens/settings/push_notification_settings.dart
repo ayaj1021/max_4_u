@@ -24,7 +24,7 @@ class PushNotificationSettingsScreen extends StatelessWidget {
                   ),
                 ),
                 horizontalSpace(60),
-                const Text(
+                 Text(
                   'Push Notification Settings',
                   style: AppTextStyles.font18,
                 )
