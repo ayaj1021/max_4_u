@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/database/database.dart';
+import 'package:max_4_u/app/encryt_data/encrypt_data.dart';
 import 'package:max_4_u/app/provider/auth_provider.dart';
 import 'package:max_4_u/app/provider/get_all_customers_provider.dart';
 import 'package:max_4_u/app/screens/buy_airtime/buy_airtime_screen.dart';
@@ -76,6 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Consumer2<AuthProviderImpl, GetAllCustomersProvider>(
         builder: (context, authProv, getCustomers, _) {
+          final userFirstName = EncryptData.decryptAES('${authProv.resDataData.userData![0].firstName}');
       return Scaffold(
         drawer: const SideDrawer(),
         appBar: AppBar(
@@ -107,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
           //   ),
           // ),
           title: Text(
-            'Hello, $firstName',
+            'Hello, $userFirstName',
             style: AppTextStyles.font18.copyWith(
               fontWeight: FontWeight.w500,
             ),

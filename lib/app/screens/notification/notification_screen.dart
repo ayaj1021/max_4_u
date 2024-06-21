@@ -56,7 +56,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   ),
                   verticalSpace(32),
                   getNot.allNotifications.transactions == null
-                      ? Text('')
+                      ? SizedBox.shrink()
                       : getNot.allNotifications.transactions!.isEmpty
                           ? Column(
                               mainAxisAlignment: MainAxisAlignment.center,

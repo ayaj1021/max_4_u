@@ -53,7 +53,7 @@ class Data {
 }
 
 class AllAppUsersResponseData {
-    final List<Datum>? data;
+    final List<UserData>? data;
     final String? currentPage;
     final int? totalData;
     final int? totalResult;
@@ -78,7 +78,7 @@ class AllAppUsersResponseData {
     });
 
     factory AllAppUsersResponseData.fromJson(Map<String, dynamic> json) => AllAppUsersResponseData(
-        data: json["data"] == null ? [] : List<Datum>.from(json["data"]!.map((x) => Datum.fromJson(x))),
+        data: json["data"] == null ? [] : List<UserData>.from(json["data"]!.map((x) => UserData.fromJson(x))),
         currentPage: json["current_page"],
         totalData: json["total_data"],
         totalResult: json["total_result"],
@@ -104,7 +104,7 @@ class AllAppUsersResponseData {
     };
 }
 
-class Datum {
+class UserData {
     final String? uniqueId;
     final String? lastName;
     final String? firstName;
@@ -115,7 +115,7 @@ class Datum {
     final String? emailStatus;
     final DateTime? regDate;
 
-    Datum({
+    UserData({
         this.uniqueId,
         this.lastName,
         this.firstName,
@@ -127,7 +127,7 @@ class Datum {
         this.regDate,
     });
 
-    factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+    factory UserData.fromJson(Map<String, dynamic> json) => UserData(
         uniqueId: json["unique_id"],
         lastName: json["last_name"],
         firstName: json["first_name"],

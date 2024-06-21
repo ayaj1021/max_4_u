@@ -128,126 +128,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   Widget build(BuildContext context) {
     return Consumer2<AuthProviderImpl, ReloadUserDataProvider>(
       builder: (context, authProv, reloadData, _) {
-        // var pages = userPages;
-        // var pageItems = [
-        //   BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-        //   BottomNavigationBarItem(
-        //       icon: Icon(Icons.receipt_long_outlined), label: 'Transaction'),
-        //   BottomNavigationBarItem(
-        //       icon: Icon(Icons.support_agent_outlined), label: 'Support'),
-        //   BottomNavigationBarItem(
-        //       icon: Icon(Icons.person_outline), label: 'Profile'),
-        // ];
-        // final userLevel = authProv.resDataData.userData![0].level;
-        // final level = reloadData.loadData.userData![0].level;
-
-        // switch (userLevel) {
-        //   case '2':
-        //     pages = vendorPages;
-        //     pageItems = [
-        //       BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-        //       BottomNavigationBarItem(
-        //           icon: Icon(Icons.people_outline), label: 'Customers'),
-        //       BottomNavigationBarItem(
-        //           icon: Icon(Icons.receipt_long_outlined),
-        //           label: 'Transaction'),
-        //       BottomNavigationBarItem(
-        //           icon: Icon(Icons.support_agent_outlined), label: 'Support'),
-        //       BottomNavigationBarItem(
-        //           icon: Icon(Icons.person_outline), label: 'Profile'),
-        //     ];
-        //     switch (level) {
-        //       case '2':
-        //         pages = vendorPages;
-        //         pageItems = [
-        //           BottomNavigationBarItem(
-        //               icon: Icon(Icons.home), label: 'Home'),
-        //           BottomNavigationBarItem(
-        //               icon: Icon(Icons.people_outline), label: 'Customers'),
-        //           BottomNavigationBarItem(
-        //               icon: Icon(Icons.receipt_long_outlined),
-        //               label: 'Transaction'),
-        //           BottomNavigationBarItem(
-        //               icon: Icon(Icons.support_agent_outlined),
-        //               label: 'Support'),
-        //           BottomNavigationBarItem(
-        //               icon: Icon(Icons.person_outline), label: 'Profile'),
-        //         ];
-        //     }
-        //     break;
-
-        //   case '4':
-        //     pages = adminPages;
-        //     pageItems = [
-        //       BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-        //       BottomNavigationBarItem(
-        //           icon: Icon(Icons.people_outline), label: 'Users'),
-        //       BottomNavigationBarItem(
-        //           icon: Icon(Icons.receipt_long_outlined),
-        //           label: 'Transaction'),
-        //       BottomNavigationBarItem(
-        //           icon: Icon(Icons.support_agent_outlined), label: 'Requests'),
-        //       BottomNavigationBarItem(
-        //           icon: Icon(Icons.person_outline), label: 'Profile'),
-        //     ];
-        //     switch (level) {
-        //       case '4':
-        //         pages = adminPages;
-        //         pageItems = [
-        //           BottomNavigationBarItem(
-        //               icon: Icon(Icons.home), label: 'Home'),
-        //           BottomNavigationBarItem(
-        //               icon: Icon(Icons.people_outline), label: 'Users'),
-        //           BottomNavigationBarItem(
-        //               icon: Icon(Icons.receipt_long_outlined),
-        //               label: 'Transaction'),
-        //           BottomNavigationBarItem(
-        //               icon: Icon(Icons.support_agent_outlined),
-        //               label: 'Requests'),
-        //           BottomNavigationBarItem(
-        //               icon: Icon(Icons.person_outline), label: 'Profile'),
-        //         ];
-        //     }
-        //     break;
-
-        //   case '5':
-        //     pages = adminPages;
-        //     pageItems = [
-        //       BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-        //       BottomNavigationBarItem(
-        //           icon: Icon(Icons.people_outline), label: 'Users'),
-        //       BottomNavigationBarItem(
-        //           icon: Icon(Icons.receipt_long_outlined),
-        //           label: 'Transaction'),
-        //       BottomNavigationBarItem(
-        //           icon: Icon(Icons.support_agent_outlined), label: 'Requests'),
-        //       BottomNavigationBarItem(
-        //           icon: Icon(Icons.person_outline), label: 'Profile'),
-        //     ];
-        //     switch (level) {
-        //       case '5':
-        //         pages = adminPages;
-        //         pageItems = [
-        //           BottomNavigationBarItem(
-        //               icon: Icon(Icons.home), label: 'Home'),
-        //           BottomNavigationBarItem(
-        //               icon: Icon(Icons.people_outline), label: 'Users'),
-        //           BottomNavigationBarItem(
-        //               icon: Icon(Icons.receipt_long_outlined),
-        //               label: 'Transaction'),
-        //           BottomNavigationBarItem(
-        //               icon: Icon(Icons.support_agent_outlined),
-        //               label: 'Requests'),
-        //           BottomNavigationBarItem(
-        //               icon: Icon(Icons.person_outline), label: 'Profile'),
-        //         ];
-        //     }
-        //     break;
-        //   default:
-        //     pages;
-        //     pageItems;
-        //     break;
-        // }
         return Scaffold(
           body: _getBody(
             userLevel: authProv.userLevel,
@@ -318,9 +198,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         ];
 
       default:
-   
         return [
-         
           BottomNavigationBarItem(icon: Icon(Icons.error), label: 'Error'),
           BottomNavigationBarItem(icon: Icon(Icons.error), label: 'Error'),
           BottomNavigationBarItem(icon: Icon(Icons.error), label: 'Error'),

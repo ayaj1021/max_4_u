@@ -127,8 +127,10 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
         context: context,
         builder: (context) {
           return Container(
-            height: 186.h,
+           // height: 186.h,
+            height: 150.h,
             width: MediaQuery.of(context).size.width,
+            alignment: Alignment.center,
             decoration: const BoxDecoration(
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(24),
@@ -150,95 +152,96 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
                     ),
                   ),
                 ),
-                verticalSpace(18),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                    showModalBottomSheet(
-                        context: context,
-                        builder: (context) {
-                          return Container(
-                            height: 186.h,
-                            width: MediaQuery.of(context).size.width,
-                            decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(24),
-                                  topRight: Radius.circular(24),
-                                ),
-                                color: AppColors.whiteColor),
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(right: 20, top: 21),
-                                  child: Align(
-                                    alignment: Alignment.topRight,
-                                    child: GestureDetector(
-                                        onTap: () => Navigator.pop(context),
-                                        child: SizedBox(
-                                          height: 16,
-                                          width: 16,
-                                          child: Image.asset(
-                                              'assets/icons/cancel_icon.png'),
-                                        )),
-                                  ),
-                                ),
-                                verticalSpace(18),
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                    _generateAndDownloadPDF();
-                                  },
-                                  child: Text(
-                                    'PDF',
-                                    style: AppTextStyles.font14.copyWith(
-                                      color: const Color(0xff333333),
-                                    ),
-                                  ),
-                                ),
-                                verticalSpace(15),
-                                Divider(
-                                  color: AppColors.blackColor.withOpacity(0.1),
-                                ),
-                                verticalSpace(15),
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                    _captureAndDownloadImage();
-                                  },
-                                  child: Text(
-                                    'Image',
-                                    style: AppTextStyles.font14.copyWith(
-                                      color: const Color(0xff333333),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        });
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.download_outlined,
-                        color: Color(0xff333333),
-                      ),
-                      horizontalSpace(12),
-                      Text(
-                        'Download Receipt',
-                        style: AppTextStyles.font14.copyWith(
-                          color: const Color(0xff333333),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                verticalSpace(15),
-                Divider(
-                  color: AppColors.blackColor.withOpacity(0.1),
-                ),
+                // verticalSpace(18),
+                // GestureDetector(
+                //   onTap: () {
+                //     Navigator.pop(context);
+                //     showModalBottomSheet(
+                //         context: context,
+                //         builder: (context) {
+                //           return Container(
+                //             height: 186.h,
+                //             width: MediaQuery.of(context).size.width,
+                //             decoration: const BoxDecoration(
+                //                 borderRadius: BorderRadius.only(
+                //                   topLeft: Radius.circular(24),
+                //                   topRight: Radius.circular(24),
+                //                 ),
+                //                 color: AppColors.whiteColor),
+                //             child: Column(
+                //               children: [
+                //                 Padding(
+                //                   padding:
+                //                       const EdgeInsets.only(right: 20, top: 21),
+                //                   child: Align(
+                //                     alignment: Alignment.topRight,
+                //                     child: GestureDetector(
+                //                         onTap: () => Navigator.pop(context),
+                //                         child: SizedBox(
+                //                           height: 16,
+                //                           width: 16,
+                //                           child: Image.asset(
+                //                               'assets/icons/cancel_icon.png'),
+                //                         )),
+                //                   ),
+                //                 ),
+                //                 verticalSpace(18),
+                //                 GestureDetector(
+                //                   onTap: () {
+                //                     Navigator.pop(context);
+                //                     _generateAndDownloadPDF();
+                //                   },
+                //                   child: Text(
+                //                     'PDF',
+                //                     style: AppTextStyles.font14.copyWith(
+                //                       color: const Color(0xff333333),
+                //                     ),
+                //                   ),
+                //                 ),
+                //                 verticalSpace(15),
+                //                 Divider(
+                //                   color: AppColors.blackColor.withOpacity(0.1),
+                //                 ),
+                //                 verticalSpace(15),
+                //                 GestureDetector(
+                //                   onTap: () {
+                //                     Navigator.pop(context);
+                //                     _captureAndDownloadImage();
+                //                   },
+                //                   child: Text(
+                //                     'Image',
+                //                     style: AppTextStyles.font14.copyWith(
+                //                       color: const Color(0xff333333),
+                //                     ),
+                //                   ),
+                //                 ),
+                //               ],
+                //             ),
+                //           );
+                //         });
+                //   },
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.center,
+                //     children: [
+                //       const Icon(
+                //         Icons.download_outlined,
+                //         color: Color(0xff333333),
+                //       ),
+                //       horizontalSpace(12),
+                //       Text(
+                //         'Download Receipt',
+                //         style: AppTextStyles.font14.copyWith(
+                //           color: const Color(0xff333333),
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
+               
+                // verticalSpace(15),
+                // Divider(
+                //   color: AppColors.blackColor.withOpacity(0.1),
+                // ),
                 verticalSpace(15),
                 GestureDetector(
                   onTap: () {

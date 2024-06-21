@@ -1,32 +1,51 @@
-// import 'package:dio/dio.dart';
+import 'dart:developer';
 
-// class CustomDioErrorHandler {
-//   static void handle(DioException error) {
-//     if (error.response != null) {
-//       print('Server Error: ${error.response?.statusCode} ${error.response?.data}');
-//     } else {
-//       print('Client Error: ${error.message}');
-//     }
+import 'package:dio/dio.dart';
+import 'package:max_4_u/app/model/error_response_model.dart';
 
-//     switch (error.type) {
-//       case DioExceptionType.cancel:
-//         print('Request to API server was cancelled');
-//         break;
-//       case DioExceptionType.connectionTimeout:
-//         print('Connection timeout with API server');
-//         break;
-//       case DioExceptionType.unknown:
-//         print('Connection to API server failed due to internet connection');
-//         break;
-//       case DioExceptionType.receiveTimeout:
-//         print('Receive timeout in connection with API server');
-//         break;
-//       case DioExceptionType.badResponse:
-//         print('Received invalid status code: ${error.response?.statusCode}');
-//         break;
-//       case DioExceptionType.sendTimeout:
-//         print('Send timeout in connection with API server');
-//         break;
-//     }
-//   }
-// }
+
+abstract class Status {
+  static String error = 'error';
+  static String success = 'success';
+}
+
+class ExceptionHandler implements Exception {
+  static  handleError<T>(DioException error) {
+    log('$error');
+
+   // AppResponseModel<T>
+
+    final response = switch (error.type) {
+      DioExceptionType.connectionTimeout ||
+      DioExceptionType.sendTimeout ||
+      DioExceptionType.receiveTimeout =>
+        AppResponseModel<T>(
+          message: 'Connection timed out',
+          status: Status.error,
+        ),
+      DioException.badResponse when (error.response?.statusCode ?? 0) >= 500 =>
+        AppResponseModel<T>(
+          message: 'Server error occurred',
+          status: Status.error,
+        ),
+      DioExceptionType.badResponse
+          when error.response?.data is Map<String, dynamic> =>
+        AppResponseModel<T>.fromJson(error.response?.data),
+      DioExceptionType.badResponse =>
+        AppResponseModel<T>(message: "An error occurred", status: Status.error,),
+   
+      DioExceptionType.cancel => AppResponseModel<T>(
+          message: 'The API request was cancelled',
+          status: Status.error,
+        ),
+      DioExceptionType.unknown => AppResponseModel<T>(
+          message: 'Network error occurred',
+          status: Status.error,
+        ),
+      _ => AppResponseModel<T>(message: "An error occurred", status: Status.error,),
+    };
+
+   // return AppResponseModel(message: "An error occurred");
+     return response;
+  }
+}

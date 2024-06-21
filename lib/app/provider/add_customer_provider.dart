@@ -130,22 +130,22 @@ class AddCustomerProvider extends ChangeNotifier {
       // message: _message,
     );
 
-    _status = response['data']['status'];
-    _message = response['data']['message'];
+    _status = response.data['data']['status'];
+    _message = response.data['data']['message'];
 
     log('$_status');
     log('$response');
     try {
       if (_status == true) {
-        _status = response['data']['status'];
+        _status = response.data['data']['status'];
         state = ViewState.Success;
-        _message = response['data']['message'];
+        _message = response.data['data']['message'];
 
         notifyListeners();
       } else {
-        _status = response['data']['status'];
+        _status = response.data['data']['status'];
         state = ViewState.Error;
-        _message = response['data']['message'];
+        _message = response.data['data']['message'];
         //  _message = response['data']['error_data']['mobile_number'];
 
         notifyListeners();
@@ -181,7 +181,6 @@ class AddCustomerProvider extends ChangeNotifier {
       "confirm_password": confirmPassword,
       "otp_code": _otp,
     };
-    
 
     log(body.toString());
     final response = await ApiService().servicePostRequest(

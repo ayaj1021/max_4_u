@@ -66,9 +66,9 @@ class _DataVerificationScreenState extends State<DataVerificationScreen> {
   @override
   Widget build(BuildContext context) {
     final DateFormat dateFormat = DateFormat('dd MMMM yyyy');
-    return Consumer3<BuyDataProvider, ObscureTextProvider,
+    return Consumer3<BuyDataProvider, AutoRenewalCheck,
         ActivateAutoRenewalProvider>(
-      builder: (context, buyData, obscure, activateRenewal, _) {
+      builder: (context, buyData, autoRenewalCheck, activateRenewal, _) {
         return BusyOverlay(
           show: buyData.state == ViewState.Busy,
           title: buyData.message,
@@ -89,7 +89,7 @@ class _DataVerificationScreenState extends State<DataVerificationScreen> {
                           ),
                         ),
                         horizontalSpace(104),
-                         Text(
+                        Text(
                           'Confirmation',
                           style: AppTextStyles.font18,
                         ),
@@ -210,9 +210,9 @@ class _DataVerificationScreenState extends State<DataVerificationScreen> {
                         Checkbox(
                             activeColor: AppColors.primaryColor,
                             checkColor: AppColors.overlayColor,
-                            value: obscure.isObscure,
+                            value: autoRenewalCheck.isAutoRenew,
                             onChanged: (v) {
-                              obscure.changeObscure();
+                              autoRenewalCheck.changeRenewal();
                             }),
                         Text('Enable auto-renewal for this transaction',
                             style: AppTextStyles.font14.copyWith(
@@ -220,7 +220,7 @@ class _DataVerificationScreenState extends State<DataVerificationScreen> {
                             ))
                       ],
                     ),
-                    obscure.isObscure
+                    autoRenewalCheck.isAutoRenew
                         ? Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -308,14 +308,16 @@ class _DataVerificationScreenState extends State<DataVerificationScreen> {
                             .getDataProducts(widget.network);
                         log('This is the code ${productCodes.toString()}');
 
-                        await activateRenewal.activateAutoRenewal(
-                          phoneNumber: widget.phoneNumber,
-                          productCode: productCodes,
-                          amount: widget.amount,
-                          // startDate: _startDate!,
-                          // endDate: _endDate!,
-                          intervalDaily: _selectedValidity,
-                        );
+                        autoRenewalCheck.isAutoRenew == true
+                            ? await activateRenewal.activateAutoRenewal(
+                                phoneNumber: widget.phoneNumber,
+                                productCode: productCodes,
+                                amount: widget.amount,
+                                // startDate: _startDate!,
+                                // endDate: _endDate!,
+                                intervalDaily: _selectedValidity,
+                              )
+                            : null;
 
                         await buyData.buyData(
                           phoneNumber: widget.phoneNumber,

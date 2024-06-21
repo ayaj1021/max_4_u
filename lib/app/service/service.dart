@@ -15,50 +15,39 @@ class ApiService {
 
   Future<dynamic> authPostRequest(
       {Map<String, String>? headers,
-      String? message,
+      //String? message,
       required Map<String, dynamic> body}) async {
     String url = AppConstants.baseUrl;
-
-    try {
-      final response = await dio.post(
-        url,
-        data: body,
-        options: Options(
-          headers: {
-           'Content-Type': 'application/json',
-            'Site-From': 'postman',
-          },
-        ),
-      );
-
-    //  if (response.statusCode == 200) {
-        print('This is this source response ${response.data}');
-        return response.data;
+try{
+    final response = await dio.post(
+      url,
+      data: body,
+      options: Options(
+        headers: {
+          'Content-Type': 'application/json',
+          'Site-From': 'postman',
+        },
+      ),
+    );
+   // try {
+     //  if (response.statusCode == 200) {
+      print('This is this source response ${response.data}');
+      return response.data;
       // } else {
       //   throw Exception('Failed to authenticate: ${response.statusCode}');
       // }
-    } on DioException catch (e) {
-
-  final statusCode = e.response?.statusCode ?? 'No Status Code';
-    final data = e.response?.data ?? 'No Data';
-    print('Server Error: $statusCode $data');
-    return Future.error('Server error: $statusCode $data');
-
-
-
-      //  final errorResponse = await Future.error(ApiError.fromDio(e));
-      //  message = errorResponse;
-      // ApiError(errorDescription: message);
-
-      // message = e.response?.data;
-      // Server-side error
-      // print('Server Error: ${e.response?.statusCode} ${e.response?.data}');
-      // return Future.error(e.response?.data);
-      // return e.response?.data;
-    } catch (e) {
-      message = e.toString();
-        print('General Error: $e');
-    return Future.error(e.toString());
+   } on DioException catch (e) {
+      final statusCode = e.response?.statusCode ?? 'No Status Code';
+      final data = e.response?.data ?? 'No Data';
+      print('Server Error: $statusCode $data');
+      print('Server Error: ${e.response?.statusCode} ${e.response?.data}');
+      return e.response?.data;
+      // return Future.error('Server error: $statusCode $data');
+   } catch (e) {
+    //  message = e.toString();
+      print('General Error: $e');
+     return Future.error(e.toString());
+    // return Future.error(e.toString());
     }
   }
 

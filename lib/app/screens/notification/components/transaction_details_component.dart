@@ -16,7 +16,7 @@ class TransactionDetailComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
           padding: const EdgeInsets.all(14),
-          height: 54.h,
+          height: 60.h,
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(7),

@@ -192,7 +192,7 @@ class _BecomeVendorScreenState extends State<BecomeVendorScreen> {
                                                   child: ButtonWidget(
                                                     text: 'Done',
                                                     onTap: () async {
-                                                      Navigator.pop(context);
+                                                   //   Navigator.pop(context);
                                                       await reloadData
                                                           .reloadUserData();
                                                       nextScreen(context,

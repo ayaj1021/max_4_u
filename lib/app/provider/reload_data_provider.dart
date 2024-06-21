@@ -20,13 +20,9 @@ class ReloadUserDataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<String> _items = [];
-  List<String> _filteredItems = [];
-  List<TransactionHistory>? query = [];
-
-  List<String> get items => _filteredItems;
-
   LoadDataData loadData = LoadDataData();
+
+  TransactionHistory searchTransaction = TransactionHistory();
   Future reloadUserData() async {
     isLoading = true;
     notifyListeners();
@@ -43,17 +39,13 @@ class ReloadUserDataProvider extends ChangeNotifier {
 
     // _status = response['data']['status'];
 
-    final userData = response['data'];
+   // final userData = response['data'];
 
     log('$response');
     try {
       isLoading = false;
       loadData = LoadDataData.fromJson(response['data']);
 
-      _items = loadData.transactionHistory!.data!
-          .map((item) => item.toString())
-          .toList();
-      _filteredItems = _items;
       final firstName =
           //  EncryptData.decryptAES('${userData['user_data'][0]['first_name']}');
           EncryptData.decryptAES('${loadData.userData![0].firstName}');
@@ -65,11 +57,12 @@ class ReloadUserDataProvider extends ChangeNotifier {
       log('last name is $lastName');
       final uniqueId =
           EncryptData.decryptAES('${loadData.userData![0].uniqueId}');
+          log('this is the unique id: $uniqueId');
       // EncryptData.decryptAES('${userData['user_data'][0]['unique_id']}');
       log('uniqueId is $uniqueId');
       final email = EncryptData.decryptAES('${loadData.userData![0].email}');
       //   EncryptData.decryptAES('${userData['user_data'][0]['email']}');
-      log('uniqueId is $email');
+      log('email is $email');
       final number =
           // EncryptData.decryptAES( '${userData['user_data'][0]['mobile_number']}');
           EncryptData.decryptAES('${loadData.userData![0].mobileNumber}');
@@ -91,11 +84,10 @@ class ReloadUserDataProvider extends ChangeNotifier {
       //  final products = userData['products'][0];
       final products = loadData.products;
 
-     // final transactions = userData['transaction_history']['data'];
+      // final transactions = userData['transaction_history']['data'];
       //await SecureStorage().saveUserTransactions(transactions);
 
-      await SecureStorage()
-          .saveUserEncryptedId('${userData['user_data'][0]['unique_id']}');
+     
       await SecureStorage().saveUserBeneficiary(beneficiary!);
       await SecureStorage().saveUserProducts(products!);
       await SecureStorage().saveUserServices(services!);
@@ -114,14 +106,6 @@ class ReloadUserDataProvider extends ChangeNotifier {
 
       notifyListeners();
     }
-  }
-
-   searchTransactions({required String search}) async {
-    final result = loadData.transactionHistory!.data!.where((element) =>
-        element.purchaseType!.toLowerCase().contains(search.toLowerCase()));
-
-    query = result.cast<TransactionHistory>().toList();
-    notifyListeners();
   }
 
   // void filterSearchResults(String query) {

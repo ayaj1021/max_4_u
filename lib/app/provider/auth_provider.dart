@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/abstract_class/auth_abstract_class.dart';
@@ -57,46 +56,33 @@ class AuthProviderImpl extends ChangeNotifier
     try {
       final response = await ApiService().authPostRequest(
         body: body,
-        message: _message,
+        // message: _message,
       );
-
-      print(body);
 
       _status = response['data']['status'];
       print('$_status');
 
-      if (response != null && response['data'] != null) {
+      if (_status == true) {
         _message = response['data']['message'];
-        _status = response['data']['status'];
-        print('$_status');
 
-        if (_status == true) {
-          _message = response['data']['message'];
+        state = ViewState.Success;
 
-          state = ViewState.Success;
-
-          notifyListeners();
-        } else {
-          _status = response['data']['status'];
-          state = ViewState.Error;
-          _message = response['data']['error_data']['mobile_number'];
-          _message = response['data']['message'];
-          notifyListeners();
-        }
+        notifyListeners();
       } else {
-        _status = false;
+        _message = response['error_data']['mobile_number'];
+        _status = response['data']['status'];
         state = ViewState.Error;
-        _message = 'Invalid response from server';
+        //  _message = response.data['data']['message'];
         notifyListeners();
       }
     } catch (e) {
-      log(e.toString());
+      debugPrint(e.toString());
 
       state = ViewState.Error;
       _status = false;
-      _message = 'An error occurred during sign-up';
-      // _message = '$e';
+
       notifyListeners();
+      // return ExceptionHandler.handleError(e);
     }
   }
 
@@ -133,8 +119,8 @@ class AuthProviderImpl extends ChangeNotifier
 
         notifyListeners();
       } else {
+        _status = false;
         _message = response['data']['message'];
-        _status = response['data']['status'];
         state = ViewState.Error;
 
         notifyListeners();
@@ -142,8 +128,9 @@ class AuthProviderImpl extends ChangeNotifier
     } catch (e) {
       state = ViewState.Error;
       _status = false;
-      _message = e.toString();
+//_message = e.toString();
       notifyListeners();
+      // return ExceptionHandler.handleError(e);
     }
   }
 
@@ -178,28 +165,24 @@ class AuthProviderImpl extends ChangeNotifier
 
     await SecureStorage().saveUserName(_userName);
 
-    log(body.toString());
-
     try {
       final response = await ApiService().authPostRequest(
         body: body,
-        message: _message,
+        // message: _message,
       );
 
-      log(response);
-
       _status = response['data']['status'];
-      _message = response['data']['message'];
+        _message = response['data']['message'];
       if (_status == true) {
-        // _status = response['data']['status'];
+        _status = response['data']['status'];
         _message = response['data']['message'];
         state = ViewState.Success;
         notifyListeners();
         resDataData =
-            ResponseDataData.fromJson(response['response_data']['data']);
+            ResponseDataData.fromJson(response['data']['response_data']);
         _userLevel = resDataData.userData![0].level!;
         updateNumber(_userLevel);
-        log('this is the result: $resDataData');
+
         return resDataData;
       } else {
         _message = response['data']['message'];
@@ -211,10 +194,11 @@ class AuthProviderImpl extends ChangeNotifier
         notifyListeners();
       }
     } catch (e) {
-      log(e.toString());
+      state = ViewState.Error;
       _status = false;
-      _message = message;
+    
       notifyListeners();
+      //  return ExceptionHandler.handleError(e);
     }
   }
 
@@ -230,12 +214,13 @@ class AuthProviderImpl extends ChangeNotifier
       "login_id": email,
       "password": password,
     };
-    print(body);
+
+    await SecureStorage().saveUserPassword(password);
     try {
       final response = await ApiService().authPostRequest(
         body: body,
       );
-      // log(response);
+      print(response);
       _status = response['data']['status'];
       // _message = response['data']['message'];
 
@@ -252,18 +237,19 @@ class AuthProviderImpl extends ChangeNotifier
         return resDataData;
       } else {
         state = ViewState.Error;
-        _status = response['data']['status'];
+        _status = false;
+
         _message = response['data']['message'];
-        // _message = response['data']['error_data']['login_id'];
+
+        _message = response['data']['error_data']['login_id'];
         notifyListeners();
       }
     } catch (e) {
       state = ViewState.Error;
       _status = false;
-      _message = e.toString();
+      // _message = e.toString();
       notifyListeners();
     }
-    //return response;
   }
 
 //Forgot password user method
@@ -305,7 +291,7 @@ class AuthProviderImpl extends ChangeNotifier
     } catch (e) {
       state = ViewState.Error;
       _status = false;
-      _message = e.toString();
+      //  _message = e.toString();
       notifyListeners();
     }
   }
@@ -354,7 +340,7 @@ class AuthProviderImpl extends ChangeNotifier
     } catch (e) {
       state = ViewState.Error;
       _status = false;
-      _message = e.toString();
+      // _message = e.toString();
       notifyListeners();
     }
   }
@@ -409,7 +395,7 @@ class AuthProviderImpl extends ChangeNotifier
     } catch (e) {
       state = ViewState.Error;
       _status = false;
-      _message = e.toString();
+      // _message = e.toString();
       notifyListeners();
     }
   }

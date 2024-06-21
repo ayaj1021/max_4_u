@@ -45,6 +45,7 @@ class OnboardPageTwo extends StatelessWidget {
                         style: AppTextStyles.font20.copyWith(
                           fontWeight: FontWeight.w500,
                         ),
+                        textAlign: TextAlign.center,
                       ),
                       verticalSpace(10),
                       Text(

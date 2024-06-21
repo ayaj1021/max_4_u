@@ -144,7 +144,7 @@ class _SupportScreenState extends State<SupportScreen> {
                 verticalSpace(9),
                 Container(
                   alignment: Alignment.center,
-                  height: 219.h,
+                  height: 250.h,
                   width: MediaQuery.of(context).size.width,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 14, vertical: 12),

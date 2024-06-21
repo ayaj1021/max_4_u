@@ -42,10 +42,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenUtilInit(
         designSize: const Size(390, 844),
+        minTextAdapt: true,
+        splitScreenMode: true,
         builder: (context, _) {
           return MultiProvider(
             providers: [
               ChangeNotifierProvider(create: (_) => AuthProviderImpl()),
+              ChangeNotifierProvider(create: (_) => AutoRenewalCheck()),
               ChangeNotifierProvider(create: (_) => FaqProvider()),
               ChangeNotifierProvider(create: (_) => SetupPricesProvider()),
               ChangeNotifierProvider(create: (_) => GenerateAccountProvider()),

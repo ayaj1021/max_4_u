@@ -14,6 +14,7 @@ import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/screen_navigator.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
 import 'package:max_4_u/app/widgets/button_widget.dart';
+import 'package:max_4_u/app/widgets/text_input_field.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -25,8 +26,13 @@ class TransactionScreen extends StatefulWidget {
 }
 
 class _TransactionScreenState extends State<TransactionScreen> {
-  //final _searchController = TextEditingController();
+  final _searchController = TextEditingController();
+  // List<LoadDataData> searchList = [];
 
+  // List<TransactionHistory> totalList =
+  //     LoadDataData() as List<TransactionHistory>;
+
+  bool isSearching = false;
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -34,11 +40,36 @@ class _TransactionScreenState extends State<TransactionScreen> {
           .reloadUserData();
     });
     super.initState();
+    //  searchList = totalList.cast<LoadDataData>();
+  }
+
+  // void runFilter(String enteredKeyword) {
+  //   List<LoadDataData> results = [];
+  //   if (enteredKeyword.isEmpty) {
+  //     results = totalList.cast<LoadDataData>();
+  //   } else {
+  //     results = totalList
+  //         .where((user) => user.data!.contains(enteredKeyword.toLowerCase()))
+  //         .cast<LoadDataData>()
+  //         .toList();
+  //   }
+
+  //   setState(() {
+  //     searchList = results;
+  //   });
+  // }
+
+  @override
+  void dispose() {
+    // Dispose the controller when the widget is disposed
+
+    _searchController.dispose();
+    super.dispose();
   }
 
   // Months _selectedMonth = Months.January;
 
-  List<LoadDataData> searchList = [];
+  //List<LoadDataData> searchList = [];
 
   final categories = [
     'All',
@@ -63,12 +94,14 @@ class _TransactionScreenState extends State<TransactionScreen> {
     Share.share(content);
   }
 
-  List filteredItems = [];
   @override
   Widget build(BuildContext context) {
     DateFormat dateFormat = DateFormat('MMMM d, yyyy h:mm a');
     return Consumer<ReloadUserDataProvider>(
       builder: (context, reloadData, _) {
+        final data = reloadData.loadData.transactionHistory!.data!;
+
+        List<Transaction> searchTransaction = [...data];
         return Scaffold(
           backgroundColor: AppColors.scaffoldBgColor2,
           body: SafeArea(
@@ -83,7 +116,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                         Text(
+                        Text(
                           'Transactions',
                           style: AppTextStyles.font18,
                         ),
@@ -111,196 +144,209 @@ class _TransactionScreenState extends State<TransactionScreen> {
                         ),
                       ],
                     ),
-                    verticalSpace(reloadData.isLoading ? 300 : 0),
-                    reloadData.isLoading
-                        ? Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Center(
-                                  child: CircularProgressIndicator(
-                                      color: AppColors.primaryColor)),
-                            ],
+
+                    // verticalSpace(reloadData.isLoading ? 300 : 0),
+                    // reloadData.isLoading
+                    //     ? SizedBox.shrink()
+                    // Column(
+                    //     mainAxisAlignment: MainAxisAlignment.center,
+                    //     crossAxisAlignment: CrossAxisAlignment.center,
+                    //     children: [
+                    //       Center(
+                    //           child: CircularProgressIndicator(
+                    //               color: AppColors.primaryColor)),
+                    //     ],
+                    //   )
+                    //  :
+                 //   reloadData.loadData.transactionHistory == null
+                   searchTransaction == null
+                        ? Center(
+                            child: Text(
+                              'No data',
+                              style: AppTextStyles.font14.copyWith(
+                                  color: AppColors.textColor,
+                                  fontWeight: FontWeight.w400),
+                            ),
                           )
-                        : reloadData.loadData.transactionHistory == null
+                        : searchTransaction.isEmpty
+                            //reloadData.loadData.transactionHistory!.data!.isEmpty
                             ? Center(
-                                child: Text(
-                                  'No data',
-                                  style: AppTextStyles.font14.copyWith(
-                                      color: AppColors.textColor,
-                                      fontWeight: FontWeight.w400),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                        height: 92.h,
+                                        width: 92.w,
+                                        child: Image.asset(
+                                            'assets/images/no_beneficiary_image.png')),
+                                    verticalSpace(24),
+                                    Text(
+                                      'You have no transaction yet',
+                                      style: AppTextStyles.font14.copyWith(
+                                          color: AppColors.textColor,
+                                          fontWeight: FontWeight.w400),
+                                    )
+                                  ],
                                 ),
                               )
-                            : reloadData
-                                    .loadData.transactionHistory!.data!.isEmpty
-                                ? Center(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        SizedBox(
-                                            height: 92.h,
-                                            width: 92.w,
-                                            child: Image.asset(
-                                                'assets/images/no_beneficiary_image.png')),
-                                        verticalSpace(24),
-                                        Text(
-                                          'You have no transaction yet',
-                                          style: AppTextStyles.font14.copyWith(
-                                              color: AppColors.textColor,
-                                              fontWeight: FontWeight.w400),
-                                        )
-                                      ],
+                            : Column(
+                                children: [
+                                  TextInputField(
+                                      controller: _searchController,
+                                      hintText: 'Search in transactions',
+                                      prefixIcon: const Icon(
+                                        Icons.search,
+                                        color: Color(0xff4F4F4F),
+                                      ),
+                                      onChanged: (value) {
+                                        print(
+                                            'this is data $searchTransaction');
+                                        if (value != null && value.isNotEmpty) {
+                                          setState(() {
+                                            searchTransaction.clear();
+                                            searchTransaction = [];
+                                          });
+
+                                          data.forEach((element) {
+                                            if (element.purchaseType!
+                                                .contains(value)) {
+                                              setState(() {
+                                                searchTransaction.add(element);
+                                              });
+                                            }
+
+                                            // else {
+                                            //   setState(() {
+                                            //     searchTransaction.addAll(data);
+                                            //   });
+                                            // }
+                                          });
+                                        } else {
+                                          setState(() {
+                                            searchTransaction.addAll(data);
+                                          });
+                                        }
+                                      }),
+
+                                  // element.purchaseType
+                                  //       ?.contains(value!);
+                                  //   searchTransaction.add(element);
+
+                                  verticalSpace(18),
+                                  // Row(
+                                  //   mainAxisAlignment:
+                                  //       MainAxisAlignment.spaceBetween,
+                                  //   children: [
+                                  //     DropdownButton<Months>(
+                                  //       underline: const SizedBox(),
+                                  //       value: _selectedMonth,
+                                  //       items: Months.values
+                                  //           .map((Months month) {
+                                  //         return DropdownMenuItem(
+                                  //             value: month,
+                                  //             child: Container(
+                                  //                 padding:
+                                  //                     EdgeInsets.zero,
+                                  //                 child: Text(
+                                  //                     _monthToString(
+                                  //                         month))));
+                                  //       }).toList(),
+                                  //       onChanged: (newValue) {
+                                  //         setState(() {
+                                  //           _selectedMonth = newValue!;
+                                  //         });
+                                  //       },
+                                  //     ),
+                                  //     GestureDetector(
+                                  //       onTap: () {
+                                  //         filterTransactionBottomSheet(
+                                  //             context);
+                                  //       },
+                                  //       child: const Row(
+                                  //         children: [
+                                  //           Text(
+                                  //             'Filter',
+                                  //             style:
+                                  //                 AppTextStyles.font16,
+                                  //           ),
+                                  //           Icon(Icons
+                                  //               .filter_alt_outlined)
+                                  //         ],
+                                  //       ),
+                                  //     )
+                                  //   ],
+                                  // ),
+
+                                  Column(
+                                    children: List.generate(
+                                      //    filteredItems.length,
+                                      // searchList.isEmpty &&
+                                      //         _searchController.text.isEmpty
+                                      //     ?
+                                      //     :
+                                      // searchList.length,
+                                      // reloadData.loadData.transactionHistory!
+                                      //     .data!.length,
+                                      searchTransaction.length,
+                                      (index) {
+                                        // final data =    searchList[index].transactionHistory!.data![index];
+
+                                        return GestureDetector(
+                                          onTap: () => nextScreen(
+                                              context,
+                                              TransactionDetailsScreen(
+                                                amount:
+                                                    '${searchTransaction[index].amountPaid}',
+                                                referenceId:
+                                                    '${searchTransaction[index].referenceId}',
+                                                status:
+                                                    '${searchTransaction[index].status}',
+                                                date:
+                                                    '${dateFormat.format(searchTransaction[index].regDate as DateTime)}',
+                                                type:
+                                                    '${searchTransaction[index].type}',
+                                              )),
+                                          child: Column(
+                                            children: [
+                                              TransactionSection(
+                                                  transactionIcon: Icons.money,
+                                                  transactionType:
+                                                      '${searchTransaction[index].subType}',
+                                                  transactionDate:
+                                                      '${dateFormat.format(searchTransaction[index].regDate as DateTime)}',
+                                                  transactionAmount:
+                                                      'N${searchTransaction[index].amountPaid}',
+                                                  transactionStatus:
+                                                      '${searchTransaction[index].status}',
+                                                  transactionColor:
+                                                      Color(0xffD6DDFE),
+                                                  transactionStatusColor:
+                                                      searchTransaction[index]
+                                                                  .status ==
+                                                              'success'
+                                                          ? Colors.green
+                                                          : searchTransaction[
+                                                                          index]
+                                                                      .status ==
+                                                                  'pending'
+                                                              ? Color(
+                                                                  0xffA6B309)
+                                                              : Colors.red),
+                                              verticalSpace(8),
+                                              Divider(
+                                                color: AppColors.blackColor
+                                                    .withOpacity(0.1),
+                                              ),
+                                              verticalSpace(8),
+                                            ],
+                                          ),
+                                        );
+                                      },
                                     ),
                                   )
-                                : Column(
-                                    children: [
-                                      // TextInputField(
-                                      //   onChanged: (value) {
-                                      //     setState(() {
-                                      //       filteredItems = reloadData
-                                      //           .loadData
-                                      //           .transactionHistory!
-                                      //           .data!
-                                      //           .where((value) => value
-                                      //               .purchaseType!
-                                      //               .toLowerCase()
-                                      //               .contains(
-                                      //                   _searchController
-                                      //                       .text
-                                      //                       .toLowerCase()))
-                                      //           .toList();
-                                      //     });
-                                      //   },
-                                      //   controller: _searchController,
-                                      //   hintText:
-                                      //       'Search in transactions',
-                                      //   prefixIcon: const Icon(
-                                      //     Icons.search,
-                                      //     color: Color(0xff4F4F4F),
-                                      //   ),
-                                      // ),
-                                      // reloadData.items.isEmpty
-                                      //     ? SizedBox.shrink()
-                                      //     : Column(
-                                      //         children: List.generate(
-                                      //             reloadData.items
-                                      //                 .length, (index) {
-                                      //           return ListTile(
-                                      //             title: Text(reloadData
-                                      //                 .items[index]),
-                                      //           );
-                                      //         }),
-                                      //       ),
-
-                                      verticalSpace(48),
-                                      // Row(
-                                      //   mainAxisAlignment:
-                                      //       MainAxisAlignment.spaceBetween,
-                                      //   children: [
-                                      //     DropdownButton<Months>(
-                                      //       underline: const SizedBox(),
-                                      //       value: _selectedMonth,
-                                      //       items: Months.values
-                                      //           .map((Months month) {
-                                      //         return DropdownMenuItem(
-                                      //             value: month,
-                                      //             child: Container(
-                                      //                 padding:
-                                      //                     EdgeInsets.zero,
-                                      //                 child: Text(
-                                      //                     _monthToString(
-                                      //                         month))));
-                                      //       }).toList(),
-                                      //       onChanged: (newValue) {
-                                      //         setState(() {
-                                      //           _selectedMonth = newValue!;
-                                      //         });
-                                      //       },
-                                      //     ),
-                                      //     GestureDetector(
-                                      //       onTap: () {
-                                      //         filterTransactionBottomSheet(
-                                      //             context);
-                                      //       },
-                                      //       child: const Row(
-                                      //         children: [
-                                      //           Text(
-                                      //             'Filter',
-                                      //             style:
-                                      //                 AppTextStyles.font16,
-                                      //           ),
-                                      //           Icon(Icons
-                                      //               .filter_alt_outlined)
-                                      //         ],
-                                      //       ),
-                                      //     )
-                                      //   ],
-                                      // ),
-
-                                      Column(
-                                        children: List.generate(
-                                          //    filteredItems.length,
-                                          reloadData.loadData
-                                              .transactionHistory!.data!.length,
-                                          (index) {
-                                            final data = reloadData
-                                                .loadData
-                                                .transactionHistory!
-                                                .data![index];
-                                            return GestureDetector(
-                                              onTap: () => nextScreen(
-                                                  context,
-                                                  TransactionDetailsScreen(
-                                                    amount:
-                                                        '${data.amountPaid}',
-                                                    referenceId:
-                                                        '${data.referenceId}',
-                                                    status: '${data.status}',
-                                                    date:
-                                                        '${dateFormat.format(data.regDate as DateTime)}',
-                                                    type: '${data.type}',
-                                                  )),
-                                              child: Column(
-                                                children: [
-                                                  TransactionSection(
-                                                      transactionIcon:
-                                                          Icons.money,
-                                                      transactionType:
-                                                          '${data.subType}',
-                                                      transactionDate:
-                                                          '${dateFormat.format(data.regDate as DateTime)}',
-                                                      transactionAmount:
-                                                          'N${data.amountPaid}',
-                                                      transactionStatus:
-                                                          '${data.status}',
-                                                      transactionColor:
-                                                          Color(0xffD6DDFE),
-                                                      transactionStatusColor:
-                                                          data.status ==
-                                                                  'success'
-                                                              ? Colors.green
-                                                              : data.status ==
-                                                                      'pending'
-                                                                  ? Color(
-                                                                      0xffA6B309)
-                                                                  : Colors.red),
-                                                  verticalSpace(8),
-                                                  Divider(
-                                                    color: AppColors.blackColor
-                                                        .withOpacity(0.1),
-                                                  ),
-                                                  verticalSpace(8),
-                                                ],
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      )
-                                    ],
-                                  ),
+                                ],
+                              ),
                   ],
                 ),
               ),

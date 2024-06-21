@@ -13,7 +13,7 @@ import 'package:max_4_u/app/utils/white_space.dart';
 import 'package:max_4_u/app/widgets/button_widget.dart';
 import 'package:provider/provider.dart';
 
-class RequestsDetailsScreen extends StatelessWidget {
+class RequestsDetailsScreen extends StatefulWidget {
   const RequestsDetailsScreen({
     super.key,
     required this.name,
@@ -34,6 +34,20 @@ class RequestsDetailsScreen extends StatelessWidget {
   final String selfiePhoto;
   final String idPhoto;
   final String userType;
+
+  @override
+  State<RequestsDetailsScreen> createState() => _RequestsDetailsScreenState();
+}
+
+class _RequestsDetailsScreenState extends State<RequestsDetailsScreen> {
+  final _reasonController = TextEditingController();
+
+  @override
+  void dispose() {
+    _reasonController.dispose();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +72,7 @@ class RequestsDetailsScreen extends StatelessWidget {
                               onTap: () => Navigator.pop(context),
                               child: Icon(Icons.arrow_back)),
                           horizontalSpace(125),
-                           Text(
+                          Text(
                             'Details',
                             style: AppTextStyles.font18,
                           ),
@@ -77,7 +91,7 @@ class RequestsDetailsScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '$name',
+                                '${widget.name}',
                                 style: AppTextStyles.font20.copyWith(
                                   fontWeight: FontWeight.w400,
                                   color: Color(0xff1A1A1A),
@@ -85,7 +99,7 @@ class RequestsDetailsScreen extends StatelessWidget {
                               ),
                               verticalSpace(6),
                               Text(
-                                phoneNumber,
+                                widget.phoneNumber,
                                 style: AppTextStyles.font16.copyWith(
                                   fontWeight: FontWeight.w500,
                                   color: Color(0xff1A1A1A),
@@ -125,7 +139,7 @@ class RequestsDetailsScreen extends StatelessWidget {
                                 ),
                                 horizontalSpace(11),
                                 Text(
-                                  bvnNo,
+                                  widget.bvnNo,
                                   style: AppTextStyles.font14.copyWith(
                                     fontWeight: FontWeight.w400,
                                     color: AppColors.mainTextColor,
@@ -145,7 +159,7 @@ class RequestsDetailsScreen extends StatelessWidget {
                                 ),
                                 horizontalSpace(11),
                                 Text(
-                                  ninNo,
+                                  widget.ninNo,
                                   style: AppTextStyles.font14.copyWith(
                                     fontWeight: FontWeight.w400,
                                     color: AppColors.mainTextColor,
@@ -174,7 +188,7 @@ class RequestsDetailsScreen extends StatelessWidget {
                         ),
                         child: ClipRRect(
                           child: Image.network(
-                            selfiePhoto,
+                            widget.selfiePhoto,
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -197,7 +211,7 @@ class RequestsDetailsScreen extends StatelessWidget {
                         ),
                         child: ClipRRect(
                           child: Image.network(
-                            idPhoto,
+                            widget.idPhoto,
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -205,7 +219,7 @@ class RequestsDetailsScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                userType == 'approved'
+                widget.userType == 'approved'
                     ? SizedBox.shrink()
                     : Positioned(
                         bottom: 0,
@@ -223,22 +237,117 @@ class RequestsDetailsScreen extends StatelessWidget {
                                 width: 160.w,
                                 child: ButtonWidget(
                                   onTap: () async {
-                                    await denyVendor.denyVendorRequest(
-                                        userId: uniqueId);
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            contentPadding: EdgeInsets.zero,
+                                            content: Container(
+                                              height: 300,
+                                              width: 350,
+                                              padding: EdgeInsets.all(8),
+                                              decoration: BoxDecoration(
+                                                  color: AppColors.whiteColor,
+                                                  borderRadius:
+                                                      BorderRadius.circular(8)),
+                                              child: Column(
+                                                children: [
+                                                  Expanded(
+                                                    child: SizedBox(
+                                                      width: 300,
+                                                      child: TextField(
+                                                      
+                                                        maxLines: 5,
+                                                        controller:
+                                                            _reasonController,
+                                                        decoration: InputDecoration(
+                                                            border:
+                                                                InputBorder.none,
+                                                            hintText:
+                                                                'Enter reason for request denial'),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      SizedBox(
+                                                        height: 44.h,
+                                                        width: 140.w,
+                                                        child: ButtonWidget(
+                                                          onTap: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          text: 'Cancel',
+                                                          color:
+                                                              Color(0xffE6E6E6),
+                                                          textColor: AppColors
+                                                              .primaryColor,
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 44.h,
+                                                        width: 140.w,
+                                                        child: ButtonWidget(
+                                                          onTap: () async {
+                                                            if (_reasonController
+                                                                .text.isEmpty) {
+                                                              showMessage(
+                                                                  context,
+                                                                  "Reason field is required");
+                                                              return;
+                                                            }
+                                                          //  Navigator.pop(context);
+                                                            await denyVendor.denyVendorRequest(
+                                                                reason:
+                                                                    _reasonController
+                                                                        .text
+                                                                        .trim(),
+                                                                userId: widget
+                                                                    .uniqueId);
 
-                                    if (denyVendor.status == false &&
-                                        context.mounted) {
-                                      showMessage(context, denyVendor.message,
-                                          isError: true);
-                                      return;
-                                    }
-                                    if (denyVendor.status == true &&
-                                        context.mounted) {
-                                      showMessage(
-                                        context,
-                                        denyVendor.message,
-                                      );
-                                    }
+                                                            if (denyVendor
+                                                                        .status ==
+                                                                    false &&
+                                                                context
+                                                                    .mounted) {
+                                                              showMessage(
+                                                                  context,
+                                                                  denyVendor
+                                                                      .message,
+                                                                  isError:
+                                                                      true);
+                                                              return;
+                                                            }
+                                                            if (denyVendor
+                                                                        .status ==
+                                                                    true &&
+                                                                context
+                                                                    .mounted) {
+                                                              showMessage(
+                                                                context,
+                                                                denyVendor
+                                                                    .message,
+                                                              );
+                                                            }
+                                                          },
+                                                          text: 'Deny request',
+                                                          color:
+                                                              Color(0xffE6E6E6),
+                                                          textColor:
+                                                              Color(0xffFF0000),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        });
                                   },
                                   text: 'Deny request',
                                   color: Color(0xffE6E6E6),
@@ -251,7 +360,7 @@ class RequestsDetailsScreen extends StatelessWidget {
                                 child: ButtonWidget(
                                   onTap: () async {
                                     await approveRequest.approveVendorRequest(
-                                        userId: uniqueId);
+                                        userId: widget.uniqueId);
 
                                     if (approveRequest.status == false &&
                                         context.mounted) {

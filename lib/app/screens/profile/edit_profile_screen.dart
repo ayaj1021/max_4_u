@@ -8,10 +8,7 @@ import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/busy_overlay.dart';
-import 'package:max_4_u/app/utils/show_message.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
-import 'package:max_4_u/app/widgets/button_widget.dart';
-import 'package:max_4_u/app/widgets/text_input_field.dart';
 import 'package:provider/provider.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -50,16 +47,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     });
   }
 
-  final _emailController = TextEditingController();
+  //final _emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Consumer2<ChangeEmailProvider, ReloadUserDataProvider>(
         builder: (context, changeEmail, reloadData, _) {
-          final phoneNumber = EncryptData.decryptAES('${reloadData.loadData.userData![0].mobileNumber}');
-          final firstName = EncryptData.decryptAES('${reloadData.loadData.userData![0].firstName}');
-          final lastName = EncryptData.decryptAES('${reloadData.loadData.userData![0].lastName}');
-          final email = EncryptData.decryptAES('${reloadData.loadData.userData![0].email}');
+      final phoneNumber = EncryptData.decryptAES(
+          '${reloadData.loadData.userData![0].mobileNumber}');
+      final firstName = EncryptData.decryptAES(
+          '${reloadData.loadData.userData![0].firstName}');
+      final lastName = EncryptData.decryptAES(
+          '${reloadData.loadData.userData![0].lastName}');
+      final email =
+          EncryptData.decryptAES('${reloadData.loadData.userData![0].email}');
       return BusyOverlay(
         show: changeEmail.state == ViewState.Busy,
         title: changeEmail.message,
@@ -79,7 +80,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
                     ),
                     horizontalSpace(109),
-                     Text(
+                    Text(
                       'Edit profile',
                       style: AppTextStyles.font18,
                     )
@@ -113,23 +114,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         ),
                       ),
                       horizontalSpace(16),
-                      // Row(
-                      //   children: [
-                      //     Text(
-                      //       'Edit image',
-                      //       style: AppTextStyles.font14.copyWith(
-                      //         color: AppColors.primaryColor,
-                      //         fontWeight: FontWeight.w500,
-                      //       ),
-                      //     )
-                      //   ],
-                      // )
                     ],
                   ),
                 ),
                 verticalSpace(20),
                 Container(
-                  height: 364.h,
+                  height: 400.h,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 13, vertical: 25),
                   width: MediaQuery.of(context).size.width,
@@ -141,30 +131,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       EditProfileComponent(
-                        editIcon: SizedBox(),
                         title: 'First name',
                         value: firstName,
                       ),
                       verticalSpace(32),
                       EditProfileComponent(
-                        editIcon: SizedBox(),
                         title: 'Last name',
                         value: lastName,
                       ),
                       verticalSpace(32),
                       EditProfileComponent(
-                        editIcon: SizedBox(),
                         title: 'Phone Number',
                         value: phoneNumber,
                       ),
                       verticalSpace(32),
                       EditProfileComponent(
                         onTap: () {
-                          editProfileAlertDialog(
-                            context,
-                            title: 'Edit Email',
-                            controller: _emailController,
-                          );
+                          // editProfileAlertDialog(
+                          //   context,
+                          //   title: 'Edit Email',
+                          //   controller: _emailController,
+                          // );
                         },
                         title: 'Email',
                         value: email,
@@ -196,7 +183,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       //     ],
                       //   ),
                       // )
-                   
                     ],
                   ),
                 ),
@@ -208,80 +194,81 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     });
   }
 
-  Future<dynamic> editProfileAlertDialog(
-    BuildContext context, {
-    required String title,
-    required TextEditingController controller,
-  }) {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return Consumer<ChangeEmailProvider>(
-              builder: (context, changeEmail, _) {
-            return AlertDialog(
-              contentPadding: EdgeInsets.zero,
-              content: Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 14, horizontal: 23),
-                height: 241.h,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  color: AppColors.whiteColor,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Column(
-                  children: [
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: SizedBox(
-                        height: 24,
-                        width: 24,
-                        child: GestureDetector(
-                          onTap: () => Navigator.pop(context),
-                          child: Image.asset('assets/icons/cancel_icon.png'),
-                        ),
-                      ),
-                    ),
-                    Text(
-                      title,
-                      style: AppTextStyles.font16.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: const Color(0xff333333)),
-                    ),
-                    TextInputField(
-                      controller: changeEmail.emailController,
-                      labelText: '',
-                      hintText: 'Enter new email',
-                    ),
-                    verticalSpace(27),
-                    ButtonWidget(
-                      text: 'Continue',
-                      onTap: () async {
-                        if (changeEmail.emailController.text.isEmpty) {
-                          showMessage(context, 'Email field is required',
-                              isError: true);
-                          return;
-                        }
-                        Navigator.pop(context);
+  // Future<dynamic> editProfileAlertDialog(
+  //   BuildContext context, {
+  //   required String title,
+  //   required TextEditingController controller,
+  // }) {
+  //   return showDialog(
+  //       context: context,
+  //       builder: (context) {
+  //         return Consumer<ChangeEmailProvider>(
+  //             builder: (context, changeEmail, _) {
+  //           return AlertDialog(
+  //             contentPadding: EdgeInsets.zero,
+  //             content: Container(
+  //               padding:
+  //                   const EdgeInsets.symmetric(vertical: 14, horizontal: 23),
+  //               height: 241.h,
+  //               width: MediaQuery.of(context).size.width,
+  //               decoration: BoxDecoration(
+  //                 color: AppColors.whiteColor,
+  //                 borderRadius: BorderRadius.circular(8),
+  //               ),
+  //               child: Column(
+  //                 children: [
+  //                   Align(
+  //                     alignment: Alignment.topRight,
+  //                     child: SizedBox(
+  //                       height: 24,
+  //                       width: 24,
+  //                       child: GestureDetector(
+  //                         onTap: () => Navigator.pop(context),
+  //                         child: Image.asset('assets/icons/cancel_icon.png'),
+  //                       ),
+  //                     ),
+  //                   ),
+  //                   Text(
+  //                     title,
+  //                     style: AppTextStyles.font16.copyWith(
+  //                         fontWeight: FontWeight.w600,
+  //                         color: const Color(0xff333333)),
+  //                   ),
+  //                   TextInputField(
+  //                     controller: changeEmail.emailController,
+  //                     labelText: '',
+  //                     hintText: 'Enter new email',
+  //                   ),
+  //                   verticalSpace(27),
+  //                   ButtonWidget(
+  //                     text: 'Continue',
+  //                     onTap: () async {
+  //                       if (changeEmail.emailController.text.isEmpty) {
+  //                         showMessage(context, 'Email field is required',
+  //                             isError: true);
+  //                         return;
+  //                       }
+  //                       Navigator.pop(context);
 
-                        await changeEmail.changeEmail();
-                        if (changeEmail.state == ViewState.Error &&
-                            context.mounted) {
-                          showMessage(context, changeEmail.message);
-                          return;
-                        }
+  //                       await changeEmail.changeEmail();
+  //                       if (changeEmail.state == ViewState.Error &&
+  //                           context.mounted) {
+  //                         showMessage(context, changeEmail.message);
+  //                         return;
+  //                       }
 
-                        if (changeEmail.state == ViewState.Success &&
-                            context.mounted) {}
-                      },
-                    )
-                  ],
-                ),
-              ),
-            );
-          });
-        });
-  }
+  //                       if (changeEmail.state == ViewState.Success &&
+  //                           context.mounted) {}
+  //                     },
+  //                   )
+  //                 ],
+  //               ),
+  //             ),
+  //           );
+  //         });
+  //       });
+  // }
+
 }
 
 class EditProfileComponent extends StatelessWidget {
@@ -290,13 +277,11 @@ class EditProfileComponent extends StatelessWidget {
     required this.title,
     required this.value,
     this.onTap,
-    this.editIcon,
   });
 
   final String title;
   final String value;
   final Function()? onTap;
-  final Widget? editIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -318,13 +303,6 @@ class EditProfileComponent extends StatelessWidget {
                   color: AppColors.mainTextColor, fontWeight: FontWeight.w400),
             )
           ],
-        ),
-        SizedBox(
-          height: 16.h,
-          width: 16.w,
-          child: GestureDetector(
-              onTap: onTap,
-              child: editIcon ?? Image.asset('assets/icons/edit_icon.png')),
         ),
       ],
     );
