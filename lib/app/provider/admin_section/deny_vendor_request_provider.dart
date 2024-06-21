@@ -12,7 +12,7 @@ class DenyVendorRequestProvider extends ChangeNotifier {
   String _message = '';
   String get message => _message;
 
-  Future<void> denyVendorRequest({required String userId}) async {
+  Future<void> denyVendorRequest({required String userId, required String reason}) async {
     state = ViewState.Busy;
     _message = 'Deleting request...';
     notifyListeners();
@@ -20,6 +20,7 @@ class DenyVendorRequestProvider extends ChangeNotifier {
     final body = {
       "request_type": "normal_admin",
       "action": "reject_request",
+      "reason" : reason,
       "user_id": userId //unique id
     };
 

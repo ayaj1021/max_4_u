@@ -133,6 +133,15 @@ class SecureStorage {
     return value;
   }
 
+  saveUserPassword(String password) async {
+    await _storage.write(key: 'user_password', value: password);
+  }
+
+  getUserPassword() async {
+    String? value = await _storage.read(key: 'user_password');
+    return value;
+  }
+
   saveUserOtp(String otp) async {
     await _storage.write(key: 'user_otp', value: otp);
   }

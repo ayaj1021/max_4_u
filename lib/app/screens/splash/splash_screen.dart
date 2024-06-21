@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/database/database.dart';
-import 'package:max_4_u/app/screens/dashboard/dashboard_screen.dart';
 
 import 'package:max_4_u/app/screens/onboarding/onboard_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
@@ -16,11 +15,11 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  String? userId = '';
+  String userId = '';
 
   getNames() async {
-    final id = await SecureStorage().getUniqueId();
-
+    final id = await SecureStorage().getEncryptedID();
+    print('this is user id: $id');
     setState(() {
       userId = id;
     });
@@ -32,16 +31,15 @@ class _SplashScreenState extends State<SplashScreen> {
     //   Provider.of<ReloadUserDataProvider>(context, listen: false)
     //       .reloadUserData();
     // });
+
     getNames();
+    // final id = Provider.of<AuthProviderImpl>(context, listen: false).resDataData.userData[0];
     Timer(const Duration(seconds: 3), () async {
-      //  await reloadData.reloadUserData();
-      //  Provider.of<ReloadUserDataProvider>(context).reloadUserData();
-      //  ReloadUserDataProvider().reloadUserData();
-      if (userId == null) {
+      // if (userId.isNotEmpty) {
+      //   nextScreenReplace(context, DashBoardScreen());
+      // } else {
         nextScreenReplace(context, const OnboardScreen());
-      } else {
-        nextScreenReplace(context, DashBoardScreen());
-      }
+     // }
     });
     super.initState();
   }

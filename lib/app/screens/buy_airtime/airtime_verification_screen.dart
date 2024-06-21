@@ -2,10 +2,14 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:max_4_u/app/enums/data_period_enum.dart';
+import 'package:max_4_u/app/enums/network_dropdown.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
+import 'package:max_4_u/app/provider/activate_auto_renewal_provider.dart';
 import 'package:max_4_u/app/provider/buy_airtime_provider.dart';
 import 'package:max_4_u/app/provider/obscure_text_provider.dart';
+import 'package:max_4_u/app/screens/buy_data/data_verification_screen.dart';
 import 'package:max_4_u/app/screens/confirmation/confirmation_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
@@ -36,10 +40,40 @@ class AirtimeVerificationScreen extends StatefulWidget {
 
 class _AirtimeVerificationScreenState extends State<AirtimeVerificationScreen> {
   DataPeriod _selectedPeriod = DataPeriod.Daily;
+
+  DateTime? _startDate;
+  DateTime? _endDate;
+
+  Future<void> _selectDate(BuildContext context, bool isStartDate) async {
+    DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+
+    if (picked != null && picked != (isStartDate ? _startDate : _endDate)) {
+      setState(() {
+        if (isStartDate) {
+          _startDate = picked;
+          // Ensure end date is after start date
+          if (_endDate != null && _endDate!.isBefore(_startDate!)) {
+            _endDate = null;
+          }
+        } else {
+          _endDate = picked;
+        }
+      });
+    }
+  }
+
+  String _selectedValidity = dataValidityProvider[0];
   @override
   Widget build(BuildContext context) {
-    return Consumer2<BuyAirtimeProvider, ObscureTextProvider>(
-      builder: (context, buyAirtime, obscure, _) {
+    final DateFormat dateFormat = DateFormat('dd MMMM yyyy');
+    return Consumer3<BuyAirtimeProvider, AutoRenewalCheck,
+        ActivateAutoRenewalProvider>(
+      builder: (context, buyAirtime, autoRenewalCheck, activateRenewal, _) {
         return BusyOverlay(
           show: buyAirtime.state == ViewState.Busy,
           title: buyAirtime.message,
@@ -61,7 +95,7 @@ class _AirtimeVerificationScreenState extends State<AirtimeVerificationScreen> {
                             ),
                           ),
                           horizontalSpace(104),
-                           Text(
+                          Text(
                             'Confirmation',
                             style: AppTextStyles.font18,
                           ),
@@ -153,10 +187,10 @@ class _AirtimeVerificationScreenState extends State<AirtimeVerificationScreen> {
                           Checkbox(
                               activeColor: AppColors.primaryColor,
                               checkColor: AppColors.overlayColor,
-                              value: false,
+                              value: autoRenewalCheck.isAutoRenew,
                               //obscure.isObscure,
                               onChanged: (v) {
-                                obscure.changeObscure();
+                                autoRenewalCheck.changeRenewal();
                               }),
                           Text('Enable auto-renewal for this transaction',
                               style: AppTextStyles.font14.copyWith(
@@ -164,7 +198,7 @@ class _AirtimeVerificationScreenState extends State<AirtimeVerificationScreen> {
                               ))
                         ],
                       ),
-                      obscure.isObscure
+                      autoRenewalCheck.isAutoRenew
                           ? Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -223,11 +257,30 @@ class _AirtimeVerificationScreenState extends State<AirtimeVerificationScreen> {
                                     }).toList(),
                                   ),
                                 ),
+                                verticalSpace(31),
+                                Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      ValidityDateWidget(
+                                        onTap: () => _selectDate(context, true),
+                                        date:
+                                            '${_startDate != null ? dateFormat.format(_startDate!) : 'DD-MM-YY'}',
+                                        dateLabel: 'Start Date',
+                                      ),
+                                      ValidityDateWidget(
+                                        onTap: () =>
+                                            _selectDate(context, false),
+                                        date:
+                                            '${_endDate != null ? dateFormat.format(_endDate!) : 'DD-MM-YY'}',
+                                        dateLabel: 'End Date',
+                                      )
+                                    ]),
                               ],
                             )
                           : SizedBox(),
 
-                      verticalSpace(297),
+                      verticalSpace(200),
                       ButtonWidget(
                         text: 'Send airtime',
                         onTap: () async {
@@ -235,6 +288,17 @@ class _AirtimeVerificationScreenState extends State<AirtimeVerificationScreen> {
                               .getAirtimeProducts(widget.network);
                           log('This is the code ${productCodes.toString()}');
                           log(productCodes.toString());
+
+                          autoRenewalCheck.isAutoRenew == true
+                              ? await activateRenewal.activateAutoRenewal(
+                                  phoneNumber: widget.phoneNumber,
+                                  productCode: productCodes,
+                                  amount: widget.amount,
+                                  // startDate: _startDate!,
+                                  // endDate: _endDate!,
+                                  intervalDaily: _selectedValidity,
+                                )
+                              : null;
 
                           await buyAirtime.buyAirtime(
                             phoneNumber: widget.phoneNumber,

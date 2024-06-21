@@ -24,7 +24,7 @@ class ServiceComponent extends StatelessWidget {
       margin: EdgeInsets.only(right: margin ?? 0),
       alignment: Alignment.center,
       height: 70.h,
-      width: 169.w,
+      width: 172.w,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         color: AppColors.whiteColor,

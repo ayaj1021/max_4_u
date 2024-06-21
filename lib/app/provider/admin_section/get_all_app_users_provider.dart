@@ -24,9 +24,13 @@ class GetAllAppUsers extends ChangeNotifier {
   String adminLastName = '';
   String adminPhoneNumber = '';
 
+  String searchedText = '';
+
   AllAppUsersResponseData allAppUsers = AllAppUsersResponseData();
   AllAppVendorsResponseData allAppVendors = AllAppVendorsResponseData();
   AllAppAdminsResponseData allAppAdmins = AllAppAdminsResponseData();
+
+  AllAppUsersResponseData searchUsers = AllAppUsersResponseData();
 
   Future getAllUsers() async {
     isLoading = true;
@@ -62,7 +66,8 @@ class GetAllAppUsers extends ChangeNotifier {
         phoneNumber =
             EncryptData.decryptAES('${allAppUsers.data![0].mobileNumber}');
         email = EncryptData.decryptAES('${allAppUsers.data![0].email}');
-        log('This is $allAppUsers');
+        //log('This is $allAppUsers');
+          updateSearch();
 
         notifyListeners();
         return allAppUsers;
@@ -77,6 +82,23 @@ class GetAllAppUsers extends ChangeNotifier {
       _status = false;
       notifyListeners();
     }
+  }
+
+  updateSearch() {
+    if (searchedText.isEmpty) {
+      searchUsers.data!.addAll(allAppUsers.data!);
+    } else {
+      searchUsers.data!.addAll(allAppUsers.data!
+          .where((element) =>
+              element.firstName!.toLowerCase().contains(searchedText))
+          .toList());
+    }
+    notifyListeners();
+  }
+
+  searchUser(String userName) {
+    searchedText = userName;
+    updateSearch();
   }
 
   Future getAlLVendors() async {

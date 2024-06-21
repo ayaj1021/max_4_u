@@ -56,8 +56,10 @@ class _AccountBalanceWidgetState extends State<AccountBalanceWidget> {
   int? selectedIndex;
   @override
   Widget build(BuildContext context) {
-    return Consumer2<AuthProviderImpl, ObscureTextProvider>(
-        builder: (context, authProv, obscure, _) {
+    return Consumer3<AuthProviderImpl, ObscureTextProvider,
+            ReloadUserDataProvider>(
+        builder: (context, authProv, obscure, reloadData, _) {
+      final accountBalance = reloadData.loadData.userAccount!.balance;
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 32),
         height: 125.h,
@@ -93,14 +95,16 @@ class _AccountBalanceWidgetState extends State<AccountBalanceWidget> {
                 ],
               ),
               verticalSpace(12),
-              Text(
-                obscure.isObscure ? '*****' : 'N${balance}.00',
-                style: AppTextStyles.font12.copyWith(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 24,
-                  color: AppColors.whiteColor,
-                ),
-              ),
+              accountBalance == null
+                  ? Text('')
+                  : Text(
+                      obscure.isObscure ? '*****' : 'N${accountBalance}.00',
+                      style: AppTextStyles.font12.copyWith(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 24,
+                        color: AppColors.whiteColor,
+                      ),
+                    ),
             ]),
             GestureDetector(
               onTap: () {

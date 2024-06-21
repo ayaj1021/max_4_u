@@ -9,3 +9,15 @@ class ObscureTextProvider extends ChangeNotifier {
     notifyListeners();
   }
 }
+
+
+class AutoRenewalCheck extends ChangeNotifier{
+ bool _isAutoRenew = false;
+  bool get isAutoRenew => _isAutoRenew;
+
+   changeRenewal() {
+    _isAutoRenew = !_isAutoRenew;
+    notifyListeners();
+  }
+
+}

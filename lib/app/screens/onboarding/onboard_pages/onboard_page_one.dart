@@ -45,8 +45,9 @@ class OnboardPageOne extends StatelessWidget {
                         style: AppTextStyles.font20.copyWith(
                           fontWeight: FontWeight.w500,
                         ),
+                        textAlign: TextAlign.center,
                       ),
-                      verticalSpace(10),
+                      verticalSpace(30),
                       Text(
                         'Buy data and airtime from all network providers ',
                         style: AppTextStyles.font14.copyWith(

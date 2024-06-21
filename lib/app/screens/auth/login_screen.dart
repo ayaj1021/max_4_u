@@ -2,6 +2,9 @@ import 'dart:developer';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/encryt_data/encrypt_data.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
@@ -29,14 +32,29 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final passwordController = TextEditingController();
-  final emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _emailController = TextEditingController();
 
   @override
   void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
+  }
+
+  late final LocalAuthentication auth;
+  // ignore: unused_field
+  bool _supportState = false;
+
+  @override
+  void initState() {
+    auth = LocalAuthentication();
+    super.initState();
+    auth.isDeviceSupported().then((bool isSupported) {
+      setState(() {
+        _supportState = isSupported;
+      });
+    });
   }
 
   @override
@@ -55,7 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                   Text(
+                  Text(
                     'Welcome back',
                     style: AppTextStyles.font20,
                   ),
@@ -67,14 +85,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   verticalSpace(26),
                   TextInputField(
-                    controller: emailController,
+                    controller: _emailController,
                     labelText: 'Email/Phone number',
                     hintText: 'Enter your email or phone number',
                   ),
                   verticalSpace(24),
                   TextInputField(
                     obscure: obscure.isObscure,
-                    controller: passwordController,
+                    controller: _passwordController,
                     labelText: 'Password',
                     hintText: 'Enter your password',
                     suffixIcon: obscure.isObscure
@@ -97,23 +115,23 @@ class _LoginScreenState extends State<LoginScreen> {
                   verticalSpace(32),
                   ButtonWidget(
                     onTap: () async {
-                      if (passwordController.text.isEmpty ||
-                          emailController.text.isEmpty) {
+                      if (_passwordController.text.isEmpty ||
+                          _emailController.text.isEmpty) {
                         showMessage(context, 'All fields are required',
                             isError: true);
                         return;
                       }
 
                       await authProv.loginUser(
-                          email: emailController.text.trim(),
-                          password: passwordController.text.trim());
+                          email: _emailController.text.trim(),
+                          password: _passwordController.text.trim());
 
                       if (authProv.status == false && context.mounted) {
                         showMessage(context, authProv.message);
                         return;
                       }
 
-                      print(authProv.message);
+                      //print(authProv.message);
 
                       // final userLevelType = await SecureStorage().getUserType();
                       if (authProv.status == true && context.mounted) {
@@ -144,7 +162,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       final transactionHistory =
                           authProv.resDataData.transactionHistory!.data;
                       final beneficiary = authProv.resDataData.beneficiaryData;
-                      log('user type is $userType');
+                      log('user type is $uniqueId');
+                      log('user very unique id is $uniqueId');
                       log('user balance is $balance');
                       final services = authProv.resDataData.services!;
                       final products = authProv.resDataData.products!;
@@ -155,6 +174,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                       await SecureStorage().saveUserEncryptedId(
                           '${authProv.resDataData.userData![0].uniqueId}');
+                    //  await SecureStorage().saveUserEncryptedId(uniqueId);
                       await SecureStorage()
                           .saveUserTransactionHistory(transactionHistory!);
                       await SecureStorage().saveUserBeneficiary(beneficiary!);
@@ -172,23 +192,26 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                     text: 'Log in',
                   ),
-                  // verticalSpace(20),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.center,
-                  //   children: [
-                  //     const Icon(
-                  //       Icons.fingerprint_outlined,
-                  //       color: AppColors.primaryColor,
-                  //     ),
-                  //     horizontalSpace(8),
-                  //     Text(
-                  //       'Click to login with fingerprint',
-                  //       style: AppTextStyles.font14.copyWith(
-                  //         color: AppColors.primaryColor,
-                  //       ),
-                  //     )
-                  //   ],
-                  // ),
+                  verticalSpace(20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () async => await _authenticate(),
+                        child: const Icon(
+                          Icons.fingerprint_outlined,
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
+                      horizontalSpace(8),
+                      Text(
+                        'Click to login with fingerprint',
+                        style: AppTextStyles.font14.copyWith(
+                          color: AppColors.primaryColor,
+                        ),
+                      )
+                    ],
+                  ),
                   verticalSpace(260),
                   Center(
                     child: RichText(
@@ -217,4 +240,66 @@ class _LoginScreenState extends State<LoginScreen> {
       );
     });
   }
+
+  Future<void> _authenticate() async {
+    final email = await SecureStorage().getUserEmail();
+    final password = await SecureStorage().getUserPassword();
+
+    final bool canAuthenticateWithBiometrics = await auth.canCheckBiometrics;
+    final bool canAuthenticate =
+        canAuthenticateWithBiometrics || await auth.isDeviceSupported();
+    final availableBiometrics = await auth.getAvailableBiometrics();
+
+    if (canAuthenticate && availableBiometrics.isNotEmpty) {
+      bool didAuthenticate = false;
+      try {
+        didAuthenticate = await auth.authenticate(
+            localizedReason:
+                'Please authenticate with Fingerprint or Face ID to proceed with login',
+            options: const AuthenticationOptions(
+                biometricOnly: true, stickyAuth: true));
+      } on PlatformException {
+        // print(e);
+        // if (e.code == auth_error.notAvailable ||
+        //     e.code == auth_error.notEnrolled) {}
+      }
+      if (didAuthenticate) {
+        _emailController.text = email;
+        _passwordController.text = password;
+        if (!mounted) return;
+
+        final authProv = Provider.of<AuthProviderImpl>(context);
+
+        await authProv.loginUser(
+            email: _emailController.text.trim(),
+            password: _passwordController.text.trim());
+        return;
+      }
+      if (!mounted) return;
+      showMessage(
+        context,
+        'Invalid credentials',
+      );
+      return;
+    }
+    if (!mounted) return;
+    showMessage(
+      context,
+      'Biometric Authorization not Available',
+    );
+    return;
+  }
 }
+
+
+    // Future<void> _getAvailableBiometric() async {
+    //   List<BiometricType> availableBiometrics =
+    //       await auth.getAvailableBiometrics();
+    //   print('List of available biometrics: $availableBiometrics');
+
+    //   if (!mounted) {
+    //     return;
+    //   }
+    // }
+  
+
