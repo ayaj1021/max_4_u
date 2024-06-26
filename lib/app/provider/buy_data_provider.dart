@@ -12,7 +12,8 @@ class BuyDataProvider extends ChangeNotifier {
   bool get status => _status;
 
   Future<void> buyData(
-      {required String amount,
+      {
+        //required String amount,
       required String productCode,
       required String phoneNumber}) async {
     state = ViewState.Busy;
@@ -27,7 +28,7 @@ class BuyDataProvider extends ChangeNotifier {
       "product_code": productCode,
       "user_id": id,
       "number": phoneNumber,
-      "amount": amount,
+    //  "amount": amount,
     };
     log('$body');
 

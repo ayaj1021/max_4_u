@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
@@ -29,11 +28,9 @@ class BuyAirtimeProvider extends ChangeNotifier {
       "number": phoneNumber,
       "amount": amount,
     };
-    log('$body');
+    debugPrint('$body');
 
-    final encryptedId = await SecureStorage().getUserEncryptedId();
-
-    log('this is $encryptedId');
+    // final encryptedId = await SecureStorage().getUserEncryptedId();
 
     final response = await ApiService().servicePostRequest(
       body: body,
@@ -43,8 +40,8 @@ class BuyAirtimeProvider extends ChangeNotifier {
     _status = response['data']['status'];
     _message = response['data']['message'];
 
-    log('$_status');
-    log('$response');
+    debugPrint('$_status');
+    debugPrint('$response');
     try {
       if (_status == true) {
         _status = response['data']['status'];
@@ -60,7 +57,7 @@ class BuyAirtimeProvider extends ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
-      log(e.toString());
+      debugPrint(e.toString());
       _status = false;
       notifyListeners();
     }

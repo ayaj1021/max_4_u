@@ -151,6 +151,15 @@ class SecureStorage {
     return value;
   }
 
+  saveUserLevel(String level) async {
+    await _storage.write(key: 'user_level', value: level);
+  }
+
+  getUserLevel() async {
+    String? value = await _storage.read(key: 'user_level');
+    return value;
+  }
+
   saveUserServices(List services) async {
     String jsonString = jsonEncode(services);
     await _storage.write(key: 'services_list', value: jsonString);
@@ -167,9 +176,7 @@ class SecureStorage {
     return null;
   }
 
-
-
- saveUserAutoRenewal(List autoRenewal) async {
+  saveUserAutoRenewal(List autoRenewal) async {
     String jsonString = jsonEncode(autoRenewal);
     await _storage.write(key: 'auto_renewal_list', value: jsonString);
   }
@@ -184,7 +191,6 @@ class SecureStorage {
     }
     return null;
   }
-
 
   saveUserTransactions(List transactions) async {
     String jsonString = jsonEncode(transactions);
@@ -250,9 +256,7 @@ class SecureStorage {
     return null;
   }
 
-
   logoutUser() async {
-
     await _storage.deleteAll();
     //await _storage.deleteAll();
   }

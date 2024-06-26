@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
@@ -22,16 +21,14 @@ class DeleteAccountProvider extends ChangeNotifier {
       "request_type": "user",
       "action": "delete_account",
     };
-    log(body.toString());
-
+    debugPrint(body.toString());
     try {
       final response = await ApiService().servicePostRequest(
         body: body,
       );
-      //print(response);
 
       _status = response['data']['status'];
-      // _message = response['data']['message'];
+      _message = response['data']['message'];
 
       if (_status == true) {
         _status = response['data']['status'];
@@ -40,12 +37,13 @@ class DeleteAccountProvider extends ChangeNotifier {
         _message = response['data']['message'];
         notifyListeners();
       } else {
-        state = ViewState.Error;
         _message = response['data']['message'];
+        _status = response['data']['status'];
+        state = ViewState.Error;
         notifyListeners();
       }
     } catch (e) {
-     log(e.toString());
+      state = ViewState.Error;
       _status = false;
       notifyListeners();
     }

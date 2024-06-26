@@ -26,78 +26,74 @@ class ConfirmationScreen extends StatelessWidget {
       return BusyOverlay(
         show: reloadData.state == ViewState.Busy,
         child: Scaffold(
-          body: SafeArea(
-              child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 41),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: 67.h,
-                  width: 67.w,
-                  child: Image.asset('assets/icons/verify_icon.png'),
-                ),
-                verticalSpace(20),
-                Text(
-                  'Airtime Purchased Successfully',
-                  style: AppTextStyles.font16.copyWith(
-                    color: AppColors.mainTextColor,
-                    fontWeight: FontWeight.w600,
+          body: PopScope(
+            child: SafeArea(
+                child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 41),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 67.h,
+                    width: 67.w,
+                    child: Image.asset('assets/icons/verify_icon.png'),
                   ),
-                ),
-                verticalSpace(12),
-                Text(
-                  'Airtime of N${amount} has been successfully sent to',
-                  style: AppTextStyles.font14.copyWith(
-                    color: AppColors.textColor,
-                    fontWeight: FontWeight.w400,
+                  verticalSpace(20),
+                  Text(
+                    'Airtime Purchased Successfully',
+                    style: AppTextStyles.font16.copyWith(
+                      color: AppColors.mainTextColor,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-                Text(
-                  '$number',
-                  style: AppTextStyles.font14.copyWith(
-                    color: AppColors.textColor,
-                    fontWeight: FontWeight.w700,
+                  verticalSpace(12),
+                  Text(
+                    'Airtime of N${amount} has been successfully sent to $number',
+                    style: AppTextStyles.font14.copyWith(
+                      color: AppColors.textColor,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
-                ),
-                verticalSpace(84),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      height: 48.h,
-                      width: 155.w,
-                      child: ButtonWidget(
-                        text: 'Continue',
-                        onTap: () async {
-                          await reloadData.reloadUserData();
+                  verticalSpace(84),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        height: 48.h,
+                        width: 155.w,
+                        child: ButtonWidget(
+                          text: 'Continue',
+                          onTap: () async {
+                            await reloadData.reloadUserData();
 
-                          nextScreen(context, DashBoardScreen());
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      height: 48.h,
-                      width: 155.w,
-                      child: ButtonWidget(
-                        color: AppColors.whiteColor,
-                        border: Border.all(
-                          color: AppColors.primaryColor,
+
+                            nextScreen(context, DashBoardScreen());
+                          },
                         ),
-                        text: 'Save beneficiary',
-                        textColor: AppColors.primaryColor,
-                        onTap: () => nextScreen(
-                            context,
-                            SaveBeneficiaryScreen(
-                              phoneNumber: number,
-                            )),
                       ),
-                    ),
-                  ],
-                )
-              ],
-            ),
-          )),
+                      SizedBox(
+                        height: 48.h,
+                        width: 155.w,
+                        child: ButtonWidget(
+                          color: AppColors.whiteColor,
+                          border: Border.all(
+                            color: AppColors.primaryColor,
+                          ),
+                          text: 'Save beneficiary',
+                          textColor: AppColors.primaryColor,
+                          onTap: () => nextScreen(
+                              context,
+                              SaveBeneficiaryScreen(
+                                phoneNumber: number,
+                              )),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            )),
+          ),
         ),
       );
     });

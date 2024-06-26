@@ -53,7 +53,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                             ),
                           ),
                           horizontalSpace(87),
-                           Text(
+                          Text(
                             'Delete Account',
                             style: AppTextStyles.font18,
                           )
@@ -142,7 +142,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                               );
                             }),
                       ),
-                      verticalSpace(440),
+                      verticalSpace(400),
                       ButtonWidget(
                         text: 'Delete Account',
                         color: Colors.red,
@@ -150,94 +150,110 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                           showDialog(
                               context: context,
                               builder: (context) {
-                                return AlertDialog(
-                                  contentPadding: EdgeInsets.zero,
-                                  content: Container(
-                                    alignment: Alignment.center,
-                                    height: 290.h,
-                                    width: MediaQuery.of(context).size.width,
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 19, vertical: 14),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      color: AppColors.whiteColor,
-                                    ),
-                                    child: Column(children: [
-                                      Align(
-                                        alignment: Alignment.topRight,
-                                        child: GestureDetector(
-                                          onTap: () => Navigator.pop(context),
-                                          child: SizedBox(
-                                              height: 24,
-                                              width: 24,
-                                              child: Image.asset(
-                                                'assets/icons/cancel_icon.png',
-                                              )),
+                                return Builder(builder: (context) {
+                                  return StatefulBuilder(
+                                      builder: (context, setState) {
+                                    return AlertDialog(
+                                      contentPadding: EdgeInsets.zero,
+                                      content: Container(
+                                        alignment: Alignment.center,
+                                        height: 290.h,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 19, vertical: 14),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          color: AppColors.whiteColor,
                                         ),
-                                      ),
-                                      verticalSpace(19),
-                                      Text(
-                                        'Delete account confirmation',
-                                        style: AppTextStyles.font20.copyWith(
-                                            fontWeight: FontWeight.w400),
-                                      ),
-                                      verticalSpace(12),
-                                      Text(
-                                        'Are you sure you want to delete this account? Note that this action is irreversible and all your info will be wiped from our record',
-                                        style: AppTextStyles.font14.copyWith(
-                                            fontWeight: FontWeight.w400,
-                                            color: const Color(0xff333333)),
-                                        textAlign: TextAlign.justify,
-                                      ),
-                                      verticalSpace(37),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          SizedBox(
-                                            height: 48.h,
-                                            width: 130.w,
-                                            child: ButtonWidget(
-                                              text: 'Cancel',
-                                              color: const Color(0xffEEEFEF),
-                                              textColor: AppColors.primaryColor,
+                                        child: Column(children: [
+                                          Align(
+                                            alignment: Alignment.topRight,
+                                            child: GestureDetector(
                                               onTap: () =>
                                                   Navigator.pop(context),
+                                              child: SizedBox(
+                                                  height: 24,
+                                                  width: 24,
+                                                  child: Image.asset(
+                                                    'assets/icons/cancel_icon.png',
+                                                  )),
                                             ),
                                           ),
-                                          SizedBox(
-                                            height: 48.h,
-                                            width: 130.w,
-                                            child: ButtonWidget(
-                                              text: 'Confirm',
-                                              onTap: () async {
-                                                Navigator.pop(context);
-                                                await deleteAcct
-                                                    .deleteAccount();
-                                                if (deleteAcct.status ==
-                                                        false &&
-                                                    context.mounted) {
-                                                  showMessage(context,
-                                                      deleteAcct.message);
-                                                  return;
-                                                }
-
-                                                if (deleteAcct.status == true &&
-                                                    context.mounted) {
-                                                  showMessage(context, 
-                                                      deleteAcct.message);
-
-                                                  nextScreen(context, 
-                                                      const SignUpScreen());
-                                                }
-                                              },
-                                            ),
+                                          verticalSpace(19),
+                                          Text(
+                                            'Delete account confirmation',
+                                            style: AppTextStyles.font20
+                                                .copyWith(
+                                                    fontWeight:
+                                                        FontWeight.w400),
                                           ),
-                                        ],
-                                      )
-                                    ]),
-                                  ),
-                                );
+                                          verticalSpace(12),
+                                          Text(
+                                            'Are you sure you want to delete this account? Note that this action is irreversible and all your info will be wiped from our record',
+                                            style: AppTextStyles.font14
+                                                .copyWith(
+                                                    fontWeight: FontWeight.w400,
+                                                    color: const Color(
+                                                        0xff333333)),
+                                            textAlign: TextAlign.justify,
+                                          ),
+                                          verticalSpace(37),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              SizedBox(
+                                                height: 48.h,
+                                                width: 130.w,
+                                                child: ButtonWidget(
+                                                  text: 'Cancel',
+                                                  color:
+                                                      const Color(0xffEEEFEF),
+                                                  textColor:
+                                                      AppColors.primaryColor,
+                                                  onTap: () =>
+                                                      Navigator.pop(context),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 48.h,
+                                                width: 130.w,
+                                                child: ButtonWidget(
+                                                  text: 'Confirm',
+                                                  onTap: () async {
+                                                    // Navigator.pop(context);
+                                                    await deleteAcct
+                                                        .deleteAccount();
+                                                    if (deleteAcct.status ==
+                                                            false &&
+                                                        context.mounted) {
+                                                      showMessage(context,
+                                                          deleteAcct.message,
+                                                          isError: true);
+                                                      return;
+                                                    }
+
+                                                    if (deleteAcct.status ==
+                                                            true &&
+                                                        context.mounted) {
+                                                      showMessage(context,
+                                                          deleteAcct.message);
+
+                                                      nextScreen(context,
+                                                          const SignUpScreen());
+                                                    }
+                                                  },
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        ]),
+                                      ),
+                                    );
+                                  });
+                                });
                               });
                         },
                       )

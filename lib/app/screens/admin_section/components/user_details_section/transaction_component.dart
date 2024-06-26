@@ -33,7 +33,7 @@ class TransactionsComponent extends StatelessWidget {
                         ? Colors.green
                         : data.status == 'pending'
                             ? Color(0xffA6B309)
-                            : Colors.red),
+                            : Colors.red, transactionNumber: '${data.number}',),
                 verticalSpace(8),
                 Divider(
                   color: AppColors.blackColor.withOpacity(0.1),

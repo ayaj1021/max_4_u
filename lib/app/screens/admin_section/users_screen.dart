@@ -8,10 +8,8 @@ import 'package:max_4_u/app/screens/admin_section/components/consumer_component.
 import 'package:max_4_u/app/screens/admin_section/components/vendor_component.dart';
 import 'package:max_4_u/app/provider/admin_section/get_all_app_users_provider.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
-
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
-import 'package:max_4_u/app/widgets/search_input_widget.dart';
 import 'package:max_4_u/app/widgets/user_stats_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -157,15 +155,15 @@ class _UserScreenState extends State<UserScreen>
                               ],
                             ),
                           ),
-                    verticalSpace(16),
-                    SearchInputWidget(
-                      controller: _searchController,
-                      hintText: 'Search for a user',
-                      prefixIcon: Icon(Icons.search),
-                      onChanged: (value) {
-                        runFilter(value.toString());
-                      },
-                    ),
+                    // verticalSpace(16),
+                    // SearchInputWidget(
+                    //   controller: _searchController,
+                    //   hintText: 'Search for a user',
+                    //   prefixIcon: Icon(Icons.search),
+                    //   onChanged: (value) {
+                    //     runFilter(value.toString());
+                    //   },
+                    // ),
                     verticalSpace(20),
                    usersList.isEmpty
                          ?

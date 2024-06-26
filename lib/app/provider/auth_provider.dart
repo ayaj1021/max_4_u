@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/abstract_class/auth_abstract_class.dart';
 import 'package:max_4_u/app/database/database.dart';
@@ -59,20 +58,21 @@ class AuthProviderImpl extends ChangeNotifier
         // message: _message,
       );
 
-      _status = response['data']['status'];
       print('$_status');
+      _status = response['data']['status'];
 
       if (_status == true) {
+        _status = response['data']['status'];
         _message = response['data']['message'];
 
         state = ViewState.Success;
 
         notifyListeners();
       } else {
-        _message = response['error_data']['mobile_number'];
+        _message = response['data']['message'];
         _status = response['data']['status'];
         state = ViewState.Error;
-        //  _message = response.data['data']['message'];
+        _message = response['data']['error_data']['mobile_number'];
         notifyListeners();
       }
     } catch (e) {
@@ -172,7 +172,7 @@ class AuthProviderImpl extends ChangeNotifier
       );
 
       _status = response['data']['status'];
-        _message = response['data']['message'];
+      _message = response['data']['message'];
       if (_status == true) {
         _status = response['data']['status'];
         _message = response['data']['message'];
@@ -181,6 +181,9 @@ class AuthProviderImpl extends ChangeNotifier
         resDataData =
             ResponseDataData.fromJson(response['data']['response_data']);
         _userLevel = resDataData.userData![0].level!;
+
+        await SecureStorage().saveUserLevel(_userLevel);
+
         updateNumber(_userLevel);
 
         return resDataData;
@@ -196,7 +199,7 @@ class AuthProviderImpl extends ChangeNotifier
     } catch (e) {
       state = ViewState.Error;
       _status = false;
-    
+
       notifyListeners();
       //  return ExceptionHandler.handleError(e);
     }
@@ -214,6 +217,7 @@ class AuthProviderImpl extends ChangeNotifier
       "login_id": email,
       "password": password,
     };
+    debugPrint(body.toString());
 
     await SecureStorage().saveUserPassword(password);
     try {

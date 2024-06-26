@@ -16,12 +16,21 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   String userId = '';
-
+  String level = '';
   getNames() async {
     final id = await SecureStorage().getEncryptedID();
     print('this is user id: $id');
     setState(() {
       userId = id;
+    });
+  }
+
+  getUserLevel() async {
+    final userLevel = await SecureStorage().getUserLevel();
+    print('this is user level: $userLevel');
+
+    setState(() {
+      level = userLevel;
     });
   }
 
@@ -33,13 +42,14 @@ class _SplashScreenState extends State<SplashScreen> {
     // });
 
     getNames();
+    getUserLevel();
     // final id = Provider.of<AuthProviderImpl>(context, listen: false).resDataData.userData[0];
     Timer(const Duration(seconds: 3), () async {
-      // if (userId.isNotEmpty) {
+      // if (userId.isNotEmpty && level.isNotEmpty) {
       //   nextScreenReplace(context, DashBoardScreen());
       // } else {
-        nextScreenReplace(context, const OnboardScreen());
-     // }
+      nextScreenReplace(context, const OnboardScreen());
+      //}
     });
     super.initState();
   }

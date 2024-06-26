@@ -1,4 +1,3 @@
-
 class UserData {
   String? uniqueId;
   String? firstName;
@@ -32,7 +31,8 @@ class UserData {
       level: json['level'],
       status: json['status'],
       emailStatus: json['email_status'],
-      regDate: json['reg_date'] != null ? DateTime.parse(json['reg_date']) : null,
+      regDate:
+          json['reg_date'] != null ? DateTime.parse(json['reg_date']) : null,
     );
   }
 
@@ -93,25 +93,49 @@ class UserSettingsData {
   }
 }
 
+// class BeneficiaryData {
+//   String? phone;
+
+//   BeneficiaryData({
+//     this.phone,
+//   });
+
+//   factory BeneficiaryData.fromJson(Map<String, dynamic> json) {
+//     return BeneficiaryData(
+//       phone: json['phone'],
+//     );
+//   }
+
+//   Map<String, dynamic> toJson() {
+//     return {
+//       'phone': phone,
+//     };
+//   }
+// }
+
 class BeneficiaryData {
-  String? phone;
+  final String phone;
+  final String name;
 
-  BeneficiaryData({
-    this.phone,
-  });
+  BeneficiaryData({required this.phone, required this.name});
 
+  // Factory constructor to create a Beneficiary object from a JSON map
   factory BeneficiaryData.fromJson(Map<String, dynamic> json) {
     return BeneficiaryData(
       phone: json['phone'],
+      name: json['name'],
     );
   }
 
+  // Method to convert a Beneficiary object to a JSON map
   Map<String, dynamic> toJson() {
     return {
       'phone': phone,
+      'name': name,
     };
   }
 }
+
 class Service {
   String? category;
 
@@ -228,7 +252,8 @@ class Transaction {
       discount: json['discount'],
       commissionEarn: json['commission_earn'],
       status: json['status'],
-      regDate: json['reg_date'] != null ? DateTime.parse(json['reg_date']) : null,
+      regDate:
+          json['reg_date'] != null ? DateTime.parse(json['reg_date']) : null,
     );
   }
 
@@ -285,22 +310,53 @@ class TransactionHistory {
   }
 }
 
+// class AutoRenewal {
+//   List<dynamic>? data;
+//   int? currentPage;
+//   int? totalData;
+//   int? totalResult;
+
+//   AutoRenewal({
+//     this.data,
+//     this.currentPage,
+//     this.totalData,
+//     this.totalResult,
+//   });
+
+//   factory AutoRenewal.fromJson(Map<String, dynamic> json) {
+//     return AutoRenewal(
+//       data: json['data'],
+//       currentPage: json['current_page'],
+//       totalData: json['total_data'],
+//       totalResult: json['total_result'],
+//     );
+//   }
+
+//   Map<String, dynamic> toJson() {
+//     return {
+//       'data': data,
+//       'current_page': currentPage,
+//       'total_data': totalData,
+//       'total_result': totalResult,
+//     };
+//   }
+// }
+
 class AutoRenewal {
-  List<dynamic>? data;
+  List<AutoRenewalData>? data;
   int? currentPage;
   int? totalData;
   int? totalResult;
 
-  AutoRenewal({
-    this.data,
-    this.currentPage,
-    this.totalData,
-    this.totalResult,
-  });
+  AutoRenewal({this.data, this.currentPage, this.totalData, this.totalResult});
 
   factory AutoRenewal.fromJson(Map<String, dynamic> json) {
     return AutoRenewal(
-      data: json['data'],
+      data: json['data'] != null
+          ? (json['data'] as List)
+              .map((item) => AutoRenewalData.fromJson(item))
+              .toList()
+          : null,
       currentPage: json['current_page'],
       totalData: json['total_data'],
       totalResult: json['total_result'],
@@ -309,10 +365,85 @@ class AutoRenewal {
 
   Map<String, dynamic> toJson() {
     return {
-      'data': data,
+      'data': data?.map((item) => item.toJson()).toList(),
       'current_page': currentPage,
       'total_data': totalData,
       'total_result': totalResult,
+    };
+  }
+}
+
+class AutoRenewalData {
+  int? id;
+  String? number;
+  String? productCode;
+  String? category;
+  String? serviceName;
+  String? amount;
+  String? subInterval;
+  String? regDate;
+  String? nextPurchase;
+  int? userId;
+  int? vendorId;
+  int? setBy;
+  String? uniqueId;
+  String? lastName;
+  String? firstName;
+
+  AutoRenewalData(
+      {this.id,
+      this.number,
+      this.productCode,
+      this.category,
+      this.serviceName,
+      this.amount,
+      this.subInterval,
+      this.regDate,
+      this.nextPurchase,
+      this.userId,
+      this.vendorId,
+      this.setBy,
+      this.uniqueId,
+      this.lastName,
+      this.firstName});
+
+  factory AutoRenewalData.fromJson(Map<String, dynamic> json) {
+    return AutoRenewalData(
+      id: json['id'],
+      number: json['number'],
+      productCode: json['product_code'],
+      category: json['category'],
+      serviceName: json['service_name'],
+      amount: json['amount'],
+      subInterval: json['sub_interval'],
+      regDate: json['reg_date'],
+      nextPurchase: json['next_purchase'],
+      userId: json['user_id'],
+      vendorId: json['vendor_id'],
+      setBy: json['set_by'],
+      uniqueId: json['unique_id'],
+      lastName: json['last_name'],
+      firstName: json['first_name'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'number': number,
+      'product_code': productCode,
+      'category': category,
+      'service_name': serviceName,
+      'amount': amount,
+      'sub_interval': subInterval,
+      'reg_date': regDate,
+      'next_purchase': nextPurchase,
+      'user_id': userId,
+      'vendor_id': vendorId,
+      'set_by': setBy,
+      'unique_id': uniqueId,
+      'last_name': lastName,
+      'first_name': firstName,
     };
   }
 }
@@ -399,15 +530,23 @@ class LoadDataData {
 
     return LoadDataData(
       userData: userDataList,
-      userAccount: json['user_account'] != null ? UserAccount.fromJson(json['user_account']) : null,
+      userAccount: json['user_account'] != null
+          ? UserAccount.fromJson(json['user_account'])
+          : null,
       userSettingsData: userSettingsDataList,
       beneficiaryData: beneficiaryDataList,
       services: servicesList,
       products: productsList,
-      transactionHistory: json['transaction_history'] != null ? TransactionHistory.fromJson(json['transaction_history']) : null,
-      autoRenewal: json['auto_renewal'] != null ? AutoRenewal.fromJson(json['auto_renewal']) : null,
+      transactionHistory: json['transaction_history'] != null
+          ? TransactionHistory.fromJson(json['transaction_history'])
+          : null,
+      autoRenewal: json['auto_renewal'] != null
+          ? AutoRenewal.fromJson(json['auto_renewal'])
+          : null,
       myVendor: json['my_vendor'],
-      verificationStatus: json['verification_status'] != null ? VerificationStatus.fromJson(json['verification_status']) : null,
+      verificationStatus: json['verification_status'] != null
+          ? VerificationStatus.fromJson(json['verification_status'])
+          : null,
       status: json['status'],
     );
   }
@@ -416,8 +555,10 @@ class LoadDataData {
     return {
       'user_data': userData?.map((user) => user.toJson()).toList(),
       'user_account': userAccount?.toJson(),
-      'user_settings_data': userSettingsData?.map((setting) => setting.toJson()).toList(),
-      'beneficiary_data': beneficiaryData?.map((beneficiary) => beneficiary.toJson()).toList(),
+      'user_settings_data':
+          userSettingsData?.map((setting) => setting.toJson()).toList(),
+      'beneficiary_data':
+          beneficiaryData?.map((beneficiary) => beneficiary.toJson()).toList(),
       'services': services?.map((service) => service.toJson()).toList(),
       'products': products?.map((product) => product.toJson()).toList(),
       'transaction_history': transactionHistory?.toJson(),
@@ -428,5 +569,3 @@ class LoadDataData {
     };
   }
 }
-
-

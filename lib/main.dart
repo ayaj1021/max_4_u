@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/provider/activate_auto_renewal_provider.dart';
@@ -7,6 +10,7 @@ import 'package:max_4_u/app/provider/admin_section/deny_vendor_request_provider.
 import 'package:max_4_u/app/provider/admin_section/get_all_app_users_provider.dart';
 import 'package:max_4_u/app/provider/admin_section/get_all_vendors_requests_provider.dart';
 import 'package:max_4_u/app/provider/auth_provider.dart';
+import 'package:max_4_u/app/provider/cancel_auto_renewal_provider.dart';
 import 'package:max_4_u/app/provider/faq_provider.dart';
 import 'package:max_4_u/app/provider/super_admin/audit_log_provider.dart';
 import 'package:max_4_u/app/provider/super_admin/deactivate_user_provider.dart';
@@ -32,12 +36,87 @@ import 'package:max_4_u/app/screens/splash/splash_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:upgrader/upgrader.dart';
+
+void main() async{
+  // WidgetsFlutterBinding.ensureInitialized();
+  // await Firebase.initializeApp();
+  // await FirebaseApi().initNotification();
+
+  // final fcmToken = await FirebaseMessaging.instance.getToken();
+  // print(fcmToken);
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  String deviceName = '';
+  String deviceModel = '';
+  String os = '';
+  String location = '';
+  String ipAddress = '';
+
+  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+  AndroidDeviceInfo? androidDeviceInfo;
+  Future<AndroidDeviceInfo> getInfo() async {
+    return await deviceInfo.androidInfo;
+  }
+
+ 
+
+  @override
+  void initState() {
+    super.initState();
+    _getDeviceInfo();
+  // _getLocation();
+    _getIPAddress();
+
+
+     debugPrint(ipAddress);
+     debugPrint(deviceModel);
+     debugPrint(os);
+     debugPrint(location);
+     debugPrint(ipAddress);
+  }
+
+  Future<void> _getDeviceInfo() async {
+    final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+    if (Platform.isAndroid) {
+      final androidInfo = await deviceInfoPlugin.androidInfo;
+      setState(() {
+        deviceName = androidInfo.device;
+        deviceModel = androidInfo.model;
+        os = 'Android ${androidInfo.version.release}';
+      });
+    } else if (Platform.isIOS) {
+      final iosInfo = await deviceInfoPlugin.iosInfo;
+      setState(() {
+        deviceName = iosInfo.name;
+        deviceModel = iosInfo.model;
+        os = 'iOS ${iosInfo.systemVersion}';
+      });
+    }
+  }
+
+
+  Future<void> _getIPAddress() async {
+    final dio = Dio();
+    final response = await dio.get('https://api.ipify.org?format=json');
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = (response.data);
+      setState(() {
+        ipAddress = data['ip'];
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
@@ -53,6 +132,7 @@ class MyApp extends StatelessWidget {
               ChangeNotifierProvider(create: (_) => SetupPricesProvider()),
               ChangeNotifierProvider(create: (_) => GenerateAccountProvider()),
               ChangeNotifierProvider(create: (_) => RemoveAdminProvider()),
+              ChangeNotifierProvider(create: (_) => CancelAutoRenewalProvider()),
               ChangeNotifierProvider(create: (_) => FundAccountProvider()),
               ChangeNotifierProvider(create: (_) => DeactivateUserProvider()),
               ChangeNotifierProvider(create: (_) => MakeAdminProvider()),
@@ -68,6 +148,7 @@ class MyApp extends StatelessWidget {
               ChangeNotifierProvider(
                   create: (_) => ActivateAutoRenewalProvider()),
               ChangeNotifierProvider(create: (_) => GetAllCustomersProvider()),
+           
               ChangeNotifierProvider(create: (_) => GetNotificationProvider()),
               ChangeNotifierProvider(create: (_) => AddCustomerProvider()),
               ChangeNotifierProvider(create: (_) => BecomeAVendorProvider()),
@@ -86,7 +167,7 @@ class MyApp extends StatelessWidget {
               theme: ThemeData(
                 scaffoldBackgroundColor: AppColors.scaffoldBgColor2,
               ),
-              home: const SplashScreen(),
+              home: UpgradeAlert(child: const SplashScreen()),
             ),
           );
         });

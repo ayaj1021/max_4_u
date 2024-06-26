@@ -9,7 +9,7 @@ import 'package:max_4_u/app/provider/super_admin/remove_admin_provider.dart';
 import 'package:max_4_u/app/screens/admin_section/components/user_details_section/details_component.dart';
 import 'package:max_4_u/app/screens/admin_section/components/user_details_section/transaction_component.dart';
 import 'package:max_4_u/app/screens/admin_section/users_screen.dart';
-import 'package:max_4_u/app/screens/vendor_sections/customers_section/auto_renewal_screen.dart';
+import 'package:max_4_u/app/screens/auto_renewal/auto_renewal_screen.dart';
 import 'package:max_4_u/app/screens/dashboard/dashboard_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';

@@ -2,19 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:max_4_u/app/enums/month_dropdown_enum.dart';
-import 'package:max_4_u/app/model/load_data_model.dart';
 
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
-import 'package:max_4_u/app/screens/vendor_sections/customers_section/auto_renewal_screen.dart';
+import 'package:max_4_u/app/screens/auto_renewal/auto_renewal_screen.dart';
 import 'package:max_4_u/app/screens/home/component/transaction_history_component.dart';
 import 'package:max_4_u/app/screens/transaction/transaction_detail_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 
 import 'package:max_4_u/app/utils/screen_navigator.dart';
+import 'package:max_4_u/app/utils/text_capitalization_extension.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
 import 'package:max_4_u/app/widgets/button_widget.dart';
-import 'package:max_4_u/app/widgets/text_input_field.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -101,7 +100,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
       builder: (context, reloadData, _) {
         final data = reloadData.loadData.transactionHistory!.data!;
 
-        List<Transaction> searchTransaction = [...data];
+        //  List<Transaction> searchTransaction = [...data];
         return Scaffold(
           backgroundColor: AppColors.scaffoldBgColor2,
           body: SafeArea(
@@ -158,8 +157,9 @@ class _TransactionScreenState extends State<TransactionScreen> {
                     //     ],
                     //   )
                     //  :
-                 //   reloadData.loadData.transactionHistory == null
-                   searchTransaction == null
+                    //   reloadData.loadData.transactionHistory == null
+                    // ignore: unnecessary_null_comparison
+                    data == null
                         ? Center(
                             child: Text(
                               'No data',
@@ -168,7 +168,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                   fontWeight: FontWeight.w400),
                             ),
                           )
-                        : searchTransaction.isEmpty
+                        : data.isEmpty
                             //reloadData.loadData.transactionHistory!.data!.isEmpty
                             ? Center(
                                 child: Column(
@@ -192,42 +192,42 @@ class _TransactionScreenState extends State<TransactionScreen> {
                               )
                             : Column(
                                 children: [
-                                  TextInputField(
-                                      controller: _searchController,
-                                      hintText: 'Search in transactions',
-                                      prefixIcon: const Icon(
-                                        Icons.search,
-                                        color: Color(0xff4F4F4F),
-                                      ),
-                                      onChanged: (value) {
-                                        print(
-                                            'this is data $searchTransaction');
-                                        if (value != null && value.isNotEmpty) {
-                                          setState(() {
-                                            searchTransaction.clear();
-                                            searchTransaction = [];
-                                          });
+                                  // TextInputField(
+                                  //     controller: _searchController,
+                                  //     hintText: 'Search in transactions',
+                                  //     prefixIcon: const Icon(
+                                  //       Icons.search,
+                                  //       color: Color(0xff4F4F4F),
+                                  //     ),
+                                  //     onChanged: (value) {
+                                  //       print(
+                                  //           'this is data $searchTransaction');
+                                  //       if (value != null && value.isNotEmpty) {
+                                  //         setState(() {
+                                  //           searchTransaction.clear();
+                                  //           searchTransaction = [];
+                                  //         });
 
-                                          data.forEach((element) {
-                                            if (element.purchaseType!
-                                                .contains(value)) {
-                                              setState(() {
-                                                searchTransaction.add(element);
-                                              });
-                                            }
+                                  //         data.forEach((element) {
+                                  //           if (element.purchaseType!
+                                  //               .contains(value)) {
+                                  //             setState(() {
+                                  //               searchTransaction.add(element);
+                                  //             });
+                                  //           }
 
-                                            // else {
-                                            //   setState(() {
-                                            //     searchTransaction.addAll(data);
-                                            //   });
-                                            // }
-                                          });
-                                        } else {
-                                          setState(() {
-                                            searchTransaction.addAll(data);
-                                          });
-                                        }
-                                      }),
+                                  //           // else {
+                                  //           //   setState(() {
+                                  //           //     searchTransaction.addAll(data);
+                                  //           //   });
+                                  //           // }
+                                  //         });
+                                  //       } else {
+                                  //         setState(() {
+                                  //           searchTransaction.addAll(data);
+                                  //         });
+                                  //       }
+                                  //     }),
 
                                   // element.purchaseType
                                   //       ?.contains(value!);
@@ -288,7 +288,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                       // searchList.length,
                                       // reloadData.loadData.transactionHistory!
                                       //     .data!.length,
-                                      searchTransaction.length,
+                                      data.length,
                                       (index) {
                                         // final data =    searchList[index].transactionHistory!.data![index];
 
@@ -297,42 +297,41 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                               context,
                                               TransactionDetailsScreen(
                                                 amount:
-                                                    '${searchTransaction[index].amountPaid}',
+                                                    '${data[index].amountPaid}',
                                                 referenceId:
-                                                    '${searchTransaction[index].referenceId}',
-                                                status:
-                                                    '${searchTransaction[index].status}',
+                                                    '${data[index].referenceId}',
+                                                status: '${data[index].status}',
                                                 date:
-                                                    '${dateFormat.format(searchTransaction[index].regDate as DateTime)}',
-                                                type:
-                                                    '${searchTransaction[index].type}',
+                                                    '${dateFormat.format(data[index].regDate as DateTime)}',
+                                                type: '${data[index].type}',
+                                                number: '${data[index].number}',
                                               )),
                                           child: Column(
                                             children: [
                                               TransactionSection(
-                                                  transactionIcon: Icons.money,
-                                                  transactionType:
-                                                      '${searchTransaction[index].subType}',
-                                                  transactionDate:
-                                                      '${dateFormat.format(searchTransaction[index].regDate as DateTime)}',
-                                                  transactionAmount:
-                                                      'N${searchTransaction[index].amountPaid}',
-                                                  transactionStatus:
-                                                      '${searchTransaction[index].status}',
-                                                  transactionColor:
-                                                      Color(0xffD6DDFE),
-                                                  transactionStatusColor:
-                                                      searchTransaction[index]
-                                                                  .status ==
-                                                              'success'
-                                                          ? Colors.green
-                                                          : searchTransaction[
-                                                                          index]
-                                                                      .status ==
-                                                                  'pending'
-                                                              ? Color(
-                                                                  0xffA6B309)
-                                                              : Colors.red),
+                                                transactionIcon: Icons.money,
+                                                transactionType:
+                                                    '${data[index].subType}'
+                                                        .capitalize(),
+                                                transactionDate:
+                                                    '${dateFormat.format(data[index].regDate as DateTime)}',
+                                                transactionAmount:
+                                                    'N${data[index].amountPaid}',
+                                                transactionStatus:
+                                                    '${data[index].status}',
+                                                transactionColor:
+                                                    Color(0xffD6DDFE),
+                                                transactionStatusColor:
+                                                    data[index].status ==
+                                                            'success'
+                                                        ? Colors.green
+                                                        : data[index].status ==
+                                                                'pending'
+                                                            ? Color(0xffA6B309)
+                                                            : Colors.red,
+                                                transactionNumber:
+                                                    '${data[index].number ?? '${data[index].referenceId!.substring(data[index].referenceId!.length - 5)}'}',
+                                              ),
                                               verticalSpace(8),
                                               Divider(
                                                 color: AppColors.blackColor

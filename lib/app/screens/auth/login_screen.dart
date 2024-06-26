@@ -127,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           password: _passwordController.text.trim());
 
                       if (authProv.status == false && context.mounted) {
-                        showMessage(context, authProv.message);
+                        showMessage(context, authProv.message, isError: true);
                         return;
                       }
 
@@ -137,7 +137,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       if (authProv.status == true && context.mounted) {
                         showMessage(context, authProv.message);
                         await reloadData.reloadUserData();
-                        nextScreen(context, DashBoardScreen());
+                        Future.delayed(Duration(seconds: 2), () {
+                          nextScreen(context, DashBoardScreen());
+                        });
+                       // nextScreen(context, DashBoardScreen());
                       }
                       final firstName = EncryptData.decryptAES(
                           '${authProv.resDataData.userData![0].firstName}');
@@ -174,7 +177,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                       await SecureStorage().saveUserEncryptedId(
                           '${authProv.resDataData.userData![0].uniqueId}');
-                    //  await SecureStorage().saveUserEncryptedId(uniqueId);
+                      //  await SecureStorage().saveUserEncryptedId(uniqueId);
                       await SecureStorage()
                           .saveUserTransactionHistory(transactionHistory!);
                       await SecureStorage().saveUserBeneficiary(beneficiary!);
@@ -192,26 +195,26 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                     text: 'Log in',
                   ),
-                  verticalSpace(20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      GestureDetector(
-                        onTap: () async => await _authenticate(),
-                        child: const Icon(
-                          Icons.fingerprint_outlined,
-                          color: AppColors.primaryColor,
-                        ),
-                      ),
-                      horizontalSpace(8),
-                      Text(
-                        'Click to login with fingerprint',
-                        style: AppTextStyles.font14.copyWith(
-                          color: AppColors.primaryColor,
-                        ),
-                      )
-                    ],
-                  ),
+                  // verticalSpace(20),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   children: [
+                  //     GestureDetector(
+                  //       onTap: () async => await _authenticate(),
+                  //       child: const Icon(
+                  //         Icons.fingerprint_outlined,
+                  //         color: AppColors.primaryColor,
+                  //       ),
+                  //     ),
+                  //     horizontalSpace(8),
+                  //     Text(
+                  //       'Click to login with fingerprint',
+                  //       style: AppTextStyles.font14.copyWith(
+                  //         color: AppColors.primaryColor,
+                  //       ),
+                  //     )
+                  //   ],
+                  // ),
                   verticalSpace(260),
                   Center(
                     child: RichText(
