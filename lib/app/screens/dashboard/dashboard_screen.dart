@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:max_4_u/app/provider/auth_provider.dart';
 import 'package:max_4_u/app/screens/admin_section/requests_screen.dart';
 import 'package:max_4_u/app/screens/admin_section/users_screen.dart';
-import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/screens/vendor_sections/customers_section/customer_screen.dart';
 import 'package:max_4_u/app/screens/home/home_screen.dart';
@@ -20,13 +19,24 @@ class DashBoardScreen extends StatefulWidget {
 }
 
 class _DashBoardScreenState extends State<DashBoardScreen> {
+  // String userType = '';
+
+  // getUserType() async {
+  //   final userLevel = await SecureStorage().getUserLevel();
+  //   print('this is dashboard user level: $userLevel');
+  //   setState(() {
+  //     userType = userLevel;
+  //   });
+  //  // return userLevel;
+ // }
+
   @override
   void initState() {
-    getUserType();
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   Provider.of<ReloadUserDataProvider>(context, listen: false)
-    //       .reloadUserData();
-    // });
+   // getUserType();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ReloadUserDataProvider>(context, listen: false)
+          .reloadUserData();
+    });
 
     // WidgetsBinding.instance.addPostFrameCallback((_) {
     //   final authProvider =
@@ -35,16 +45,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     // });
 
     super.initState();
-  }
-
-  String? userType;
-
-  getUserType() async {
-    final user = await SecureStorage().getUserType();
-    setState(() {
-      userType = user;
-    });
-    return user;
   }
 
   final userPages = [
@@ -130,7 +130,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       builder: (context, authProv, reloadData, _) {
         return Scaffold(
           body: _getBody(
-            userLevel: authProv.userLevel,
+           // userLevel: userType,
+             userLevel: authProv.userLevel,
             selectedIndex: _selectedIndex,
           ),
           //pages[_selectedIndex],
@@ -140,6 +141,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
             currentIndex: _selectedIndex,
             onTap: changePage,
             items: _getBottomNavBarItems(authProv.userLevel),
+            //items: _getBottomNavBarItems(userType),
           ),
         );
       },

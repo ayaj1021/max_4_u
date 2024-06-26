@@ -19,7 +19,6 @@ class AtmFundWallet extends StatefulWidget {
 }
 
 class _AtmFundWalletState extends State<AtmFundWallet> {
-  // PaymentPlatform _selectedPayment = PaymentPlatform.Flutterwave;
   final _amountController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -43,7 +42,7 @@ class _AtmFundWalletState extends State<AtmFundWallet> {
                         ),
                       ),
                       horizontalSpace(50),
-                       Text(
+                      Text(
                         'ATM Card (Fund Wallet)',
                         style: AppTextStyles.font18,
                       )
@@ -143,17 +142,3 @@ class _AtmFundWalletState extends State<AtmFundWallet> {
     );
   }
 }
-
-// String _paymentToString(PaymentPlatform paymentPlatform) {
-//   switch (paymentPlatform) {
-//     case PaymentPlatform.Flutterwave:
-//       return 'Flutterwave';
-//     case PaymentPlatform.Paypal:
-//       return 'Paypal';
-//     case PaymentPlatform.Quickteller:
-//       return 'Quickteller';
-
-//     default:
-//       return '';
-//   }
-// }

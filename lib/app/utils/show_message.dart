@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:toastification/toastification.dart';
 
@@ -6,10 +7,12 @@ import 'package:toastification/toastification.dart';
 void showMessage(BuildContext context, String message, {bool isError = false}) {
   toastification.show(
       context: context,
-     // backgroundColor: isError == true ? Colors.red : Colors.green,
+      backgroundColor: isError == true ? Colors.red : Colors.green,
       title: Text(
         message,
-        style: AppTextStyles.font18,
+        style: AppTextStyles.font18.copyWith(
+          color: AppColors.whiteColor
+        ),
       ),
       showProgressBar: true,
       autoCloseDuration: const Duration(seconds: 3),

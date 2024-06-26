@@ -58,16 +58,19 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     labelText: 'Old password',
                     suffixIcon: Icons.visibility_outlined,
                   ),
+                  verticalSpace(20),
                   TextInputField(
                     controller: _newPasswordController,
                     labelText: 'New password',
                     suffixIcon: Icons.visibility_outlined,
                   ),
+                  verticalSpace(20),
                   TextInputField(
                     controller: _confirmNewPasswordController,
                     labelText: 'Confirm new password',
                     suffixIcon: Icons.visibility_outlined,
                   ),
+              
                   verticalSpace(34),
                   ButtonWidget(
                     text: 'Change password',
@@ -100,7 +103,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         showMessage(
                           context,
                           changePassword.message,
-                          // isError: true,
+                           isError: false,
                         );
 
                         await reloadData.reloadUserData();

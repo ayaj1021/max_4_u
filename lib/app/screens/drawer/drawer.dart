@@ -8,10 +8,12 @@ import 'package:max_4_u/app/screens/auth/login_screen.dart';
 import 'package:max_4_u/app/screens/profile/profile_screen.dart';
 import 'package:max_4_u/app/screens/settings/settings_screen.dart';
 import 'package:max_4_u/app/screens/support/support_screen.dart';
+import 'package:max_4_u/app/screens/auto_renewal/auto_renewal_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/screen_navigator.dart';
 import 'package:max_4_u/app/utils/show_message.dart';
+import 'package:max_4_u/app/utils/text_capitalization_extension.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
 import 'package:max_4_u/app/screens/vendor_sections/screens/become_vendor_screen.dart';
 import 'package:provider/provider.dart';
@@ -92,7 +94,7 @@ class _SideDrawerState extends State<SideDrawer> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '$firstName $lastName',
+                        '$firstName $lastName'.capitalize(),
                         style: AppTextStyles.font20
                             .copyWith(color: const Color(0xff333333)),
                       ),
@@ -115,6 +117,18 @@ class _SideDrawerState extends State<SideDrawer> {
                     child: Image.asset('assets/icons/profile_icon.png')),
                 title: Text(
                   'My Profile',
+                  style: AppTextStyles.font16
+                      .copyWith(fontWeight: FontWeight.w500),
+                ),
+              ),
+              ListTile(
+                onTap: () => nextScreen(context, AutoRenewalScreen()),
+                leading: SizedBox(
+                    height: 24,
+                    width: 24,
+                    child: Image.asset('assets/icons/auto_renew_icon.png')),
+                title: Text(
+                  'Auto Renewals',
                   style: AppTextStyles.font16
                       .copyWith(fontWeight: FontWeight.w500),
                 ),
@@ -143,7 +157,7 @@ class _SideDrawerState extends State<SideDrawer> {
                       .copyWith(fontWeight: FontWeight.w500),
                 ),
               ),
-              verticalSpace(342),
+              verticalSpace(300),
               Container(
                 height: 56.h,
                 width: 288.w,
@@ -227,14 +241,12 @@ class _SideDrawerState extends State<SideDrawer> {
                               child: Image.asset('assets/icons/user_icon.png'))
                           : authProv.userLevel == '5'
                               ? SizedBox.shrink()
-                              : userType == '1'?  Image.asset(
-                                   'assets/icons/vendor_white_icon.png'
-                  ): SizedBox.shrink()
-                  ),
+                              : userType == '1'
+                                  ? Image.asset(
+                                      'assets/icons/vendor_white_icon.png')
+                                  : SizedBox.shrink()),
                   title: Text(
-                    authProv.userLevel == '1'
-                        ? 'Become a vendor'
-                        : '',
+                    authProv.userLevel == '1' ? 'Become a vendor' : '',
                     style: AppTextStyles.font16.copyWith(
                       fontWeight: FontWeight.w500,
                       color: authProv.userLevel == '1'

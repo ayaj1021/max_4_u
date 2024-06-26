@@ -37,7 +37,7 @@ class _OnboardScreenState extends State<OnboardScreen> {
           )
         ]),
         Positioned(
-          bottom: 110,
+          bottom: 50,
           left: 20,
           child: SizedBox(
             width: 358.w,
@@ -60,7 +60,7 @@ class _OnboardScreenState extends State<OnboardScreen> {
                     ),
                   ),
                 ),
-                verticalSpace(68),
+                verticalSpace(50),
                 ButtonWidget(
                   text: 'Create an account',
                   onTap: () => nextScreen(context, const SignUpScreen()),

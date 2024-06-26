@@ -1,5 +1,7 @@
+import 'package:country_picker/country_picker.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/provider/auth_provider.dart';
 import 'package:max_4_u/app/provider/obscure_text_provider.dart';
@@ -12,7 +14,7 @@ import 'package:max_4_u/app/utils/screen_navigator.dart';
 import 'package:max_4_u/app/utils/show_message.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
 import 'package:max_4_u/app/widgets/button_widget.dart';
-import 'package:max_4_u/app/widgets/text_input_field.dart';
+
 import 'package:provider/provider.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -23,11 +25,32 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  final phoneController = TextEditingController();
+  final _phoneController = TextEditingController();
   @override
   void dispose() {
-    phoneController.dispose();
+    _phoneController.dispose();
     super.dispose();
+  }
+
+  Country country = CountryParser.parseCountryCode('NG');
+
+  void showPicker() {
+    showCountryPicker(
+        context: context,
+        countryListTheme: CountryListThemeData(
+            bottomSheetHeight: 600,
+            // backgroundColor: AppColors.primaryColor.withOpacity(0.8),
+            borderRadius: BorderRadius.circular(20),
+            inputDecoration: InputDecoration(
+              prefixIcon: Icon(Icons.search),
+              hintText: 'Select your country here',
+              border: InputBorder.none,
+            )),
+        onSelect: (country) {
+          setState(() {
+            this.country = country;
+          });
+        });
   }
 
   @override
@@ -45,47 +68,92 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                   Text(
+                  Text(
                     'Welcome to Max4u!',
                     style: AppTextStyles.font20,
                   ),
                   verticalSpace(12),
                   Text(
-                    'Input your phone number to get started',
+                    'Input your whatsapp enabled phone number to get started',
                     style: AppTextStyles.font14
                         .copyWith(color: const Color(0xff475569)),
                   ),
                   verticalSpace(24),
-                  TextInputField(
-                    controller: phoneController,
-                    labelText: 'Phone number',
-                    textInputType: TextInputType.number,
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    height: 52.h,
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: AppColors.whiteColor,
+                        border: Border.all(color: AppColors.borderColor)),
+                    child: TextField(
+                      controller: _phoneController,
+                      keyboardType: TextInputType.number,
+                      maxLength: 11,
+                      decoration: InputDecoration(
+                        hintText: 'Enter phone number',
+                        counterText: '',
+
+                        hintStyle: AppTextStyles.font14.copyWith(
+                            color: AppColors.textColor.withOpacity(0.3)),
+                        border: InputBorder.none,
+                        // prefixIcon: GestureDetector(
+                        //   behavior: HitTestBehavior.opaque,
+                        //   onTap: showPicker,
+                        //   child: Container(
+                        //     height: 40.w,
+                        //     width: 60.w,
+                        //     alignment: Alignment.center,
+                        //     child: Text(
+                        //       '${country.flagEmoji} + ${country.phoneCode} ',
+                        //     ),
+                        //   ),
+                        // ),
+                      ),
+                    ),
                   ),
+                  // TextInputField(
+                  //   controller: _phoneController,
+                  //   labelText: 'Phone number',
+                  //   textInputType: TextInputType.number,
+                  //   prefixIcon: Container(
+                  //     height: 40.w,
+                  //     width: 100.w,
+                  //     alignment: Alignment.center,
+                  //     child: Text('+91'),
+                  //   ),
+                  // ),
+
                   verticalSpace(32),
                   ButtonWidget(
                     onTap: () async {
-                      if (phoneController.text.isEmpty) {
+                      if (_phoneController.text.isEmpty) {
                         showMessage(context, 'Phone number is required',
                             isError: true);
                         return;
                       }
 
+                      if (_phoneController.text.length > 11) {
+                        showMessage(context, 'Invalid phone number',
+                            isError: true);
+                        return;
+                      }
+
                       await authProv.signUp(
-                          phoneNumber: phoneController.text.trim());
-                      if (authProv.status == false &&
-                          context.mounted) {
+                          phoneNumber: _phoneController.text.trim());
+                      if (authProv.status == false && context.mounted) {
                         showMessage(context, authProv.message);
                         return;
                       }
 
-                      if (authProv.status == true &&
-                          context.mounted) {
+                      if (authProv.status == true && context.mounted) {
                         showMessage(context, authProv.message);
 
                         nextScreen(
                             context,
                             VerificationScreen(
-                              phoneNumber: phoneController.text,
+                              phoneNumber: _phoneController.text,
                             ));
                       }
                     },

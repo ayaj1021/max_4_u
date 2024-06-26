@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "8967763541",
+    "project_id": "max4u-65b09",
+    "storage_bucket": "max4u-65b09.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:8967763541:android:68b0eb4de10335512d86dc",
+        "android_client_info": {
+          "package_name": "com.example.max_4_u"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA46oQipmGDKu4iq6OI5Gg73pkznz-VO9E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

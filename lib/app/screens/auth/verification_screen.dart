@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/provider/auth_provider.dart';
@@ -49,16 +50,17 @@ class _VerificationScreenState extends State<VerificationScreen> {
                       onTap: () => Navigator.pop(context),
                     ),
                     verticalSpace(26),
-                     Text(
+                    Text(
                       'Verification Code',
                       style: AppTextStyles.font20,
                     ),
                     verticalSpace(12),
                     Text(
-                      'Enter the 6-digit code sent to you at ${authProv.number}',
+                      'Enter the 6-digit code sent to your whatsapp at ${widget.phoneNumber}',
                       style: AppTextStyles.font14
                           .copyWith(color: const Color(0xff475569)),
                     ),
+                    
                     verticalSpace(24),
                     PinCodeTextField(
                       controller: _otpController,

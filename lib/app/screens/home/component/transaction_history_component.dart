@@ -6,6 +6,7 @@ import 'package:max_4_u/app/provider/auth_provider.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
+import 'package:max_4_u/app/utils/text_capitalization_extension.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
 import 'package:provider/provider.dart';
 
@@ -46,18 +47,14 @@ class _TransactionHistoryContainerState
     return Consumer2<AuthProviderImpl, ReloadUserDataProvider>(
         builder: (context, authProv, reloadData, _) {
       return Container(
-          height: 241.h,
+          height: 280.h,
           width: 358.w,
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 20),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               color: AppColors.whiteColor),
-          child: reloadData.isLoading
-              ? Center(
-                  child: CircularProgressIndicator(
-                    color: AppColors.primaryColor,
-                  ),
-                )
+          child: reloadData.loadData.transactionHistory!.data == null
+              ? SizedBox.shrink()
               : reloadData.loadData.transactionHistory!.data!.isEmpty
                   ? Center(
                       child: Column(
@@ -88,19 +85,27 @@ class _TransactionHistoryContainerState
                                   .loadData.transactionHistory!.data!.length) {
                             final data = reloadData
                                 .loadData.transactionHistory!.data![index];
-                            return TransactionSection(
-                              transactionStatusColor: data.status == 'success'
-                                  ? Colors.green
-                                  : data.status == 'pending'
-                                      ? Color(0xffA6B309)
-                                      : Colors.red,
-                              transactionIcon: Icons.call_outlined,
-                              transactionType: data.subType.toString(),
-                              transactionDate:
-                                  '${dateFormat.format(data.regDate!)}',
-                              transactionAmount: 'N${data.productAmount ?? 0}',
-                              transactionStatus: data.status.toString(),
-                              transactionColor: Color(0xffDEEDF7),
+                            return Column(
+                              children: [
+                                TransactionSection(
+                                  transactionStatusColor: data.status == 'success'
+                                      ? Colors.green
+                                      : data.status == 'pending'
+                                          ? Color(0xffA6B309)
+                                          : Colors.red,
+                                  transactionIcon: Icons.call_outlined,
+                                  transactionType: data.subType.toString().capitalize(),
+                                  transactionDate:
+                                      '${dateFormat.format(data.regDate!)}',
+                                  transactionAmount: 'N${data.productAmount ?? 0}',
+                                  transactionStatus: data.status.toString(),
+                                  transactionColor: Color(0xffDEEDF7),
+                                  transactionNumber:
+                                      '${data.number ?? '${data.referenceId!.substring(data.referenceId!.length - 5)}'}',
+                                ),
+                                verticalSpace(2),
+                                Divider(color: Colors.grey.withOpacity(0.3),)
+                              ],
                             );
                           } else {
                             return SizedBox();
@@ -138,11 +143,13 @@ class TransactionSection extends StatelessWidget {
     required this.transactionStatus,
     required this.transactionColor,
     required this.transactionStatusColor,
+    required this.transactionNumber,
   });
   final IconData transactionIcon;
   final String transactionType;
   final String transactionDate;
   final String transactionAmount;
+  final String transactionNumber;
   final String transactionStatus;
   final Color transactionStatusColor;
   final Color transactionColor;
@@ -157,8 +164,8 @@ class TransactionSection extends StatelessWidget {
             Row(
               children: [
                 Container(
-                  height: 40.h,
-                  width: 40.w,
+                  height: 45.h,
+                  width: 45.w,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
@@ -174,6 +181,12 @@ class TransactionSection extends StatelessWidget {
                       transactionType,
                       style: AppTextStyles.font18
                           .copyWith(fontWeight: FontWeight.w400),
+                    ),
+                    Text(
+                      transactionNumber,
+                      style: AppTextStyles.font14.copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                     Text(
                       transactionDate,
@@ -204,7 +217,7 @@ class TransactionSection extends StatelessWidget {
             )
           ],
         ),
-        verticalSpace(24),
+        // verticalSpace(24),
       ],
     );
   }

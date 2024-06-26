@@ -16,7 +16,6 @@ class BeneficiaryScreen extends StatefulWidget {
 class _BeneficiaryScreenState extends State<BeneficiaryScreen> {
   @override
   void initState() {
-    
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<ReloadUserDataProvider>(context, listen: false)
           .reloadUserData();
@@ -24,8 +23,7 @@ class _BeneficiaryScreenState extends State<BeneficiaryScreen> {
     super.initState();
   }
 
-  
-int? selectedIndex;
+  int? selectedIndex;
   @override
   Widget build(BuildContext context) {
     return Consumer<ReloadUserDataProvider>(
@@ -45,7 +43,7 @@ int? selectedIndex;
                       ),
                     ),
                     horizontalSpace(104),
-                     Text(
+                    Text(
                       'Beneficiary List',
                       style: AppTextStyles.font18,
                     ),
@@ -75,36 +73,43 @@ int? selectedIndex;
                         ),
                       )
                     : Expanded(
-                        child: Column(
-                          children: List.generate(
-                              reloadData.loadData.beneficiaryData!.length,
-                              (index) {
-                            final data =
-                                reloadData.loadData.beneficiaryData![index];
-                            return GestureDetector(
-                              onTap: () { 
-                                setState(() {
-                                  selectedIndex = index;
-                                });
-                                Navigator.pop(context, selectedIndex);},
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  verticalSpace(4),
-                                  Text(
-                                    '${data.phone}',
-                                    style: AppTextStyles.font18,
-                                  ),
-                                  verticalSpace(16),
-                                  Divider(
-                                      color: AppColors.blackColor
-                                          .withOpacity(0.05))
-                                ],
-                              ),
-                            );
-                          }),
-                        ),
-                      )
+                        child:  Column(
+                            children: List.generate(
+                                reloadData.loadData.beneficiaryData!.length,
+                                (index) {
+                              final data =
+                                  reloadData.loadData.beneficiaryData![index];
+                              return GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    selectedIndex = index;
+                                  });
+                               
+                                  Navigator.of(context).pop('${data.phone}');
+                                  //  Navigator.pop(context, index);
+                                },
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '${data.name}',
+                                      style: AppTextStyles.font14.copyWith(),
+                                    ),
+                                    verticalSpace(4),
+                                    Text(
+                                      '${data.phone}',
+                                      style: AppTextStyles.font18,
+                                    ),
+                                    verticalSpace(16),
+                                    Divider(
+                                        color: AppColors.blackColor
+                                            .withOpacity(0.05))
+                                  ],
+                                ),
+                              );
+                            }),
+                     
+                      )),
               ],
             ),
           )),

@@ -16,10 +16,12 @@ class ConfirmSavedBeneficiaryScreen extends StatefulWidget {
   const ConfirmSavedBeneficiaryScreen({super.key});
 
   @override
-  State<ConfirmSavedBeneficiaryScreen> createState() => _ConfirmSavedBeneficiaryScreenState();
+  State<ConfirmSavedBeneficiaryScreen> createState() =>
+      _ConfirmSavedBeneficiaryScreenState();
 }
 
-class _ConfirmSavedBeneficiaryScreenState extends State<ConfirmSavedBeneficiaryScreen> {
+class _ConfirmSavedBeneficiaryScreenState
+    extends State<ConfirmSavedBeneficiaryScreen> {
   @override
   Widget build(BuildContext context) {
     return Consumer<ReloadUserDataProvider>(

@@ -63,9 +63,19 @@ class _DataVerificationScreenState extends State<DataVerificationScreen> {
   }
 
   String _selectedValidity = dataValidityProvider[0];
+
   @override
   Widget build(BuildContext context) {
-    final DateFormat dateFormat = DateFormat('dd MMMM yyyy');
+    // final DateFormat dateFormat = DateFormat('dd MMMM yyyy');
+    final DateFormat dateFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
+    //DateFormat dateFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
+    List<String> parts = widget.dataBundle.split(' - ');
+    String bundle = '${parts[0]} - ${parts[1]}';
+    String amount = parts.last;
+
+    // List<String> data = amount.split(' ');
+    // String dataAmount = data.last.trim();
+
     return Consumer3<BuyDataProvider, AutoRenewalCheck,
         ActivateAutoRenewalProvider>(
       builder: (context, buyData, autoRenewalCheck, activateRenewal, _) {
@@ -148,7 +158,7 @@ class _DataVerificationScreenState extends State<DataVerificationScreen> {
                                     ),
                                   ),
                                   Text(
-                                    widget.network,
+                                    widget.network.toUpperCase(),
                                     style: AppTextStyles.font16.copyWith(
                                       color: AppColors.whiteColor,
                                       fontWeight: FontWeight.w600,
@@ -173,7 +183,7 @@ class _DataVerificationScreenState extends State<DataVerificationScreen> {
                                     ),
                                   ),
                                   Text(
-                                    widget.dataBundle,
+                                    amount,
                                     style: AppTextStyles.font16.copyWith(
                                       color: AppColors.whiteColor,
                                       fontWeight: FontWeight.w600,
@@ -192,7 +202,7 @@ class _DataVerificationScreenState extends State<DataVerificationScreen> {
                                     ),
                                   ),
                                   Text(
-                                    widget.dataBundle,
+                                    bundle,
                                     style: AppTextStyles.font16.copyWith(
                                       color: AppColors.whiteColor,
                                       fontWeight: FontWeight.w600,
@@ -205,152 +215,218 @@ class _DataVerificationScreenState extends State<DataVerificationScreen> {
                         ],
                       ),
                     ),
-                    Row(
+                    Column(
                       children: [
-                        Checkbox(
-                            activeColor: AppColors.primaryColor,
-                            checkColor: AppColors.overlayColor,
-                            value: autoRenewalCheck.isAutoRenew,
-                            onChanged: (v) {
-                              autoRenewalCheck.changeRenewal();
-                            }),
-                        Text('Enable auto-renewal for this transaction',
-                            style: AppTextStyles.font14.copyWith(
-                              fontWeight: FontWeight.w400,
-                            ))
+                        Row(
+                          children: [
+                            Checkbox(
+                                activeColor: AppColors.primaryColor,
+                                checkColor: AppColors.overlayColor,
+                                value: autoRenewalCheck.isAutoRenew,
+                                onChanged: (v) {
+                                  autoRenewalCheck.changeRenewal();
+                                }),
+                            Text('Enable auto-renewal for this transaction',
+                                style: AppTextStyles.font14.copyWith(
+                                  fontWeight: FontWeight.w400,
+                                ))
+                          ],
+                        ),
+                        autoRenewalCheck.isAutoRenew == true
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // verticalSpace(24),
+                                  Text(
+                                    'Frequency',
+                                    style: AppTextStyles.font14.copyWith(
+                                      color: const Color(0xff475569),
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  verticalSpace(4),
+
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 15),
+                                    height: 52.h,
+                                    width: MediaQuery.of(context).size.width,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12),
+                                      color: AppColors.whiteColor,
+                                      border: Border.all(
+                                        color: const Color(0xffCBD5E1),
+                                      ),
+                                    ),
+                                    child: DropdownMenu(
+                                      hintText: _selectedValidity.toUpperCase(),
+                                      width: 330.w,
+                                      enableFilter: true,
+                                      enableSearch: false,
+                                      inputDecorationTheme:
+                                          InputDecorationTheme(
+                                        fillColor: AppColors.whiteColor,
+                                        border: InputBorder.none,
+                                      ),
+                                      onSelected: (newValue) {
+                                        setState(() {
+                                          _selectedValidity = newValue!;
+                                        });
+                                      },
+                                      dropdownMenuEntries: dataValidityProvider
+                                          .map((String dataValidity) {
+                                        return DropdownMenuEntry(
+                                          value: dataValidity,
+                                          label: dataValidity.toUpperCase(),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ),
+
+                                  //           // Container(
+                                  //           //   padding:
+                                  //           //       const EdgeInsets.symmetric(horizontal: 15),
+                                  //           //   height: 52.h,
+                                  //           //   width: MediaQuery.of(context).size.width,
+                                  //           //   decoration: BoxDecoration(
+                                  //           //     borderRadius: BorderRadius.circular(12),
+                                  //           //     color: AppColors.whiteColor,
+                                  //           //     border: Border.all(
+                                  //           //       color: const Color(0xffCBD5E1),
+                                  //           //     ),
+                                  //           //   ),
+                                  //           //   child: DropdownButton<String>(
+                                  //           //     elevation: 0,
+                                  //           //     borderRadius: BorderRadius.circular(12),
+                                  //           //     underline: const SizedBox(),
+                                  //           //     value: _selectedValidity,
+                                  //           //     onChanged: (newValue) {
+                                  //           //       setState(() {
+                                  //           //         _selectedValidity = newValue!;
+                                  //           //       });
+                                  //           //     },
+                                  //           //     items: dataValidityProvider
+                                  //           //         .map((String dataValidity) {
+                                  //           //       return DropdownMenuItem(
+                                  //           //         value: dataValidity,
+                                  //           //         child: Container(
+                                  //           //           margin:
+                                  //           //               const EdgeInsets.only(right: 250),
+                                  //           //           child: Container(
+                                  //           //             margin: const EdgeInsets.only(top: 8),
+                                  //           //             child: Text(
+                                  //           //               dataValidity.toUpperCase(),
+                                  //           //               style:
+                                  //           //                   AppTextStyles.font14.copyWith(
+                                  //           //                 fontSize: 14,
+                                  //           //                 fontWeight: FontWeight.w400,
+                                  //           //               ),
+                                  //           //             ),
+                                  //           //           ),
+                                  //           //         ),
+                                  //           //       );
+                                  //           //     }).toList(),
+                                  //           //   ),
+                                  //           // ),
+
+                                  verticalSpace(31),
+                                  Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        ValidityDateWidget(
+                                          onTap: () =>
+                                              _selectDate(context, true),
+                                          date:
+                                              '${_startDate != null ? dateFormat.format(_startDate!) : 'DD-MM-YY'}',
+                                          dateLabel: 'Start Date',
+                                        ),
+                                        ValidityDateWidget(
+                                          onTap: () =>
+                                              _selectDate(context, false),
+                                          date:
+                                              '${_endDate != null ? dateFormat.format(_endDate!) : 'DD-MM-YY'}',
+                                          dateLabel: 'End Date',
+                                        )
+                                      ]),
+                                ],
+                              )
+                            : SizedBox(),
                       ],
                     ),
-                    autoRenewalCheck.isAutoRenew
-                        ? Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // verticalSpace(24),
-                              Text(
-                                'Frequency',
-                                style: AppTextStyles.font14.copyWith(
-                                  color: const Color(0xff475569),
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              verticalSpace(4),
-                              Container(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 15),
-                                height: 52.h,
-                                width: MediaQuery.of(context).size.width,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
-                                  color: AppColors.whiteColor,
-                                  border: Border.all(
-                                    color: const Color(0xffCBD5E1),
-                                  ),
-                                ),
-                                child: DropdownButton<String>(
-                                  elevation: 0,
-                                  borderRadius: BorderRadius.circular(12),
-                                  underline: const SizedBox(),
-                                  value: _selectedValidity,
-                                  onChanged: (newValue) {
-                                    setState(() {
-                                      _selectedValidity = newValue!;
-                                    });
-                                  },
-                                  items: dataValidityProvider
-                                      .map((String dataValidity) {
-                                    return DropdownMenuItem(
-                                      value: dataValidity,
-                                      child: Container(
-                                        margin:
-                                            const EdgeInsets.only(right: 250),
-                                        child: Container(
-                                          margin: const EdgeInsets.only(top: 8),
-                                          child: Text(
-                                            dataValidity.toUpperCase(),
-                                            style:
-                                                AppTextStyles.font14.copyWith(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  }).toList(),
-                                ),
-                              ),
-
-                              verticalSpace(31),
-                              Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    ValidityDateWidget(
-                                      onTap: () => _selectDate(context, true),
-                                      date:
-                                          '${_startDate != null ? dateFormat.format(_startDate!) : 'DD-MM-YY'}',
-                                      dateLabel: 'Start Date',
-                                    ),
-                                    ValidityDateWidget(
-                                      onTap: () => _selectDate(context, false),
-                                      date:
-                                          '${_endDate != null ? dateFormat.format(_endDate!) : 'DD-MM-YY'}',
-                                      dateLabel: 'End Date',
-                                    )
-                                  ]),
-                            ],
-                          )
-                        : SizedBox(),
                     verticalSpace(146),
                     ButtonWidget(
-                      text: 'Send data',
-                      onTap: () async {
-                        final productCodes = await ProductHelper()
-                            .getDataProducts(widget.network);
-                        log('This is the code ${productCodes.toString()}');
+                        text: 'Send data',
+                        onTap: () async {
+                          final productCodes = await ProductHelper()
+                              .getDataProducts(widget.network);
+                          log('This is the code ${productCodes.toString()}');
+                          // final endDate = _endDate?.toIso8601String();
+                          // final startDate = _startDate?.toIso8601String();
 
-                        autoRenewalCheck.isAutoRenew == true
-                            ? await activateRenewal.activateAutoRenewal(
-                                phoneNumber: widget.phoneNumber,
-                                productCode: productCodes,
-                                amount: widget.amount,
-                                // startDate: _startDate!,
-                                // endDate: _endDate!,
-                                intervalDaily: _selectedValidity,
-                              )
-                            : null;
+                          if (autoRenewalCheck.isAutoRenew == true) {
+                            await activateRenewal.activateAutoRenewal(
+                              phoneNumber: widget.phoneNumber,
+                              productCode: productCodes,
+                              amount: widget.amount,
+                              startDate: dateFormat.format(_startDate!),
+                              endDate: dateFormat.format(_endDate!),
+                              intervalDaily: _selectedValidity.toLowerCase(),
+                            );
 
-                        await buyData.buyData(
-                          phoneNumber: widget.phoneNumber,
-                          amount: widget.amount,
-                          productCode: productCodes,
-                        );
+                            if (activateRenewal.status == false &&
+                                context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content:
+                                          Text('${activateRenewal.message}')));
+                              showMessage(
+                                context,
+                                activateRenewal.message,
+                                isError: true,
+                              );
+                              debugPrint(activateRenewal.message.toString());
+                              return;
+                            }
+                            if (activateRenewal.status == true &&
+                                context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content:
+                                          Text('${activateRenewal.message}')));
+                            }
 
-                        if (buyData.status == false && context.mounted) {
-                          showMessage(
-                            context,
-                            buyData.message,
-                            isError: true,
-                          );
-                          log(buyData.message.toString());
-                          return;
-                        }
+                            await buyData.buyData(
+                              phoneNumber: widget.phoneNumber,
+                              // amount: dataAmount,
+                              productCode: productCodes,
+                            );
 
-                        if (buyData.status == true && context.mounted) {
-                          showMessage(
-                            context,
-                            buyData.message,
-                            // isError: false,
-                          );
+                            if (buyData.status == false && context.mounted) {
+                              showMessage(
+                                context,
+                                buyData.message,
+                                isError: true,
+                              );
+                              log(buyData.message.toString());
+                              return;
+                            }
 
-                          nextScreen(
-                              context,
-                              ConfirmationScreen(
-                                amount: widget.amount,
-                                number: widget.phoneNumber,
-                              ));
-                        }
-                      },
-                    )
+                            if (buyData.status == true && context.mounted) {
+                              showMessage(
+                                context,
+                                buyData.message,
+                              );
+
+                              nextScreen(
+                                  context,
+                                  ConfirmationScreen(
+                                    amount: widget.amount,
+                                    number: widget.phoneNumber,
+                                  ));
+                            }
+                          }
+                        })
                   ],
                 ),
               ),

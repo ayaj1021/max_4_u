@@ -36,7 +36,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   void dispose() {
     firstNameController.dispose();
     lastNameController.dispose();
-
     emailController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
@@ -55,11 +54,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           body: SafeArea(
               child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 41),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                   Text(
+                  Text(
                     'Set up your profile',
                     style: AppTextStyles.font20,
                   ),
@@ -138,7 +137,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           ),
                         )
                       : Text(''),
-                  verticalSpace(28),
+                  verticalSpace(18),
                   RichText(
                     text: TextSpan(
                         text: 'By signing up you agree with our ',
@@ -185,8 +184,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           confirmPassword:
                               confirmPasswordController.text.trim());
                       if (authProv.status == false && context.mounted) {
-                        showMessage(context, authProv.message);
-                        log('${authProv.message}');
+                        showMessage(context, authProv.message, isError: true);
+                        // log('${authProv.message}');
                         return;
                       }
 
@@ -194,7 +193,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         showMessage(context, authProv.message);
                         await reloadData.reloadUserData();
 
-                        nextScreen(context, DashBoardScreen());
+                        Future.delayed(Duration(seconds: 2), () {
+                          nextScreen(context, DashBoardScreen());
+                        });
                       }
 
                       final firstName = EncryptData.decryptAES(

@@ -103,7 +103,7 @@ class _CustomerTransactionScreenState extends State<CustomerTransactionScreen> {
                             transactionDate: 'Apr 18th, 20:59',
                             transactionAmount: '-N35,000.00',
                             transactionStatus: 'Successful',
-                            transactionColor: Color(0xffD6DDFE), transactionStatusColor: Colors.green,
+                            transactionColor: Color(0xffD6DDFE), transactionStatusColor: Colors.green, transactionNumber: '',
                           ),
                           verticalSpace(8),
                           Divider(

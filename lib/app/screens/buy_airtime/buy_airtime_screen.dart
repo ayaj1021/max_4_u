@@ -5,6 +5,7 @@ import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/enums/network_dropdown.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/provider/buy_airtime_provider.dart';
+
 import 'package:max_4_u/app/screens/beneficiary/beneficiary_screen.dart';
 import 'package:max_4_u/app/screens/buy_airtime/airtime_verification_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
@@ -44,12 +45,15 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
 
   String airtimeAmount = '';
 
-  String beneficiaryNumber = '';
+ 
   @override
   void dispose() {
     _phoneNumber.dispose();
+   
     super.dispose();
   }
+
+ 
 
   var codeValues = [];
   var networks = [];
@@ -96,7 +100,7 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
                           ),
                         ),
                         horizontalSpace(104),
-                         Text(
+                        Text(
                           'Buy Airtime',
                           style: AppTextStyles.font18,
                         )
@@ -110,83 +114,104 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    verticalSpace(8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      height: 52.h,
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: AppColors.whiteColor,
-                        border: Border.all(
-                          color: const Color(0xffCBD5E1),
-                        ),
-                      ),
-                      child: DropdownButton<String>(
-                        // hint: Text('MTN'),
-                        elevation: 0,
-                        borderRadius: BorderRadius.circular(12),
-                        underline: const SizedBox(),
-                        value: _selectedNetwork,
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            _selectedNetwork = newValue!;
-                          });
-                        },
-                        items: networkProvider.map((String networkProviders) {
-                          return DropdownMenuItem(
-                            value: networkProviders,
-                            onTap: () {
-                              // setState(() {
-                              //   network =
-                              //       _networkToString(network) as NetworkProvider;
-                              // });
-                            },
-                            child: Container(
-                              margin: const EdgeInsets.only(right: 255),
-                              child: Container(
-                                margin: const EdgeInsets.only(top: 8),
-                                child: Text(
-                                  networkProviders.toUpperCase(),
-                                  style: AppTextStyles.font14.copyWith(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        }).toList(),
+ verticalSpace(8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    height: 52.h,
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: AppColors.whiteColor,
+                      border: Border.all(
+                        color: const Color(0xffCBD5E1),
                       ),
                     ),
+                    child: DropdownMenu(
+                      hintText: 'Select network',
+                      width: 330.w,
+                      enableFilter: true,
+                      enableSearch: false,
+                      inputDecorationTheme: InputDecorationTheme(
+                        fillColor: AppColors.whiteColor,
+                        border: InputBorder.none,
+                      ),
+                      onSelected: (newValue) {
+                        setState(() {
+                          _selectedNetwork = newValue!;
+                        });
+                      },
+                      dropdownMenuEntries:
+                          networkProvider.map((String networkProviders) {
+                        return DropdownMenuEntry(
+                          value: networkProviders,
+                          label: networkProviders.toUpperCase(),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                  //  verticalSpace(8),
+                    // Container(
+                    //   padding: const EdgeInsets.symmetric(horizontal: 15),
+                    //   height: 52.h,
+                    //   width: MediaQuery.of(context).size.width,
+                    //   decoration: BoxDecoration(
+                    //     borderRadius: BorderRadius.circular(12),
+                    //     color: AppColors.whiteColor,
+                    //     border: Border.all(
+                    //       color: const Color(0xffCBD5E1),
+                    //     ),
+                    //   ),
+                    //   child: DropdownButton<String>(
+    
+                    //     elevation: 0,
+                    //     borderRadius: BorderRadius.circular(12),
+                    //     underline: const SizedBox(),
+                    //     value: _selectedNetwork,
+                    //     onChanged: (String? newValue) {
+                    //       setState(() {
+                    //         _selectedNetwork = newValue!;
+                    //       });
+                    //     },
+                    //     items: networkProvider.map((String networkProviders) {
+                    //       return DropdownMenuItem(
+                    //         value: networkProviders,
+                    //         child: Text(
+                    //           networkProviders.toUpperCase(),
+                    //           style: AppTextStyles.font14.copyWith(
+                    //             fontSize: 14,
+                    //             fontWeight: FontWeight.w400,
+                    //           ),
+                    //         ),
+                    //       );
+                    //     }).toList(),
+                    //   ),
+                    // ),
+                    
+                    
                     verticalSpace(30),
-
                     Stack(
                       children: [
                         TextInputField(
                           controller: _phoneNumber,
                           labelText: 'Phone Number',
-                          hintText: 'receiver\'s number',
+                          hintText: 'Receiver\'s number',
                           textInputType: TextInputType.number,
+                          maxLength: 11,
+                          onChanged: (p0) {
+                            
+                          },
                         ),
-                          // ElevatedButton(
-                          //       onPressed: () {
-                          //         log(beneficiaryNumber);
-                          //       },
-                          //       child: Text('Press'),
-                          //     ),
                         Positioned(
                           right: 0,
                           child: GestureDetector(
-                            onTap: () {
-                            
-                              final beneficiary = nextScreen(
-                                  context, const BeneficiaryScreen());
+                            onTap: () async {
+                              var number = await Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          BeneficiaryScreen()));
 
-                              if (beneficiary != null) {
-                                setState(() {
-                                  _phoneNumber.text = beneficiary;
-                                });
+                              if (number != null) {
+                                _phoneNumber.text = number;
                               }
                             },
                             child: Text(
@@ -201,10 +226,6 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
                         )
                       ],
                     ),
-                    // ElevatedButton(onPressed: (){
-
-                    //   getNetworkList();
-                    // }, child: Text('')),
                     verticalSpace(30),
                     Text(
                       'Amount',
@@ -234,6 +255,18 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
                                   airtimeAmount =
                                       amount[selectedIndex!.toInt()];
                                 });
+
+                                if (_phoneNumber.text.isEmpty) {
+                                  return;
+                                } else {
+                                  nextScreen(
+                                      context,
+                                      AirtimeVerificationScreen(
+                                        network: '${_selectedNetwork}',
+                                        phoneNumber: _phoneNumber.text.trim(),
+                                        amount: airtimeAmount,
+                                      ));
+                                }
                               },
                               child: Container(
                                 alignment: Alignment.center,
@@ -267,6 +300,7 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
                       onChanged: (p0) {
                         airtimeAmount = _amountController.text;
                       },
+                      // enable: selectedIndex == null ? true : false,
                     ),
                     verticalSpace(68),
                     ButtonWidget(
@@ -274,12 +308,6 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
                       onTap: () async {
                         if (_phoneNumber.text.isEmpty) {
                           showMessage(context, 'Phone number is required',
-                              isError: true);
-                          return;
-                        }
-                        if (_phoneNumber.text.length < 10 ||
-                            _phoneNumber.text.length > 11) {
-                          showMessage(context, 'Enter a valid phone number',
                               isError: true);
                           return;
                         }

@@ -27,12 +27,14 @@ class TransactionDetailsScreen extends StatefulWidget {
       required this.referenceId,
       required this.status,
       required this.date,
-      required this.type});
+      required this.type,
+      required this.number});
   final String amount;
   final String referenceId;
   final String status;
   final String date;
   final String type;
+  final String number;
 
   @override
   State<TransactionDetailsScreen> createState() =>
@@ -57,7 +59,7 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
                     onTap: () => Navigator.pop(context),
                   ),
                   horizontalSpace(140),
-                   Text(
+                  Text(
                     'Details',
                     style: AppTextStyles.font18,
                   ),
@@ -67,11 +69,13 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
               RepaintBoundary(
                 key: _globalKey,
                 child: TransactionsDetailsWidget(
-                    amount: widget.amount,
-                    status: widget.status,
-                    referenceId: widget.referenceId,
-                    type: widget.type,
-                    date: widget.date),
+                  amount: widget.amount,
+                  status: widget.status,
+                  referenceId: widget.referenceId,
+                  type: widget.type,
+                  date: widget.date,
+                  number: widget.number,
+                ),
               ),
               verticalSpace(20),
               Container(
@@ -86,7 +90,7 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                     Text(
+                    Text(
                       'Any issue with this transaction?',
                       style: AppTextStyles.font14,
                     ),
@@ -127,7 +131,7 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
         context: context,
         builder: (context) {
           return Container(
-           // height: 186.h,
+            // height: 186.h,
             height: 150.h,
             width: MediaQuery.of(context).size.width,
             alignment: Alignment.center,
@@ -145,7 +149,7 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
                     alignment: Alignment.topRight,
                     child: GestureDetector(
                       onTap: () => Navigator.pop(context),
-                      child:  Text(
+                      child: Text(
                         'X',
                         style: AppTextStyles.font20,
                       ),
@@ -237,7 +241,7 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
                 //     ],
                 //   ),
                 // ),
-               
+
                 // verticalSpace(15),
                 // Divider(
                 //   color: AppColors.blackColor.withOpacity(0.1),
@@ -267,7 +271,7 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
                                     alignment: Alignment.topRight,
                                     child: GestureDetector(
                                       onTap: () => Navigator.pop(context),
-                                      child:  Text(
+                                      child: Text(
                                         'X',
                                         style: AppTextStyles.font20,
                                       ),
@@ -659,6 +663,7 @@ class TransactionsDetailsWidget extends StatelessWidget {
     required this.referenceId,
     required this.type,
     required this.date,
+    required this.number,
   });
 
   final String amount;
@@ -666,6 +671,7 @@ class TransactionsDetailsWidget extends StatelessWidget {
   final String referenceId;
   final String type;
   final String date;
+  final String number;
 
   @override
   Widget build(BuildContext context) {
@@ -698,7 +704,7 @@ class TransactionsDetailsWidget extends StatelessWidget {
             Text(
               '$status',
               style: AppTextStyles.font14.copyWith(
-                fontWeight: FontWeight.w400,
+                  fontWeight: FontWeight.w400,
                   color: status == 'success'
                       ? Colors.green
                       : status == 'pending'
@@ -716,7 +722,7 @@ class TransactionsDetailsWidget extends StatelessWidget {
         TransactionDetailsSection(
           title: 'Transaction ID',
           value: '$referenceId',
-         // iconData: Icons.copy,
+          // iconData: Icons.copy,
         ),
         verticalSpace(24),
         TransactionDetailsSection(
@@ -728,11 +734,11 @@ class TransactionsDetailsWidget extends StatelessWidget {
         //   title: 'Transaction Means',
         //   value: 'Wallet',
         // ),
-        // verticalSpace(24),
-        // const TransactionDetailsSection(
-        //   title: 'Payment method',
-        //   value: 'Wallet',
-        // ),
+        verticalSpace(24),
+        TransactionDetailsSection(
+          title: 'Number',
+          value: number,
+        ),
         verticalSpace(24),
         TransactionDetailsSection(
           title: 'Date',
