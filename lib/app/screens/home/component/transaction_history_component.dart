@@ -97,7 +97,7 @@ class _TransactionHistoryContainerState
                                   transactionType: data.subType.toString().capitalize(),
                                   transactionDate:
                                       '${dateFormat.format(data.regDate!)}',
-                                  transactionAmount: 'N${data.productAmount ?? 0}',
+                                  transactionAmount: 'N${data.amountPaid ?? 0}',
                                   transactionStatus: data.status.toString(),
                                   transactionColor: Color(0xffDEEDF7),
                                   transactionNumber:

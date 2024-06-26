@@ -395,36 +395,36 @@ class _DataVerificationScreenState extends State<DataVerificationScreen> {
                                       content:
                                           Text('${activateRenewal.message}')));
                             }
+                          }
 
-                            await buyData.buyData(
-                              phoneNumber: widget.phoneNumber,
-                              // amount: dataAmount,
-                              productCode: productCodes,
+                          await buyData.buyData(
+                            phoneNumber: widget.phoneNumber,
+                            // amount: dataAmount,
+                            productCode: productCodes,
+                          );
+
+                          if (buyData.status == false && context.mounted) {
+                            showMessage(
+                              context,
+                              buyData.message,
+                              isError: true,
+                            );
+                            log(buyData.message.toString());
+                            return;
+                          }
+
+                          if (buyData.status == true && context.mounted) {
+                            showMessage(
+                              context,
+                              buyData.message,
                             );
 
-                            if (buyData.status == false && context.mounted) {
-                              showMessage(
+                            nextScreen(
                                 context,
-                                buyData.message,
-                                isError: true,
-                              );
-                              log(buyData.message.toString());
-                              return;
-                            }
-
-                            if (buyData.status == true && context.mounted) {
-                              showMessage(
-                                context,
-                                buyData.message,
-                              );
-
-                              nextScreen(
-                                  context,
-                                  ConfirmationScreen(
-                                    amount: widget.amount,
-                                    number: widget.phoneNumber,
-                                  ));
-                            }
+                                ConfirmationScreen(
+                                  amount: widget.amount,
+                                  number: widget.phoneNumber,
+                                ));
                           }
                         })
                   ],
