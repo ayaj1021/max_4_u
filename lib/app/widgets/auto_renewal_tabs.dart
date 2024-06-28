@@ -145,7 +145,7 @@ class AutoRenewalTabs extends StatelessWidget {
                   nextScreenReplace(context, AutoRenewalScreen());
                 }
               },
-              text:  cancelRenewal.state == ViewState.Busy ? 'Cancelling auto renewal' : 'Cancel auto renewal',
+              text:  cancelRenewal.state == ViewState.Busy ? 'Cancelling auto renewal...' : 'Cancel auto renewal',
               textColor: AppColors.primaryColor,
               color: Color(0xffD9D9D9),
             )

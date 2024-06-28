@@ -18,6 +18,9 @@ class AuthProviderImpl extends ChangeNotifier
   String get number => _number;
   String _message = '';
   String get message => _message;
+
+  String _errorMessage = '';
+  String get errorMessage => _errorMessage;
   bool _status = false;
   bool get status => _status;
 
@@ -243,14 +246,15 @@ class AuthProviderImpl extends ChangeNotifier
         state = ViewState.Error;
         _status = false;
 
-        _message = response['data']['message'];
+        _errorMessage = response['data']['message'];
 
-        _message = response['data']['error_data']['login_id'];
+        _errorMessage = response['data']['error_data']['login_id'];
         notifyListeners();
       }
     } catch (e) {
       state = ViewState.Error;
       _status = false;
+     // _errorMessage = e.toString();
       // _message = e.toString();
       notifyListeners();
     }

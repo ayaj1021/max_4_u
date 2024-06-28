@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/encryt_data/encrypt_data.dart';
 import 'package:max_4_u/app/provider/auth_provider.dart';
@@ -9,6 +10,7 @@ import 'package:max_4_u/app/utils/white_space.dart';
 import 'package:max_4_u/app/widgets/faq_question_section.dart';
 import 'package:max_4_u/app/widgets/settings_option_section.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SupportScreen extends StatefulWidget {
   const SupportScreen({super.key});
@@ -18,10 +20,26 @@ class SupportScreen extends StatefulWidget {
 }
 
 class _SupportScreenState extends State<SupportScreen> {
+  Future<void> _makePhoneCall(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    await launchUrl(launchUri);
+  }
+
+  void _copyToClipboard(text) {
+    Clipboard.setData(ClipboardData(text: text));
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Consumer2<FaqProvider, AuthProviderImpl>(builder: (context, faq,authProv, _) {
-       final name = EncryptData.decryptAES('${authProv.resDataData.userData![0].firstName}');
+    // final Uri phoneNumber = Uri.parse('tel:+2349152330553');
+    final Uri whatsapp = Uri.parse('https://wa.me/09152330553');
+    return Scaffold(body: Consumer2<FaqProvider, AuthProviderImpl>(
+        builder: (context, faq, authProv, _) {
+      final name = EncryptData.decryptAES(
+          '${authProv.resDataData.userData![0].firstName}');
       return SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -62,15 +80,28 @@ class _SupportScreenState extends State<SupportScreen> {
                   ),
                   child: Column(
                     children: [
-                      const SettingsOptionSection(
+                      SettingsOptionSection(
+                          iconData: Icons.arrow_forward_ios,
+                          onTap: () {
+                            launchUrl(whatsapp);
+                          },
                           icon: 'assets/icons/whatsapp_icon.png',
                           settingOption: '09038177869'),
                       verticalSpace(20),
-                      const SettingsOptionSection(
+                      SettingsOptionSection(
+                          iconData: Icons.copy,
+                          iconDataColor: Colors.blue,
+                          iconOnTap: () {
+                            _copyToClipboard('Max4u@gmail.com');
+                          },
                           icon: 'assets/icons/sms_icon.png',
                           settingOption: 'Max4u@gmail.com'),
                       verticalSpace(20),
-                      const SettingsOptionSection(
+                      SettingsOptionSection(
+                          iconData: Icons.arrow_forward_ios,
+                          onTap: () {
+                            _makePhoneCall('+2348097238712');
+                          },
                           icon: 'assets/icons/call_icon.png',
                           settingOption: '07038177869'),
                     ],
@@ -158,30 +189,32 @@ class _SupportScreenState extends State<SupportScreen> {
                         question: 'How can i become a vendor?',
                         iconData: Icons.add,
                         index: 0,
-                        answer:  'You can be become a vendor by clicking the menu icon on the dashboard and toggling the becoming a vendor',
+                        answer:
+                            'You can be become a vendor by clicking the menu icon on the dashboard and toggling the becoming a vendor',
                       ),
-                      
                       verticalSpace(19),
                       FaqQuestionSection(
                         question: 'Do you offer other services?',
                         iconData: Icons.add,
                         index: 1,
-                        answer:  'You can be become a vendor by clicking the menu icon on the dashboard and toggling the becoming a vendor',
+                        answer:
+                            'You can be become a vendor by clicking the menu icon on the dashboard and toggling the becoming a vendor',
                       ),
-                     
                       verticalSpace(19),
                       const FaqQuestionSection(
                         question: 'What are your rates',
                         iconData: Icons.add,
                         index: 2,
-                        answer:  'You can be become a vendor by clicking the menu icon on the dashboard and toggling the becoming a vendor',
+                        answer:
+                            'You can be become a vendor by clicking the menu icon on the dashboard and toggling the becoming a vendor',
                       ),
                       verticalSpace(19),
                       const FaqQuestionSection(
                         question: 'Do you sell data for all networks',
                         iconData: Icons.add,
                         index: 3,
-                        answer:  'You can be become a vendor by clicking the menu icon on the dashboard and toggling the becoming a vendor',
+                        answer:
+                            'You can be become a vendor by clicking the menu icon on the dashboard and toggling the becoming a vendor',
                       ),
                     ],
                   ),

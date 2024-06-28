@@ -8,6 +8,9 @@ class ActivateAutoRenewalProvider extends ChangeNotifier {
   String _message = '';
   String get message => _message;
 
+  String _errorMessage = '';
+  String get errorMessage => _errorMessage;
+
   bool _status = false;
   bool get status => _status;
 
@@ -51,8 +54,9 @@ class ActivateAutoRenewalProvider extends ChangeNotifier {
     } else {
       state = ViewState.Error;
       _status = response['data']['status'];
-      _message = response['data']['message'] ??
-          response['data']['error_data']['start_date'] ??
+      _message = response['data']['message'];
+
+      _errorMessage = response['data']['error_data']['start_date'] ??
           response['data']['error_data']['end_date'];
       // _message = response['data']['error_data']['start_date'];
       // _message = response['data']['error_data']['end_date'];

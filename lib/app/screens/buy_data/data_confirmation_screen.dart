@@ -9,7 +9,8 @@ import 'package:max_4_u/app/utils/white_space.dart';
 import 'package:max_4_u/app/widgets/button_widget.dart';
 
 class DataConfirmationScreen extends StatelessWidget {
-  const DataConfirmationScreen({super.key, required this.amount, required this.phoneNumber});
+  const DataConfirmationScreen(
+      {super.key, required this.amount, required this.phoneNumber});
   final String amount;
   final String phoneNumber;
 
@@ -59,18 +60,14 @@ class DataConfirmationScreen extends StatelessWidget {
                   height: 48.h,
                   width: 155.w,
                   child: ButtonWidget(
-                    text: 'Continue',
-                    onTap: ()async {
-
-                      
-                        nextScreen(context,  DashBoardScreen());
-                    }
-                      
-                  ),
+                      text: 'Continue',
+                      onTap: () async {
+                        nextScreenReplace(context, DashBoardScreen());
+                      }),
                 ),
                 SizedBox(
                   height: 48.h,
-                  width: 155.w,
+                  width: 165.w,
                   child: ButtonWidget(
                     color: AppColors.whiteColor,
                     border: Border.all(
@@ -78,8 +75,11 @@ class DataConfirmationScreen extends StatelessWidget {
                     ),
                     text: 'Save beneficiary',
                     textColor: AppColors.primaryColor,
-                    onTap: () =>
-                        nextScreen(context, const SaveBeneficiaryScreen(phoneNumber: '',)),
+                    onTap: () => nextScreen(
+                        context,
+                        const SaveBeneficiaryScreen(
+                          phoneNumber: '',
+                        )),
                   ),
                 ),
               ],

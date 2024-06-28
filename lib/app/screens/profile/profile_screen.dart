@@ -134,7 +134,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       width: 24,
                       child: Image.asset('assets/icons/profile_icon.png')),
                   title: Text(
-                    'Edit profile',
+                    'Profile',
                     style: AppTextStyles.font16
                         .copyWith(fontWeight: FontWeight.w500),
                   ),

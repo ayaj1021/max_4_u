@@ -7,9 +7,20 @@ import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
 import 'package:provider/provider.dart';
 
-class TransactionsComponent extends StatelessWidget {
+class TransactionsComponent extends StatefulWidget {
   const TransactionsComponent({super.key});
 
+  @override
+  State<TransactionsComponent> createState() => _TransactionsComponentState();
+}
+
+class _TransactionsComponentState extends State<TransactionsComponent> {
+
+  final List icons = [
+    'assets/icons/call_icon.png',
+    'assets/icons/data_icon.png',
+    'assets/icons/fund_wallet_icon.png',
+  ];
   @override
   Widget build(BuildContext context) {
       DateFormat dateFormat = DateFormat('MMMM d, yyyy h:mm a');
@@ -22,7 +33,7 @@ class TransactionsComponent extends StatelessWidget {
               //getAllApps.allAppUsers.data![index];
               return Column(children: [
                 TransactionSection(
-                    transactionIcon: Icons.money,
+                    transactionIcon: icons[2],
                     transactionType: '${data.purchaseType}',
                     transactionDate:
                         '${dateFormat.format(data.regDate as DateTime)}',

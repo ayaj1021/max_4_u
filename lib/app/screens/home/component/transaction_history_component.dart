@@ -41,6 +41,18 @@ class _TransactionHistoryContainerState
     });
   }
 
+  final List icons = [
+    'assets/icons/call_icon.png',
+    'assets/icons/data_icon.png',
+    'assets/icons/fund_wallet_icon.png',
+  ];
+
+  final List colors = [
+    Color(0xffDEEDF7),
+    Color(0xffD6DDFE),
+    Color(0xffE8D6FE),
+
+  ];
   @override
   Widget build(BuildContext context) {
     DateFormat dateFormat = DateFormat('MMMM d, yyyy h:mm a');
@@ -88,23 +100,38 @@ class _TransactionHistoryContainerState
                             return Column(
                               children: [
                                 TransactionSection(
-                                  transactionStatusColor: data.status == 'success'
-                                      ? Colors.green
-                                      : data.status == 'pending'
-                                          ? Color(0xffA6B309)
-                                          : Colors.red,
-                                  transactionIcon: Icons.call_outlined,
-                                  transactionType: data.subType.toString().capitalize(),
+                                  transactionStatusColor:
+                                      data.status == 'success'
+                                          ? Colors.green
+                                          : data.status == 'pending'
+                                              ? Color(0xffA6B309)
+                                              : Colors.red,
+                                  transactionIcon:
+                                      data.subType!.contains('card')
+                                          ? icons[2]
+                                          : data.subType!.contains('data')
+                                              ? icons[1]
+                                              : icons[0],
+                                  transactionType:
+                                      data.subType.toString().capitalize(),
                                   transactionDate:
                                       '${dateFormat.format(data.regDate!)}',
                                   transactionAmount: 'N${data.amountPaid ?? 0}',
                                   transactionStatus: data.status.toString(),
-                                  transactionColor: Color(0xffDEEDF7),
+                                  transactionColor:   data.subType!.contains('card')
+                                          ? colors[1]
+                                          : data.subType!.contains('data')
+                                              ? colors[2]
+                                              : colors[0],
+                                  
+                                  // Color(0xffDEEDF7),
                                   transactionNumber:
                                       '${data.number ?? '${data.referenceId!.substring(data.referenceId!.length - 5)}'}',
                                 ),
                                 verticalSpace(2),
-                                Divider(color: Colors.grey.withOpacity(0.3),)
+                                Divider(
+                                  color: Colors.grey.withOpacity(0.3),
+                                )
                               ],
                             );
                           } else {
@@ -145,7 +172,7 @@ class TransactionSection extends StatelessWidget {
     required this.transactionStatusColor,
     required this.transactionNumber,
   });
-  final IconData transactionIcon;
+  final String transactionIcon;
   final String transactionType;
   final String transactionDate;
   final String transactionAmount;
@@ -171,7 +198,10 @@ class TransactionSection extends StatelessWidget {
                     shape: BoxShape.circle,
                     color: transactionColor,
                   ),
-                  child: Icon(transactionIcon),
+                  child: SizedBox(
+                    height: 24,
+                    width: 24,
+                    child: Image.asset(transactionIcon)),
                 ),
                 horizontalSpace(9),
                 Column(

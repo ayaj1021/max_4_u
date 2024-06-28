@@ -1,13 +1,9 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/enums/data_period_enum.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
-import 'package:max_4_u/app/provider/activate_auto_renewal_provider.dart';
 import 'package:max_4_u/app/provider/buy_airtime_provider.dart';
-import 'package:max_4_u/app/provider/obscure_text_provider.dart';
-import 'package:max_4_u/app/screens/confirmation/confirmation_screen.dart';
+import 'package:max_4_u/app/screens/buy_airtime/airtime_confirmation_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/busy_overlay.dart';
@@ -36,37 +32,12 @@ class AirtimeVerificationScreen extends StatefulWidget {
 }
 
 class _AirtimeVerificationScreenState extends State<AirtimeVerificationScreen> {
-  DateTime? _startDate;
-  DateTime? _endDate;
-
-  Future<void> _selectDate(BuildContext context, bool isStartDate) async {
-    DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-    );
-
-    if (picked != null && picked != (isStartDate ? _startDate : _endDate)) {
-      setState(() {
-        if (isStartDate) {
-          _startDate = picked;
-          // Ensure end date is after start date
-          if (_endDate != null && _endDate!.isBefore(_startDate!)) {
-            _endDate = null;
-          }
-        } else {
-          _endDate = picked;
-        }
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Consumer3<BuyAirtimeProvider, AutoRenewalCheck,
-        ActivateAutoRenewalProvider>(
-      builder: (context, buyAirtime, autoRenewalCheck, activateRenewal, _) {
+    //DateFormat dateFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
+
+    return Consumer<BuyAirtimeProvider>(
+      builder: (context, buyAirtime, _) {
         return BusyOverlay(
           show: buyAirtime.state == ViewState.Busy,
           title: buyAirtime.message,
@@ -75,7 +46,7 @@ class _AirtimeVerificationScreenState extends State<AirtimeVerificationScreen> {
               child: SingleChildScrollView(
                 child: Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 41),
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 21),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -94,7 +65,7 @@ class _AirtimeVerificationScreenState extends State<AirtimeVerificationScreen> {
                           ),
                         ],
                       ),
-                      verticalSpace(52),
+                      verticalSpace(30),
                       Text(
                         'Select airtime to',
                         style: AppTextStyles.font14.copyWith(
@@ -105,7 +76,7 @@ class _AirtimeVerificationScreenState extends State<AirtimeVerificationScreen> {
                       verticalSpace(4),
                       Container(
                         padding: const EdgeInsets.all(13),
-                        height: 125.h,
+                        height: 175.h,
                         width: MediaQuery.of(context).size.width,
                         decoration: BoxDecoration(
                           color: AppColors.primaryColor,
@@ -155,7 +126,7 @@ class _AirtimeVerificationScreenState extends State<AirtimeVerificationScreen> {
                                 ),
                               ],
                             ),
-                            verticalSpace(12),
+                            verticalSpace(55),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -176,9 +147,10 @@ class _AirtimeVerificationScreenState extends State<AirtimeVerificationScreen> {
                           ],
                         ),
                       ),
+
                       //verticalSpace(28),
 
-                      verticalSpace(400),
+                      verticalSpace(331),
                       ButtonWidget(
                         text: 'Send airtime',
                         onTap: () async {
@@ -187,9 +159,6 @@ class _AirtimeVerificationScreenState extends State<AirtimeVerificationScreen> {
 
                           final productCodes = await ProductHelper()
                               .getAirtimeProducts(widget.network);
-                          log('This is the code ${productCodes.toString()}');
-                          log(productCodes.toString());
-                          // final date = dateFormat.format(_endDate!);
 
                           await buyAirtime.buyAirtime(
                             phoneNumber: widget.phoneNumber,
@@ -215,9 +184,10 @@ class _AirtimeVerificationScreenState extends State<AirtimeVerificationScreen> {
                             );
                             nextScreenReplace(
                                 context,
-                                ConfirmationScreen(
+                                AirtimeConfirmationScreen(
                                   amount: widget.amount,
                                   number: widget.phoneNumber,
+                                  productCodes: productCodes,
                                 ));
                           }
                         },

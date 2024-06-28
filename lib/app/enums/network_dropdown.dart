@@ -33,9 +33,36 @@ List<String> dataValidityProvider = [
   'Yearly',
 ];
 
-List<String> dataBundle = [
-  'MTN - 5GB - NGN 1500',
-  'MTN - 10GB - NGN 4000',
-  'MTN - 20GB - NGN 6000',
-  'MTN - 30GB - NGN 7000',
-];
+// List<String> dataBundle = [
+//   'MTN - 5GB - NGN 1500',
+//   'MTN - 10GB - NGN 4000',
+//   'MTN - 20GB - NGN 6000',
+//   'MTN - 30GB - NGN 7000',
+// ];
+
+Map<String, List<String>> dataBundles = {
+  'mtn': [
+    'MTN - 5GB - NGN 1500',
+    'MTN - 10GB - NGN 4000',
+    'MTN - 20GB - NGN 6000',
+    'MTN - 30GB - NGN 7000',
+  ],
+  'glo': [
+    'GLO - 5GB - NGN 1500',
+    'GLO - 10GB - NGN 4000',
+    'GLO - 20GB - NGN 6000',
+    'GLO - 30GB - NGN 7000',
+  ],
+  'airtel': [
+    'Airtel - 5GB - NGN 1500',
+    'Airtel - 10GB - NGN 4000',
+    'Airtel - 20GB - NGN 6000',
+    'Airtel - 30GB - NGN 7000',
+  ],
+  '9mobile': [
+    '9mobile - 5GB - NGN 1500',
+    '9mobile - 10GB - NGN 4000',
+    '9mobile - 20GB - NGN 6000',
+    '9mobile - 30GB - NGN 7000',
+  ],
+};

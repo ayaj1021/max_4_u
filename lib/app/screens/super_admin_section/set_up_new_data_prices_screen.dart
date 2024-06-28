@@ -30,7 +30,7 @@ class _SetupNewDataPricesScreenState extends State<SetupNewDataPricesScreen> {
 
   String? _selectedServices = services[0];
   String? _selectedDataPrice = dataPrices[0];
-  String _selectedBundle = dataBundle[0];
+  String _selectedBundle = dataBundles['mtn']![0];
 
   final _setPriceController = TextEditingController();
   final _productPriceController = TextEditingController();
@@ -167,7 +167,8 @@ class _SetupNewDataPricesScreenState extends State<SetupNewDataPricesScreen> {
                               _selectedBundle = newValue!;
                             });
                           },
-                          items: dataBundle.map((String data) {
+                          items:
+                              dataBundles[_selectedNetwork]!.map((String data) {
                             return DropdownMenuItem(
                               value: data,
                               onTap: () {

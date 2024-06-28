@@ -93,6 +93,17 @@ class _TransactionScreenState extends State<TransactionScreen> {
     Share.share(content);
   }
 
+  final List icons = [
+    'assets/icons/call_icon.png',
+    'assets/icons/data_icon.png',
+    'assets/icons/fund_wallet_icon.png',
+  ];
+
+  final List colors = [
+    Color(0xffDEEDF7),
+    Color(0xffD6DDFE),
+    Color(0xffE8D6FE),
+  ];
   @override
   Widget build(BuildContext context) {
     DateFormat dateFormat = DateFormat('MMMM d, yyyy h:mm a');
@@ -309,7 +320,15 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                           child: Column(
                                             children: [
                                               TransactionSection(
-                                                transactionIcon: Icons.money,
+                                                transactionIcon: data[index]
+                                                        .subType!
+                                                        .contains('card')
+                                                    ? icons[2]
+                                                    : data[index]
+                                                            .subType!
+                                                            .contains('data')
+                                                        ? icons[1]
+                                                        : icons[0],
                                                 transactionType:
                                                     '${data[index].subType}'
                                                         .capitalize(),
@@ -319,8 +338,16 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                                     'N${data[index].amountPaid}',
                                                 transactionStatus:
                                                     '${data[index].status}',
-                                                transactionColor:
-                                                    Color(0xffD6DDFE),
+                                                transactionColor: data[index]
+                                                        .subType!
+                                                        .contains('card')
+                                                    ? colors[1]
+                                                    : data[index]
+                                                            .subType!
+                                                            .contains('data')
+                                                        ? colors[2]
+                                                        : colors[0],
+                                                // Color(0xffD6DDFE),
                                                 transactionStatusColor:
                                                     data[index].status ==
                                                             'success'

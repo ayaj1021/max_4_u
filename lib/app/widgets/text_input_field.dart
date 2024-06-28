@@ -61,6 +61,7 @@ class TextInputField extends StatelessWidget {
             obscureText: obscure,
             maxLength: maxLength,
             onChanged: onChanged,
+            style: AppTextStyles.font14,
             decoration: InputDecoration(
               counterText: '',
               hintText: hintText,

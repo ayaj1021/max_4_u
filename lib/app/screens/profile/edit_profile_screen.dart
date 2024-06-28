@@ -81,42 +81,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                     horizontalSpace(109),
                     Text(
-                      'Edit profile',
+                      'profile',
                       style: AppTextStyles.font18,
                     )
                   ],
                 ),
                 verticalSpace(37),
-                Container(
-                  height: 105.h,
-                  width: MediaQuery.of(context).size.width,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: AppColors.whiteColor,
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        height: 74.h,
-                        width: 74.w,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            width: 2,
-                            color: const Color(0xff333333),
-                          ),
-                        ),
-                        child: ClipOval(
-                          child:
-                              Image.asset('assets/images/profile_avatar.png'),
-                        ),
-                      ),
-                      horizontalSpace(16),
-                    ],
-                  ),
+                CircleAvatar(
+                  radius: 45,
+                  backgroundImage: AssetImage('assets/images/profile_avatar.png'),
+                
                 ),
+                horizontalSpace(16),
                 verticalSpace(20),
                 Container(
                   height: 400.h,

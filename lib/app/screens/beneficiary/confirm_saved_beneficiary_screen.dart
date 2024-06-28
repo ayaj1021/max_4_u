@@ -54,7 +54,7 @@ class _ConfirmSavedBeneficiaryScreenState
                     onTap: () async {
                       await reloadData.reloadUserData();
 
-                      nextScreen(context, DashBoardScreen());
+                      nextScreenReplace(context, DashBoardScreen());
                     },
                   )
                 ],
