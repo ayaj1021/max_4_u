@@ -26,7 +26,7 @@ class BuyDataScreen extends StatefulWidget {
 class _BuyDataScreenState extends State<BuyDataScreen> {
   String _selectedNetwork = networkProvider[0];
   String selectedValidity = dataValidityProvider[0];
-  String _selectedBundle = dataBundle[0];
+  String _selectedBundle = dataBundles['mtn']![0];
 
   final _phoneNumberController = TextEditingController();
 
@@ -117,6 +117,7 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
                       onSelected: (newValue) {
                         setState(() {
                           _selectedNetwork = newValue!;
+                            _selectedBundle = ''; 
                         });
                       },
                       dropdownMenuEntries:
@@ -325,7 +326,7 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
                         });
                       },
                       dropdownMenuEntries:
-                          dataBundle.map((String dataBundleType) {
+                          dataBundles[_selectedNetwork]!.map((String dataBundleType) {
                         return DropdownMenuEntry(
                           value: dataBundleType,
                           label: dataBundleType.toUpperCase(),

@@ -194,7 +194,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         await reloadData.reloadUserData();
 
                         Future.delayed(Duration(seconds: 2), () {
-                          nextScreen(context, DashBoardScreen());
+                          nextScreenReplace(context, DashBoardScreen());
                         });
                       }
 

@@ -16,6 +16,17 @@ class CustomerTransactionScreen extends StatefulWidget {
 
 class _CustomerTransactionScreenState extends State<CustomerTransactionScreen> {
   Months _selectedMonth = Months.January;
+  final List icons = [
+    'assets/icons/call_icon.png',
+    'assets/icons/data_icon.png',
+    'assets/icons/fund_wallet_icon.png',
+  ];
+  final List colors = [
+    Color(0xffDEEDF7),
+    Color(0xffD6DDFE),
+    Color(0xffE8D6FE),
+
+  ];
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -72,7 +83,7 @@ class _CustomerTransactionScreenState extends State<CustomerTransactionScreen> {
                       );
                     });
               },
-              child:  Row(
+              child: Row(
                 children: [
                   Text(
                     'Filter',
@@ -97,13 +108,23 @@ class _CustomerTransactionScreenState extends State<CustomerTransactionScreen> {
                       //     context, const TransactionDetailsScreen()),
                       child: Column(
                         children: [
-                          const TransactionSection(
-                            transactionIcon: Icons.money,
+                          TransactionSection(
+                            transactionIcon: icons[2],
                             transactionType: 'Added funds',
                             transactionDate: 'Apr 18th, 20:59',
                             transactionAmount: '-N35,000.00',
                             transactionStatus: 'Successful',
-                            transactionColor: Color(0xffD6DDFE), transactionStatusColor: Colors.green, transactionNumber: '',
+                            transactionColor:
+
+                            // data.subType!.contains('card')
+                            //               ? colors[1]
+                            //               : data.subType!.contains('data')
+                            //                   ? colors[2]
+                            //                   : colors[0],
+                            
+                             Color(0xffD6DDFE),
+                            transactionStatusColor: Colors.green,
+                            transactionNumber: '',
                           ),
                           verticalSpace(8),
                           Divider(
@@ -115,7 +136,6 @@ class _CustomerTransactionScreenState extends State<CustomerTransactionScreen> {
                     );
                   })),
         ),
-       
       ],
     );
   }

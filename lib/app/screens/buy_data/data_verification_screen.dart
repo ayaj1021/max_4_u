@@ -2,13 +2,12 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
-import 'package:max_4_u/app/enums/network_dropdown.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/provider/activate_auto_renewal_provider.dart';
 import 'package:max_4_u/app/provider/buy_data_provider.dart';
 import 'package:max_4_u/app/provider/obscure_text_provider.dart';
-import 'package:max_4_u/app/screens/confirmation/confirmation_screen.dart';
+import 'package:max_4_u/app/screens/buy_data/buy_data_screen.dart';
+import 'package:max_4_u/app/screens/buy_data/data_confirmation_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/busy_overlay.dart';
@@ -40,35 +39,39 @@ class _DataVerificationScreenState extends State<DataVerificationScreen> {
   DateTime? _endDate;
 
   Future<void> _selectDate(BuildContext context, bool isStartDate) async {
-    DateTime? picked = await showDatePicker(
+    DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
+      initialDate: DateTime.now().add(Duration(days: 1)),
+      firstDate: DateTime.now(),
       lastDate: DateTime(2101),
     );
 
-    if (picked != null && picked != (isStartDate ? _startDate : _endDate)) {
+    if (pickedDate != null) {
+      DateTime now = DateTime.now();
+      DateTime pickedDateTime = DateTime(
+        pickedDate.year,
+        pickedDate.month,
+        pickedDate.day,
+        now.hour,
+        now.minute + 1, // Add one minute to the current time
+      );
+
       setState(() {
         if (isStartDate) {
-          _startDate = picked;
+          _startDate = pickedDateTime;
           // Ensure end date is after start date
           if (_endDate != null && _endDate!.isBefore(_startDate!)) {
             _endDate = null;
           }
         } else {
-          _endDate = picked;
+          _endDate = pickedDateTime;
         }
       });
     }
   }
 
-  String _selectedValidity = dataValidityProvider[0];
-
   @override
   Widget build(BuildContext context) {
-    // final DateFormat dateFormat = DateFormat('dd MMMM yyyy');
-    final DateFormat dateFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
-    //DateFormat dateFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
     List<String> parts = widget.dataBundle.split(' - ');
     String bundle = '${parts[0]} - ${parts[1]}';
     String amount = parts.last;
@@ -86,14 +89,14 @@ class _DataVerificationScreenState extends State<DataVerificationScreen> {
             body: SafeArea(
               child: Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 41),
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 21),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       children: [
                         GestureDetector(
-                          onTap: () => Navigator.pop(context),
+                          onTap: () => nextScreen(context, BuyDataScreen()),
                           child: const Icon(
                             Icons.arrow_back,
                           ),
@@ -105,7 +108,7 @@ class _DataVerificationScreenState extends State<DataVerificationScreen> {
                         ),
                       ],
                     ),
-                    verticalSpace(52),
+                    verticalSpace(30),
                     Text(
                       'Send data to',
                       style: AppTextStyles.font14.copyWith(
@@ -116,7 +119,7 @@ class _DataVerificationScreenState extends State<DataVerificationScreen> {
                     verticalSpace(4),
                     Container(
                       padding: const EdgeInsets.all(13),
-                      height: 125.h,
+                      height: 175.h,
                       width: MediaQuery.of(context).size.width,
                       decoration: BoxDecoration(
                         color: AppColors.primaryColor,
@@ -168,7 +171,7 @@ class _DataVerificationScreenState extends State<DataVerificationScreen> {
                               )
                             ],
                           ),
-                          verticalSpace(12),
+                          verticalSpace(55),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -215,191 +218,18 @@ class _DataVerificationScreenState extends State<DataVerificationScreen> {
                         ],
                       ),
                     ),
-                    Column(
-                      children: [
-                        Row(
-                          children: [
-                            Checkbox(
-                                activeColor: AppColors.primaryColor,
-                                checkColor: AppColors.overlayColor,
-                                value: autoRenewalCheck.isAutoRenew,
-                                onChanged: (v) {
-                                  autoRenewalCheck.changeRenewal();
-                                }),
-                            Text('Enable auto-renewal for this transaction',
-                                style: AppTextStyles.font14.copyWith(
-                                  fontWeight: FontWeight.w400,
-                                ))
-                          ],
-                        ),
-                        autoRenewalCheck.isAutoRenew == true
-                            ? Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // verticalSpace(24),
-                                  Text(
-                                    'Frequency',
-                                    style: AppTextStyles.font14.copyWith(
-                                      color: const Color(0xff475569),
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  verticalSpace(4),
-
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 15),
-                                    height: 52.h,
-                                    width: MediaQuery.of(context).size.width,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12),
-                                      color: AppColors.whiteColor,
-                                      border: Border.all(
-                                        color: const Color(0xffCBD5E1),
-                                      ),
-                                    ),
-                                    child: DropdownMenu(
-                                      hintText: _selectedValidity.toUpperCase(),
-                                      width: 330.w,
-                                      enableFilter: true,
-                                      enableSearch: false,
-                                      inputDecorationTheme:
-                                          InputDecorationTheme(
-                                        fillColor: AppColors.whiteColor,
-                                        border: InputBorder.none,
-                                      ),
-                                      onSelected: (newValue) {
-                                        setState(() {
-                                          _selectedValidity = newValue!;
-                                        });
-                                      },
-                                      dropdownMenuEntries: dataValidityProvider
-                                          .map((String dataValidity) {
-                                        return DropdownMenuEntry(
-                                          value: dataValidity,
-                                          label: dataValidity.toUpperCase(),
-                                        );
-                                      }).toList(),
-                                    ),
-                                  ),
-
-                                  //           // Container(
-                                  //           //   padding:
-                                  //           //       const EdgeInsets.symmetric(horizontal: 15),
-                                  //           //   height: 52.h,
-                                  //           //   width: MediaQuery.of(context).size.width,
-                                  //           //   decoration: BoxDecoration(
-                                  //           //     borderRadius: BorderRadius.circular(12),
-                                  //           //     color: AppColors.whiteColor,
-                                  //           //     border: Border.all(
-                                  //           //       color: const Color(0xffCBD5E1),
-                                  //           //     ),
-                                  //           //   ),
-                                  //           //   child: DropdownButton<String>(
-                                  //           //     elevation: 0,
-                                  //           //     borderRadius: BorderRadius.circular(12),
-                                  //           //     underline: const SizedBox(),
-                                  //           //     value: _selectedValidity,
-                                  //           //     onChanged: (newValue) {
-                                  //           //       setState(() {
-                                  //           //         _selectedValidity = newValue!;
-                                  //           //       });
-                                  //           //     },
-                                  //           //     items: dataValidityProvider
-                                  //           //         .map((String dataValidity) {
-                                  //           //       return DropdownMenuItem(
-                                  //           //         value: dataValidity,
-                                  //           //         child: Container(
-                                  //           //           margin:
-                                  //           //               const EdgeInsets.only(right: 250),
-                                  //           //           child: Container(
-                                  //           //             margin: const EdgeInsets.only(top: 8),
-                                  //           //             child: Text(
-                                  //           //               dataValidity.toUpperCase(),
-                                  //           //               style:
-                                  //           //                   AppTextStyles.font14.copyWith(
-                                  //           //                 fontSize: 14,
-                                  //           //                 fontWeight: FontWeight.w400,
-                                  //           //               ),
-                                  //           //             ),
-                                  //           //           ),
-                                  //           //         ),
-                                  //           //       );
-                                  //           //     }).toList(),
-                                  //           //   ),
-                                  //           // ),
-
-                                  verticalSpace(31),
-                                  Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        ValidityDateWidget(
-                                          onTap: () =>
-                                              _selectDate(context, true),
-                                          date:
-                                              '${_startDate != null ? dateFormat.format(_startDate!) : 'DD-MM-YY'}',
-                                          dateLabel: 'Start Date',
-                                        ),
-                                        ValidityDateWidget(
-                                          onTap: () =>
-                                              _selectDate(context, false),
-                                          date:
-                                              '${_endDate != null ? dateFormat.format(_endDate!) : 'DD-MM-YY'}',
-                                          dateLabel: 'End Date',
-                                        )
-                                      ]),
-                                ],
-                              )
-                            : SizedBox(),
-                      ],
-                    ),
-                    verticalSpace(146),
+                   
+                    verticalSpace(331),
                     ButtonWidget(
                         text: 'Send data',
                         onTap: () async {
                           final productCodes = await ProductHelper()
                               .getDataProducts(widget.network);
                           log('This is the code ${productCodes.toString()}');
-                          // final endDate = _endDate?.toIso8601String();
-                          // final startDate = _startDate?.toIso8601String();
-
-                          if (autoRenewalCheck.isAutoRenew == true) {
-                            await activateRenewal.activateAutoRenewal(
-                              phoneNumber: widget.phoneNumber,
-                              productCode: productCodes,
-                              amount: widget.amount,
-                              startDate: dateFormat.format(_startDate!),
-                              endDate: dateFormat.format(_endDate!),
-                              intervalDaily: _selectedValidity.toLowerCase(),
-                            );
-
-                            if (activateRenewal.status == false &&
-                                context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content:
-                                          Text('${activateRenewal.message}')));
-                              showMessage(
-                                context,
-                                activateRenewal.message,
-                                isError: true,
-                              );
-                              debugPrint(activateRenewal.message.toString());
-                              return;
-                            }
-                            if (activateRenewal.status == true &&
-                                context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content:
-                                          Text('${activateRenewal.message}')));
-                            }
-                          }
-
+                         
+                         
                           await buyData.buyData(
                             phoneNumber: widget.phoneNumber,
-                            // amount: dataAmount,
                             productCode: productCodes,
                           );
 
@@ -421,9 +251,9 @@ class _DataVerificationScreenState extends State<DataVerificationScreen> {
 
                             nextScreen(
                                 context,
-                                ConfirmationScreen(
+                                DataConfirmationScreen(
                                   amount: widget.amount,
-                                  number: widget.phoneNumber,
+                                  phoneNumber: widget.phoneNumber,
                                 ));
                           }
                         })
@@ -435,53 +265,5 @@ class _DataVerificationScreenState extends State<DataVerificationScreen> {
         );
       },
     );
-  }
-}
-
-class ValidityDateWidget extends StatelessWidget {
-  const ValidityDateWidget({
-    super.key,
-    required this.date,
-    this.onTap,
-    required this.dateLabel,
-  });
-
-  final String date;
-  final String dateLabel;
-  final Function()? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(
-        dateLabel,
-        style: AppTextStyles.font14.copyWith(
-          color: const Color(0xff475569),
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-      verticalSpace(8),
-      GestureDetector(
-        onTap: onTap,
-        child: Container(
-          height: 52.h,
-          width: 119.w,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(6),
-            border: Border.all(
-              color: Color(0xffBDBDBD),
-            ),
-          ),
-          child: Text(
-            date,
-            style: AppTextStyles.font14.copyWith(
-              color: const Color(0xffAAA3A3),
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-        ),
-      )
-    ]);
   }
 }

@@ -127,7 +127,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           password: _passwordController.text.trim());
 
                       if (authProv.status == false && context.mounted) {
-                        showMessage(context, authProv.message, isError: true);
+                        showMessage(context, authProv.errorMessage, isError: true);
+                        // ScaffoldMessenger.of(context).showSnackBar(
+                        //     SnackBar(content: Text(authProv.errorMessage)));
                         return;
                       }
 
@@ -138,9 +140,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         showMessage(context, authProv.message);
                         await reloadData.reloadUserData();
                         Future.delayed(Duration(seconds: 2), () {
-                          nextScreen(context, DashBoardScreen());
+                          nextScreenReplace(context, DashBoardScreen());
                         });
-                       // nextScreen(context, DashBoardScreen());
+                        // nextScreen(context, DashBoardScreen());
                       }
                       final firstName = EncryptData.decryptAES(
                           '${authProv.resDataData.userData![0].firstName}');

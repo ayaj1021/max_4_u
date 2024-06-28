@@ -52,6 +52,7 @@ class SettingsScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SettingsOptionSection(
+                     iconData: Icons.arrow_forward_ios,
                     onTap: () =>
                         nextScreen(context, const ChangePasswordScreen()),
                     icon: 'assets/icons/profile_icon.png',
@@ -107,6 +108,7 @@ class SettingsScreen extends StatelessWidget {
                 color: AppColors.whiteColor,
               ),
               child: const SettingsOptionSection(
+                 iconData: Icons.arrow_forward_ios,
                 icon: 'assets/icons/profile_icon.png',
                 settingOption: 'About Max4u',
               ),
@@ -122,6 +124,7 @@ class SettingsScreen extends StatelessWidget {
                 color: AppColors.whiteColor,
               ),
               child: SettingsOptionSection(
+                 iconData: Icons.arrow_forward_ios,
                 onTap: () => nextScreen(context, const DeleteAccountScreen()),
                 icon: 'assets/icons/setting_icon.png',
                 settingOption: 'Delete account',

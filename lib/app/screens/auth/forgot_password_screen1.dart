@@ -20,99 +20,99 @@ class ForgotPasswordScreen1 extends StatefulWidget {
 }
 
 class _ForgotPasswordScreen1State extends State<ForgotPasswordScreen1> {
-  final _emailController= TextEditingController();
+  final _emailController = TextEditingController();
   @override
   void dispose() {
-   _emailController.dispose();
+    _emailController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AuthProviderImpl>(
-      builder: (context, authProv, _) {
-        return BusyOverlay(
-             show: authProv.state == ViewState.Busy,
+    return Consumer<AuthProviderImpl>(builder: (context, authProv, _) {
+      return BusyOverlay(
+        show: authProv.state == ViewState.Busy,
         title: authProv.message,
-          child: Scaffold(
-            body: SafeArea(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 42),
-                  child:
-                      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    BackArrowButton(
-                      onTap: () => Navigator.pop(context),
-                    ),
-                    verticalSpace(26),
-                     Text(
-                      'Forgot your password?',
-                      style: AppTextStyles.font20,
-                    ),
-                    verticalSpace(12),
-                    Text(
-                      'Enter the email associated with this account to get a code to reset your password',
-                      style: AppTextStyles.font14
-                          .copyWith(color: const Color(0xff475569)),
-                    ),
-                    verticalSpace(24),
-                    TextInputField(
-                      controller: _emailController,
-                      labelText: 'Email',
-                    ),
-                    verticalSpace(40),
-                    ButtonWidget(
-                      text: 'Send code',
-                      onTap: ()async {
-                          if (_emailController.text.isEmpty) {
-                        showMessage(context, 'Email is required',
-                            isError: true);
-                        return;
-                      }
+        child: Scaffold(
+          body: SafeArea(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 42),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      BackArrowButton(
+                        onTap: () => Navigator.pop(context),
+                      ),
+                      verticalSpace(26),
+                      Text(
+                        'Forgot your password?',
+                        style: AppTextStyles.font20,
+                      ),
+                      verticalSpace(12),
+                      Text(
+                        'Enter the email or phone number associated with this account to get a code to reset your password',
+                        style: AppTextStyles.font14
+                            .copyWith(color: const Color(0xff475569)),
+                      ),
+                      verticalSpace(24),
+                      TextInputField(
+                        hintText: 'Enter email or phone number',
+                        controller: _emailController,
+                        labelText: 'Email/Phone number',
+                      ),
+                      verticalSpace(40),
+                      ButtonWidget(
+                          text: 'Send code',
+                          onTap: () async {
+                            if (_emailController.text.isEmpty) {
+                              showMessage(context, 'Email is required',
+                                  isError: true);
+                              return;
+                            }
 
-                      await authProv.forgotPassword(email: _emailController.text.trim());
-                      if (authProv.state == ViewState.Error &&
-                          context.mounted) {
-                        showMessage(context, authProv.message);
-                        return;
-                      }
+                            await authProv.forgotPassword(
+                                email: _emailController.text.trim());
+                            if (authProv.state == ViewState.Error &&
+                                context.mounted) {
+                              showMessage(context, authProv.message);
+                              return;
+                            }
 
-                      if (authProv.state == ViewState.Success &&
-                          context.mounted) {
-                        showMessage(context, authProv.message);
+                            if (authProv.state == ViewState.Success &&
+                                context.mounted) {
+                              showMessage(context, authProv.message);
 
-                       
-                      nextScreen(context, const ResetCodeScreen());
-                      }
-                      }
-                    ),
-                    verticalSpace(20),
-                    // GestureDetector(
-                    //   onTap: () => nextScreen(context, const ForgotPasswordScreen2()),
-                    //   child: Row(
-                    //     mainAxisAlignment: MainAxisAlignment.center,
-                    //     children: [
-                    //       const Icon(
-                    //         Icons.phone_android_rounded,
-                    //         color: AppColors.primaryColor,
-                    //       ),
-                    //       horizontalSpace(8),
-                    //       Text(
-                    //         'Use phone number instead',
-                    //         style: AppTextStyles.font14.copyWith(
-                    //           color: AppColors.primaryColor,
-                    //         ),
-                    //       )
-                    //     ],
-                    //   ),
-                    // ),
-                  ]),
-                ),
+                              nextScreen(context, const ResetCodeScreen());
+                            }
+                          }),
+                      verticalSpace(20),
+                      // GestureDetector(
+                      //   onTap: () => nextScreen(context, const ForgotPasswordScreen2()),
+                      //   child: Row(
+                      //     mainAxisAlignment: MainAxisAlignment.center,
+                      //     children: [
+                      //       const Icon(
+                      //         Icons.phone_android_rounded,
+                      //         color: AppColors.primaryColor,
+                      //       ),
+                      //       horizontalSpace(8),
+                      //       Text(
+                      //         'Use phone number instead',
+                      //         style: AppTextStyles.font14.copyWith(
+                      //           color: AppColors.primaryColor,
+                      //         ),
+                      //       )
+                      //     ],
+                      //   ),
+                      // ),
+                    ]),
               ),
             ),
           ),
-        );
-      }
-    );
+        ),
+      );
+    });
   }
 }

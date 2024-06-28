@@ -4,6 +4,7 @@ import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
 
 import 'package:max_4_u/app/screens/beneficiary/save_beneficiary_screen.dart';
+import 'package:max_4_u/app/screens/buy_airtime/airtime_autorenewal_screen.dart';
 import 'package:max_4_u/app/screens/dashboard/dashboard_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
@@ -15,10 +16,15 @@ import 'package:provider/provider.dart';
 
 class AirtimeConfirmationScreen extends StatelessWidget {
   const AirtimeConfirmationScreen(
-      {super.key, required this.amount, required this.number});
+      {super.key,
+      required this.amount,
+      required this.number,
+      required this.productCodes});
 
   final String amount;
   final String number;
+
+  final String productCodes;
 
   @override
   Widget build(BuildContext context) {
@@ -68,19 +74,26 @@ class AirtimeConfirmationScreen extends StatelessWidget {
                       height: 48.h,
                       width: 155.w,
                       child: ButtonWidget(
-                        text: 'Continue',
-                        onTap: () async {
-                          await reloadData.reloadUserData();
-
-                          nextScreen(context, DashBoardScreen());
-                        },
+                        color: Colors.transparent,
+                        border: Border.all(
+                          color: AppColors.primaryColor,
+                        ),
+                        text: 'Auto Renewal',
+                        textColor: AppColors.primaryColor,
+                        onTap: () => nextScreen(
+                            context,
+                            AirtimeAutoRenewalScreen(
+                              amount: amount,
+                              phoneNumber: number,
+                              productCodes: productCodes,
+                            )),
                       ),
                     ),
                     SizedBox(
                       height: 48.h,
-                      width: 155.w,
+                      width: 165.w,
                       child: ButtonWidget(
-                        color: AppColors.whiteColor,
+                        color: Colors.transparent,
                         border: Border.all(
                           color: AppColors.primaryColor,
                         ),
@@ -94,7 +107,16 @@ class AirtimeConfirmationScreen extends StatelessWidget {
                       ),
                     ),
                   ],
-                )
+                ),
+                verticalSpace(28),
+                ButtonWidget(
+                  text: 'Continue',
+                  onTap: () async {
+                    await reloadData.reloadUserData();
+
+                    nextScreenReplace(context, DashBoardScreen());
+                  },
+                ),
               ],
             ),
           )),

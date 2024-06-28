@@ -69,6 +69,7 @@ class _SideDrawerState extends State<SideDrawer> {
         final userId = EncryptData.decryptAES(
             authProv.resDataData.userData![0].uniqueId.toString());
         return Drawer(
+          
           backgroundColor: AppColors.whiteColor,
           child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 64),
@@ -157,7 +158,7 @@ class _SideDrawerState extends State<SideDrawer> {
                       .copyWith(fontWeight: FontWeight.w500),
                 ),
               ),
-              verticalSpace(300),
+              verticalSpace(270),
               Container(
                 height: 56.h,
                 width: 288.w,
@@ -238,7 +239,8 @@ class _SideDrawerState extends State<SideDrawer> {
                           ? SizedBox(
                               height: 24,
                               width: 24,
-                              child: Image.asset('assets/icons/user_icon.png'))
+                              child: Image.asset(
+                                  'assets/icons/vendor_white_icon.png'))
                           : authProv.userLevel == '5'
                               ? SizedBox.shrink()
                               : userType == '1'

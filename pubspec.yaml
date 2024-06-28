@@ -48,6 +48,8 @@ dependencies:
   firebase_core: ^3.1.0
   upgrader: ^10.3.0
   country_picker: ^2.0.26
+  url_launcher: ^6.3.0
+
   
 
 
@@ -91,10 +93,10 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: fonts/Poppins-Medium.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

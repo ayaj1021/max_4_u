@@ -73,7 +73,7 @@ class ConfirmationScreen extends StatelessWidget {
                       ),
                       SizedBox(
                         height: 48.h,
-                        width: 155.w,
+                        width: 165.w,
                         child: ButtonWidget(
                           color: AppColors.whiteColor,
                           border: Border.all(

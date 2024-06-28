@@ -78,7 +78,7 @@ class _FundAccountValidationScreenState
                               text: 'Continue',
                               onTap: ()async { 
                                 await reloadData.reloadUserData();
-                                nextScreen(context, DashBoardScreen());}
+                                nextScreenReplace(context, DashBoardScreen());}
                             )
                           ],
                         ),
