@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:max_4_u/app/enums/network_dropdown.dart';
-import 'package:max_4_u/app/enums/view_state_enum.dart';
-import 'package:max_4_u/app/provider/buy_data_provider.dart';
+import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/screens/beneficiary/beneficiary_screen.dart';
 import 'package:max_4_u/app/screens/buy_data/data_verification_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
-import 'package:max_4_u/app/utils/busy_overlay.dart';
 import 'package:max_4_u/app/utils/screen_navigator.dart';
 import 'package:max_4_u/app/utils/show_message.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
@@ -24,8 +22,8 @@ class BuyDataScreen extends StatefulWidget {
 }
 
 class _BuyDataScreenState extends State<BuyDataScreen> {
-  String _selectedNetwork = networkProvider[0];
-  String selectedValidity = dataValidityProvider[0];
+  //String _selectedNetwork = networkProvider[0];
+// String selectedValidity = dataValidityProvider[0];
   String _selectedBundle = dataBundles['mtn']![0];
 
   final _phoneNumberController = TextEditingController();
@@ -38,31 +36,23 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
 
   var codeValues = [];
   var networks = [];
-  // getProductCodeValues() async {
-  //   final code = await SecureStorage().getUserProducts();
-  //   final network = code
-  //       .where((code) => code['name'] == 'mtn')
-  //       .map((code) => code['code'])
-  //       .toList();
 
-  //   final productCodes = code
-  //       .where((code) => code['category'] == 'airtime')
-  //       .map((code) => code['code'])
-  //       .toList();
-
-  //   setState(() {
-  //     networks = network;
-  //     codeValues = productCodes;
-  //   });
-  // }
+  Map<int, String> durationMap = {
+    1: 'Daily',
+    7: 'Weekly',
+    30: 'Monthly',
+    90: '3 Months',
+    365: 'Yearly',
+  };
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<BuyDataProvider>(builder: (context, buyData, _) {
-      return BusyOverlay(
-        show: buyData.state == ViewState.Busy,
-        title: buyData.message,
-        child: Scaffold(
+    return Consumer<ReloadUserDataProvider>(
+      builder: (context, reloadData, _) {
+        String _selectedNetwork = reloadData.loadData.products![0].serviceName!;
+        String _selectedValidity = reloadData.loadData.products![0].duration!;
+
+        return Scaffold(
           body: SafeArea(
               child: SingleChildScrollView(
             child: Padding(
@@ -117,7 +107,7 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
                       onSelected: (newValue) {
                         setState(() {
                           _selectedNetwork = newValue!;
-                            _selectedBundle = ''; 
+                          _selectedBundle = '';
                         });
                       },
                       dropdownMenuEntries:
@@ -279,7 +269,7 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
                       ),
                       onSelected: (newValue) {
                         setState(() {
-                          selectedValidity = newValue!;
+                          _selectedValidity = newValue!;
                         });
                       },
                       dropdownMenuEntries:
@@ -325,8 +315,8 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
                           _selectedBundle = newValue!;
                         });
                       },
-                      dropdownMenuEntries:
-                          dataBundles[_selectedNetwork]!.map((String dataBundleType) {
+                      dropdownMenuEntries: dataBundles[_selectedNetwork]!
+                          .map((String dataBundleType) {
                         return DropdownMenuEntry(
                           value: dataBundleType,
                           label: dataBundleType.toUpperCase(),
@@ -399,8 +389,8 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
               ),
             ),
           )),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 }

@@ -85,7 +85,7 @@ class _UploadIdCardScreenState extends State<UploadIdCardScreen> {
                     Row(
                       children: [
                         GestureDetector(
-                          onTap: () => Navigator.pop(context),
+                          onTap: () => Navigator.of(context).pop(),
                           child: const Icon(
                             Icons.arrow_back,
                           ),

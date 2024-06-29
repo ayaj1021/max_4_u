@@ -20,7 +20,10 @@ class FaqQuestionSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<FaqProvider>(builder: (context, faqProvider, child) {
       bool isTapped = faqProvider.activeFaqIndex == index;
-      return GestureDetector(
+      return InkWell(
+        onTap: () {
+          faqProvider.setActiveFaqIndex(index);
+        },
         child: Column(
           children: [
             Row(
@@ -32,7 +35,7 @@ class FaqQuestionSection extends StatelessWidget {
                       color: const Color(0xff1A1A1A),
                       fontWeight: FontWeight.w400),
                 ),
-                GestureDetector(
+                InkWell(
                   onTap: () {
                     faqProvider.setActiveFaqIndex(index);
                   },

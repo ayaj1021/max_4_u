@@ -30,6 +30,7 @@ List<String> dataValidityProvider = [
   'Daily',
   'Weekly',
   'Monthly',
+  '3 Months',
   'Yearly',
 ];
 
