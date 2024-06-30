@@ -97,7 +97,9 @@ class _HomeScreenState extends State<HomeScreen> {
     final userFirstName = EncryptData.decryptAES(
         '${authProv.resDataData.userData![0].firstName}');
     return Scaffold(
-      drawer: const SideDrawer(),
+      drawer: ClipRRect(
+          borderRadius: BorderRadius.zero, 
+        child: const SideDrawer()),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         leading: Builder(builder: (context) {

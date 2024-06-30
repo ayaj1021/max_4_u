@@ -30,8 +30,11 @@ List<String> dataValidityProvider = [
   'Daily',
   'Weekly',
   'Monthly',
+  '3 Months',
   'Yearly',
 ];
+
+
 
 // List<String> dataBundle = [
 //   'MTN - 5GB - NGN 1500',

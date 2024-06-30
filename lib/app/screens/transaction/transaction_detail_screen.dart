@@ -8,8 +8,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/screens/transaction/components/transaction_details_component.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
+import 'package:max_4_u/app/utils/text_capitalization_extension.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
-import 'package:max_4_u/app/widgets/back_arrow_button.dart';
 import 'package:max_4_u/app/widgets/button_widget.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -28,12 +28,13 @@ class TransactionDetailsScreen extends StatefulWidget {
       required this.status,
       required this.date,
       required this.type,
-      required this.number});
+      required this.number, required this.subType});
   final String amount;
   final String referenceId;
   final String status;
   final String date;
   final String type;
+  final String subType;
   final String number;
 
   @override
@@ -55,9 +56,9 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
             children: [
               Row(
                 children: [
-                  BackArrowButton(
-                    onTap: () => Navigator.pop(context),
-                  ),
+                  InkWell(
+                      onTap: () => Navigator.of(context).pop(),
+                      child: Icon(Icons.arrow_back)),
                   horizontalSpace(140),
                   Text(
                     'Details',
@@ -69,6 +70,7 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
               RepaintBoundary(
                 key: _globalKey,
                 child: TransactionsDetailsWidget(
+                  subType: widget.subType,
                   amount: widget.amount,
                   status: widget.status,
                   referenceId: widget.referenceId,
@@ -663,7 +665,7 @@ class TransactionsDetailsWidget extends StatelessWidget {
     required this.referenceId,
     required this.type,
     required this.date,
-    required this.number,
+    required this.number, required this.subType,
   });
 
   final String amount;
@@ -672,6 +674,7 @@ class TransactionsDetailsWidget extends StatelessWidget {
   final String type;
   final String date;
   final String number;
+  final String subType;
 
   @override
   Widget build(BuildContext context) {
@@ -727,7 +730,7 @@ class TransactionsDetailsWidget extends StatelessWidget {
         verticalSpace(24),
         TransactionDetailsSection(
           title: 'Transaction Type',
-          value: '$type',
+          value: '$type'.capitalize(),
         ),
         // verticalSpace(24),
         // const TransactionDetailsSection(
@@ -736,8 +739,8 @@ class TransactionsDetailsWidget extends StatelessWidget {
         // ),
         verticalSpace(24),
         TransactionDetailsSection(
-          title: 'Number',
-          value: number,
+          title: 'Type',
+          value: subType.capitalize(),
         ),
         verticalSpace(24),
         TransactionDetailsSection(

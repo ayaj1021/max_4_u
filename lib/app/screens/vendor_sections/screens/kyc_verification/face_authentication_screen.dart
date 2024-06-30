@@ -94,7 +94,7 @@ class _FaceAuthenticationScreenState extends State<FaceAuthenticationScreen> {
                   Row(
                     children: [
                       GestureDetector(
-                        onTap: () => Navigator.pop(context),
+                        onTap: () => Navigator.of(context).pop(),
                         child: const Icon(
                           Icons.arrow_back,
                         ),
@@ -124,7 +124,7 @@ class _FaceAuthenticationScreenState extends State<FaceAuthenticationScreen> {
                     'Tap on image below to photo',
                     style: AppTextStyles.font14.copyWith(
                       fontWeight: FontWeight.w400,
-                      color: const Color(0xff333333),
+                      color: AppColors.primaryColor
                     ),
                     textAlign: TextAlign.center,
                   ),

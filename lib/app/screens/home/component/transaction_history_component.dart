@@ -185,67 +185,69 @@ class TransactionSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Container(
-                  height: 45.h,
-                  width: 45.w,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: transactionColor,
+        Container(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    height: 45.h,
+                    width: 45.w,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: transactionColor,
+                    ),
+                    child: SizedBox(
+                      height: 24,
+                      width: 24,
+                      child: Image.asset(transactionIcon)),
                   ),
-                  child: SizedBox(
-                    height: 24,
-                    width: 24,
-                    child: Image.asset(transactionIcon)),
-                ),
-                horizontalSpace(9),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      transactionType,
-                      style: AppTextStyles.font18
-                          .copyWith(fontWeight: FontWeight.w400),
-                    ),
-                    Text(
-                      transactionNumber,
-                      style: AppTextStyles.font14.copyWith(
-                        fontWeight: FontWeight.w500,
+                  horizontalSpace(9),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        transactionType,
+                        style: AppTextStyles.font18
+                            .copyWith(fontWeight: FontWeight.w400),
                       ),
-                    ),
-                    Text(
-                      transactionDate,
-                      style: AppTextStyles.font12.copyWith(
-                        fontWeight: FontWeight.normal,
+                      Text(
+                        transactionNumber,
+                        style: AppTextStyles.font14.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                    ),
-                  ],
-                )
-              ],
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  transactionAmount,
-                  style: AppTextStyles.font14
-                      .copyWith(fontWeight: FontWeight.w500),
-                ),
-                Text(
-                  transactionStatus,
-                  style: AppTextStyles.font12.copyWith(
-                    fontWeight: FontWeight.w400,
-                    color: transactionStatusColor,
+                      Text(
+                        transactionDate,
+                        style: AppTextStyles.font12.copyWith(
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    transactionAmount,
+                    style: AppTextStyles.font14
+                        .copyWith(fontWeight: FontWeight.w500),
                   ),
-                ),
-              ],
-            )
-          ],
+                  Text(
+                    transactionStatus,
+                    style: AppTextStyles.font12.copyWith(
+                      fontWeight: FontWeight.w400,
+                      color: transactionStatusColor,
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
         // verticalSpace(24),
       ],

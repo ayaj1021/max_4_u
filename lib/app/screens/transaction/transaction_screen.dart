@@ -303,7 +303,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                       (index) {
                                         // final data =    searchList[index].transactionHistory!.data![index];
 
-                                        return GestureDetector(
+                                        return InkWell(
                                           onTap: () => nextScreen(
                                               context,
                                               TransactionDetailsScreen(
@@ -315,7 +315,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                                 date:
                                                     '${dateFormat.format(data[index].regDate as DateTime)}',
                                                 type: '${data[index].type}',
-                                                number: '${data[index].number}',
+                                                number: '${data[index].number}', subType: '${data[index].subType}',
                                               )),
                                           child: Column(
                                             children: [

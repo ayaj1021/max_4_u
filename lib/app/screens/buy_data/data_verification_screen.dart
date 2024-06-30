@@ -218,7 +218,6 @@ class _DataVerificationScreenState extends State<DataVerificationScreen> {
                         ],
                       ),
                     ),
-                   
                     verticalSpace(331),
                     ButtonWidget(
                         text: 'Send data',
@@ -226,8 +225,7 @@ class _DataVerificationScreenState extends State<DataVerificationScreen> {
                           final productCodes = await ProductHelper()
                               .getDataProducts(widget.network);
                           log('This is the code ${productCodes.toString()}');
-                         
-                         
+
                           await buyData.buyData(
                             phoneNumber: widget.phoneNumber,
                             productCode: productCodes,
@@ -254,6 +252,7 @@ class _DataVerificationScreenState extends State<DataVerificationScreen> {
                                 DataConfirmationScreen(
                                   amount: widget.amount,
                                   phoneNumber: widget.phoneNumber,
+                                  productCodes: productCodes,
                                 ));
                           }
                         })

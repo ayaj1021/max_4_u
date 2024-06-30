@@ -21,7 +21,7 @@ class SettingsOptionSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: onTap,
       child: Container(
         child: Row(
@@ -38,7 +38,7 @@ class SettingsOptionSection extends StatelessWidget {
                 ),
               )
             ]),
-            GestureDetector(
+            InkWell(
               onTap: iconOnTap,
               child: Icon(
                 iconData,
