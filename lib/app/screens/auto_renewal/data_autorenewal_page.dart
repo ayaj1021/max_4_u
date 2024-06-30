@@ -19,12 +19,6 @@ class DataAutoRenewalPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer2<ReloadUserDataProvider, CancelAutoRenewalProvider>(
         builder: (context, reloadData, cancelRenewal, _) {
-      final data = reloadData.loadData.autoRenewal!.data![0];
-      //Code to get the data bundle
-
-      final products = reloadData.loadData.products!;
-      //  final dataAmount = reloadData.loadData.autoRenewal!.data!.where((element) => element.productCode ==  products.where((element) => element.code == 'code'));
-      // final dataAmount = amountData.firstWhere((element) => false)
       return Column(
         children: [
           verticalSpace(reloadData.loadData.autoRenewal!.data!
@@ -64,161 +58,198 @@ class DataAutoRenewalPage extends StatelessWidget {
                       reloadData.loadData.autoRenewal!.data!
                           .where((element) => element.category == 'data')
                           .length, (index) {
-                    final dataItem =
-                        reloadData.loadData.autoRenewal!.data![index];
+                    final data = reloadData.loadData.autoRenewal!.data!
+                        .where((element) => element.category == 'data')
+                        .map((e) => e)
+                        .toList();
+                    // final data = reloadData.loadData.autoRenewal!.data!.map((e) => e).toList();
 
-                    var product = products.firstWhere(
-                        (product) => product.code == dataItem.productCode);
+                    // final dataItem =
+                    //     reloadData.loadData.autoRenewal!.data![index];
+
+                    // var product = products.firstWhere(
+                    //     (product) => product.code == dataItem.productCode);
 
                     return Column(
                       children: [
-                        Container(
-                          height: 174.h,
-                          width: MediaQuery.of(context).size.width,
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 12, horizontal: 14),
-                          decoration: BoxDecoration(
-                            color: const Color(0xffE8E8E8),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                        Stack(
+                          children: [
+                            Container(
+                              height: 174.h,
+                              width: MediaQuery.of(context).size.width,
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 12, horizontal: 14),
+                              decoration: BoxDecoration(
+                                color: const Color(0xffE8E8E8),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Column(
                                 children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
-                                        'Phone number',
-                                        style: AppTextStyles.font12.copyWith(
-                                          fontWeight: FontWeight.w400,
-                                          color: AppColors.textColor,
-                                        ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Phone number',
+                                            style:
+                                                AppTextStyles.font12.copyWith(
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.textColor,
+                                            ),
+                                          ),
+                                          Text(
+                                            '${data[index].number}',
+                                            // '${data.number}',
+                                            style:
+                                                AppTextStyles.font16.copyWith(
+                                              fontWeight: FontWeight.w500,
+                                              color: AppColors.mainTextColor,
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      Text(
-                                        '${data.number}',
-                                        // '${data.number}',
-                                        style: AppTextStyles.font16.copyWith(
-                                          fontWeight: FontWeight.w500,
-                                          color: AppColors.mainTextColor,
-                                        ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          Text(
+                                            'Network',
+                                            style:
+                                                AppTextStyles.font12.copyWith(
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.textColor,
+                                            ),
+                                          ),
+                                          Text(
+                                            '${data[index].serviceName}'
+                                                .toUpperCase(),
+                                            style:
+                                                AppTextStyles.font16.copyWith(
+                                              fontWeight: FontWeight.w500,
+                                              color: AppColors.mainTextColor,
+                                            ),
+                                          ),
+                                          // Text(
+                                          //   '${data.id}'.toUpperCase(),
+                                          //   style: AppTextStyles.font16.copyWith(
+                                          //     fontWeight: FontWeight.w500,
+                                          //     color: AppColors.mainTextColor,
+                                          //   ),
+                                          // ),
+                                        ],
                                       ),
                                     ],
                                   ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                  verticalSpace(13),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
-                                        'Network',
-                                        style: AppTextStyles.font12.copyWith(
-                                          fontWeight: FontWeight.w400,
-                                          color: AppColors.textColor,
-                                        ),
-                                      ),
-                                      Text(
-                                        '${data.serviceName}'.toUpperCase(),
-                                        style: AppTextStyles.font16.copyWith(
-                                          fontWeight: FontWeight.w500,
-                                          color: AppColors.mainTextColor,
-                                        ),
-                                      ),
-                                      // Text(
-                                      //   '${data.id}'.toUpperCase(),
-                                      //   style: AppTextStyles.font16.copyWith(
-                                      //     fontWeight: FontWeight.w500,
-                                      //     color: AppColors.mainTextColor,
-                                      //   ),
+                                      // Column(
+                                      //   crossAxisAlignment:
+                                      //       CrossAxisAlignment.start,
+                                      //   children: [
+                                      //     Text(
+                                      //       'Amount',
+                                      //       style:
+                                      //           AppTextStyles.font12.copyWith(
+                                      //         fontWeight: FontWeight.w400,
+                                      //         color: AppColors.textColor,
+                                      //       ),
+                                      //     ),
+                                      //     Text(
+                                      //       '${data[index].amount}',
+                                      //       style:
+                                      //           AppTextStyles.font16.copyWith(
+                                      //         fontWeight: FontWeight.w500,
+                                      //         color: AppColors.mainTextColor,
+                                      //       ),
+                                      //     ),
+                                      //   ],
                                       // ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Data Bundle',
+                                            style:
+                                                AppTextStyles.font12.copyWith(
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.textColor,
+                                            ),
+                                          ),
+                                          Text(
+                                            '${data[index].productCode}'
+                                                .toUpperCase(),
+                                            style:
+                                                AppTextStyles.font16.copyWith(
+                                              fontWeight: FontWeight.w500,
+                                              color: AppColors.mainTextColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ],
+                                  ),
+                                  verticalSpace(8),
+                                  ButtonWidget(
+                                    onTap: () async {
+                                      await cancelRenewal.cancelAutoRenewal(
+                                        id: '${data[0].id}',
+                                      );
+
+                                      if (cancelRenewal.status == false &&
+                                          context.mounted) {
+                                        showMessage(
+                                          context,
+                                          cancelRenewal.message,
+                                          isError: true,
+                                        );
+
+                                        return;
+                                      }
+
+                                      if (cancelRenewal.status == true &&
+                                          context.mounted) {
+                                        showMessage(
+                                          context,
+                                          cancelRenewal.message,
+                                          // isError: false,
+                                        );
+                                        nextScreenReplace(
+                                            context, AutoRenewalScreen());
+                                      }
+                                    },
+                                    text: 'Cancel auto renewal',
+                                    textColor: AppColors.primaryColor,
+                                    color: Color(0xffD9D9D9),
                                   ),
                                 ],
                               ),
-                              verticalSpace(13),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Amount',
-                                        style: AppTextStyles.font12.copyWith(
-                                          fontWeight: FontWeight.w400,
-                                          color: AppColors.textColor,
-                                        ),
+                            ),
+                            cancelRenewal.state == ViewState.Busy
+                                ? Container(
+                                    height: 174.h,
+                                    width: MediaQuery.of(context).size.width,
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 12, horizontal: 14),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xffE8E8E8).withOpacity(0.5),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Center(
+                                      child: CircularProgressIndicator(
+                                        color: AppColors.primaryColor,
                                       ),
-                                      Text(
-                                        '${product.price}',
-                                        style: AppTextStyles.font16.copyWith(
-                                          fontWeight: FontWeight.w500,
-                                          color: AppColors.mainTextColor,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                        'Data Bundle',
-                                        style: AppTextStyles.font12.copyWith(
-                                          fontWeight: FontWeight.w400,
-                                          color: AppColors.textColor,
-                                        ),
-                                      ),
-                                      Text(
-                                        '${product.code}',
-                                        style: AppTextStyles.font16.copyWith(
-                                          fontWeight: FontWeight.w500,
-                                          color: AppColors.mainTextColor,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              verticalSpace(8),
-                              ButtonWidget(
-                                onTap: () async {
-                                  await cancelRenewal.cancelAutoRenewal(
-                                    id: '${data.id}',
-                                  );
-
-                                  if (cancelRenewal.status == false &&
-                                      context.mounted) {
-                                    showMessage(
-                                      context,
-                                      cancelRenewal.message,
-                                      isError: true,
-                                    );
-
-                                    return;
-                                  }
-
-                                  if (cancelRenewal.status == true &&
-                                      context.mounted) {
-                                    showMessage(
-                                      context,
-                                      cancelRenewal.message,
-                                      // isError: false,
-                                    );
-                                    nextScreenReplace(
-                                        context, AutoRenewalScreen());
-                                  }
-                                },
-                                text: cancelRenewal.state == ViewState.Busy
-                                    ? 'Cancelling auto renewal...'
-                                    : 'Cancel auto renewal',
-                                textColor: AppColors.primaryColor,
-                                color: Color(0xffD9D9D9),
-                              ),
-                            ],
-                          ),
+                                    ),
+                                  )
+                                : SizedBox.shrink(),
+                          ],
                         ),
                         verticalSpace(20),
                       ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/screens/beneficiary/save_beneficiary_screen.dart';
+import 'package:max_4_u/app/screens/buy_data/buy_data_auto_renewal_screen.dart';
 import 'package:max_4_u/app/screens/dashboard/dashboard_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
@@ -10,9 +11,13 @@ import 'package:max_4_u/app/widgets/button_widget.dart';
 
 class DataConfirmationScreen extends StatelessWidget {
   const DataConfirmationScreen(
-      {super.key, required this.amount, required this.phoneNumber});
+      {super.key,
+      required this.amount,
+      required this.phoneNumber,
+      required this.productCodes});
   final String amount;
   final String phoneNumber;
+  final String productCodes;
 
   @override
   Widget build(BuildContext context) {
@@ -60,10 +65,20 @@ class DataConfirmationScreen extends StatelessWidget {
                   height: 48.h,
                   width: 155.w,
                   child: ButtonWidget(
-                      text: 'Continue',
-                      onTap: () async {
-                        nextScreenReplace(context, DashBoardScreen());
-                      }),
+                    color: Colors.transparent,
+                    border: Border.all(
+                      color: AppColors.primaryColor,
+                    ),
+                    text: 'Auto Renewal',
+                    textColor: AppColors.primaryColor,
+                    onTap: () => nextScreen(
+                        context,
+                        BuyDataAutoRenewalScreen(
+                          amount: amount,
+                          phoneNumber: phoneNumber,
+                          productCodes: productCodes,
+                        )),
+                  ),
                 ),
                 SizedBox(
                   height: 48.h,
@@ -83,7 +98,13 @@ class DataConfirmationScreen extends StatelessWidget {
                   ),
                 ),
               ],
-            )
+            ),
+            verticalSpace(28),
+            ButtonWidget(
+                text: 'Continue',
+                onTap: () async {
+                  nextScreenReplace(context, DashBoardScreen());
+                }),
           ],
         ),
       )),
