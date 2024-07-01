@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 
 nextScreen(BuildContext context,Widget page){

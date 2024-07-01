@@ -6,6 +6,22 @@ List<String> networkProvider = [
   'airtel',
   '9mobile',
 ];
+// for(var product in networkProvider){
+//  getDurationText(networkProvider['duration'])
+// }
+// function getDurationText(days) {
+//   switch (parseInt(days)) {
+//     case 1:
+//       return "Daily";
+//     case 7:
+//       return "Weekly";
+//     case 30:
+//     case 31:
+//       return "Monthly";
+//     default:
+//       return `${days} days`;
+//   }
+// }
 
 List<String> selectUser = [
   'Vendor',

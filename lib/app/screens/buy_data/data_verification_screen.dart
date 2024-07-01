@@ -220,43 +220,43 @@ class _DataVerificationScreenState extends State<DataVerificationScreen> {
                     ),
                    
                     verticalSpace(331),
-                    ButtonWidget(
-                        text: 'Send data',
-                        onTap: () async {
-                          final productCodes = await ProductHelper()
-                              .getDataProducts(widget.network);
-                          log('This is the code ${productCodes.toString()}');
+                    // ButtonWidget(
+                    //     text: 'Send data',
+                    //     onTap: () async {
+                    //       final productCodes = await ProductHelper()
+                    //           .getDataProducts(widget.network);
+                    //       log('This is the code ${productCodes.toString()}');
                          
                          
-                          await buyData.buyData(
-                            phoneNumber: widget.phoneNumber,
-                            productCode: productCodes,
-                          );
+                    //       await buyData.buyData(
+                    //         phoneNumber: widget.phoneNumber,
+                    //         productCode: productCodes,
+                    //       );
 
-                          if (buyData.status == false && context.mounted) {
-                            showMessage(
-                              context,
-                              buyData.message,
-                              isError: true,
-                            );
-                            log(buyData.message.toString());
-                            return;
-                          }
+                    //       if (buyData.status == false && context.mounted) {
+                    //         showMessage(
+                    //           context,
+                    //           buyData.message,
+                    //           isError: true,
+                    //         );
+                    //         log(buyData.message.toString());
+                    //         return;
+                    //       }
 
-                          if (buyData.status == true && context.mounted) {
-                            showMessage(
-                              context,
-                              buyData.message,
-                            );
+                    //       if (buyData.status == true && context.mounted) {
+                    //         showMessage(
+                    //           context,
+                    //           buyData.message,
+                    //         );
 
-                            nextScreen(
-                                context,
-                                DataConfirmationScreen(
-                                  amount: widget.amount,
-                                  phoneNumber: widget.phoneNumber,
-                                ));
-                          }
-                        })
+                    //         nextScreen(
+                    //             context,
+                    //             DataConfirmationScreen(
+                    //               amount: widget.amount,
+                    //               phoneNumber: widget.phoneNumber,
+                    //             ));
+                    //       }
+                    //     })
                   ],
                 ),
               ),

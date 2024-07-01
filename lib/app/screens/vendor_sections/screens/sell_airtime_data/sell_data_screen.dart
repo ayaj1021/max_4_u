@@ -38,23 +38,23 @@ class _SellDataScreenState extends State<SellDataScreen> {
 
   var codeValues = [];
   var networks = [];
-  getProductCodeValues() async {
-    final code = await SecureStorage().getUserProducts();
-    final network = code
-        .where((code) => code['name'] == 'mtn')
-        .map((code) => code['code'])
-        .toList();
+  // getProductCodeValues() async {
+  //   final code = await SecureStorage().getUserProducts();
+  //   final network = code
+  //       .where((code) => code['name'] == 'mtn')
+  //       .map((code) => code['code'])
+  //       .toList();
 
-    final productCodes = code
-        .where((code) => code['category'] == 'airtime')
-        .map((code) => code['code'])
-        .toList();
+  //   final productCodes = code
+  //       .where((code) => code['category'] == 'airtime')
+  //       .map((code) => code['code'])
+  //       .toList();
 
-    setState(() {
-      networks = network;
-      codeValues = productCodes;
-    });
-  }
+  //   setState(() {
+  //     networks = network;
+  //     codeValues = productCodes;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {

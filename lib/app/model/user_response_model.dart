@@ -1,3 +1,6 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
 
 
 class ResponseModel {
@@ -194,6 +197,42 @@ class Product {
       status: json['status'] as String?,
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'name': name,
+      'code': code,
+      'serviceName': serviceName,
+      'category': category,
+      'price': price,
+      'consumerDiscount': consumerDiscount,
+      'vendorDiscount': vendorDiscount,
+      'serviceFee': serviceFee,
+      'logo': logo,
+      'duration': duration,
+      'status': status,
+    };
+  }
+
+  factory Product.fromMap(Map<String, dynamic> map) {
+    return Product(
+      name: map['name'] != null ? map['name'] as String : null,
+      code: map['code'] != null ? map['code'] as String : null,
+      serviceName: map['serviceName'] != null ? map['serviceName'] as String : null,
+      category: map['category'] != null ? map['category'] as String : null,
+      price: map['price'] != null ? map['price'] as String : null,
+      consumerDiscount: map['consumerDiscount'] != null ? map['consumerDiscount'] as String : null,
+      vendorDiscount: map['vendorDiscount'] != null ? map['vendorDiscount'] as String : null,
+      serviceFee: map['serviceFee'] != null ? map['serviceFee'] as String : null,
+      logo: map['logo'] != null ? map['logo'] as String : null,
+      duration: map['duration'] != null ? map['duration'] as String : null,
+      status: map['status'] != null ? map['status'] as String : null,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  // factory Product.fromJson(String source) => Product.fromMap(json.decode(source) as Map<String, dynamic>);
 }
 
 class TransactionHistory {

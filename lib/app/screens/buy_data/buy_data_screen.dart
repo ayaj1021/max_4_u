@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/enums/network_dropdown.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/provider/buy_data_provider.dart';
@@ -38,23 +38,22 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
 
   var codeValues = [];
   var networks = [];
-  // getProductCodeValues() async {
-  //   final code = await SecureStorage().getUserProducts();
-  //   final network = code
-  //       .where((code) => code['name'] == 'mtn')
-  //       .map((code) => code['code'])
-  //       .toList();
+  var retrievedProducts = [];
 
-  //   final productCodes = code
-  //       .where((code) => code['category'] == 'airtime')
-  //       .map((code) => code['code'])
-  //       .toList();
+  @override
+  void initState() {
+    getProduct();
+    super.initState();
+  }
 
-  //   setState(() {
-  //     networks = network;
-  //     codeValues = productCodes;
-  //   });
-  // }
+  getProduct() async {
+    final storage = await SecureStorage();
+
+    retrievedProducts = (await storage.getUserProducts())!;
+    for (var product in retrievedProducts) {
+      print('${product.name}: ${product.price}');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -117,7 +116,7 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
                       onSelected: (newValue) {
                         setState(() {
                           _selectedNetwork = newValue!;
-                            _selectedBundle = ''; 
+                          _selectedBundle = '';
                         });
                       },
                       dropdownMenuEntries:
@@ -325,8 +324,8 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
                           _selectedBundle = newValue!;
                         });
                       },
-                      dropdownMenuEntries:
-                          dataBundles[_selectedNetwork]!.map((String dataBundleType) {
+                      dropdownMenuEntries: dataBundles[_selectedNetwork]!
+                          .map((String dataBundleType) {
                         return DropdownMenuEntry(
                           value: dataBundleType,
                           label: dataBundleType.toUpperCase(),

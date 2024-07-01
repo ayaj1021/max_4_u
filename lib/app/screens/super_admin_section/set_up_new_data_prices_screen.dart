@@ -370,46 +370,46 @@ class _SetupNewDataPricesScreenState extends State<SetupNewDataPricesScreen> {
                         hintText: 'not yet',
                       ),
                       verticalSpace(40),
-                      ButtonWidget(
-                          onTap: () async {
-                            final productCodes = await ProductHelper()
-                                .getDataProducts(_selectedNetwork!);
-                            log('This is the code ${productCodes.toString()}');
-                            // if (_setPriceController.text.isEmpty) {
-                            //   showMessage(context, 'Price is required');
-                            //   return;
-                            //  }
+                      // ButtonWidget(
+                      //     onTap: () async {
+                      //       final productCodes = await ProductHelper()
+                      //           .getDataProducts(_selectedNetwork!);
+                      //       log('This is the code ${productCodes.toString()}');
+                      //       // if (_setPriceController.text.isEmpty) {
+                      //       //   showMessage(context, 'Price is required');
+                      //       //   return;
+                      //       //  }
 
-                            await setupPrice.setupPrices(
-                              category: _selectedServices!,
-                              productPrice: _setPriceController.text.trim(),
-                              serviceName: _selectedNetwork!,
-                              logoName: _logoNameController.text.trim(),
-                              productName: _selectedNetwork!,
-                              productCode: productCodes,
-                              customerDiscount:
-                                  _customerDiscountController.text.trim(),
-                              vendorDiscount:
-                                  _vendorDiscountController.text.trim(),
-                              serviceFee: _serviceFeeController.text.trim(),
-                              duration: _durationController.text.trim(),
-                              vendingCode: _vendingCodeController.text.trim(),
-                            );
+                      //       await setupPrice.setupPrices(
+                      //         category: _selectedServices!,
+                      //         productPrice: _setPriceController.text.trim(),
+                      //         serviceName: _selectedNetwork!,
+                      //         logoName: _logoNameController.text.trim(),
+                      //         productName: _selectedNetwork!,
+                      //         productCode: productCodes,
+                      //         customerDiscount:
+                      //             _customerDiscountController.text.trim(),
+                      //         vendorDiscount:
+                      //             _vendorDiscountController.text.trim(),
+                      //         serviceFee: _serviceFeeController.text.trim(),
+                      //         duration: _durationController.text.trim(),
+                      //         vendingCode: _vendingCodeController.text.trim(),
+                      //       );
 
-                            if (setupPrice.status == false && context.mounted) {
-                              showMessage(context, setupPrice.message,
-                                  isError: true);
+                      //       if (setupPrice.status == false && context.mounted) {
+                      //         showMessage(context, setupPrice.message,
+                      //             isError: true);
 
-                              return;
-                            }
+                      //         return;
+                      //       }
 
-                            if (setupPrice.status == true && context.mounted) {
-                              showMessage(context, setupPrice.message,
-                                  isError: true);
-                              nextScreen(context, SuccessfulPriceSetScreen());
-                            }
-                          },
-                          text: 'Set Price'),
+                      //       if (setupPrice.status == true && context.mounted) {
+                      //         showMessage(context, setupPrice.message,
+                      //             isError: true);
+                      //         nextScreen(context, SuccessfulPriceSetScreen());
+                      //       }
+                      //     },
+                      //     text: 'Set Price'),
                     ],
                   ),
                 ),

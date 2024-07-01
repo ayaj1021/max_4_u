@@ -1,8 +1,17 @@
 import 'dart:convert';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:max_4_u/app/model/user_response_model.dart';
 
 class SecureStorage {
+    SecureStorage._();
+
+  // Singleton instance
+  static final SecureStorage _instance = SecureStorage._();
+
+  // Factory constructor to return the same instance every time
+  factory SecureStorage() => _instance;
+
   final _storage = FlutterSecureStorage(
     iOptions: IOSOptions.defaultOptions,
     aOptions: AndroidOptions.defaultOptions,
@@ -208,18 +217,16 @@ class SecureStorage {
     return null;
   }
 
-  saveUserProducts(List products) async {
-    String jsonString = jsonEncode(products);
+   Future<void> saveUserProducts(List<Product> products) async {
+    final jsonString = jsonEncode(products.map((p) => p.toJson()).toList());
     await _storage.write(key: 'products_list', value: jsonString);
   }
 
-  getUserProducts() async {
-    String? jsonString = await _storage.read(key: 'products_list');
-
+  Future<List<Product>?> getUserProducts() async {
+    final jsonString = await _storage.read(key: 'products_list');
     if (jsonString != null) {
-      List<dynamic> jsonList = jsonDecode(jsonString);
-      List products = jsonList.map((item) => item).toList();
-      return products;
+      final List<dynamic> jsonList = jsonDecode(jsonString);
+      return jsonList.map((item) => Product.fromJson(item)).toList();
     }
     return null;
   }

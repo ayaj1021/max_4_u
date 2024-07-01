@@ -89,7 +89,7 @@ class ReloadUserDataProvider extends ChangeNotifier {
 
      
       await SecureStorage().saveUserBeneficiary(beneficiary!);
-      await SecureStorage().saveUserProducts(products!);
+      // await SecureStorage().saveUserProducts(products!);
       await SecureStorage().saveUserServices(services!);
       await SecureStorage().saveUserType(_userLevel.toString());
       await SecureStorage().saveEncryptedID(uniqueId);
