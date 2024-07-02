@@ -24,7 +24,7 @@ class SellDataScreen extends StatefulWidget {
 }
 
 class _SellDataScreenState extends State<SellDataScreen> {
-  String _selectedNetwork = networkProvider[0];
+  String _selectedNetwork = networkProviders[0];
   String _selectedValidity = dataValidityProvider[0];
   String _selectedBundle = dataBundles['mtn']![0];
 
@@ -39,15 +39,16 @@ class _SellDataScreenState extends State<SellDataScreen> {
   var codeValues = [];
   var networks = [];
   getProductCodeValues() async {
-    final code = await SecureStorage().getUserProducts();
-    final network = code
-        .where((code) => code['name'] == 'mtn')
-        .map((code) => code['code'])
+  final storage = await SecureStorage();
+    final code = await storage.getUserProducts();
+    final network = code!
+        .where((code) => code.name == 'mtn')
+        .map((code) => code.code)
         .toList();
 
     final productCodes = code
-        .where((code) => code['category'] == 'airtime')
-        .map((code) => code['code'])
+        .where((code) => code.category == 'airtime')
+        .map((code) => code.code)
         .toList();
 
     setState(() {
@@ -115,7 +116,7 @@ class _SellDataScreenState extends State<SellDataScreen> {
                           _selectedNetwork = newValue!;
                         });
                       },
-                      items: networkProvider.map((String networkProviders) {
+                      items: networkProviders.map((String networkProviders) {
                         return DropdownMenuItem(
                           value: networkProviders,
                           child: Container(

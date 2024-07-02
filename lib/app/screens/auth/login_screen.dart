@@ -166,12 +166,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       // context.read();
                       final transactionHistory =
                           authProv.resDataData.transactionHistory!.data;
-                      final beneficiary = authProv.resDataData.beneficiaryData;
+                    //  final beneficiary = authProv.resDataData.beneficiaryData;
                       log('user type is $uniqueId');
                       log('user very unique id is $uniqueId');
                       log('user balance is $balance');
                       final services = authProv.resDataData.services!;
-                      final products = authProv.resDataData.products!;
+                     // final products = authProv.resDataData.products!;
                       final autoRenewal =
                           authProv.resDataData.autoRenewal!.data;
                       //                  final transactions = result.data.;
@@ -182,9 +182,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       //  await SecureStorage().saveUserEncryptedId(uniqueId);
                       await SecureStorage()
                           .saveUserTransactionHistory(transactionHistory!);
-                      await SecureStorage().saveUserBeneficiary(beneficiary!);
+                     // await SecureStorage().saveUserBeneficiary(beneficiary);
                       await SecureStorage().saveUserAutoRenewal(autoRenewal!);
-                      await SecureStorage().saveUserProducts(products);
+                    //  await SecureStorage().saveUserProducts(products);
                       await SecureStorage().saveUserServices(services as List);
                       await SecureStorage().saveUserType(userType.toString());
                       await SecureStorage().saveEncryptedID(uniqueId);

@@ -152,18 +152,19 @@ class Service {
   }
 }
 
+
 class Product {
-  final String? name;
-  final String? code;
-  final String? serviceName;
-  final String? category;
-  final String? price;
-  final String? consumerDiscount;
-  final String? vendorDiscount;
-  final String? serviceFee;
-  final String? logo;
-  final String? duration;
-  final String? status;
+  String? name;
+  String? code;
+  String? serviceName;
+  String? category;
+  String? price;
+  String? consumerDiscount;
+  String? vendorDiscount;
+  String? serviceFee;
+  String? logo;
+  String? duration;
+  String? status;
 
   Product({
     this.name,
@@ -181,18 +182,34 @@ class Product {
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
-      name: json['name'] as String?,
-      code: json['code'] as String?,
-      serviceName: json['service_name'] as String?,
-      category: json['category'] as String?,
-      price: json['price'] as String?,
-      consumerDiscount: json['consumer_discount'] as String?,
-      vendorDiscount: json['vendor_discount'] as String?,
-      serviceFee: json['service_fee'] as String?,
-      logo: json['logo'] as String?,
-      duration: json['duration'] as String?,
-      status: json['status'] as String?,
+      name: json['name'],
+      code: json['code'],
+      serviceName: json['service_name'],
+      category: json['category'],
+      price: json['price'],
+      consumerDiscount: json['consumer_discount'],
+      vendorDiscount: json['vendor_discount'],
+      serviceFee: json['service_fee'],
+      logo: json['logo'],
+      duration: json['duration'],
+      status: json['status'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'code': code,
+      'service_name': serviceName,
+      'category': category,
+      'price': price,
+      'consumer_discount': consumerDiscount,
+      'vendor_discount': vendorDiscount,
+      'service_fee': serviceFee,
+      'logo': logo,
+      'duration': duration,
+      'status': status,
+    };
   }
 }
 

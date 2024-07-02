@@ -24,31 +24,30 @@ class ProductHelper {
   //   }
   // }
 
-
-   getAirtimeProducts(String network) async {
-    final code = await SecureStorage().getUserProducts();
+  getAirtimeProducts(String network) async {
+    final storage = await SecureStorage();
+    final code = await storage.getUserProducts();
     try {
-      final networksList = code
-          .where((code) => code['name'] == network)
-          .map((code) => code['code'])
+      final networksList = code!
+          .where((code) => code.name == network)
+          .map((code) => code.code)
           .toList();
       // final networks = networksList.isNotEmpty ? networksList.first : '';
       final networks = networksList.first;
       log('This is networks ${networks}');
       return networks;
-    } catch (e) {
+    } catch (e) { 
       log(e.toString());
     }
   }
 
-
-
-   getDataProducts(String network) async {
-    final code = await SecureStorage().getUserProducts();
+  getDataProducts(String network) async {
+    final storage = await SecureStorage();
+    final code = await storage.getUserProducts();
     try {
-      final networksList = code
-          .where((code) => code['service_name'] == network)
-          .map((code) => code['code'])
+      final networksList = code!
+          .where((code) => code.serviceName == network)
+          .map((code) => code.code)
           .toList();
       // final networks = networksList.isNotEmpty ? networksList.first : '';
       final networks = networksList.first;

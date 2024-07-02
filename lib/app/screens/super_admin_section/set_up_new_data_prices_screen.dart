@@ -26,7 +26,7 @@ class SetupNewDataPricesScreen extends StatefulWidget {
 }
 
 class _SetupNewDataPricesScreenState extends State<SetupNewDataPricesScreen> {
-  String? _selectedNetwork = networkProvider[0];
+  String? _selectedNetwork = networkProviders[0];
 
   String? _selectedServices = services[0];
   String? _selectedDataPrice = dataPrices[0];
@@ -110,7 +110,7 @@ class _SetupNewDataPricesScreenState extends State<SetupNewDataPricesScreen> {
                               _selectedNetwork = newValue!;
                             });
                           },
-                          items: networkProvider.map((String networkProviders) {
+                          items: networkProviders.map((String networkProviders) {
                             return DropdownMenuItem(
                               value: networkProviders,
                               onTap: () {

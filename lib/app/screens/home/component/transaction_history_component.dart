@@ -22,7 +22,7 @@ class TransactionHistoryContainer extends StatefulWidget {
 
 class _TransactionHistoryContainerState
     extends State<TransactionHistoryContainer> {
-  List getTransactions = [];
+  var getTransactions = [];
 
   @override
   void initState() {
@@ -35,9 +35,11 @@ class _TransactionHistoryContainerState
   }
 
   getAllTransactions() async {
-    final transactions = await SecureStorage().getUserTransactions();
+   // final transactions = await SecureStorage().getUserTransactions();
+        final storage = await SecureStorage();
+    final transactions = await storage.getUserTransactions();
     setState(() {
-      getTransactions = transactions;
+      getTransactions = transactions!;
     });
   }
 

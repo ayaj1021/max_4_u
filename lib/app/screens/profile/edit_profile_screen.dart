@@ -79,18 +79,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         Icons.arrow_back,
                       ),
                     ),
-                    horizontalSpace(109),
+                    horizontalSpace(115),
                     Text(
-                      'profile',
-                      style: AppTextStyles.font18,
-                    )
+                      'Profile',
+                      style: AppTextStyles.font18.copyWith(
+                        color: AppColors.mainTextColor,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ],
                 ),
                 verticalSpace(37),
                 CircleAvatar(
                   radius: 45,
-                  backgroundImage: AssetImage('assets/images/profile_avatar.png'),
-                
+                  backgroundImage:
+                      AssetImage('assets/images/profile_avatar.png'),
                 ),
                 horizontalSpace(16),
                 verticalSpace(20),
@@ -122,43 +125,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
                       verticalSpace(32),
                       EditProfileComponent(
-                        onTap: () {
-                          // editProfileAlertDialog(
-                          //   context,
-                          //   title: 'Edit Email',
-                          //   controller: _emailController,
-                          // );
-                        },
                         title: 'Email',
                         value: email,
                       ),
                       verticalSpace(8),
-                      // Container(
-                      //   alignment: Alignment.center,
-                      //   height: 23.h,
-                      //   width: 104.w,
-                      //   decoration: BoxDecoration(
-                      //     borderRadius: BorderRadius.circular(22),
-                      //     color: Color(0xffAE8027).withOpacity(0.2),
-                      //   ),
-                      //   child: Row(
-                      //     mainAxisAlignment: MainAxisAlignment.center,
-                      //     children: [
-                      //       CircleAvatar(
-                      //         radius: 4,
-                      //         backgroundColor: Color(0xffAE8027),
-                      //       ),
-                      //       horizontalSpace(10),
-                      //       Text(
-                      //         'Unverified',
-                      //         style: AppTextStyles.font12.copyWith(
-                      //           fontWeight: FontWeight.w600,
-                      //           color: Color(0xffAE8027),
-                      //         ),
-                      //       )
-                      //     ],
-                      //   ),
-                      // )
                     ],
                   ),
                 ),
@@ -169,82 +139,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       );
     });
   }
-
-  // Future<dynamic> editProfileAlertDialog(
-  //   BuildContext context, {
-  //   required String title,
-  //   required TextEditingController controller,
-  // }) {
-  //   return showDialog(
-  //       context: context,
-  //       builder: (context) {
-  //         return Consumer<ChangeEmailProvider>(
-  //             builder: (context, changeEmail, _) {
-  //           return AlertDialog(
-  //             contentPadding: EdgeInsets.zero,
-  //             content: Container(
-  //               padding:
-  //                   const EdgeInsets.symmetric(vertical: 14, horizontal: 23),
-  //               height: 241.h,
-  //               width: MediaQuery.of(context).size.width,
-  //               decoration: BoxDecoration(
-  //                 color: AppColors.whiteColor,
-  //                 borderRadius: BorderRadius.circular(8),
-  //               ),
-  //               child: Column(
-  //                 children: [
-  //                   Align(
-  //                     alignment: Alignment.topRight,
-  //                     child: SizedBox(
-  //                       height: 24,
-  //                       width: 24,
-  //                       child: GestureDetector(
-  //                         onTap: () => Navigator.pop(context),
-  //                         child: Image.asset('assets/icons/cancel_icon.png'),
-  //                       ),
-  //                     ),
-  //                   ),
-  //                   Text(
-  //                     title,
-  //                     style: AppTextStyles.font16.copyWith(
-  //                         fontWeight: FontWeight.w600,
-  //                         color: const Color(0xff333333)),
-  //                   ),
-  //                   TextInputField(
-  //                     controller: changeEmail.emailController,
-  //                     labelText: '',
-  //                     hintText: 'Enter new email',
-  //                   ),
-  //                   verticalSpace(27),
-  //                   ButtonWidget(
-  //                     text: 'Continue',
-  //                     onTap: () async {
-  //                       if (changeEmail.emailController.text.isEmpty) {
-  //                         showMessage(context, 'Email field is required',
-  //                             isError: true);
-  //                         return;
-  //                       }
-  //                       Navigator.pop(context);
-
-  //                       await changeEmail.changeEmail();
-  //                       if (changeEmail.state == ViewState.Error &&
-  //                           context.mounted) {
-  //                         showMessage(context, changeEmail.message);
-  //                         return;
-  //                       }
-
-  //                       if (changeEmail.state == ViewState.Success &&
-  //                           context.mounted) {}
-  //                     },
-  //                   )
-  //                 ],
-  //               ),
-  //             ),
-  //           );
-  //         });
-  //       });
-  // }
-
 }
 
 class EditProfileComponent extends StatelessWidget {
