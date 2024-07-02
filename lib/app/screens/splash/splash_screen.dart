@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/database/database.dart';
-
 import 'package:max_4_u/app/screens/onboarding/onboard_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/utils/screen_navigator.dart';
@@ -41,8 +40,8 @@ class _SplashScreenState extends State<SplashScreen> {
     //       .reloadUserData();
     // });
 
-    getNames();
-    getUserLevel();
+    // getNames();
+    // getUserLevel();
     // final id = Provider.of<AuthProviderImpl>(context, listen: false).resDataData.userData[0];
     Timer(const Duration(seconds: 3), () async {
       // if (userId.isNotEmpty && level.isNotEmpty) {

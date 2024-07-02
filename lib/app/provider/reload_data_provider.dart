@@ -1,9 +1,12 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/encryt_data/encrypt_data.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
+import 'package:max_4_u/app/model/data_plans_model.dart';
 import 'package:max_4_u/app/model/load_data_model.dart';
 import 'package:max_4_u/app/service/service.dart';
 
@@ -39,7 +42,7 @@ class ReloadUserDataProvider extends ChangeNotifier {
 
     // _status = response['data']['status'];
 
-   // final userData = response['data'];
+    // final userData = response['data'];
 
     log('$response');
     try {
@@ -51,13 +54,11 @@ class ReloadUserDataProvider extends ChangeNotifier {
           EncryptData.decryptAES('${loadData.userData![0].firstName}');
       await SecureStorage().saveFirstName(firstName);
 
-      final lastName =
-          EncryptData.decryptAES('${loadData.userData![0].lastName}');
+      final lastName = EncryptData.decryptAES('${loadData.userData![0].lastName}');
       //  EncryptData.decryptAES('${userData['user_data'][0]['last_name']}');
       log('last name is $lastName');
-      final uniqueId =
-          EncryptData.decryptAES('${loadData.userData![0].uniqueId}');
-          log('this is the unique id: $uniqueId');
+      final uniqueId = EncryptData.decryptAES('${loadData.userData![0].uniqueId}');
+      log('this is the unique id: $uniqueId');
       // EncryptData.decryptAES('${userData['user_data'][0]['unique_id']}');
       log('uniqueId is $uniqueId');
       final email = EncryptData.decryptAES('${loadData.userData![0].email}');
@@ -87,7 +88,6 @@ class ReloadUserDataProvider extends ChangeNotifier {
       // final transactions = userData['transaction_history']['data'];
       //await SecureStorage().saveUserTransactions(transactions);
 
-     
       await SecureStorage().saveUserBeneficiary(beneficiary!);
       await SecureStorage().saveUserProducts(products!);
       await SecureStorage().saveUserServices(services!);
@@ -105,6 +105,33 @@ class ReloadUserDataProvider extends ChangeNotifier {
       isLoading = false;
 
       notifyListeners();
+    }
+  }
+
+  Future<DataPlans> fetchData() async {
+    isLoading = true;
+    notifyListeners();
+    final encryptedId = await SecureStorage().getUserEncryptedId();
+
+    var request = await http.post(
+      Uri.parse("https://api.max4u.com.ng"),
+      headers: {
+        'Site-From': 'postman',
+        'User-Key': encryptedId,
+      },
+      body: {
+        "request_type": "user",
+        "action": "load_user_data",
+      },
+    );
+    isLoading = false;
+    notifyListeners();
+    var response = jsonDecode(request.body);
+    log(response.toString());
+    if (request.statusCode == 200) {
+      return DataPlans.fromJson(response);
+    } else {
+      return DataPlans.fromJson(response);
     }
   }
 
