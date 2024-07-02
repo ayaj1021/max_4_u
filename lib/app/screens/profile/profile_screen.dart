@@ -53,23 +53,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Consumer2<AuthProviderImpl, ReloadUserDataProvider>(
       builder: (context, authProv, reloadData, _) {
-       final firstName = EncryptData.decryptAES(authProv.resDataData.userData![0].firstName.toString());
-       final lastName = EncryptData.decryptAES(authProv.resDataData.userData![0].lastName.toString());
-        final userId = EncryptData.decryptAES(authProv.resDataData.userData![0].uniqueId.toString());
+        final firstName = EncryptData.decryptAES(
+            authProv.resDataData.userData![0].firstName.toString());
+        final lastName = EncryptData.decryptAES(
+            authProv.resDataData.userData![0].lastName.toString());
+        final userId = EncryptData.decryptAES(
+            authProv.resDataData.userData![0].uniqueId.toString());
         return Scaffold(
           body: SafeArea(
               child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
             child: Column(
               children: [
-                Center(
-                  child: Text(
-                    'Profile',
-                    style: AppTextStyles.font18.copyWith(
-                      color: AppColors.mainTextColor,
-                      fontWeight: FontWeight.w500,
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: const Icon(
+                        Icons.arrow_back,
+                      ),
                     ),
-                  ),
+                    horizontalSpace(115),
+                    Text(
+                      'Profile',
+                      style: AppTextStyles.font18.copyWith(
+                        color: AppColors.mainTextColor,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
                 ),
                 verticalSpace(33),
                 Container(

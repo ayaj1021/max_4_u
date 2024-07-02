@@ -93,33 +93,12 @@ class UserSettingsData {
   }
 }
 
-// class BeneficiaryData {
-//   String? phone;
-
-//   BeneficiaryData({
-//     this.phone,
-//   });
-
-//   factory BeneficiaryData.fromJson(Map<String, dynamic> json) {
-//     return BeneficiaryData(
-//       phone: json['phone'],
-//     );
-//   }
-
-//   Map<String, dynamic> toJson() {
-//     return {
-//       'phone': phone,
-//     };
-//   }
-// }
-
 class BeneficiaryData {
   final String phone;
   final String name;
 
   BeneficiaryData({required this.phone, required this.name});
 
-  // Factory constructor to create a Beneficiary object from a JSON map
   factory BeneficiaryData.fromJson(Map<String, dynamic> json) {
     return BeneficiaryData(
       phone: json['phone'],
@@ -150,64 +129,191 @@ class Service {
   }
 }
 
+// class Product {
+//   String? name;
+//   String? code;
+//   String? serviceName;
+//   String? category;
+//   String? price;
+//   String? consumerDiscount;
+//   String? vendorDiscount;
+//   String? serviceFee;
+//   String? logo;
+//   String? duration;
+//   String? status;
+
+
+//   Product({
+//     this.name,
+//     this.code,
+//     this.serviceName,
+//     this.category,
+//     this.price,
+//     this.consumerDiscount,
+//     this.vendorDiscount,
+//     this.serviceFee,
+//     this.logo,
+//     this.duration,
+//     this.status,
+//   });
+
+  
+
+//   factory Product.fromJson(Map<String, dynamic> json) {
+//     return Product(
+//       name: json['name'],
+//       code: json['code'],
+//       serviceName: json['service_name'],
+//       category: json['category'],
+//       price: json['price'],
+//       consumerDiscount: json['consumer_discount'],
+//       vendorDiscount: json['vendor_discount'],
+//       serviceFee: json['service_fee'],
+//       logo: json['logo'],
+//       duration: json['duration'],
+//       status: json['status'],
+//     );
+//   }
+
+//   Map<String, dynamic> toJson() {
+//     return {
+//       'name': name,
+//       'code': code,
+//       'service_name': serviceName,
+//       'category': category,
+//       'price': price,
+//       'consumer_discount': consumerDiscount,
+//       'vendor_discount': vendorDiscount,
+//       'service_fee': serviceFee,
+//       'logo': logo,
+//       'duration': duration,
+//       'status': status,
+//     };
+//   }
+// }
+
+
+// To parse this JSON data, do
+//
+//     final products = productsFromJson(jsonString);
+
+
+
+
+// class Products {
+//     final List<Product>? products;
+
+//     Products({
+//         this.products,
+//     });
+
+//     factory Products.fromJson(Map<String, dynamic> json) => Products(
+//         products: json["products"] == null ? [] : List<Product>.from(json["products"]!.map((x) => Product.fromJson(x))),
+//     );
+
+//     Map<String, dynamic> toJson() => {
+//         "products": products == null ? [] : List<dynamic>.from(products!.map((x) => x.toJson())),
+//     };
+// }
+
 class Product {
-  String? name;
-  String? code;
-  String? serviceName;
-  String? category;
-  String? price;
-  String? consumerDiscount;
-  String? vendorDiscount;
-  String? serviceFee;
-  String? logo;
-  String? duration;
-  String? status;
+    final String? name;
+    final String? code;
+    final Logo? serviceName;
+    final Category? category;
+    final String? price;
+    final String? consumerDiscount;
+    final String? vendorDiscount;
+    final String? serviceFee;
+    final Logo? logo;
+    final String? duration;
+    final Status? status;
 
-  Product({
-    this.name,
-    this.code,
-    this.serviceName,
-    this.category,
-    this.price,
-    this.consumerDiscount,
-    this.vendorDiscount,
-    this.serviceFee,
-    this.logo,
-    this.duration,
-    this.status,
-  });
+    Product({
+        this.name,
+        this.code,
+        this.serviceName,
+        this.category,
+        this.price,
+        this.consumerDiscount,
+        this.vendorDiscount,
+        this.serviceFee,
+        this.logo,
+        this.duration,
+        this.status,
+    });
 
-  factory Product.fromJson(Map<String, dynamic> json) {
-    return Product(
-      name: json['name'],
-      code: json['code'],
-      serviceName: json['service_name'],
-      category: json['category'],
-      price: json['price'],
-      consumerDiscount: json['consumer_discount'],
-      vendorDiscount: json['vendor_discount'],
-      serviceFee: json['service_fee'],
-      logo: json['logo'],
-      duration: json['duration'],
-      status: json['status'],
+    factory Product.fromJson(Map<String, dynamic> json) => Product(
+        name: json["name"],
+        code: json["code"],
+        serviceName: logoValues.map[json["service_name"]]!,
+        category: categoryValues.map[json["category"]]!,
+        price: json["price"],
+        consumerDiscount: json["consumer_discount"],
+        vendorDiscount: json["vendor_discount"],
+        serviceFee: json["service_fee"],
+        logo: logoValues.map[json["logo"]]!,
+        duration: json["duration"],
+        status: statusValues.map[json["status"]]!,
     );
-  }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'code': code,
-      'service_name': serviceName,
-      'category': category,
-      'price': price,
-      'consumer_discount': consumerDiscount,
-      'vendor_discount': vendorDiscount,
-      'service_fee': serviceFee,
-      'logo': logo,
-      'duration': duration,
-      'status': status,
+    Map<String, dynamic> toJson() => {
+        "name": name,
+        "code": code,
+        "service_name": logoValues.reverse[serviceName],
+        "category": categoryValues.reverse[category],
+        "price": price,
+        "consumer_discount": consumerDiscount,
+        "vendor_discount": vendorDiscount,
+        "service_fee": serviceFee,
+        "logo": logoValues.reverse[logo],
+        "duration": duration,
+        "status": statusValues.reverse[status],
     };
-  }
+}
+
+enum Category {
+    AIRTIME,
+    DATA
+}
+
+final categoryValues = EnumValues({
+    "airtime": Category.AIRTIME,
+    "data": Category.DATA
+});
+
+enum Logo {
+    AIRTEL,
+    GLO,
+    MTN,
+    THE_9_MOBILE
+}
+
+final logoValues = EnumValues({
+    "airtel": Logo.AIRTEL,
+    "glo": Logo.GLO,
+    "mtn": Logo.MTN,
+    "9mobile": Logo.THE_9_MOBILE
+});
+
+enum Status {
+    ACTIVE
+}
+
+final statusValues = EnumValues({
+    "active": Status.ACTIVE
+});
+
+class EnumValues<T> {
+    Map<String, T> map;
+    late Map<T, String> reverseMap;
+
+    EnumValues(this.map);
+
+    Map<T, String> get reverse {
+            reverseMap = map.map((k, v) => MapEntry(v, k));
+            return reverseMap;
+    }
 }
 
 class Transaction {

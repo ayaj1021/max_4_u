@@ -26,10 +26,11 @@ class BuyAirtimeScreen extends StatefulWidget {
 }
 
 class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
-  String? _selectedNetwork = networkProvider[0];
+  
 
   final _amountController = TextEditingController();
   final _phoneNumber = TextEditingController();
+    var retrievedProducts = [];
 
   final amount = [
     '100',
@@ -52,21 +53,37 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
    
     super.dispose();
   }
+String? _selectedNetwork = networkProviders[0];
 
+@override
+  void initState() {
+    getProduct();
+    super.initState();
+  }
+
+  getProduct() async {
+    final storage = await SecureStorage();
+
+    retrievedProducts = (await storage.getUserProducts())!;
+    for (var product in retrievedProducts) {
+      print('${product.name}: ${product.price}');
+    }
+  }
  
 
   var codeValues = [];
   var networks = [];
   getProductCodeValues() async {
-    final code = await SecureStorage().getUserProducts();
-    final network = code
-        .where((code) => code['name'] == 'mtn')
-        .map((code) => code['code'])
+      final storage = await SecureStorage();
+    final code = await storage.getUserProducts();
+    final network = code!
+        .where((code) => code.name == 'mtn')
+        .map((code) => code.code)
         .toList();
 
     final productCodes = code
-        .where((code) => code['category'] == 'airtime')
-        .map((code) => code['code'])
+        .where((code) => code.category== 'airtime')
+        .map((code) => code.code)
         .toList();
 
     setState(() {
@@ -141,7 +158,7 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
                         });
                       },
                       dropdownMenuEntries:
-                          networkProvider.map((String networkProviders) {
+                          networkProviders.map((String networkProviders) {
                         return DropdownMenuEntry(
                           value: networkProviders,
                           label: networkProviders.toUpperCase(),

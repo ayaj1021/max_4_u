@@ -1,7 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max_4_u/app/database/database.dart';
 
 import 'package:max_4_u/app/enums/network_dropdown.dart';
+import 'package:max_4_u/app/model/load_data_model.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/screens/beneficiary/beneficiary_screen.dart';
 import 'package:max_4_u/app/screens/buy_data/data_verification_screen.dart';
@@ -24,7 +28,7 @@ class BuyDataScreen extends StatefulWidget {
 class _BuyDataScreenState extends State<BuyDataScreen> {
   //String _selectedNetwork = networkProvider[0];
 // String selectedValidity = dataValidityProvider[0];
-  String _selectedBundle = dataBundles['mtn']![0];
+  // String _selectedBundle = dataBundles['mtn']![0];
 
   final _phoneNumberController = TextEditingController();
 
@@ -36,21 +40,103 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
 
   var codeValues = [];
   var networks = [];
+  List<Product> retrievedProducts = [];
 
-  Map<int, String> durationMap = {
-    1: 'Daily',
-    7: 'Weekly',
-    30: 'Monthly',
-    90: '3 Months',
-    365: 'Yearly',
-  };
+  List<String> durationMap = [
+    'Daily',
+    'Weekly',
+    'Monthly',
+    '3 Months',
+    'Yearly',
+  ];
+  // getNetworks() {
+  //   getNetWorkText(network) {
+  //     switch (network) {
+  //       case 'mtn':
+  //         return durationMap[0];
+  //       case 'glo':
+  //         return durationMap[1];
+  //       case 'airtel':
+  //         return durationMap[2];
+  //       case '9mobile':
+  //         return durationMap[3];
+
+  //       default:
+  //         return 'No value';
+  //     }
+  //   }
+
+  //   for (var logo in retrievedProducts) {
+  //     getNetWorkText(durationMap[logo.logo]);
+  //   }
+  // }
+
+  getDuration(selectedNetwork) {
+    final durations =
+        retrievedProducts.where((products) => products.logo == selectedNetwork);
+
+    getDurationText(durationTime) {
+      switch ((durations)) {
+        case '1':
+          return durationMap[0];
+        //"Daily";
+        case '7':
+          return durationMap[1];
+        //"Weekly";
+        case '30':
+        case '31':
+          return durationMap[2];
+
+        //"Monthly";
+        case '90':
+          return durationMap[3];
+        //"3 Months";
+        case '365':
+          return durationMap[4];
+
+        //"Yearly";
+        default:
+          return 'no day';
+      }
+    }
+
+    for (var duration in retrievedProducts) {
+      //getDurationText(durationMap[duration.duration]);
+      // print('This is duration $duration');
+    }
+  }
+
+  @override
+  void initState() {
+    getProduct();
+    super.initState();
+  }
+
+  getProduct() async {
+    final storage = await SecureStorage();
+
+    retrievedProducts = (await storage.getUserProducts())!;
+    for (var products in retrievedProducts) {
+      print('${products.name}: ${products.price}');
+      print('${products.logo}: ${products.duration}');
+    }
+  }
+
+  //String _selectedDuration = 'Daily';
 
   @override
   Widget build(BuildContext context) {
     return Consumer<ReloadUserDataProvider>(
       builder: (context, reloadData, _) {
-        String _selectedNetwork = reloadData.loadData.products![0].serviceName!;
-        String _selectedValidity = reloadData.loadData.products![0].duration!;
+        // String _selectedNetwork = reloadData.loadData.products![0].serviceName!;
+        // String _selectedValidity = reloadData.loadData.products![0].duration!;
+        final products = reloadData.loadData.products!;
+        String? _selectedNetwork = networkProviders.join(',');
+
+        //  String? _selectedNetwork = products[0].serviceName;
+        String? _selectedDuration = durationMap[0];
+        //getDuration().toString();
+        String? _selectedBundle = products[0].code;
 
         return Scaffold(
           body: SafeArea(
@@ -106,62 +192,19 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
                       ),
                       onSelected: (newValue) {
                         setState(() {
-                          _selectedNetwork = newValue!;
+                          _selectedNetwork = newValue;
                           _selectedBundle = '';
                         });
                       },
-                      dropdownMenuEntries:
-                          networkProvider.map((String networkProviders) {
+                      dropdownMenuEntries: dataValidityProvider
+                          .map(( networkProviders) {
                         return DropdownMenuEntry(
                           value: networkProviders,
-                          label: networkProviders.toUpperCase(),
+                          label: networkProviders.toString(),
                         );
                       }).toList(),
                     ),
                   ),
-
-                  // Container(
-                  //   padding: const EdgeInsets.symmetric(horizontal: 15),
-                  //   height: 52.h,
-                  //   width: MediaQuery.of(context).size.width,
-                  //   decoration: BoxDecoration(
-                  //     borderRadius: BorderRadius.circular(12),
-                  //     color: AppColors.whiteColor,
-                  //     border: Border.all(
-                  //       color: const Color(0xffCBD5E1),
-                  //     ),
-                  //   ),
-                  //   child: DropdownButton<String>(
-                  //     elevation: 0,
-                  //     borderRadius: BorderRadius.circular(12),
-                  //     underline: const SizedBox(),
-                  //     value: _selectedNetwork,
-                  //     onChanged: (String? newValue) {
-                  //       setState(() {
-                  //         _selectedNetwork = newValue!;
-                  //       });
-                  //     },
-                  //     items: networkProvider.map((String networkProviders) {
-                  //       return DropdownMenuItem(
-                  //         value: networkProviders,
-                  //         child: Container(
-                  //           margin: const EdgeInsets.only(right: 270),
-                  //           child: Container(
-                  //             margin: const EdgeInsets.only(top: 8),
-                  //             child: Text(
-                  //               networkProviders.toUpperCase(),
-                  //               style: AppTextStyles.font14.copyWith(
-                  //                 fontSize: 14,
-                  //                 fontWeight: FontWeight.w400,
-                  //               ),
-                  //             ),
-                  //           ),
-                  //         ),
-                  //       );
-                  //     }).toList(),
-                  //   ),
-                  // ),
-
                   verticalSpace(30),
                   Stack(
                     children: [
@@ -205,47 +248,6 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  // Container(
-                  //   padding: const EdgeInsets.symmetric(horizontal: 15),
-                  //   height: 52.h,
-                  //   width: MediaQuery.of(context).size.width,
-                  //   decoration: BoxDecoration(
-                  //     borderRadius: BorderRadius.circular(12),
-                  //     color: AppColors.whiteColor,
-                  //     border: Border.all(
-                  //       color: const Color(0xffCBD5E1),
-                  //     ),
-                  //   ),
-                  //   child: DropdownButton<String>(
-                  //     elevation: 0,
-                  //     borderRadius: BorderRadius.circular(12),
-                  //     underline: const SizedBox(),
-                  //     value: _selectedValidity,
-                  //     onChanged: (newValue) {
-                  //       setState(() {
-                  //         _selectedValidity = newValue!;
-                  //       });
-                  //     },
-                  //     items: dataValidityProvider.map((String dataValidity) {
-                  //       return DropdownMenuItem(
-                  //         value: dataValidity,
-                  //         child: Container(
-                  //           margin: const EdgeInsets.only(right: 260),
-                  //           child: Container(
-                  //             margin: const EdgeInsets.only(top: 8),
-                  //             child: Text(
-                  //               dataValidity.toUpperCase(),
-                  //               style: AppTextStyles.font14.copyWith(
-                  //                 fontSize: 14,
-                  //                 fontWeight: FontWeight.w400,
-                  //               ),
-                  //             ),
-                  //           ),
-                  //         ),
-                  //       );
-                  //     }).toList(),
-                  //   ),
-                  // ),
                   verticalSpace(8),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -269,11 +271,11 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
                       ),
                       onSelected: (newValue) {
                         setState(() {
-                          _selectedValidity = newValue!;
+                          _selectedDuration = newValue!;
                         });
                       },
                       dropdownMenuEntries:
-                          dataValidityProvider.map((String dataValidity) {
+                          durationMap.map((String dataValidity) {
                         return DropdownMenuEntry(
                           value: dataValidity,
                           label: dataValidity.toUpperCase(),
@@ -281,6 +283,13 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
                       }).toList(),
                     ),
                   ),
+                  ElevatedButton(
+                      onPressed: () {
+                        log(_selectedDuration.toString());
+                        // log(retrievedProducts[10].duration);
+                        //log(getDuration());
+                      },
+                      child: Text('')),
                   verticalSpace(27),
                   Text(
                     'Data Bundle',
@@ -324,49 +333,6 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
                       }).toList(),
                     ),
                   ),
-
-                  // Container(
-                  //   padding: const EdgeInsets.symmetric(horizontal: 15),
-                  //   height: 52.h,
-                  //   width: MediaQuery.of(context).size.width,
-                  //   decoration: BoxDecoration(
-                  //     borderRadius: BorderRadius.circular(12),
-                  //     color: AppColors.whiteColor,
-                  //     border: Border.all(
-                  //       color: const Color(0xffCBD5E1),
-                  //     ),
-                  //   ),
-                  //   child: DropdownButton<String>(
-                  //     elevation: 0,
-                  //     borderRadius: BorderRadius.circular(12),
-                  //     underline: const SizedBox(),
-                  //     value: _selectedBundle,
-                  //     onChanged: (newValue) {
-                  //       setState(() {
-                  //         _selectedBundle = newValue!;
-                  //       });
-                  //     },
-                  //     items: dataBundle.map((String dataBundleType) {
-                  //       return DropdownMenuItem(
-                  //         value: dataBundleType,
-                  //         child: Container(
-                  //           margin: const EdgeInsets.only(right: 185),
-                  //           child: Container(
-                  //             margin: const EdgeInsets.only(top: 8),
-                  //             child: Text(
-                  //               dataBundleType.toUpperCase(),
-                  //               style: AppTextStyles.font14.copyWith(
-                  //                 fontSize: 14,
-                  //                 fontWeight: FontWeight.w400,
-                  //               ),
-                  //             ),
-                  //           ),
-                  //         ),
-                  //       );
-                  //     }).toList(),
-                  //   ),
-                  // ),
-
                   verticalSpace(169),
                   ButtonWidget(
                       text: 'Continue',
@@ -379,10 +345,10 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
                         nextScreen(
                             context,
                             DataVerificationScreen(
-                              network: _selectedNetwork,
-                              amount: _selectedBundle,
+                              network: _selectedNetwork.toString(),
+                              amount: _selectedBundle.toString(),
                               phoneNumber: _phoneNumberController.text,
-                              dataBundle: _selectedBundle,
+                              dataBundle: _selectedBundle.toString(),
                             ));
                       })
                 ],

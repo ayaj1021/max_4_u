@@ -25,7 +25,7 @@ class SellAirtimeScreen extends StatefulWidget {
 }
 
 class _SellAirtimeScreenState extends State<SellAirtimeScreen> {
-  String? _selectedNetwork = networkProvider[0];
+  String? _selectedNetwork = networkProviders[0];
 
   final _amountController = TextEditingController();
   final _phoneNumber = TextEditingController();
@@ -52,15 +52,17 @@ class _SellAirtimeScreenState extends State<SellAirtimeScreen> {
   var codeValues = [];
   var networks = [];
   getProductCodeValues() async {
-    final code = await SecureStorage().getUserProducts();
-    final network = code
-        .where((code) => code['name'] == 'mtn')
-        .map((code) => code['code'])
+   // final code = await SecureStorage().getUserProducts();
+     final storage = await SecureStorage();
+    final code = await storage.getUserProducts();
+    final network = code!
+        .where((code) => code.name == 'mtn')
+        .map((code) => code.code)
         .toList();
 
     final productCodes = code
-        .where((code) => code['category'] == 'airtime')
-        .map((code) => code['code'])
+        .where((code) => code.category == 'airtime')
+        .map((code) => code.code)
         .toList();
 
     setState(() {
@@ -131,7 +133,7 @@ class _SellAirtimeScreenState extends State<SellAirtimeScreen> {
                             _selectedNetwork = newValue!;
                           });
                         },
-                        items: networkProvider.map((String networkProviders) {
+                        items: networkProviders.map((String networkProviders) {
                           return DropdownMenuItem(
                             value: networkProviders,
                             onTap: () {
