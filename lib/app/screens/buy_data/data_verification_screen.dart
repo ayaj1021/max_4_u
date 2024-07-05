@@ -24,57 +24,66 @@ class DataVerificationScreen extends StatefulWidget {
       required this.network,
       required this.amount,
       required this.phoneNumber,
-      required this.dataBundle});
+      required this.dataBundle, required this.userType});
   final String network;
   final String amount;
   final String phoneNumber;
   final String dataBundle;
+  final String userType;
 
   @override
   State<DataVerificationScreen> createState() => _DataVerificationScreenState();
 }
 
 class _DataVerificationScreenState extends State<DataVerificationScreen> {
-  DateTime? _startDate;
-  DateTime? _endDate;
+  // DateTime? _startDate;
+  // DateTime? _endDate;
 
-  Future<void> _selectDate(BuildContext context, bool isStartDate) async {
-    DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now().add(Duration(days: 1)),
-      firstDate: DateTime.now(),
-      lastDate: DateTime(2101),
-    );
+  // Future<void> _selectDate(BuildContext context, bool isStartDate) async {
+  //   DateTime? pickedDate = await showDatePicker(
+  //     context: context,
+  //     initialDate: DateTime.now().add(Duration(days: 1)),
+  //     firstDate: DateTime.now(),
+  //     lastDate: DateTime(2101),
+  //   );
 
-    if (pickedDate != null) {
-      DateTime now = DateTime.now();
-      DateTime pickedDateTime = DateTime(
-        pickedDate.year,
-        pickedDate.month,
-        pickedDate.day,
-        now.hour,
-        now.minute + 1, // Add one minute to the current time
-      );
+  //   if (pickedDate != null) {
+  //     DateTime now = DateTime.now();
+  //     DateTime pickedDateTime = DateTime(
+  //       pickedDate.year,
+  //       pickedDate.month,
+  //       pickedDate.day,
+  //       now.hour,
+  //       now.minute + 1, // Add one minute to the current time
+  //     );
 
-      setState(() {
-        if (isStartDate) {
-          _startDate = pickedDateTime;
-          // Ensure end date is after start date
-          if (_endDate != null && _endDate!.isBefore(_startDate!)) {
-            _endDate = null;
-          }
-        } else {
-          _endDate = pickedDateTime;
-        }
-      });
-    }
-  }
+  //     setState(() {
+  //       if (isStartDate) {
+  //         _startDate = pickedDateTime;
+  //         // Ensure end date is after start date
+  //         if (_endDate != null && _endDate!.isBefore(_startDate!)) {
+  //           _endDate = null;
+  //         }
+  //       } else {
+  //         _endDate = pickedDateTime;
+  //       }
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
+    //  List<String> network = widget.network.split('.');
+
+    // List<String> bundle = widget.dataBundle.split(' - ');
     List<String> parts = widget.dataBundle.split(' - ');
-    String bundle = '${parts[0]} - ${parts[1]}';
-    String amount = parts.last;
+    //String bundle = '${parts[0]} }';
+    // String amount = bundle.last;
+    String dataBundleType = parts.last;
+    // String amount = parts.last;
+
+    String originalString = dataBundleType;
+    String bundle = originalString.replaceAll('_', ' ');
 
     // List<String> data = amount.split(' ');
     // String dataAmount = data.last.trim();
@@ -108,15 +117,15 @@ class _DataVerificationScreenState extends State<DataVerificationScreen> {
                         ),
                       ],
                     ),
-                    verticalSpace(30),
+                    verticalSpace(50),
                     Text(
                       'Send data to',
-                      style: AppTextStyles.font14.copyWith(
+                      style: AppTextStyles.font18.copyWith(
                         color: const Color(0xff475569),
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                    verticalSpace(4),
+                    verticalSpace(14),
                     Container(
                       padding: const EdgeInsets.all(13),
                       height: 175.h,
@@ -186,7 +195,7 @@ class _DataVerificationScreenState extends State<DataVerificationScreen> {
                                     ),
                                   ),
                                   Text(
-                                    amount,
+                                    'N${widget.amount}',
                                     style: AppTextStyles.font16.copyWith(
                                       color: AppColors.whiteColor,
                                       fontWeight: FontWeight.w600,
@@ -205,7 +214,8 @@ class _DataVerificationScreenState extends State<DataVerificationScreen> {
                                     ),
                                   ),
                                   Text(
-                                    bundle,
+                                    bundle.toString(),
+                                    //bundle[0],
                                     style: AppTextStyles.font16.copyWith(
                                       color: AppColors.whiteColor,
                                       fontWeight: FontWeight.w600,
@@ -218,12 +228,13 @@ class _DataVerificationScreenState extends State<DataVerificationScreen> {
                         ],
                       ),
                     ),
-                    verticalSpace(331),
+                    verticalSpace(361),
                     ButtonWidget(
                         text: 'Send data',
                         onTap: () async {
                           final productCodes = await ProductHelper()
-                              .getDataProducts(widget.network);
+                              .getDataProducts(widget.dataBundle);
+                          //.getDataProducts(widget.network);
                           log('This is the code ${productCodes.toString()}');
 
                           await buyData.buyData(
@@ -252,7 +263,7 @@ class _DataVerificationScreenState extends State<DataVerificationScreen> {
                                 DataConfirmationScreen(
                                   amount: widget.amount,
                                   phoneNumber: widget.phoneNumber,
-                                  productCodes: productCodes,
+                                  productCodes: productCodes, userType: widget.userType,
                                 ));
                           }
                         })

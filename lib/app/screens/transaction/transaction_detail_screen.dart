@@ -271,17 +271,21 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
                                       const EdgeInsets.only(right: 20, top: 21),
                                   child: Align(
                                     alignment: Alignment.topRight,
-                                    child: GestureDetector(
+                                    child: InkWell(
                                       onTap: () => Navigator.pop(context),
-                                      child: Text(
-                                        'X',
-                                        style: AppTextStyles.font20,
+                                      child: SizedBox(
+                                        height: 20,
+                                        width: 20,
+                                        child: Image.asset(
+                                          'assets/icons/cancel_icon.png',
+                                        
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
                                 verticalSpace(18),
-                                GestureDetector(
+                                InkWell(
                                   onTap: () {
                                     _generateAndSharePDF();
                                   },
@@ -297,7 +301,7 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
                                   color: AppColors.blackColor.withOpacity(0.1),
                                 ),
                                 verticalSpace(15),
-                                GestureDetector(
+                                InkWell(
                                   onTap: () {
                                     _captureAndShareImage();
                                   },
@@ -538,7 +542,7 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
                   //    verticalSpace(16),
                   pw.Text('N${widget.amount}',
                       style: pw.TextStyle(
-                          fontSize: 20, fontWeight: pw.FontWeight.bold)
+                          fontSize: 24, fontWeight: pw.FontWeight.bold)
                       //AppTextStyles.font20,
                       ),
                   pw.SizedBox(height: 16),
@@ -634,13 +638,22 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
   pw.Widget _transactionDetailsSection(String title, String value,
       [IconData? iconData]) {
     return pw.Row(
+     
       children: [
         pw.Expanded(
           child: pw.Text(
-            '$title: $value',
-            style: pw.TextStyle(fontSize: 12),
+            '$title: ',
+            style: pw.TextStyle(fontSize: 18),
           ),
         ),
+           pw.SizedBox(width: 50),
+            pw.Expanded(
+          child: pw.Text(
+            ' $value',
+            style: pw.TextStyle(fontSize: 18),
+          ),
+        ),
+      
         if (iconData != null)
           pw.Icon(pw.IconData(iconData.codePoint), size: 16),
       ],
@@ -648,12 +661,24 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
   }
 
   Future<void> _sharePDF(Uint8List bytes) async {
-    final tempDir = await getTemporaryDirectory();
-    final file = File('${tempDir.path}/transaction details');
+    final directory = await getApplicationDocumentsDirectory();
+    final file = File('${directory.path}/transaction_details.pdf');
     await file.writeAsBytes(bytes);
 
-    // await Share.shareFiles([file.path], text: 'Here is a PDF file');
-    await Share.shareXFiles([XFile(file.path)], text: 'Here is a PDF file');
+    
+    // final tempDir = await getTemporaryDirectory();
+    // final file = File('${tempDir.path}/transaction details');
+    // await file.writeAsBytes(bytes);
+
+     final XFile xFile = XFile(
+      file.path,
+      mimeType: 'application/pdf',
+      name: 'transaction_details.pdf',
+    );
+
+    
+  //  // await Share.shareXFiles([XFile(file.path)], text: 'Here is a PDF file');
+    await Share.shareXFiles([xFile], text: 'Here is your PDF file');
   }
 }
 

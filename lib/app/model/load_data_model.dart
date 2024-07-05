@@ -129,6 +129,69 @@ class Service {
   }
 }
 
+class Product {
+  String? name;
+  String? code;
+  String? serviceName;
+  String? category;
+  String? price;
+  String? consumerDiscount;
+  String? vendorDiscount;
+  String? serviceFee;
+  String? logo;
+  String? duration;
+  String? status;
+  bool selected;
+
+  Product({
+    this.name,
+    this.code,
+    this.serviceName,
+    this.category,
+    this.price,
+    this.consumerDiscount,
+    this.vendorDiscount,
+    this.serviceFee,
+    this.logo,
+    this.duration,
+    this.status,
+     this.selected = false,
+  });
+
+  factory Product.fromJson(Map<String, dynamic> json) {
+    return Product(
+      name: json['name'] as String?,
+      code: json['code'] as String?,
+      serviceName: json['service_name'] as String?,
+      category: json['category'] as String?,
+      price: json['price'] as String?,
+      consumerDiscount: json['consumer_discount'] as String?,
+      vendorDiscount: json['vendor_discount'] as String?,
+      serviceFee: json['service_fee'] as String?,
+      logo: json['logo'] as String?,
+      duration: json['duration'] as String?,
+      status: json['status'] as String?,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'code': code,
+      'service_name': serviceName,
+      'category': category,
+      'price': price,
+      'consumer_discount': consumerDiscount,
+      'vendor_discount': vendorDiscount,
+      'service_fee': serviceFee,
+      'logo': logo,
+      'duration': duration,
+      'status': status,
+    };
+  }
+}
+
+
 // class Product {
 //   String? name;
 //   String? code;
@@ -141,7 +204,6 @@ class Service {
 //   String? logo;
 //   String? duration;
 //   String? status;
-
 
 //   Product({
 //     this.name,
@@ -156,8 +218,6 @@ class Service {
 //     this.duration,
 //     this.status,
 //   });
-
-  
 
 //   factory Product.fromJson(Map<String, dynamic> json) {
 //     return Product(
@@ -192,13 +252,9 @@ class Service {
 //   }
 // }
 
-
 // To parse this JSON data, do
 //
 //     final products = productsFromJson(jsonString);
-
-
-
 
 // class Products {
 //     final List<Product>? products;
@@ -216,105 +272,125 @@ class Service {
 //     };
 // }
 
-class Product {
-    final String? name;
-    final String? code;
-    final Logo? serviceName;
-    final Category? category;
-    final String? price;
-    final String? consumerDiscount;
-    final String? vendorDiscount;
-    final String? serviceFee;
-    final Logo? logo;
-    final String? duration;
-    final Status? status;
+// class Product {
+//   final String? name;
+//   final String? code;
+//   final Logo? serviceName;
+//   final Category? category;
+//   final String? price;
+//   final String? consumerDiscount;
+//   final String? vendorDiscount;
+//   final String? serviceFee;
+//   final Logo? logo;
+//   final String? duration;
+//   final Status? status;
+//   bool selected;
 
-    Product({
-        this.name,
-        this.code,
-        this.serviceName,
-        this.category,
-        this.price,
-        this.consumerDiscount,
-        this.vendorDiscount,
-        this.serviceFee,
-        this.logo,
-        this.duration,
-        this.status,
-    });
+//   Product({
+//     this.name,
+//     this.code,
+//     this.serviceName,
+//     this.category,
+//     this.price,
+//     this.consumerDiscount,
+//     this.vendorDiscount,
+//     this.serviceFee,
+//     this.logo,
+//     this.duration,
+//     this.status,
+//      this.selected = false,
+//   });
 
-    factory Product.fromJson(Map<String, dynamic> json) => Product(
-        name: json["name"],
-        code: json["code"],
-        serviceName: logoValues.map[json["service_name"]]!,
-        category: categoryValues.map[json["category"]]!,
-        price: json["price"],
-        consumerDiscount: json["consumer_discount"],
-        vendorDiscount: json["vendor_discount"],
-        serviceFee: json["service_fee"],
-        logo: logoValues.map[json["logo"]]!,
-        duration: json["duration"],
-        status: statusValues.map[json["status"]]!,
-    );
+//   factory Product.fromJson(Map<String, dynamic> json) => Product(
+//         name: json["name"],
+//         code: json["code"],
+//         serviceName: logoValues.map[json["service_name"]]!,
+//         category: categoryValues.map[json["category"]]!,
+//         price: json["price"],
+//         consumerDiscount: json["consumer_discount"],
+//         vendorDiscount: json["vendor_discount"],
+//         serviceFee: json["service_fee"],
+//         logo: logoValues.map[json["logo"]]!,
+//         duration: json["duration"],
+//         status: statusValues.map[json["status"]]!,
+//       );
 
-    Map<String, dynamic> toJson() => {
-        "name": name,
-        "code": code,
-        "service_name": logoValues.reverse[serviceName],
-        "category": categoryValues.reverse[category],
-        "price": price,
-        "consumer_discount": consumerDiscount,
-        "vendor_discount": vendorDiscount,
-        "service_fee": serviceFee,
-        "logo": logoValues.reverse[logo],
-        "duration": duration,
-        "status": statusValues.reverse[status],
-    };
-}
+//   Map<String, dynamic> toJson() => {
+//         "name": name,
+//         "code": code,
+//         "service_name": logoValues.reverse[serviceName],
+//         "category": categoryValues.reverse[category],
+//         "price": price,
+//         "consumer_discount": consumerDiscount,
+//         "vendor_discount": vendorDiscount,
+//         "service_fee": serviceFee,
+//         "logo": logoValues.reverse[logo],
+//         "duration": duration,
+//         "status": statusValues.reverse[status],
+//       };
 
-enum Category {
-    AIRTIME,
-    DATA
-}
+//   String period() {
+//     String? productPeriod;
+//     switch (duration) {
+//       case 1:
+//         productPeriod = 'Daily';
+//         break;
+//       case 7:
+//         productPeriod = 'Weekly';
+//         break;
+//       case 30:
+//         productPeriod = 'Monthly';
+//         break;
+//       case 90:
+//         productPeriod = 'Quarterly';
+//       default:
+//         productPeriod = 'Yearly';
+//     }
+//     return productPeriod;
+//   }
+// }
 
-final categoryValues = EnumValues({
-    "airtime": Category.AIRTIME,
-    "data": Category.DATA
-});
+// List<Product> allProducts = [];
 
-enum Logo {
-    AIRTEL,
-    GLO,
-    MTN,
-    THE_9_MOBILE
-}
+// List<Product> filerProducts({String? duration, String? networkName}) {
+//   return allProducts
+//       .where((product) =>
+//           product.logo == networkName && product.period() == duration)
+//       .toList();
+// }
 
-final logoValues = EnumValues({
-    "airtel": Logo.AIRTEL,
-    "glo": Logo.GLO,
-    "mtn": Logo.MTN,
-    "9mobile": Logo.THE_9_MOBILE
-});
+// //to run function
+// var matchingProducts = filerProducts(duration: 'Daily', networkName: 'MTN');
 
-enum Status {
-    ACTIVE
-}
+// enum Category { AIRTIME, DATA }
 
-final statusValues = EnumValues({
-    "active": Status.ACTIVE
-});
+// final categoryValues =
+//     EnumValues({"airtime": Category.AIRTIME, "data": Category.DATA});
 
-class EnumValues<T> {
-    Map<String, T> map;
-    late Map<T, String> reverseMap;
+// enum Logo { AIRTEL, GLO, MTN, THE_9_MOBILE }
 
-    EnumValues(this.map);
+// final logoValues = EnumValues({
+//   "airtel": Logo.AIRTEL,
+//   "glo": Logo.GLO,
+//   "mtn": Logo.MTN,
+//   "9mobile": Logo.THE_9_MOBILE
+// });
 
-    Map<T, String> get reverse {
-            reverseMap = map.map((k, v) => MapEntry(v, k));
-            return reverseMap;
-    }
-}
+// enum Status { ACTIVE }
+
+// final statusValues = EnumValues({"active": Status.ACTIVE});
+
+// class EnumValues<T> {
+//   Map<String, T> map;
+//   late Map<T, String> reverseMap;
+
+//   EnumValues(this.map);
+
+//   Map<T, String> get reverse {
+//     reverseMap = map.map((k, v) => MapEntry(v, k));
+//     return reverseMap;
+//   }
+// }
 
 class Transaction {
   String? referenceId;

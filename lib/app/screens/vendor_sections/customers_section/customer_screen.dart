@@ -47,7 +47,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-               Text(
+              Text(
                 'Customers',
                 style: AppTextStyles.font18,
               ),
@@ -61,6 +61,86 @@ class _CustomerScreenState extends State<CustomerScreen> {
               //   ),
               // ),
               verticalSpace(25),
+
+              GestureDetector(
+                onTap: () {
+                  showModalBottomSheet(
+                      context: context,
+                      builder: (context) {
+                        return Container(
+                          height: 193.h,
+                          width: MediaQuery.of(context).size.width,
+                          padding: const EdgeInsets.all(25),
+                          decoration: BoxDecoration(
+                            color: AppColors.whiteColor,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(18),
+                              topRight: Radius.circular(18),
+                            ),
+                          ),
+                          child: Column(
+                            children: [
+                              Text(
+                                'Add Customer',
+                                style: AppTextStyles.font18.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              verticalSpace(37),
+                              GestureDetector(
+                                onTap: () => nextScreen(
+                                    context, AddCustomerNumberScreen()),
+                                child: Text(
+                                  'Add Using Phone Number/Email',
+                                  style: AppTextStyles.font14.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.subTextColor,
+                                  ),
+                                ),
+                              ),
+                              verticalSpace(40),
+                              GestureDetector(
+                                onTap: () =>
+                                    nextScreen(context, AddCustomerIdScreen()),
+                                child: Text(
+                                  'Add Using User ID',
+                                  style: AppTextStyles.font14.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.subTextColor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      });
+                },
+                child: Row(
+                  children: [
+                    Container(
+                      height: 24,
+                      width: 24,
+                      decoration: const BoxDecoration(
+                          color: AppColors.primaryColor,
+                          shape: BoxShape.circle),
+                      child: const Icon(
+                        Icons.add,
+                        color: AppColors.whiteColor,
+                        size: 18,
+                      ),
+                    ),
+                    horizontalSpace(4),
+                    Text(
+                      'Add Customer',
+                      style: AppTextStyles.font14.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.primaryColor,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+
               Consumer<GetAllCustomersProvider>(
                   builder: (context, getAllCustomer, _) {
                 return getAllCustomer.data.isEmpty
@@ -97,90 +177,6 @@ class _CustomerScreenState extends State<CustomerScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              GestureDetector(
-                                onTap: () {
-                                  showModalBottomSheet(
-                                      context: context,
-                                      builder: (context) {
-                                        return Container(
-                                          height: 193.h,
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          padding: const EdgeInsets.all(25),
-                                          decoration: BoxDecoration(
-                                            color: AppColors.whiteColor,
-                                            borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(18),
-                                              topRight: Radius.circular(18),
-                                            ),
-                                          ),
-                                          child: Column(
-                                            children: [
-                                              Text(
-                                                'Add Customer',
-                                                style: AppTextStyles.font18
-                                                    .copyWith(
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                              verticalSpace(37),
-                                              GestureDetector(
-                                                onTap: () => nextScreen(context,
-                                                    AddCustomerNumberScreen()),
-                                                child: Text(
-                                                  'Add Using Phone Number/Email',
-                                                  style: AppTextStyles.font14
-                                                      .copyWith(
-                                                    fontWeight: FontWeight.w500,
-                                                    color:
-                                                        AppColors.subTextColor,
-                                                  ),
-                                                ),
-                                              ),
-                                              verticalSpace(40),
-                                              GestureDetector(
-                                                onTap: () => nextScreen(context,
-                                                    AddCustomerIdScreen()),
-                                                child: Text(
-                                                  'Add Using User ID',
-                                                  style: AppTextStyles.font14
-                                                      .copyWith(
-                                                    fontWeight: FontWeight.w500,
-                                                    color:
-                                                        AppColors.subTextColor,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      });
-                                },
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      height: 24,
-                                      width: 24,
-                                      decoration: const BoxDecoration(
-                                          color: AppColors.primaryColor,
-                                          shape: BoxShape.circle),
-                                      child: const Icon(
-                                        Icons.add,
-                                        color: AppColors.whiteColor,
-                                        size: 18,
-                                      ),
-                                    ),
-                                    horizontalSpace(4),
-                                    Text(
-                                      'Add Customer',
-                                      style: AppTextStyles.font14.copyWith(
-                                        fontWeight: FontWeight.w500,
-                                        color: AppColors.primaryColor,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
                               verticalSpace(17),
                               // ElevatedButton(
                               //   onPressed: () {
@@ -188,64 +184,58 @@ class _CustomerScreenState extends State<CustomerScreen> {
                               //   },
                               //   child: Text(''),
                               // ),
-                              SizedBox(
-                                  height: MediaQuery.of(context).size.height,
-                                  width: MediaQuery.of(context).size.height,
-                                  child: ListView.builder(
-                                      // shrinkWrap: true,
-                                      itemCount: getAllCustomer.data.length,
-                                      itemBuilder: (_, index) {
-                                        return Column(
-                                          children: [
-                                            ListTile(
-                                              onTap: () => nextScreen(
-                                                  context,
-                                                  CustomerDetailsPage(
-                                                    firstName:
-                                                        '${getAllCustomer.firstName}',
-                                                    lastName:
-                                                        '${getAllCustomer.lastName} ',
-                                                    phoneNumber:
-                                                        '${getAllCustomer.mobileNumber}',
-                                                    uniqueId:
-                                                        '${getAllCustomer.uniqueId}',
-                                                  )),
-                                              contentPadding: EdgeInsets.zero,
-                                              // leading: Text(
-                                              //   getAllCustomer.firstName,
-                                              //   style:
-                                              //       AppTextStyles.font14.copyWith(
-                                              //     color: AppColors.textColor,
-                                              //     fontWeight: FontWeight.w400,
-                                              //   ),
-                                              // ),
-                                              title: Text(
-                                                '${getAllCustomer.firstName} ${getAllCustomer.lastName} ',
-                                                style: AppTextStyles.font14
-                                                    .copyWith(
-                                                  color: AppColors.textColor,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              ),
-                                              subtitle: Text(
-                                                '${getAllCustomer.mobileNumber}',
-                                                style: AppTextStyles.font16
-                                                    .copyWith(
-                                                  color: AppColors.subTextColor,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                              trailing:
-                                                  const Icon(Icons.more_vert),
-                                            ),
-                                            //verticalSpace(5),
-                                            Divider(
-                                              color: AppColors.blackColor
-                                                  .withOpacity(0.1),
-                                            )
-                                          ],
-                                        );
-                                      })),
+                              Column(
+                                children: List.generate(
+                                    getAllCustomer.data.length, (index) {
+                                  return Column(
+                                    children: [
+                                      ListTile(
+                                        onTap: () => nextScreen(
+                                            context,
+                                            CustomerDetailsPage(
+                                              firstName:
+                                                  '${getAllCustomer.firstName}',
+                                              lastName:
+                                                  '${getAllCustomer.lastName} ',
+                                              phoneNumber:
+                                                  '${getAllCustomer.mobileNumber}',
+                                              uniqueId:
+                                                  '${getAllCustomer.uniqueId}',
+                                            )),
+                                        contentPadding: EdgeInsets.zero,
+                                        // leading: Text(
+                                        //   getAllCustomer.firstName,
+                                        //   style:
+                                        //       AppTextStyles.font14.copyWith(
+                                        //     color: AppColors.textColor,
+                                        //     fontWeight: FontWeight.w400,
+                                        //   ),
+                                        // ),
+                                        title: Text(
+                                          '${getAllCustomer.firstName} ${getAllCustomer.lastName} ',
+                                          style: AppTextStyles.font14.copyWith(
+                                            color: AppColors.textColor,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        subtitle: Text(
+                                          '${getAllCustomer.mobileNumber}',
+                                          style: AppTextStyles.font16.copyWith(
+                                            color: AppColors.subTextColor,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        trailing: const Icon(Icons.more_vert),
+                                      ),
+                                      //verticalSpace(5),
+                                      Divider(
+                                        color: AppColors.blackColor
+                                            .withOpacity(0.1),
+                                      )
+                                    ],
+                                  );
+                                }),
+                              ),
                             ],
                           ),
                         ),

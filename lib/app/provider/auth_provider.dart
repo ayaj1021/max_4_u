@@ -220,20 +220,22 @@ class AuthProviderImpl extends ChangeNotifier
       "login_id": email,
       "password": password,
     };
-    debugPrint(body.toString());
+    print(body.toString());
 
-    await SecureStorage().saveUserPassword(password);
+    // await SecureStorage().saveUserPassword(password);
     try {
       final response = await ApiService().authPostRequest(
         body: body,
       );
-      print(response);
+
       _status = response['data']['status'];
+      
       // _message = response['data']['message'];
 
       if (_status == true) {
         _status = response['data']['status'];
         _message = response['data']['message'];
+        print('this is message: $_message');
         state = ViewState.Success;
         resDataData =
             ResponseDataData.fromJson(response['data']['response_data']);
@@ -243,18 +245,20 @@ class AuthProviderImpl extends ChangeNotifier
         notifyListeners();
         return resDataData;
       } else {
+        _status = response['data']['status'];
         state = ViewState.Error;
-        _status = false;
+        // _status = false;
 
         _errorMessage = response['data']['message'];
 
         _errorMessage = response['data']['error_data']['login_id'];
+        print(_errorMessage);
         notifyListeners();
       }
     } catch (e) {
       state = ViewState.Error;
       _status = false;
-     // _errorMessage = e.toString();
+      // _errorMessage = e.toString();
       // _message = e.toString();
       notifyListeners();
     }

@@ -124,11 +124,11 @@ class SecureStorage {
     return value;
   }
 
-  saveUserEncryptedId(String encryptedId) async {
+ Future<void> saveUserEncryptedId(String encryptedId) async {
     await _storage.write(key: 'encryptedId', value: encryptedId);
   }
 
-  getUserEncryptedId() async {
+ Future getUserEncryptedId() async {
     String? value = await _storage.read(key: 'encryptedId');
     return value;
   }

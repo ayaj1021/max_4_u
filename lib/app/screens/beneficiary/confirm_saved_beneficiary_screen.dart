@@ -13,8 +13,8 @@ import 'package:max_4_u/app/widgets/button_widget.dart';
 import 'package:provider/provider.dart';
 
 class ConfirmSavedBeneficiaryScreen extends StatefulWidget {
-  const ConfirmSavedBeneficiaryScreen({super.key});
-
+  const ConfirmSavedBeneficiaryScreen({super.key, required this.userType});
+final String userType;
   @override
   State<ConfirmSavedBeneficiaryScreen> createState() =>
       _ConfirmSavedBeneficiaryScreenState();
@@ -42,7 +42,7 @@ class _ConfirmSavedBeneficiaryScreenState
                   ),
                   verticalSpace(20),
                   Text(
-                    'Beneficiary Saved Successfully',
+                 widget.userType == 'vendor' ? 'Customer Saved Successfully' :   'Beneficiary Saved Successfully',
                     style: AppTextStyles.font16.copyWith(
                       color: AppColors.mainTextColor,
                       fontWeight: FontWeight.w600,

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/screens/beneficiary/save_beneficiary_screen.dart';
 import 'package:max_4_u/app/screens/buy_data/buy_data_auto_renewal_screen.dart';
 import 'package:max_4_u/app/screens/dashboard/dashboard_screen.dart';
+import 'package:max_4_u/app/screens/vendor_sections/screens/sell_airtime_data/save_customer_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/screen_navigator.dart';
@@ -14,13 +15,18 @@ class DataConfirmationScreen extends StatelessWidget {
       {super.key,
       required this.amount,
       required this.phoneNumber,
-      required this.productCodes});
+      required this.productCodes,
+      required this.userType});
   final String amount;
   final String phoneNumber;
   final String productCodes;
+  final String userType;
 
   @override
   Widget build(BuildContext context) {
+    String originalString = productCodes;
+    String bundle = originalString.replaceAll('_', ' ');
+
     return Scaffold(
       body: SafeArea(
           child: Padding(
@@ -43,7 +49,7 @@ class DataConfirmationScreen extends StatelessWidget {
             ),
             verticalSpace(12),
             Text(
-              'Data of $amount has been successfully \nsent to',
+              'Data of $bundle has been successfully \nsent to',
               style: AppTextStyles.font14.copyWith(
                 color: AppColors.textColor,
                 fontWeight: FontWeight.w400,
@@ -84,17 +90,23 @@ class DataConfirmationScreen extends StatelessWidget {
                   height: 48.h,
                   width: 165.w,
                   child: ButtonWidget(
-                    color: AppColors.whiteColor,
+                    color: Colors.transparent,
                     border: Border.all(
                       color: AppColors.primaryColor,
                     ),
-                    text: 'Save beneficiary',
+                    text: userType == 'user'
+                        ? 'Save beneficiary'
+                        : 'Save Customer',
                     textColor: AppColors.primaryColor,
                     onTap: () => nextScreen(
                         context,
-                        const SaveBeneficiaryScreen(
-                          phoneNumber: '',
-                        )),
+                        userType == 'user'
+                            ? SaveBeneficiaryScreen(
+                                phoneNumber: phoneNumber,
+                              )
+                            : SaveCustomerScreen(
+                                phoneNumber: phoneNumber,
+                              )),
                   ),
                 ),
               ],

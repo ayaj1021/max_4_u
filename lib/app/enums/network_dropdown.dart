@@ -7,14 +7,14 @@ List<String> networkProviders = [
   '9mobile',
 ];
 
-final Map<int, String> durationMap = {
-    1: 'Daily',
-    7: 'Weekly',
-    30: 'Monthly',
-    90: '3 Months',
-    365: 'Yearly',
-  };
 
+final Map<int, String> durationMap = {
+  1: 'Daily',
+  7: 'Weekly',
+  30: 'Monthly',
+  90: '3 Months',
+  365: 'Yearly',
+};
 
 // for(var product in networkProvider){
 //  getDurationText(networkProvider['duration'])
@@ -32,8 +32,6 @@ final Map<int, String> durationMap = {
 //       return `${days} days`;
 //   }
 // }
-
-
 
 List<String> selectUser = [
   'Vendor',
@@ -61,8 +59,6 @@ List<String> dataValidityProvider = [
   '3 Months',
   'Yearly',
 ];
-
-
 
 // List<String> dataBundle = [
 //   'MTN - 5GB - NGN 1500',

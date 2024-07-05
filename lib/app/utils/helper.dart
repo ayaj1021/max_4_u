@@ -46,7 +46,7 @@ class ProductHelper {
     final code = await storage.getUserProducts();
     try {
       final networksList = code!
-          .where((code) => code.serviceName == network)
+          .where((code) => code.code == network)
           .map((code) => code.code)
           .toList();
       // final networks = networksList.isNotEmpty ? networksList.first : '';

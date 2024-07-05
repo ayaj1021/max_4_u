@@ -6,7 +6,6 @@ import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/busy_overlay.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
-import 'package:max_4_u/app/widgets/text_input_field.dart';
 import 'package:provider/provider.dart';
 
 class SavedCustomersScreen extends StatefulWidget {
@@ -22,7 +21,7 @@ class _SavedCustomersScreenState extends State<SavedCustomersScreen> {
     super.initState();
   }
 
-  final _searchController = TextEditingController();
+ // final _searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -53,14 +52,14 @@ class _SavedCustomersScreenState extends State<SavedCustomersScreen> {
                     ],
                   ),
                   verticalSpace(24),
-                  TextInputField(
-                    controller: _searchController,
-                    hintText: 'Enter customer’s name or phone number',
-                    prefixIcon: const Icon(
-                      Icons.search,
-                      color: Color(0xff4F4F4F),
-                    ),
-                  ),
+                  // TextInputField(
+                  //   controller: _searchController,
+                  //   hintText: 'Enter customer’s name or phone number',
+                  //   prefixIcon: const Icon(
+                  //     Icons.search,
+                  //     color: Color(0xff4F4F4F),
+                  //   ),
+                  // ),
                   verticalSpace(getAllCustomer.data.isEmpty ? 220 : 38),
                   getAllCustomer.data.isEmpty
                       ? Center(
@@ -93,14 +92,14 @@ class _SavedCustomersScreenState extends State<SavedCustomersScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        'Peace Adedokun',
+                                       '${getAllCustomer.firstName} ${getAllCustomer.lastName}',
                                         style: AppTextStyles.font14.copyWith(
                                             color: AppColors.textColor,
                                             fontWeight: FontWeight.w400),
                                       ),
                                       verticalSpace(4),
                                        Text(
-                                        '93395853348',
+                                        getAllCustomer.mobileNumber,
                                         style: AppTextStyles.font18,
                                       ),
                                       verticalSpace(16)
