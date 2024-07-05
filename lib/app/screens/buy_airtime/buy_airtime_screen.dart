@@ -1,10 +1,11 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/enums/network_dropdown.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
+import 'package:max_4_u/app/model/load_data_model.dart';
 import 'package:max_4_u/app/provider/buy_airtime_provider.dart';
+import 'package:max_4_u/app/provider/reload_data_provider.dart';
 
 import 'package:max_4_u/app/screens/beneficiary/beneficiary_screen.dart';
 import 'package:max_4_u/app/screens/buy_airtime/airtime_verification_screen.dart';
@@ -26,11 +27,8 @@ class BuyAirtimeScreen extends StatefulWidget {
 }
 
 class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
-  
-
   final _amountController = TextEditingController();
   final _phoneNumber = TextEditingController();
-    var retrievedProducts = [];
 
   final amount = [
     '100',
@@ -40,41 +38,69 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
     '2000',
     '5000',
   ];
+
+  List<Product> retrievedProducts = [];
   String network = '';
 
   int? selectedIndex;
 
   String airtimeAmount = '';
 
- 
+  String? selectedLogo;
+
+  void handleLogoSelection(String logo) {
+    setState(() {
+      selectedLogo = logo;
+    });
+    print('Selected logo: $selectedLogo');
+    print(
+        'Available logos in products: ${retrievedProducts.map((product) => product.logo).toSet().toList()}');
+  }
+
+  @override
+  void initState() {
+    getProduct();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ReloadUserDataProvider>(context, listen: false)
+          .reloadUserData();
+    });
+    super.initState();
+  }
+
+  List<String> networkProvidersImage = [
+    'assets/logo/mtn.png',
+    'assets/logo/glo.png',
+    'assets/logo/airtel.png',
+    'assets/logo/9mobile.png',
+  ];
+
   @override
   void dispose() {
     _phoneNumber.dispose();
-   
+    _amountController.dispose();
+
     super.dispose();
   }
-String? _selectedNetwork = networkProviders[0];
 
-@override
-  void initState() {
-    getProduct();
-    super.initState();
-  }
+  String? _selectedNetwork = networkProviders[0];
 
   getProduct() async {
     final storage = await SecureStorage();
 
     retrievedProducts = (await storage.getUserProducts())!;
-    for (var product in retrievedProducts) {
-      print('${product.name}: ${product.price}');
+    for (var products in retrievedProducts) {
+      print('${products.name}: ${products.price}');
+      print('${products.logo}: ${products.duration}');
     }
   }
- 
+
+  int? selectedLogoIndex;
 
   var codeValues = [];
   var networks = [];
   getProductCodeValues() async {
-      final storage = await SecureStorage();
+    final storage = await SecureStorage();
     final code = await storage.getUserProducts();
     final network = code!
         .where((code) => code.name == 'mtn')
@@ -82,7 +108,7 @@ String? _selectedNetwork = networkProviders[0];
         .toList();
 
     final productCodes = code
-        .where((code) => code.category== 'airtime')
+        .where((code) => code.category == 'airtime')
         .map((code) => code.code)
         .toList();
 
@@ -96,6 +122,8 @@ String? _selectedNetwork = networkProviders[0];
   Widget build(BuildContext context) {
     return Consumer<BuyAirtimeProvider>(
       builder: (context, buyAirtime, _) {
+        // var logos =
+        //     retrievedProducts.map((product) => product.logo).toSet().toList();
         return BusyOverlay(
           show: buyAirtime.state == ViewState.Busy,
           title: buyAirtime.message,
@@ -131,42 +159,85 @@ String? _selectedNetwork = networkProviders[0];
                         fontWeight: FontWeight.w500,
                       ),
                     ),
- verticalSpace(8),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    height: 52.h,
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: AppColors.whiteColor,
-                      border: Border.all(
-                        color: const Color(0xffCBD5E1),
+                    verticalSpace(8),
+                    // Padding(
+                    //   padding: const EdgeInsets.symmetric(horizontal: 20),
+                    //   child: Row(
+                    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //     children: List.generate(
+                    //       logos.length,
+                    //       (index) {
+                    //         return Padding(
+                    //           padding: const EdgeInsets.all(8.0),
+                    //           child: Column(
+                    //             children: [
+                    //               InkWell(
+                    //                 onTap: () {
+                    //                   handleLogoSelection(
+                    //                       logos[index].toString());
+                    //                   setState(() {
+                    //                     selectedLogoIndex = index;
+                    //                   });
+                    //                 },
+                    //                 child: Container(
+                    //                   height: 60,
+                    //                   width: 60,
+                    //                   padding: EdgeInsets.all(3),
+                    //                   decoration: BoxDecoration(
+                    //                       shape: BoxShape.circle,
+                    //                       color: selectedLogoIndex == index
+                    //                           ? AppColors.primaryColor
+                    //                           : Colors.transparent),
+                    //                   child: CircleAvatar(
+                    //                       radius: 25,
+                    //                       child: Image.asset(
+                    //                           networkProvidersImage[index])),
+                    //                 ),
+                    //               ),
+                    //             ],
+                    //           ),
+                    //         );
+                    //       },
+                    //     ),
+                    //   ),
+                    // ),
+
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      height: 52.h,
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: AppColors.whiteColor,
+                        border: Border.all(
+                          color: const Color(0xffCBD5E1),
+                        ),
+                      ),
+                      child: DropdownMenu(
+                        hintText: 'Select network',
+                        width: 330.w,
+                        enableFilter: true,
+                        enableSearch: false,
+                        inputDecorationTheme: InputDecorationTheme(
+                          fillColor: AppColors.whiteColor,
+                          border: InputBorder.none,
+                        ),
+                        onSelected: (newValue) {
+                          setState(() {
+                            _selectedNetwork = newValue!;
+                          });
+                        },
+                        dropdownMenuEntries:
+                            networkProviders.map((String networkProviders) {
+                          return DropdownMenuEntry(
+                            value: networkProviders,
+                            label: networkProviders.toUpperCase(),
+                          );
+                        }).toList(),
                       ),
                     ),
-                    child: DropdownMenu(
-                      hintText: 'Select network',
-                      width: 330.w,
-                      enableFilter: true,
-                      enableSearch: false,
-                      inputDecorationTheme: InputDecorationTheme(
-                        fillColor: AppColors.whiteColor,
-                        border: InputBorder.none,
-                      ),
-                      onSelected: (newValue) {
-                        setState(() {
-                          _selectedNetwork = newValue!;
-                        });
-                      },
-                      dropdownMenuEntries:
-                          networkProviders.map((String networkProviders) {
-                        return DropdownMenuEntry(
-                          value: networkProviders,
-                          label: networkProviders.toUpperCase(),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                  //  verticalSpace(8),
+
+                    //  verticalSpace(8),
                     // Container(
                     //   padding: const EdgeInsets.symmetric(horizontal: 15),
                     //   height: 52.h,
@@ -179,7 +250,7 @@ String? _selectedNetwork = networkProviders[0];
                     //     ),
                     //   ),
                     //   child: DropdownButton<String>(
-    
+
                     //     elevation: 0,
                     //     borderRadius: BorderRadius.circular(12),
                     //     underline: const SizedBox(),
@@ -203,8 +274,7 @@ String? _selectedNetwork = networkProviders[0];
                     //     }).toList(),
                     //   ),
                     // ),
-                    
-                    
+
                     verticalSpace(30),
                     Stack(
                       children: [
@@ -214,9 +284,7 @@ String? _selectedNetwork = networkProviders[0];
                           hintText: 'Receiver\'s number',
                           textInputType: TextInputType.number,
                           maxLength: 11,
-                          onChanged: (p0) {
-                            
-                          },
+                          onChanged: (p0) {},
                         ),
                         Positioned(
                           right: 0,
@@ -338,7 +406,8 @@ String? _selectedNetwork = networkProviders[0];
                         nextScreen(
                             context,
                             AirtimeVerificationScreen(
-                              network: '${_selectedNetwork}',
+                              network: _selectedNetwork.toString(),
+                              //selectedLogo.toString(),
                               phoneNumber: _phoneNumber.text.trim(),
                               amount: airtimeAmount,
                             ));
@@ -354,19 +423,3 @@ String? _selectedNetwork = networkProviders[0];
     );
   }
 }
-
-// String _networkToString(networkProvider network) {
-//   switch (network) {
-//     case networkProvider.MTN:
-//       return 'MTN';
-//     case networkProvider.GLO:
-//       return 'GLO';
-//     case networkProvider.Airtel:
-//       return 'Airtel';
-//     case networkProvider.Etisalat:
-//       return 'Etisalat';
-
-//     default:
-//       return '';
-//   }
-// }

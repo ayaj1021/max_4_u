@@ -13,15 +13,15 @@ import 'package:max_4_u/app/widgets/button_widget.dart';
 import 'package:max_4_u/app/widgets/text_input_field.dart';
 import 'package:provider/provider.dart';
 
-class SaveBeneficiaryScreen extends StatefulWidget {
-  const SaveBeneficiaryScreen({super.key, required this.phoneNumber});
+class SaveCustomerScreen extends StatefulWidget {
+  const SaveCustomerScreen({super.key, required this.phoneNumber});
   final String phoneNumber;
 
   @override
-  State<SaveBeneficiaryScreen> createState() => _SaveBeneficiaryScreenState();
+  State<SaveCustomerScreen> createState() => _SaveCustomerScreenState();
 }
 
-class _SaveBeneficiaryScreenState extends State<SaveBeneficiaryScreen> {
+class _SaveCustomerScreenState extends State<SaveCustomerScreen> {
   final _nameController = TextEditingController();
 
   @override
@@ -54,7 +54,7 @@ class _SaveBeneficiaryScreenState extends State<SaveBeneficiaryScreen> {
                       ),
                       horizontalSpace(104),
                        Text(
-                        'Save Beneficiary',
+                        'Save Customer',
                         style: AppTextStyles.font18,
                       )
                     ],
@@ -88,14 +88,14 @@ class _SaveBeneficiaryScreenState extends State<SaveBeneficiaryScreen> {
                   TextInputField(
                     controller: _nameController,
                     labelText: 'Set name',
-                    hintText: 'Enter beneficiary name',
+                    hintText: 'Enter customer name',
                   ),
                   verticalSpace(80),
                   ButtonWidget(
-                      text: 'Save Beneficiary',
+                      text: 'Save Customer',
                       onTap: () async {
                         if (_nameController.text.isEmpty) {
-                          showMessage(context, 'Beneficiary name is required',
+                          showMessage(context, 'Customer name is required',
                               isError: true);
                           return;
                         }
@@ -113,7 +113,7 @@ class _SaveBeneficiaryScreenState extends State<SaveBeneficiaryScreen> {
                           showMessage(context, saveBen.message);
                           await reloadData.reloadUserData();
                           nextScreen(
-                              context, const ConfirmSavedBeneficiaryScreen(userType: 'user',));
+                              context, const ConfirmSavedBeneficiaryScreen(userType: 'vendor',));
                         }
                       })
                 ],

@@ -79,7 +79,7 @@ class _BeneficiaryScreenState extends State<BeneficiaryScreen> {
                                 (index) {
                               final data =
                                   reloadData.loadData.beneficiaryData![index];
-                              return GestureDetector(
+                              return InkWell(
                                 onTap: () {
                                   setState(() {
                                     selectedIndex = index;

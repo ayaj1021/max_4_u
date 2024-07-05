@@ -121,70 +121,63 @@ class _LoginScreenState extends State<LoginScreen> {
                             isError: true);
                         return;
                       }
-
                       await authProv.loginUser(
                           email: _emailController.text.trim(),
                           password: _passwordController.text.trim());
 
                       if (authProv.status == false && context.mounted) {
-                        showMessage(context, authProv.errorMessage, isError: true);
-                        // ScaffoldMessenger.of(context).showSnackBar(
-                        //     SnackBar(content: Text(authProv.errorMessage)));
+                        showMessage(context, authProv.errorMessage,
+                            isError: true);
                         return;
                       }
 
-                      //print(authProv.message);
-
-                      // final userLevelType = await SecureStorage().getUserType();
                       if (authProv.status == true && context.mounted) {
                         showMessage(context, authProv.message);
+
                         await reloadData.reloadUserData();
-                        Future.delayed(Duration(seconds: 2), () {
+                        Future.delayed(Duration(seconds: 1), () {
                           nextScreenReplace(context, DashBoardScreen());
                         });
-                        // nextScreen(context, DashBoardScreen());
                       }
                       final firstName = EncryptData.decryptAES(
                           '${authProv.resDataData.userData![0].firstName}');
-                      // '${result.data!.userData![0].firstName}');
+
                       await SecureStorage().saveFirstName(firstName);
 
                       final lastName = EncryptData.decryptAES(
                           '${authProv.resDataData.userData![0].lastName}');
-                      log('last name is $lastName');
+
                       final uniqueId = EncryptData.decryptAES(
                           '${authProv.resDataData.userData![0].uniqueId}');
-                      log('uniqueId is $uniqueId');
+
                       final email = EncryptData.decryptAES(
                           '${authProv.resDataData.userData![0].email}');
-                      log('uniqueId is $email');
+
                       final number = EncryptData.decryptAES(
                           '${authProv.resDataData.userData![0].mobileNumber}');
-                      log('number is $number');
+
                       final balance = authProv.resDataData.userAccount!.balance;
                       final userType = authProv.resDataData.userData![0].level;
-                      // context.read();
+
                       final transactionHistory =
                           authProv.resDataData.transactionHistory!.data;
-                    //  final beneficiary = authProv.resDataData.beneficiaryData;
+
                       log('user type is $uniqueId');
                       log('user very unique id is $uniqueId');
                       log('user balance is $balance');
                       final services = authProv.resDataData.services!;
-                     // final products = authProv.resDataData.products!;
+
                       final autoRenewal =
                           authProv.resDataData.autoRenewal!.data;
-                      //                  final transactions = result.data.;
-                      // await SecureStorage().saveUserTransactions(transactions);
 
                       await SecureStorage().saveUserEncryptedId(
                           '${authProv.resDataData.userData![0].uniqueId}');
-                      //  await SecureStorage().saveUserEncryptedId(uniqueId);
+
                       await SecureStorage()
                           .saveUserTransactionHistory(transactionHistory!);
-                     // await SecureStorage().saveUserBeneficiary(beneficiary);
+
                       await SecureStorage().saveUserAutoRenewal(autoRenewal!);
-                    //  await SecureStorage().saveUserProducts(products);
+
                       await SecureStorage().saveUserServices(services as List);
                       await SecureStorage().saveUserType(userType.toString());
                       await SecureStorage().saveEncryptedID(uniqueId);

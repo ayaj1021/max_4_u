@@ -73,7 +73,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Icons.arrow_back,
                       ),
                     ),
-                    horizontalSpace(115),
+                    horizontalSpace(120),
                     Text(
                       'Profile',
                       style: AppTextStyles.font18.copyWith(
