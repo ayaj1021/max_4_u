@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/enums/month_dropdown_enum.dart';
+import 'package:max_4_u/app/model/load_data_model.dart';
 
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/screens/auto_renewal/auto_renewal_screen.dart';
@@ -14,6 +16,7 @@ import 'package:max_4_u/app/utils/screen_navigator.dart';
 import 'package:max_4_u/app/utils/text_capitalization_extension.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
 import 'package:max_4_u/app/widgets/button_widget.dart';
+import 'package:max_4_u/app/widgets/text_input_field.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -26,49 +29,65 @@ class TransactionScreen extends StatefulWidget {
 
 class _TransactionScreenState extends State<TransactionScreen> {
   final _searchController = TextEditingController();
-  // List<LoadDataData> searchList = [];
 
-  // List<TransactionHistory> totalList =
-  //     LoadDataData() as List<TransactionHistory>;
+  TransactionHistory? retrievedTransactionHistory;
 
   bool isSearching = false;
   @override
   void initState() {
+    getTransactions();
+    _searchController.addListener(_filterTransactions);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<ReloadUserDataProvider>(context, listen: false)
           .reloadUserData();
     });
     super.initState();
-    //  searchList = totalList.cast<LoadDataData>();
   }
 
-  // void runFilter(String enteredKeyword) {
-  //   List<LoadDataData> results = [];
-  //   if (enteredKeyword.isEmpty) {
-  //     results = totalList.cast<LoadDataData>();
-  //   } else {
-  //     results = totalList
-  //         .where((user) => user.data!.contains(enteredKeyword.toLowerCase()))
-  //         .cast<LoadDataData>()
-  //         .toList();
-  //   }
+  List<Transaction>? filteredTransactions = [];
+//Months? _selectedMonth;
+  void _filterTransactions() {
+    final query = _searchController.text.toLowerCase();
+    setState(() {
+      filteredTransactions =
+          retrievedTransactionHistory?.data?.where((transaction) {
+        return (transaction.referenceId?.toLowerCase().contains(query) ??
+                false) ||
+            (transaction.number?.toLowerCase().contains(query) ?? false) ||
+            (transaction.type?.toLowerCase().contains(query) ?? false) ||
+            (transaction.subType?.toLowerCase().contains(query) ?? false) ||
+            (transaction.purchaseType?.toLowerCase().contains(query) ??
+                false) ||
+            (transaction.productCode?.toLowerCase().contains(query) ?? false) ||
+            (transaction.productAmount
+                    ?.toLowerCase()
+                    .contains(query) ??
+                false) ||
+            (transaction.amountPaid?.toLowerCase().contains(query) ?? false) ||
+            (transaction.discount?.toLowerCase().contains(query) ?? false) ||
+            (transaction.commissionEarn?.toLowerCase().contains(query) ??
+                false) ||
+            (transaction.status?.toLowerCase().contains(query) ?? false);
+        //  ||
+        //  (transaction.regDate?.toLowerCase().contains(query) ?? false);
+      }).toList();
+    });
+  }
 
-  //   setState(() {
-  //     searchList = results;
-  //   });
-  // }
+  getTransactions() async {
+    final storage = await SecureStorage();
+
+    retrievedTransactionHistory = (await storage.getUserTransactions());
+    setState(() {
+      filteredTransactions = retrievedTransactionHistory?.data;
+    });
+  }
 
   @override
   void dispose() {
-    // Dispose the controller when the widget is disposed
-
     _searchController.dispose();
     super.dispose();
   }
-
-  // Months _selectedMonth = Months.January;
-
-  //List<LoadDataData> searchList = [];
 
   final categories = [
     'All',
@@ -99,6 +118,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
     'assets/icons/fund_wallet_icon.png',
   ];
 
+  
   final List colors = [
     Color(0xffDEEDF7),
     Color(0xffD6DDFE),
@@ -109,9 +129,8 @@ class _TransactionScreenState extends State<TransactionScreen> {
     DateFormat dateFormat = DateFormat('MMMM d, yyyy h:mm a');
     return Consumer<ReloadUserDataProvider>(
       builder: (context, reloadData, _) {
-        final data = reloadData.loadData.transactionHistory!.data!;
+        final dataList = reloadData.loadData.transactionHistory!.data!;
 
-        //  List<Transaction> searchTransaction = [...data];
         return Scaffold(
           backgroundColor: AppColors.scaffoldBgColor2,
           body: SafeArea(
@@ -155,22 +174,8 @@ class _TransactionScreenState extends State<TransactionScreen> {
                       ],
                     ),
 
-                    // verticalSpace(reloadData.isLoading ? 300 : 0),
-                    // reloadData.isLoading
-                    //     ? SizedBox.shrink()
-                    // Column(
-                    //     mainAxisAlignment: MainAxisAlignment.center,
-                    //     crossAxisAlignment: CrossAxisAlignment.center,
-                    //     children: [
-                    //       Center(
-                    //           child: CircularProgressIndicator(
-                    //               color: AppColors.primaryColor)),
-                    //     ],
-                    //   )
-                    //  :
-                    //   reloadData.loadData.transactionHistory == null
                     // ignore: unnecessary_null_comparison
-                    data == null
+                    dataList == null
                         ? Center(
                             child: Text(
                               'No data',
@@ -179,7 +184,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                   fontWeight: FontWeight.w400),
                             ),
                           )
-                        : data.isEmpty
+                        : dataList.isEmpty
                             //reloadData.loadData.transactionHistory!.data!.isEmpty
                             ? Center(
                                 child: Column(
@@ -203,47 +208,14 @@ class _TransactionScreenState extends State<TransactionScreen> {
                               )
                             : Column(
                                 children: [
-                                  // TextInputField(
-                                  //     controller: _searchController,
-                                  //     hintText: 'Search in transactions',
-                                  //     prefixIcon: const Icon(
-                                  //       Icons.search,
-                                  //       color: Color(0xff4F4F4F),
-                                  //     ),
-                                  //     onChanged: (value) {
-                                  //       print(
-                                  //           'this is data $searchTransaction');
-                                  //       if (value != null && value.isNotEmpty) {
-                                  //         setState(() {
-                                  //           searchTransaction.clear();
-                                  //           searchTransaction = [];
-                                  //         });
-
-                                  //         data.forEach((element) {
-                                  //           if (element.purchaseType!
-                                  //               .contains(value)) {
-                                  //             setState(() {
-                                  //               searchTransaction.add(element);
-                                  //             });
-                                  //           }
-
-                                  //           // else {
-                                  //           //   setState(() {
-                                  //           //     searchTransaction.addAll(data);
-                                  //           //   });
-                                  //           // }
-                                  //         });
-                                  //       } else {
-                                  //         setState(() {
-                                  //           searchTransaction.addAll(data);
-                                  //         });
-                                  //       }
-                                  //     }),
-
-                                  // element.purchaseType
-                                  //       ?.contains(value!);
-                                  //   searchTransaction.add(element);
-
+                                  TextInputField(
+                                    controller: _searchController,
+                                    hintText: 'Search in transactions',
+                                    prefixIcon: const Icon(
+                                      Icons.search,
+                                      color: Color(0xff4F4F4F),
+                                    ),
+                                  ),
                                   verticalSpace(18),
                                   // Row(
                                   //   mainAxisAlignment:
@@ -252,16 +224,14 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                   //     DropdownButton<Months>(
                                   //       underline: const SizedBox(),
                                   //       value: _selectedMonth,
-                                  //       items: Months.values
-                                  //           .map((Months month) {
+                                  //       items:
+                                  //           Months.values.map((Months month) {
                                   //         return DropdownMenuItem(
                                   //             value: month,
                                   //             child: Container(
-                                  //                 padding:
-                                  //                     EdgeInsets.zero,
+                                  //                 padding: EdgeInsets.zero,
                                   //                 child: Text(
-                                  //                     _monthToString(
-                                  //                         month))));
+                                  //                     _monthToString(month))));
                                   //       }).toList(),
                                   //       onChanged: (newValue) {
                                   //         setState(() {
@@ -271,37 +241,27 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                   //     ),
                                   //     GestureDetector(
                                   //       onTap: () {
-                                  //         filterTransactionBottomSheet(
-                                  //             context);
+                                  //         filterTransactionBottomSheet(context);
                                   //       },
-                                  //       child: const Row(
+                                  //       child: Row(
                                   //         children: [
                                   //           Text(
                                   //             'Filter',
-                                  //             style:
-                                  //                 AppTextStyles.font16,
+                                  //             style: AppTextStyles.font16,
                                   //           ),
-                                  //           Icon(Icons
-                                  //               .filter_alt_outlined)
+                                  //           Icon(Icons.filter_alt_outlined)
                                   //         ],
                                   //       ),
                                   //     )
                                   //   ],
                                   // ),
-
+                                 
                                   Column(
                                     children: List.generate(
-                                      //    filteredItems.length,
-                                      // searchList.isEmpty &&
-                                      //         _searchController.text.isEmpty
-                                      //     ?
-                                      //     :
-                                      // searchList.length,
-                                      // reloadData.loadData.transactionHistory!
-                                      //     .data!.length,
-                                      data.length,
+                                      // data.length,
+                                      filteredTransactions!.length,
                                       (index) {
-                                        // final data =    searchList[index].transactionHistory!.data![index];
+                                        final data = filteredTransactions!;
 
                                         return InkWell(
                                           onTap: () => nextScreen(
@@ -315,7 +275,9 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                                 date:
                                                     '${dateFormat.format(data[index].regDate as DateTime)}',
                                                 type: '${data[index].type}',
-                                                number: '${data[index].number}', subType: '${data[index].subType}',
+                                                number: '${data[index].number}',
+                                                subType:
+                                                    '${data[index].subType}',
                                               )),
                                           child: Column(
                                             children: [

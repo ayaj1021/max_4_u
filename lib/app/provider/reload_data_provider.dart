@@ -50,36 +50,31 @@ class ReloadUserDataProvider extends ChangeNotifier {
       loadData = LoadDataData.fromJson(response['data']);
 
       final firstName =
-          //  EncryptData.decryptAES('${userData['user_data'][0]['first_name']}');
           EncryptData.decryptAES('${loadData.userData![0].firstName}');
       await SecureStorage().saveFirstName(firstName);
 
-      final lastName = EncryptData.decryptAES('${loadData.userData![0].lastName}');
-      //  EncryptData.decryptAES('${userData['user_data'][0]['last_name']}');
-      log('last name is $lastName');
-      final uniqueId = EncryptData.decryptAES('${loadData.userData![0].uniqueId}');
-      log('this is the unique id: $uniqueId');
-      // EncryptData.decryptAES('${userData['user_data'][0]['unique_id']}');
-      log('uniqueId is $uniqueId');
+
+      final lastName =
+          EncryptData.decryptAES('${loadData.userData![0].lastName}');
+
+      final uniqueId =
+          EncryptData.decryptAES('${loadData.userData![0].uniqueId}');
+
+
       final email = EncryptData.decryptAES('${loadData.userData![0].email}');
-      //   EncryptData.decryptAES('${userData['user_data'][0]['email']}');
-      log('email is $email');
+
       final number =
-          // EncryptData.decryptAES( '${userData['user_data'][0]['mobile_number']}');
           EncryptData.decryptAES('${loadData.userData![0].mobileNumber}');
-      log('number is $number');
-      // final balance = userData['user_data'][0]['balance'];
+
       final balance = loadData.userAccount!.balance;
-      //  final userType = userData['user_data'][0]['level'];
+
       _userLevel = loadData.userData![0].level!;
-      log('this is user level: ${_userLevel}');
-      // _userLevel = resDataData.userData![0].level!;
+
       updateNumber(_userLevel);
 
-      // final beneficiary = userData['beneficiary_data'][0];
       final beneficiary = loadData.beneficiaryData;
-      log('user type is $_userLevel');
-      log('user balance is $balance');
+      final transaction = loadData.transactionHistory;
+   
       final services = loadData.services;
       //final services = userData['services'][0];
       //  final products = userData['products'][0];
@@ -89,6 +84,7 @@ class ReloadUserDataProvider extends ChangeNotifier {
       //await SecureStorage().saveUserTransactions(transactions);
 
       await SecureStorage().saveUserBeneficiary(beneficiary!);
+      await SecureStorage().saveUserTransactions(transaction!);
       await SecureStorage().saveUserProducts(products!);
       await SecureStorage().saveUserServices(services!);
       await SecureStorage().saveUserType(_userLevel.toString());

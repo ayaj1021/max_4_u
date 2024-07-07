@@ -40,8 +40,12 @@ import 'package:upgrader/upgrader.dart';
 
 void main() async {
   // WidgetsFlutterBinding.ensureInitialized();
+
   // await Firebase.initializeApp();
+  //   await FirebaseMessaging.instance.getInitialMessage();
+  //await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   // await FirebaseApi().initNotification();
+  // NotificationService.initNotification();
 
   // final fcmToken = await FirebaseMessaging.instance.getToken();
   // print(fcmToken);

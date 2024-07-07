@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:max_4_u/app/database/database.dart';
+import 'package:max_4_u/app/model/load_data_model.dart';
 import 'package:max_4_u/app/provider/auth_provider.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
@@ -22,7 +23,7 @@ class TransactionHistoryContainer extends StatefulWidget {
 
 class _TransactionHistoryContainerState
     extends State<TransactionHistoryContainer> {
-  var getTransactions = [];
+  TransactionHistory? retrievedTransactionHistory;
 
   @override
   void initState() {
@@ -35,12 +36,10 @@ class _TransactionHistoryContainerState
   }
 
   getAllTransactions() async {
-   // final transactions = await SecureStorage().getUserTransactions();
-        final storage = await SecureStorage();
-    final transactions = await storage.getUserTransactions();
-    setState(() {
-      getTransactions = transactions!;
-    });
+    // final transactions = await SecureStorage().getUserTransactions();
+    final storage = await SecureStorage();
+
+    retrievedTransactionHistory = (await storage.getUserTransactions())!;
   }
 
   final List icons = [
@@ -53,7 +52,6 @@ class _TransactionHistoryContainerState
     Color(0xffDEEDF7),
     Color(0xffD6DDFE),
     Color(0xffE8D6FE),
-
   ];
   @override
   Widget build(BuildContext context) {
@@ -120,12 +118,13 @@ class _TransactionHistoryContainerState
                                       '${dateFormat.format(data.regDate!)}',
                                   transactionAmount: 'N${data.amountPaid ?? 0}',
                                   transactionStatus: data.status.toString(),
-                                  transactionColor:   data.subType!.contains('card')
+                                  transactionColor:
+                                      data.subType!.contains('card')
                                           ? colors[1]
                                           : data.subType!.contains('data')
                                               ? colors[2]
                                               : colors[0],
-                                  
+
                                   // Color(0xffDEEDF7),
                                   transactionNumber:
                                       '${data.number ?? '${data.referenceId!.substring(data.referenceId!.length - 5)}'}',
@@ -202,9 +201,9 @@ class TransactionSection extends StatelessWidget {
                       color: transactionColor,
                     ),
                     child: SizedBox(
-                      height: 24,
-                      width: 24,
-                      child: Image.asset(transactionIcon)),
+                        height: 24,
+                        width: 24,
+                        child: Image.asset(transactionIcon)),
                   ),
                   horizontalSpace(9),
                   Column(
