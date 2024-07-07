@@ -60,7 +60,7 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
     retrievedProducts = (await storage.getUserProducts())!;
     for (var products in retrievedProducts) {
       print('${products.name}: ${products.price}');
-      print('${products.logo}: ${products.duration}');
+      
     }
   }
 

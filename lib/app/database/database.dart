@@ -124,11 +124,11 @@ class SecureStorage {
     return value;
   }
 
- Future<void> saveUserEncryptedId(String encryptedId) async {
+  Future<void> saveUserEncryptedId(String encryptedId) async {
     await _storage.write(key: 'encryptedId', value: encryptedId);
   }
 
- Future getUserEncryptedId() async {
+  Future getUserEncryptedId() async {
     String? value = await _storage.read(key: 'encryptedId');
     return value;
   }
@@ -202,18 +202,23 @@ class SecureStorage {
   }
 
   Future<void> saveUserTransactions(
-      List<TransactionHistory> transactions) async {
-    final jsonString = jsonEncode(transactions.map((t) => t.toJson()).toList());
+      TransactionHistory transactionHistory) async {
+    String jsonString = jsonEncode(transactionHistory.toJson());
     await _storage.write(key: 'transaction_list', value: jsonString);
   }
 
-  Future<List<TransactionHistory>?> getUserTransactions() async {
+  Future<TransactionHistory?> getUserTransactions() async {
+    // String? jsonString = await _storage.read(key: 'transaction_list');
+
+    // if (jsonString != null) {
+    //   final List<dynamic> jsonList = jsonDecode(jsonString);
+
+    //   return jsonList.map((item) => TransactionHistory.fromJson(item)).toList();
+    // }
     String? jsonString = await _storage.read(key: 'transaction_list');
-
     if (jsonString != null) {
-      final List<dynamic> jsonList = jsonDecode(jsonString);
-
-      return jsonList.map((item) => TransactionHistory.fromJson(item)).toList();
+      Map<String, dynamic> jsonMap = jsonDecode(jsonString);
+      return TransactionHistory.fromJson(jsonMap);
     }
     return null;
   }

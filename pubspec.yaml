@@ -49,6 +49,7 @@ dependencies:
   upgrader: ^10.3.0
   country_picker: ^2.0.26
   url_launcher: ^6.3.0
+  flutter_local_notifications: ^17.2.1
 
   
 
