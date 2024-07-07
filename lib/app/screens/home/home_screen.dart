@@ -4,8 +4,7 @@ import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/encryt_data/encrypt_data.dart';
 import 'package:max_4_u/app/provider/auth_provider.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
-import 'package:max_4_u/app/screens/buy_airtime/buy_airtime_screen.dart';
-import 'package:max_4_u/app/screens/buy_data/buy_data_screen.dart';
+import 'package:max_4_u/app/screens/data_testpage.dart';
 import 'package:max_4_u/app/screens/drawer/drawer.dart';
 import 'package:max_4_u/app/screens/home/component/account_balance_component.dart';
 import 'package:max_4_u/app/screens/home/component/overview_container.dart';
@@ -13,13 +12,13 @@ import 'package:max_4_u/app/screens/home/component/service_component.dart';
 import 'package:max_4_u/app/screens/home/component/transaction_history_component.dart';
 import 'package:max_4_u/app/screens/notification/notification_screen.dart';
 import 'package:max_4_u/app/screens/transaction/transaction_screen.dart';
+import 'package:max_4_u/app/screens/vendor_sections/screens/sell_airtime_data/sell_airtime_screen.dart';
+import 'package:max_4_u/app/screens/vendor_sections/screens/sell_airtime_data/sell_data_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/screen_navigator.dart';
 import 'package:max_4_u/app/utils/text_capitalization_extension.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
-import 'package:max_4_u/app/screens/vendor_sections/screens/sell_airtime_data/sell_airtime_screen.dart';
-import 'package:max_4_u/app/screens/vendor_sections/screens/sell_airtime_data/sell_data_screen.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -38,8 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // getName();
     // getUserType();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<ReloadUserDataProvider>(context, listen: false)
-          .reloadUserData();
+      Provider.of<ReloadUserDataProvider>(context, listen: false).reloadUserData();
     });
     super.initState();
   }
@@ -94,12 +92,9 @@ class _HomeScreenState extends State<HomeScreen> {
     //   );
     // }
 
-    final userFirstName = EncryptData.decryptAES(
-        '${authProv.resDataData.userData![0].firstName}');
+    final userFirstName = EncryptData.decryptAES('${authProv.resDataData.userData![0].firstName}');
     return Scaffold(
-      drawer: ClipRRect(
-          borderRadius: BorderRadius.zero, 
-        child: const SideDrawer()),
+      drawer: ClipRRect(borderRadius: BorderRadius.zero, child: const SideDrawer()),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         leading: Builder(builder: (context) {
@@ -162,15 +157,17 @@ class _HomeScreenState extends State<HomeScreen> {
                           itemCount: reloadData.loadData.services?.length,
                           //  userServices.length,
                           itemBuilder: (_, index) {
-                            final services =
-                                reloadData.loadData.services![index];
+                            final services = reloadData.loadData.services![index];
                             return GestureDetector(
-                              onTap: () => nextScreen(
-                                context,
-                                index == 0
-                                    ? BuyDataScreen()
-                                    : BuyAirtimeScreen(),
-                              ),
+                              onTap: () {
+                                //   nextScreen(
+                                //   context,
+                                //   index == 0
+                                //       ? BuyDataScreen()
+                                //       : BuyAirtimeScreen(),
+                                // );
+                                nextScreen(context, TestData());
+                              },
                               child: ServiceComponent(
                                 margin: 20,
                                 serviceColor: Color(0xffDEEDF7),
@@ -237,14 +234,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           GestureDetector(
-                            onTap: () =>
-                                nextScreen(context, const TransactionScreen()),
+                            onTap: () => nextScreen(context, const TransactionScreen()),
                             child: Text(
                               'see all',
-                              style: AppTextStyles.font18.copyWith(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 13,
-                                  color: AppColors.secondaryColor),
+                              style:
+                                  AppTextStyles.font18.copyWith(fontWeight: FontWeight.w400, fontSize: 13, color: AppColors.secondaryColor),
                             ),
                           ),
                         ],
