@@ -1,0 +1,56 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max_4_u/app/presentation/features/dashboard/dashboard_screen.dart';
+import 'package:max_4_u/app/provider/reload_data_provider.dart';
+import 'package:max_4_u/app/styles/app_colors.dart';
+import 'package:max_4_u/app/styles/app_text_styles.dart';
+import 'package:max_4_u/app/utils/busy_overlay.dart';
+import 'package:max_4_u/app/utils/screen_navigator.dart';
+import 'package:max_4_u/app/utils/white_space.dart';
+import 'package:max_4_u/app/presentation/general_widgets/widgets/button_widget.dart';
+import 'package:provider/provider.dart';
+
+class AirtimeAutoRenewalConfirmationScreen extends StatelessWidget {
+  const AirtimeAutoRenewalConfirmationScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<ReloadUserDataProvider>(builder: (context, reloadData, _) {
+      return BusyOverlay(
+        child: Scaffold(
+          body: SafeArea(
+              child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 21),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 67.h,
+                  width: 67.w,
+                  child: Image.asset('assets/icons/verify_icon.png'),
+                ),
+                verticalSpace(20),
+                Text(
+                  'Auto - renewal Successful',
+                  style: AppTextStyles.font16.copyWith(
+                    color: AppColors.mainTextColor,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                verticalSpace(56),
+                ButtonWidget(
+                  onTap: () async {
+                    await reloadData.reloadUserData();
+
+                    nextScreenReplace(context, DashBoardScreen());
+                  },
+                  text: 'Continue',
+                )
+              ],
+            ),
+          )),
+        ),
+      );
+    });
+  }
+}

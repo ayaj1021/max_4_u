@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
+import 'package:max_4_u/app/presentation/features/beneficiary/presentation/save_beneficiary_screen.dart';
+import 'package:max_4_u/app/presentation/features/dashboard/dashboard_screen.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
-
-import 'package:max_4_u/app/screens/beneficiary/save_beneficiary_screen.dart';
-import 'package:max_4_u/app/screens/dashboard/dashboard_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/busy_overlay.dart';
 import 'package:max_4_u/app/utils/screen_navigator.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
-import 'package:max_4_u/app/widgets/button_widget.dart';
+import 'package:max_4_u/app/presentation/general_widgets/widgets/button_widget.dart';
 import 'package:provider/provider.dart';
 
 class ConfirmationScreen extends StatelessWidget {
