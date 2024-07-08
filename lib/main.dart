@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max_4_u/app/presentation/general_widgets/splash/splash_screen.dart';
 import 'package:max_4_u/app/provider/activate_auto_renewal_provider.dart';
 import 'package:max_4_u/app/provider/add_customer_provider.dart';
 import 'package:max_4_u/app/provider/admin_section/approve_vendor_request_provider.dart';
@@ -32,7 +33,6 @@ import 'package:max_4_u/app/provider/vendor/generate_account_number_provider.dar
 import 'package:max_4_u/app/provider/vendor/remove_customer_provider.dart';
 import 'package:max_4_u/app/provider/save_beneficiary_provider.dart';
 import 'package:max_4_u/app/provider/super_admin/setup_prices_provider.dart';
-import 'package:max_4_u/app/screens/splash/splash_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:provider/provider.dart';
 
