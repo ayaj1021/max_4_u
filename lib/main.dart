@@ -37,7 +37,6 @@ import 'package:max_4_u/app/provider/vendor/remove_customer_provider.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:provider/provider.dart';
 
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:upgrader/upgrader.dart';
 
 void main() async{
