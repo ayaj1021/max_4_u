@@ -233,7 +233,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           .saveUserTransactionHistory(transactionHistory!);
                       await SecureStorage().saveUserBeneficiary(beneficiary!);
                       await SecureStorage().saveUserProducts(products);
-                      await SecureStorage().saveUserServices(services as List);
+                     await SecureStorage().saveUserServices(services);
                       await SecureStorage().saveUserType(userType.toString());
                       await SecureStorage().saveEncryptedID(uniqueId);
                       await SecureStorage().saveUserBalance(balance.toString());

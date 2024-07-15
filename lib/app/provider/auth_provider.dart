@@ -95,6 +95,7 @@ class AuthProviderImpl extends ChangeNotifier
     state = ViewState.Busy;
     _message = 'Verifying otp...';
     notifyListeners();
+    
 
     _number = await SecureStorage().getUserPhone();
     final body = {
@@ -235,7 +236,7 @@ class AuthProviderImpl extends ChangeNotifier
       if (_status == true) {
         _status = response['data']['status'];
         _message = response['data']['message'];
-        print('this is message: $_message');
+      
         state = ViewState.Success;
         resDataData =
             ResponseDataData.fromJson(response['data']['response_data']);
@@ -252,7 +253,7 @@ class AuthProviderImpl extends ChangeNotifier
         _errorMessage = response['data']['message'];
 
         _errorMessage = response['data']['error_data']['login_id'];
-        print(_errorMessage);
+    
         notifyListeners();
       }
     } catch (e) {
@@ -281,7 +282,7 @@ class AuthProviderImpl extends ChangeNotifier
     await SecureStorage().saveUserEmail(_email);
     _email = await SecureStorage().getUserEmail();
 
-    print(body);
+  
     try {
       final response = await ApiService().authPostRequest(
         body: body,

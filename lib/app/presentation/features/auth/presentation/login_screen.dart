@@ -1,9 +1,8 @@
-import 'dart:developer';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
+
 import 'package:local_auth/local_auth.dart';
 import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/encryt_data/encrypt_data.dart';
@@ -161,12 +160,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
                       final transactionHistory =
                           authProv.resDataData.transactionHistory!.data;
-
-                      log('user type is $uniqueId');
-                      log('user very unique id is $uniqueId');
-                      log('user balance is $balance');
-                      final services = authProv.resDataData.services!;
-
                       final autoRenewal =
                           authProv.resDataData.autoRenewal!.data;
 
@@ -178,7 +171,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                       await SecureStorage().saveUserAutoRenewal(autoRenewal!);
 
-                      await SecureStorage().saveUserServices(services as List);
+                   //  await SecureStorage().saveUserServices(services);
                       await SecureStorage().saveUserType(userType.toString());
                       await SecureStorage().saveEncryptedID(uniqueId);
                       await SecureStorage().saveUserBalance(balance.toString());

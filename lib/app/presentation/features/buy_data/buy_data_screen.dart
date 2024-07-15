@@ -58,10 +58,10 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
     final storage = await SecureStorage();
 
     retrievedProducts = (await storage.getUserProducts())!;
-    for (var products in retrievedProducts) {
-      print('${products.name}: ${products.price}');
+    // for (var products in retrievedProducts) {
+    //   print('${products.name}: ${products.price}');
       
-    }
+    // }
   }
 
   String? selectedLogo;
