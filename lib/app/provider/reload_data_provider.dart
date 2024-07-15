@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -33,18 +32,16 @@ class ReloadUserDataProvider extends ChangeNotifier {
       "request_type": "user",
       "action": "load_user_data",
     };
-    log('$body');
+   
 
     final response = await ApiService().servicePostRequest(
       body: body,
       // message: _message,
     );
 
-    // _status = response['data']['status'];
 
-    // final userData = response['data'];
 
-    log('$response');
+
     try {
       isLoading = false;
       loadData = LoadDataData.fromJson(response['data']);
@@ -53,13 +50,11 @@ class ReloadUserDataProvider extends ChangeNotifier {
           EncryptData.decryptAES('${loadData.userData![0].firstName}');
       await SecureStorage().saveFirstName(firstName);
 
-
       final lastName =
           EncryptData.decryptAES('${loadData.userData![0].lastName}');
 
       final uniqueId =
           EncryptData.decryptAES('${loadData.userData![0].uniqueId}');
-
 
       final email = EncryptData.decryptAES('${loadData.userData![0].email}');
 
@@ -74,14 +69,10 @@ class ReloadUserDataProvider extends ChangeNotifier {
 
       final beneficiary = loadData.beneficiaryData;
       final transaction = loadData.transactionHistory;
-   
-      final services = loadData.services;
-      //final services = userData['services'][0];
-      //  final products = userData['products'][0];
-      final products = loadData.products;
 
-      // final transactions = userData['transaction_history']['data'];
-      //await SecureStorage().saveUserTransactions(transactions);
+      final services = loadData.services;
+
+      final products = loadData.products;
 
       await SecureStorage().saveUserBeneficiary(beneficiary!);
       await SecureStorage().saveUserTransactions(transaction!);
@@ -123,23 +114,11 @@ class ReloadUserDataProvider extends ChangeNotifier {
     isLoading = false;
     notifyListeners();
     var response = jsonDecode(request.body);
-    log(response.toString());
+
     if (request.statusCode == 200) {
       return DataPlans.fromJson(response);
     } else {
       return DataPlans.fromJson(response);
     }
   }
-
-  // void filterSearchResults(String query) {
-  //   _query = query;
-  //   if (_query.isEmpty) {
-  //     _filteredItems = _items;
-  //   } else {
-  //     _filteredItems = _items
-  //         .where((item) => item.toLowerCase().contains(_query.toLowerCase()))
-  //         .toList();
-  //   }
-  //   notifyListeners();
-  // }
 }

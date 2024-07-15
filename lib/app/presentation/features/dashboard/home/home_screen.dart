@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/encryt_data/encrypt_data.dart';
+import 'package:max_4_u/app/model/load_data_model.dart';
 import 'package:max_4_u/app/presentation/features/dashboard/home/component/account_balance_component.dart';
 import 'package:max_4_u/app/presentation/features/dashboard/home/component/overview_container.dart';
 import 'package:max_4_u/app/presentation/features/dashboard/home/component/service_component.dart';
@@ -34,32 +35,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    // getServices();
-    // getName();
-    // getUserType();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<ReloadUserDataProvider>(context, listen: false)
-          .reloadUserData();
-    });
+    getServices();
+
     super.initState();
-  }
-
-  String? userType;
-
-  getUserType() async {
-    final user = await SecureStorage().getUserLevel();
-    setState(() {
-      userType = user;
-    });
-    //return user;
-  }
-
-  getName() async {
-    final name = await SecureStorage().getFirstName();
-
-    setState(() {
-      firstName = name;
-    });
   }
 
   List servicesIcon = [
@@ -67,39 +45,28 @@ class _HomeScreenState extends State<HomeScreen> {
     Icons.call_outlined,
   ];
 
-  List userServices = [];
+  List<Service> userServices = [];
 
   getServices() async {
-    final services = await SecureStorage().getUserServices();
+    final storage = await SecureStorage();
 
-    setState(() {
-      userServices = services;
-    });
-    return services;
+    userServices = (await storage.getUserServices())!;
+    for (var services in userServices) {
+      print('${services.category}: ${services.category}');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final authProv = context.watch<AuthProviderImpl>();
-    // final getCustomers = context.watch<GetAllCustomersProvider>();
+
     final reloadData = context.watch<ReloadUserDataProvider>();
-    // return Consumer3<AuthProviderImpl, GetAllCustomersProvider,
-    //         ReloadUserDataProvider>(
-    //     builder: (context, authProv, getCustomers, reloadData, _) {
-    // if (authProv == null || getCustomers == null || reloadData == null) {
-    //   return Scaffold(
-    //     body: Center(
-    //       child: CircularProgressIndicator(),
-    //     ),
-    //   );
-    // }
 
     final userFirstName = EncryptData.decryptAES(
         '${authProv.resDataData.userData![0].firstName}');
     return Scaffold(
-      drawer: ClipRRect(
-          borderRadius: BorderRadius.zero, 
-        child: const SideDrawer()),
+      drawer:
+          ClipRRect(borderRadius: BorderRadius.zero, child: const SideDrawer()),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         leading: Builder(builder: (context) {
@@ -146,86 +113,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 verticalSpace(16),
-                Column(
-                  children: [
-                    // ElevatedButton(
-                    //     onPressed: () {
-                    //       getServices();
-                    //      // log('${userServices.length}');
-                    //     },
-                    //     child: Text('press')),
-                    SizedBox(
-                      height: 70.h,
-                      width: MediaQuery.of(context).size.width,
-                      child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: reloadData.loadData.services?.length,
-                          //  userServices.length,
-                          itemBuilder: (_, index) {
-                            final services =
-                                reloadData.loadData.services![index];
-                            return GestureDetector(
-                              onTap: () => nextScreen(
-                                context,
-                                index == 0
-                                    ? BuyDataScreen()
-                                    : BuyAirtimeScreen(),
-                              ),
-                              child: ServiceComponent(
-                                margin: 20,
-                                serviceColor: Color(0xffDEEDF7),
-                                serviceName: '${services.category}',
-                                // userServices[index]
-                                //     ['category'],
-                                // 'Airtime\npurchase',
-                                serviceIcon: servicesIcon[index],
-                                //Icons.call_outlined,
-                              ),
-                            );
-                          }),
-                    ),
-
-                    verticalSpace(
-                        //  vendor.isVendor == '1'
-                        //  authProv.resDataData.userData![0].level == '1'
-                        reloadData.loadData.userData?[0].level == '1' ? 0 : 16),
-                    //    vendor.isVendor == '1'
-                    reloadData.loadData.userData?[0].level == '1'
-                        // authProv.resDataData.userData![0].level == '1'
-                        ? const SizedBox()
-                        : Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              GestureDetector(
-                                onTap: () => nextScreen(
-                                  context,
-                                  const SellAirtimeScreen(),
-                                ),
-                                child: const ServiceComponent(
-                                  serviceColor: Color(0xffDEEDF7),
-                                  serviceName: 'Sell Airtime',
-                                  serviceIcon: Icons.call_outlined,
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () => nextScreen(
-                                  context,
-                                  const SellDataScreen(),
-                                ),
-                                child: const ServiceComponent(
-                                  serviceColor: Color(0xffE8D6FE),
-                                  serviceName: 'Sell Data',
-                                  serviceIcon: Icons.network_wifi_outlined,
-                                ),
-                              ),
-                            ],
-                          )
-                  ],
-                ),
+                ServicesSection(
+                    userServices: userServices,
+                    servicesIcon: servicesIcon,
+                    reloadData: reloadData),
                 verticalSpace(30),
-                //   vendor.isVendor == '1'
-
-                // authProv.resDataData.userData![0].level == '1'
                 reloadData.loadData.userData?[0].level == '1'
                     ? Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -256,16 +148,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                 verticalSpace(17),
-                // vendor.isVendor == '1'
                 reloadData.loadData.userData?[0].level == '1'
-                  
                     ? const TransactionHistoryContainer()
                     : const OverViewContainer(),
-
-                // ElevatedButton(onPressed: (){
-                //   final level =  authProv.resDataData.userData![0].level;
-                //   log('this is level: $level');
-                // }, child: Text('Get level'))
               ],
             ),
           ),
@@ -273,5 +158,85 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
     //  });
+  }
+}
+
+class ServicesSection extends StatelessWidget {
+  const ServicesSection({
+    super.key,
+    required this.userServices,
+    required this.servicesIcon,
+    required this.reloadData,
+  });
+
+  final List<Service> userServices;
+  final List servicesIcon;
+  final ReloadUserDataProvider reloadData;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(
+          height: 70.h,
+          width: MediaQuery.of(context).size.width,
+          child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: userServices.length,
+              itemBuilder: (_, index) {
+                return GestureDetector(
+                  onTap: () => nextScreen(
+                    context,
+                    index == 0 ? BuyDataScreen() : BuyAirtimeScreen(),
+                  ),
+                  child: ServiceComponent(
+                    margin: 20,
+                    serviceColor: Color(0xffDEEDF7),
+                    serviceName: '${userServices[index].category}',
+                 
+                    serviceIcon: servicesIcon[index],
+                    //Icons.call_outlined,
+                  ),
+                );
+              }),
+        ),
+
+        verticalSpace(
+            //  vendor.isVendor == '1'
+            //  authProv.resDataData.userData![0].level == '1'
+            reloadData.loadData.userData?[0].level == '1' ? 0 : 16),
+        //    vendor.isVendor == '1'
+        reloadData.loadData.userData?[0].level == '1'
+            // authProv.resDataData.userData![0].level == '1'
+            ? const SizedBox()
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  GestureDetector(
+                    onTap: () => nextScreen(
+                      context,
+                      const SellAirtimeScreen(),
+                    ),
+                    child: const ServiceComponent(
+                      serviceColor: Color(0xffDEEDF7),
+                      serviceName: 'Sell Airtime',
+                      serviceIcon: Icons.call_outlined,
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () => nextScreen(
+                      context,
+                      const SellDataScreen(),
+                    ),
+                    child: const ServiceComponent(
+                      serviceColor: Color(0xffE8D6FE),
+                      serviceName: 'Sell Data',
+                      serviceIcon: Icons.network_wifi_outlined,
+                    ),
+                  ),
+                ],
+              )
+      ],
+    );
   }
 }

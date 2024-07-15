@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-import 'package:max_4_u/app/database/database.dart';
+
 import 'package:max_4_u/app/presentation/features/vendor_features/presentation/vendor_sections/become_vendor_section/fund_wallet/account_no_payment_screen.dart';
 import 'package:max_4_u/app/presentation/features/vendor_features/presentation/vendor_sections/become_vendor_section/fund_wallet/atm_fund_wallet.dart';
 import 'package:max_4_u/app/provider/auth_provider.dart';
@@ -27,20 +27,11 @@ class _AccountBalanceWidgetState extends State<AccountBalanceWidget> {
 
   @override
   void initState() {
-    getBalance();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<ReloadUserDataProvider>(context, listen: false)
-          .reloadUserData();
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   Provider.of<ReloadUserDataProvider>(context, listen: false)
+    //       .reloadUserData();
+    // });
     super.initState();
-  }
-
-  getBalance() async {
-    final userBalance = await SecureStorage().getUserBalance();
-    setState(() {
-      balance = userBalance;
-    });
-    return userBalance;
   }
 
   List walletType = [
@@ -61,7 +52,7 @@ class _AccountBalanceWidgetState extends State<AccountBalanceWidget> {
             ReloadUserDataProvider>(
         builder: (context, authProv, obscure, reloadData, _) {
       final accountBalance = reloadData.loadData.userAccount!.balance;
-        String totalBalance = NumberFormat('#,##0').format(accountBalance);
+      String totalBalance = NumberFormat('#,##0').format(accountBalance);
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 32),
         height: 125.h,
@@ -99,15 +90,15 @@ class _AccountBalanceWidgetState extends State<AccountBalanceWidget> {
               verticalSpace(12),
               // accountBalance == null
               //     ? Text('')
-              //     : 
-                  Text(
-                      obscure.isObscure ? '*****' : 'N${totalBalance}.00',
-                      style: AppTextStyles.font12.copyWith(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 24,
-                        color: AppColors.whiteColor,
-                      ),
-                    ),
+              //     :
+              Text(
+                obscure.isObscure ? '*****' : 'N${totalBalance}.00',
+                style: AppTextStyles.font12.copyWith(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 24,
+                  color: AppColors.whiteColor,
+                ),
+              ),
             ]),
             GestureDetector(
               onTap: () {

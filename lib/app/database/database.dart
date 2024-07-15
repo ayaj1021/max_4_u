@@ -16,20 +16,20 @@ class SecureStorage {
     iOptions: IOSOptions.defaultOptions,
     aOptions: AndroidOptions.defaultOptions,
   );
-  saveUserPhone(String phoneNumber) async {
+ saveUserPhone(String phoneNumber) async {
     await _storage.write(key: 'phone_number', value: phoneNumber);
   }
 
-  getUserPhone() async {
+ getUserPhone() async {
     String? value = await _storage.read(key: 'phone_number');
     return value;
   }
 
-  saveUserBalance(String balance) async {
+  Future<void>  saveUserBalance(String balance) async {
     await _storage.write(key: 'user_balance', value: balance);
   }
 
-  getUserBalance() async {
+  Future<String?>  getUserBalance() async {
     String? value = await _storage.read(key: 'user_balance');
     return value;
   }
@@ -169,18 +169,16 @@ class SecureStorage {
     return value;
   }
 
-  saveUserServices(List services) async {
-    String jsonString = jsonEncode(services);
-    await _storage.write(key: 'services_list', value: jsonString);
+  Future<void> saveUserServices(List<Service> services) async {
+    final jsonString = jsonEncode(services.map((s) => s.toJson()).toList());
+    await _storage.write(key: 'service_list', value: jsonString);
   }
 
-  getUserServices() async {
-    String? jsonString = await _storage.read(key: 'services_list');
-
+  Future<List<Service>?> getUserServices() async {
+    final jsonString = await _storage.read(key: 'service_list');
     if (jsonString != null) {
-      List<dynamic> jsonList = jsonDecode(jsonString);
-      List services = jsonList.map((item) => item).toList();
-      return services;
+      final List<dynamic> jsonList = jsonDecode(jsonString);
+      return jsonList.map((item) => Service.fromJson(item)).toList();
     }
     return null;
   }
@@ -208,13 +206,6 @@ class SecureStorage {
   }
 
   Future<TransactionHistory?> getUserTransactions() async {
-    // String? jsonString = await _storage.read(key: 'transaction_list');
-
-    // if (jsonString != null) {
-    //   final List<dynamic> jsonList = jsonDecode(jsonString);
-
-    //   return jsonList.map((item) => TransactionHistory.fromJson(item)).toList();
-    // }
     String? jsonString = await _storage.read(key: 'transaction_list');
     if (jsonString != null) {
       Map<String, dynamic> jsonMap = jsonDecode(jsonString);
