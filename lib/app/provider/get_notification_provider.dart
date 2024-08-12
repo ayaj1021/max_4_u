@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/model/notification_model.dart';
@@ -9,7 +7,8 @@ class GetNotificationProvider extends ChangeNotifier {
   ViewState state = ViewState.Idle;
   bool _status = false;
   bool get status => _status;
-  
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
   String _message = '';
   String get message => _message;
 
@@ -20,22 +19,21 @@ class GetNotificationProvider extends ChangeNotifier {
       "request_type": "user",
       "action": "load_notification",
     };
-    log('$body');
-
+    _isLoading = true;
     final response = await ApiService().servicePostRequest(
       body: body,
       // message: _message,
     );
     _status = response['data']['status'];
-    //log(response);
 
     if (_status == true) {
       allNotifications = NotificationResponseData.fromJson(response['data']);
       state = ViewState.Success;
-
+      _isLoading = false;
       notifyListeners();
       return allNotifications;
     } else {
+      _isLoading = false;
       state = ViewState.Error;
       _status = response['data']['status'];
       _message = response['data']['message'];

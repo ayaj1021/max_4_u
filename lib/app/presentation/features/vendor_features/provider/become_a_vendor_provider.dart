@@ -13,8 +13,8 @@ class BecomeAVendorProvider extends ChangeNotifier {
   bool _status = false;
   bool get status => _status;
 
-  String _bvnMessage = '';
-  String get bvnMessage => _bvnMessage;
+  String _errorMessage = '';
+  String get errorMessage => _errorMessage;
 
   String _ninMessage = '';
   String get ninMessage => _ninMessage;
@@ -56,8 +56,8 @@ class BecomeAVendorProvider extends ChangeNotifier {
         _status = response['data']['status'];
         state = ViewState.Error;
         _message = response['data']['message'];
-        _bvnMessage = response['data']['error_data']['bvn'];
-        _ninMessage = response['data']['error_data']['nin'];
+        _errorMessage = response['data']['error_data']['bvn'];
+        _errorMessage = response['data']['error_data']['nin'];
 
         notifyListeners();
       }
@@ -211,7 +211,6 @@ class BecomeAVendorProvider extends ChangeNotifier {
         _status = response['data']['status'];
         state = ViewState.Error;
         _message = response['data']['message'];
-       
 
         notifyListeners();
       }

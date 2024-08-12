@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
 
@@ -29,10 +28,8 @@ class ValidityDateWidget extends StatelessWidget {
       GestureDetector(
         onTap: onTap,
         child: Container(
-          height: 52.h,
           width: MediaQuery.of(context).size.width,
           padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-        
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(6),
             border: Border.all(

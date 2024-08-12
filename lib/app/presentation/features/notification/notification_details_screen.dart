@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max_4_u/app/model/notification_model.dart';
 import 'package:max_4_u/app/presentation/features/dashboard/transaction/components/transaction_details_component.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
@@ -7,8 +8,8 @@ import 'package:max_4_u/app/utils/white_space.dart';
 import 'package:max_4_u/app/presentation/general_widgets/widgets/button_widget.dart';
 
 class NotificationDetailsScreen extends StatelessWidget {
-  const NotificationDetailsScreen({super.key});
-
+  const NotificationDetailsScreen({super.key, required this.notificationResponseData});
+final NotificationResponseData notificationResponseData;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,7 +39,7 @@ class NotificationDetailsScreen extends StatelessWidget {
               Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 14, vertical: 20),
-                height: 438.h,
+               // height: 438.h,
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
@@ -48,14 +49,14 @@ class NotificationDetailsScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(
-                        height: 24,
-                        width: 24,
-                        child: Image.asset('assets/logo/mtn_logo.png'),
-                      ),
+                      // SizedBox(
+                      //   height: 24,
+                      //   width: 24,
+                      //   child: Image.asset('assets/logo/mtn_logo.png'),
+                      // ),
                       horizontalSpace(5),
                        Text(
-                        'MTN',
+                        '${notificationResponseData.transactions?.first.heading}',
                         style: AppTextStyles.font14,
                       )
                     ],
@@ -154,7 +155,7 @@ class NotificationDetailsScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              verticalSpace(100),
+              verticalSpace(50),
               ButtonWidget(
                 text: 'Get Receipt',
                 onTap: () {

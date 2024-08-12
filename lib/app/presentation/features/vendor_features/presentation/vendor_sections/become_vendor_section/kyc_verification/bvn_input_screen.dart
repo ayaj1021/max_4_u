@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/presentation/features/vendor_features/presentation/vendor_sections/become_vendor_section/become_vendor_screen.dart';
-import 'package:max_4_u/app/provider/vendor/become_a_vendor_provider.dart';
+import 'package:max_4_u/app/presentation/features/vendor_features/provider/become_a_vendor_provider.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/busy_overlay.dart';
 import 'package:max_4_u/app/utils/screen_navigator.dart';
@@ -63,28 +63,28 @@ class _BvnNinInputScreenState extends State<BvnNinInputScreen> {
                     controller: _ninController,
                     labelText: 'Your NIN',
                   ),
-                  bvn.status == false
-                      ? Text(
-                          bvn.ninMessage,
-                          style: AppTextStyles.font12.copyWith(
-                            color: Colors.red,
-                          ),
-                        )
-                      : Text(''),
+                  // bvn.status == false
+                  //     ? Text(
+                  //         bvn.ninMessage,
+                  //         style: AppTextStyles.font12.copyWith(
+                  //           color: Colors.red,
+                  //         ),
+                  //       )
+                  //     : SizedBox.shrink(),
                   verticalSpace(30),
                   TextInputField(
                     controller: _bvnController,
                     labelText: 'Your BVN',
                   ),
-                  bvn.status == false
-                      ? Text(
-                          bvn.bvnMessage,
-                          style: AppTextStyles.font12.copyWith(
-                            color: Colors.red,
-                          ),
-                        )
-                      : Text(''),
-                  verticalSpace(400),
+                  // bvn.status == false
+                  //     ? Text(
+                  //         bvn.bvnMessage,
+                  //         style: AppTextStyles.font12.copyWith(
+                  //           color: Colors.red,
+                  //         ),
+                  //       )
+                  //     : SizedBox.shrink(),
+                  verticalSpace(270),
                   ButtonWidget(
                     text: 'Submit',
                     onTap: () async {
@@ -102,7 +102,7 @@ class _BvnNinInputScreenState extends State<BvnNinInputScreen> {
                       if (bvn.status == false && context.mounted) {
                         showMessage(
                           context,
-                          bvn.message,
+                          bvn.errorMessage,
                           isError: true,
                         );
                         return;

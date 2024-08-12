@@ -8,7 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/presentation/features/vendor_features/presentation/vendor_sections/become_vendor_section/become_vendor_screen.dart';
-import 'package:max_4_u/app/provider/vendor/become_a_vendor_provider.dart';
+import 'package:max_4_u/app/presentation/features/vendor_features/provider/become_a_vendor_provider.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/busy_overlay.dart';
@@ -99,7 +99,7 @@ class _FaceAuthenticationScreenState extends State<FaceAuthenticationScreen> {
                           Icons.arrow_back,
                         ),
                       ),
-                      horizontalSpace(100),
+                      horizontalSpace(80),
                        Text(
                         'Face Authentication',
                         style: AppTextStyles.font18,
@@ -154,19 +154,11 @@ class _FaceAuthenticationScreenState extends State<FaceAuthenticationScreen> {
                       ),
                     ),
                   ),
-                  // verticalSpace(26),
-                  // Text(
-                  //   'Make sure your face is in the circle',
-                  //   style: AppTextStyles.font12.copyWith(
-                  //     fontWeight: FontWeight.w400,
-                  //     color: const Color(0xff333333),
-                  //   ),
-                  //   textAlign: TextAlign.center,
-                  // ),
+             
                   verticalSpace(31),
                   Container(
                     alignment: Alignment.center,
-                    height: 87.h,
+                   // height: 87.h,
                     width: MediaQuery.of(context).size.width,
                     padding: const EdgeInsets.all(13),
                     decoration: BoxDecoration(
@@ -181,7 +173,7 @@ class _FaceAuthenticationScreenState extends State<FaceAuthenticationScreen> {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  verticalSpace(164),
+                  verticalSpace(150),
                   ButtonWidget(
                     text: 'Submit',
                     onTap: () async {

@@ -104,164 +104,7 @@ class _AccountBalanceWidgetState extends State<AccountBalanceWidget> {
               onTap: () {
                 authProv.userLevel != '2'
                     ? nextScreen(context, const AtmFundWallet())
-                    : showModalBottomSheet(
-                        context: context,
-                        builder: (context) {
-                          return StatefulBuilder(builder: (context, setState) {
-                            return Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 32, vertical: 24),
-                              height: 250.h,
-                              width: MediaQuery.of(context).size.width,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(18),
-                                color: AppColors.whiteColor,
-                              ),
-                              child: Column(
-                                children: [
-                                  Text(
-                                    'Fund wallet using',
-                                    style: AppTextStyles.font18.copyWith(
-                                      color: const Color(0xff333333),
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  verticalSpace(28),
-
-                                  SizedBox(
-                                    height: 100.h,
-                                    width: MediaQuery.of(context).size.width,
-                                    child: ListView.builder(
-                                        scrollDirection: Axis.horizontal,
-                                        shrinkWrap: true,
-                                        itemCount: walletType.length,
-                                        itemBuilder: (_, index) {
-                                          return GestureDetector(
-                                            onTap: () {
-                                              Navigator.pop(context);
-                                              selectedIndex == 0
-                                                  ? nextScreen(context,
-                                                      const AtmFundWallet())
-                                                  : authProv.userLevel == '2'
-                                                      ? nextScreen(context,
-                                                          const AccountNoPaymentScreen())
-                                                      : SizedBox.shrink();
-
-                                              setState(() {
-                                                selectedIndex = index;
-                                              });
-                                            },
-                                            child: Row(
-                                              children: [
-                                                Container(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                      horizontal: 5,
-                                                      vertical: 16),
-                                                  height: 98.h,
-                                                  width: 116.2,
-                                                  decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                      color: selectedIndex ==
-                                                              index
-                                                          ? AppColors.whiteColor
-                                                          : const Color(
-                                                              0xffF6F6F6),
-                                                      border: Border.all(
-                                                        color: selectedIndex ==
-                                                                index
-                                                            ? AppColors
-                                                                .primaryColor
-                                                            : Colors
-                                                                .transparent,
-                                                      )),
-                                                  child: Column(
-                                                    children: [
-                                                      SizedBox(
-                                                        height: 20.h,
-                                                        width: 20.w,
-                                                        child: Image.asset(
-                                                            walletType[index]
-                                                                ['image']),
-                                                      ),
-                                                      verticalSpace(19),
-                                                      Text(
-                                                        walletType[index]
-                                                            ['title'],
-                                                        style: AppTextStyles
-                                                            .font14
-                                                            .copyWith(
-                                                          color: const Color(
-                                                              0xff333333),
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                horizontalSpace(90)
-                                              ],
-                                            ),
-                                          );
-                                        }),
-                                  ),
-                                  // Row(
-                                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  //     children:
-                                  //         List.generate(walletType.length, (index) {
-                                  //       return
-                                  //       GestureDetector(
-                                  //         onTap: () {
-                                  //           setState(() {
-                                  //             selectedIndex == index;
-                                  //           });
-                                  //         },
-                                  //         child:
-                                  //         Container(
-                                  //           padding: const EdgeInsets.symmetric(
-                                  //               horizontal: 5, vertical: 16),
-                                  //           height: 98.h,
-                                  //           width: 116.2,
-                                  //           decoration: BoxDecoration(
-                                  //               borderRadius: BorderRadius.circular(10),
-                                  //               color: selectedIndex == index
-                                  //                   ? AppColors.whiteColor
-                                  //                   : const Color(0xffF6F6F6),
-                                  //               border: Border.all(
-                                  //                 color: selectedIndex == index
-                                  //                     ? AppColors.primaryColor
-                                  //                     : Colors.transparent,
-                                  //               )),
-                                  //           child: Column(
-                                  //             children: [
-                                  //               SizedBox(
-                                  //                 height: 20.h,
-                                  //                 width: 20.w,
-                                  //                 child: Image.asset(
-                                  //                     walletType[index]['image']),
-                                  //               ),
-                                  //               verticalSpace(19),
-                                  //               Text(
-                                  //                 walletType[index]['title'],
-                                  //                 style: AppTextStyles.font14.copyWith(
-                                  //                   color: const Color(0xff333333),
-                                  //                   fontWeight: FontWeight.w500,
-                                  //                 ),
-                                  //               ),
-                                  //             ],
-                                  //           ),
-                                  //         ),
-                                  //       );
-
-                                  //     })),
-                                ],
-                              ),
-                            );
-                          });
-                        });
+                    : fundAccountTypeBottomSheet(context, authProv);
               },
               child: Container(
                 alignment: Alignment.center,
@@ -284,5 +127,150 @@ class _AccountBalanceWidgetState extends State<AccountBalanceWidget> {
         ),
       );
     });
+  }
+
+  Future<dynamic> fundAccountTypeBottomSheet(
+      BuildContext context, AuthProviderImpl authProv) {
+    return showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: (context, setState) {
+            return Container(
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+              height: 250.h,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(18),
+                color: AppColors.whiteColor,
+              ),
+              child: Column(
+                children: [
+                  Text(
+                    'Fund wallet using',
+                    style: AppTextStyles.font18.copyWith(
+                      color: const Color(0xff333333),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  verticalSpace(28),
+
+                  SizedBox(
+                    height: 100.h,
+                    width: MediaQuery.of(context).size.width,
+                    child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        shrinkWrap: true,
+                        itemCount: walletType.length,
+                        itemBuilder: (_, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                              selectedIndex == 0
+                                  ? nextScreen(context, const AtmFundWallet())
+                                  : authProv.userLevel == '2'
+                                      ? nextScreen(context,
+                                          const AccountNoPaymentScreen())
+                                      : SizedBox.shrink();
+
+                              setState(() {
+                                selectedIndex = index;
+                              });
+                            },
+                            child: Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 5, vertical: 16),
+                                  height: 98.h,
+                                  width: 116.2,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: selectedIndex == index
+                                          ? AppColors.whiteColor
+                                          : const Color(0xffF6F6F6),
+                                      border: Border.all(
+                                        color: selectedIndex == index
+                                            ? AppColors.primaryColor
+                                            : Colors.transparent,
+                                      )),
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 20.h,
+                                        width: 20.w,
+                                        child: Image.asset(
+                                            walletType[index]['image']),
+                                      ),
+                                      verticalSpace(19),
+                                      Text(
+                                        walletType[index]['title'],
+                                        style: AppTextStyles.font14.copyWith(
+                                          color: const Color(0xff333333),
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                horizontalSpace(90)
+                              ],
+                            ),
+                          );
+                        }),
+                  ),
+                  // Row(
+                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //     children:
+                  //         List.generate(walletType.length, (index) {
+                  //       return
+                  //       GestureDetector(
+                  //         onTap: () {
+                  //           setState(() {
+                  //             selectedIndex == index;
+                  //           });
+                  //         },
+                  //         child:
+                  //         Container(
+                  //           padding: const EdgeInsets.symmetric(
+                  //               horizontal: 5, vertical: 16),
+                  //           height: 98.h,
+                  //           width: 116.2,
+                  //           decoration: BoxDecoration(
+                  //               borderRadius: BorderRadius.circular(10),
+                  //               color: selectedIndex == index
+                  //                   ? AppColors.whiteColor
+                  //                   : const Color(0xffF6F6F6),
+                  //               border: Border.all(
+                  //                 color: selectedIndex == index
+                  //                     ? AppColors.primaryColor
+                  //                     : Colors.transparent,
+                  //               )),
+                  //           child: Column(
+                  //             children: [
+                  //               SizedBox(
+                  //                 height: 20.h,
+                  //                 width: 20.w,
+                  //                 child: Image.asset(
+                  //                     walletType[index]['image']),
+                  //               ),
+                  //               verticalSpace(19),
+                  //               Text(
+                  //                 walletType[index]['title'],
+                  //                 style: AppTextStyles.font14.copyWith(
+                  //                   color: const Color(0xff333333),
+                  //                   fontWeight: FontWeight.w500,
+                  //                 ),
+                  //               ),
+                  //             ],
+                  //           ),
+                  //         ),
+                  //       );
+
+                  //     })),
+                ],
+              ),
+            );
+          });
+        });
   }
 }

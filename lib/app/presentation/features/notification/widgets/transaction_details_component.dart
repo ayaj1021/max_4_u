@@ -16,7 +16,7 @@ class TransactionDetailComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
           padding: const EdgeInsets.all(14),
-          height: 60.h,
+        //  height: 60.h,
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(7),
@@ -42,7 +42,7 @@ class TransactionDetailComponent extends StatelessWidget {
               ),
               horizontalSpace(9),
               SizedBox(
-                height: 31.h,
+               // height: 31.h,
                 width: 295.w,
                 child: RichText(
                   textAlign: TextAlign.justify,

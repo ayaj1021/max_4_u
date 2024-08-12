@@ -4,7 +4,7 @@ import 'package:max_4_u/app/presentation/features/vendor_features/presentation/v
 import 'package:max_4_u/app/presentation/features/vendor_features/presentation/vendor_sections/become_vendor_section/kyc_verification/face_authentication_screen.dart';
 import 'package:max_4_u/app/presentation/features/vendor_features/presentation/vendor_sections/become_vendor_section/kyc_verification/upload_idcard_screen.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
-import 'package:max_4_u/app/provider/vendor/become_a_vendor_provider.dart';
+import 'package:max_4_u/app/presentation/features/vendor_features/provider/become_a_vendor_provider.dart';
 import 'package:max_4_u/app/presentation/features/dashboard/dashboard_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
