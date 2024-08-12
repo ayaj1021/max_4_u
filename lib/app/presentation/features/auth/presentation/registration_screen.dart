@@ -73,12 +73,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     controller: firstNameController,
                     labelText: 'First name',
                   ),
-                  verticalSpace(24),
+                  verticalSpace(20),
                   TextInputField(
                     controller: lastNameController,
                     labelText: 'Last name',
                   ),
-                  verticalSpace(24),
+                  verticalSpace(20),
                   TextInputField(
                     controller: emailController,
                     labelText: 'Email',
@@ -93,7 +93,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           ),
                         )
                       : Text(''),
-                  verticalSpace(24),
+                  verticalSpace(20),
                   TextInputField(
                     obscure: obscure.isObscure,
                     controller: passwordController,
@@ -105,6 +105,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       obscure.changeObscure();
                     },
                   ),
+                  Text(
+                    'Password must be 8 or more characters, contain at least one uppercase, lowercase, digit and special characters.',
+                    style: AppTextStyles.font10.copyWith(
+                      color: const Color(0xff475569),
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
                   authProv.status == false
                       ? Text(
                           authProv.wrongPassword,
@@ -115,7 +122,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           ),
                         )
                       : Text(''),
-                  verticalSpace(24),
+                  verticalSpace(15),
                   TextInputField(
                     obscure: obscure.isObscure,
                     controller: confirmPasswordController,
@@ -233,7 +240,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           .saveUserTransactionHistory(transactionHistory!);
                       await SecureStorage().saveUserBeneficiary(beneficiary!);
                       await SecureStorage().saveUserProducts(products);
-                     await SecureStorage().saveUserServices(services);
+                      await SecureStorage().saveUserServices(services);
                       await SecureStorage().saveUserType(userType.toString());
                       await SecureStorage().saveEncryptedID(uniqueId);
                       await SecureStorage().saveUserBalance(balance.toString());

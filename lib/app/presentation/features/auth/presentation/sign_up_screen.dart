@@ -143,7 +143,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       await authProv.signUp(
                           phoneNumber: _phoneController.text.trim());
                       if (authProv.status == false && context.mounted) {
-                        showMessage(context, authProv.message);
+                        showMessage(context, authProv.message, isError: true);
                         return;
                       }
 

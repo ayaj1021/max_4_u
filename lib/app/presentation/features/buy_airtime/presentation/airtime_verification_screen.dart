@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/enums/data_period_enum.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/presentation/features/buy_airtime/presentation/airtime_confirmation_screen.dart';
-import 'package:max_4_u/app/provider/buy_airtime_provider.dart';
+import 'package:max_4_u/app/presentation/features/buy_airtime/provider/buy_airtime_provider.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/busy_overlay.dart';
@@ -40,7 +40,7 @@ class _AirtimeVerificationScreenState extends State<AirtimeVerificationScreen> {
       builder: (context, buyAirtime, _) {
         return BusyOverlay(
           show: buyAirtime.state == ViewState.Busy,
-          title: buyAirtime.message,
+          title: buyAirtime.message, 
           child: Scaffold(
             body: SafeArea(
               child: SingleChildScrollView(

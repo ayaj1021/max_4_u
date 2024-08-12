@@ -6,7 +6,7 @@ import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/model/load_data_model.dart';
 import 'package:max_4_u/app/presentation/features/beneficiary/presentation/beneficiary_screen.dart';
 import 'package:max_4_u/app/presentation/features/buy_airtime/presentation/airtime_verification_screen.dart';
-import 'package:max_4_u/app/provider/buy_airtime_provider.dart';
+import 'package:max_4_u/app/presentation/features/buy_airtime/provider/buy_airtime_provider.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
 
 import 'package:max_4_u/app/styles/app_colors.dart';
@@ -216,8 +216,7 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
                       child: DropdownMenu(
                         hintText: 'Select network',
                         width: 330.w,
-                        enableFilter: true,
-                        enableSearch: false,
+                      
                         inputDecorationTheme: InputDecorationTheme(
                           fillColor: AppColors.whiteColor,
                           border: InputBorder.none,

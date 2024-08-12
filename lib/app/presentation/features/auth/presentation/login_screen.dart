@@ -174,6 +174,7 @@ class _LoginScreenState extends State<LoginScreen> {
                    //  await SecureStorage().saveUserServices(services);
                       await SecureStorage().saveUserType(userType.toString());
                       await SecureStorage().saveEncryptedID(uniqueId);
+                    
                       await SecureStorage().saveUserBalance(balance.toString());
                       await SecureStorage().saveFirstName(firstName);
                       await SecureStorage().saveLastName(lastName);

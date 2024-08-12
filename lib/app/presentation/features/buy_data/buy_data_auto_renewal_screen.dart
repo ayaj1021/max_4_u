@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:max_4_u/app/enums/network_dropdown.dart';
+import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/presentation/features/buy_data/buy_data_autorenewal_confirmation_screen.dart';
 import 'package:max_4_u/app/provider/activate_auto_renewal_provider.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
+import 'package:max_4_u/app/utils/busy_overlay.dart';
 import 'package:max_4_u/app/utils/screen_navigator.dart';
 import 'package:max_4_u/app/utils/show_message.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
@@ -71,134 +73,136 @@ class _BuyDataAutoRenewalScreenState extends State<BuyDataAutoRenewalScreen> {
     return Consumer<ActivateAutoRenewalProvider>(
         builder: (context, activateRenewal, _) {
       return Scaffold(
-        body: SafeArea(
-            child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 21),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  GestureDetector(
-                    onTap: () => Navigator.pop(context),
-                    child: const Icon(
-                      Icons.arrow_back,
+        body: BusyOverlay(
+          show: activateRenewal.state == ViewState.Busy,
+          title: activateRenewal.message,
+          child: SafeArea(
+              child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 21),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: const Icon(
+                        Icons.arrow_back,
+                      ),
                     ),
-                  ),
-                  horizontalSpace(104),
-                  Text(
-                    'Auto-Renewal',
-                    style: AppTextStyles.font18,
-                  ),
-                ],
-              ),
-              verticalSpace(15),
-              Center(
-                child: Text(
-                  'Please select next auto renewal date',
-                  style: AppTextStyles.font14,
+                    horizontalSpace(104),
+                    Text(
+                      'Auto-Renewal',
+                      style: AppTextStyles.font18,
+                    ),
+                  ],
                 ),
-              ),
-              verticalSpace(50),
-              Column(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // verticalSpace(24),
-                      Text(
-                        'Frequency',
-                        style: AppTextStyles.font14.copyWith(
-                          color: const Color(0xff475569),
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      verticalSpace(4),
-
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                        height: 52.h,
-                        width: MediaQuery.of(context).size.width,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: const Color(0xffCBD5E1),
+                verticalSpace(15),
+                Center(
+                  child: Text(
+                    'Please select next auto renewal date',
+                    style: AppTextStyles.font14,
+                  ),
+                ),
+                verticalSpace(50),
+                Column(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // verticalSpace(24),
+                        Text(
+                          'Frequency',
+                          style: AppTextStyles.font14.copyWith(
+                            color: const Color(0xff475569),
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
-                        child: DropdownMenu(
-                          hintText: _selectedValidity.toUpperCase(),
-                          width: 330.w,
-                          enableFilter: true,
-                          enableSearch: false,
-                          inputDecorationTheme: InputDecorationTheme(
-                            fillColor: AppColors.whiteColor,
-                            border: InputBorder.none,
+                        verticalSpace(4),
+
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                          height: 52.h,
+                          width: MediaQuery.of(context).size.width,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: const Color(0xffCBD5E1),
+                            ),
                           ),
-                          onSelected: (newValue) {
-                            setState(() {
-                              _selectedValidity = newValue!;
-                            });
-                          },
-                          dropdownMenuEntries:
-                              dataValidityProvider.map((String dataValidity) {
-                            return DropdownMenuEntry(
-                              value: dataValidity,
-                              label: dataValidity.toUpperCase(),
-                            );
-                          }).toList(),
+                          child: DropdownMenu(
+                            hintText: _selectedValidity,
+                            width: 330.w,
+                            inputDecorationTheme: InputDecorationTheme(
+                              fillColor: AppColors.whiteColor,
+                              border: InputBorder.none,
+                            ),
+                            onSelected: (newValue) {
+                              setState(() {
+                                _selectedValidity = newValue!;
+                              });
+                            },
+                            dropdownMenuEntries:
+                                dataValidityProvider.map((String dataValidity) {
+                              return DropdownMenuEntry(
+                                value: dataValidity,
+                                label: dataValidity,
+                              );
+                            }).toList(),
+                          ),
                         ),
-                      ),
 
-                      verticalSpace(32),
-                      ValidityDateWidget(
-                        onTap: () => _selectDate(context, true),
-                        date:
-                            '${_startDate != null ? dateFormat.format(_startDate!) : 'DD-MM-YY'}',
-                        dateLabel: 'Start Date',
-                      ),
-                      verticalSpace(32),
-                      ValidityDateWidget(
-                        onTap: () => _selectDate(context, false),
-                        date:
-                            '${_endDate != null ? dateFormat.format(_endDate!) : 'DD-MM-YY'}',
-                        dateLabel: 'End Date',
-                      ),
-                    ],
-                  )
-                ],
-              ),
-              verticalSpace(52),
-              ButtonWidget(
-                  onTap: () async {
-                    await activateRenewal.activateAutoRenewal(
-                      phoneNumber: widget.phoneNumber,
-                      productCode: widget.productCodes,
-                      amount: widget.amount,
-                      startDate: dateFormat.format(_startDate!),
-                      endDate: dateFormat.format(_endDate!),
-                      intervalDaily: _selectedValidity.toLowerCase(),
-                    );
+                        verticalSpace(32),
+                        ValidityDateWidget(
+                          onTap: () => _selectDate(context, true),
+                          date:
+                              '${_startDate != null ? dateFormat.format(_startDate!) : 'DD-MM-YY'}',
+                          dateLabel: 'Start Date',
+                        ),
+                        verticalSpace(32),
+                        ValidityDateWidget(
+                          onTap: () => _selectDate(context, false),
+                          date:
+                              '${_endDate != null ? dateFormat.format(_endDate!) : 'DD-MM-YY'}',
+                          dateLabel: 'End Date',
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+                verticalSpace(52),
+                ButtonWidget(
+                    onTap: () async {
+                      await activateRenewal.activateAutoRenewal(
+                        phoneNumber: widget.phoneNumber,
+                        productCode: widget.productCodes,
+                        amount: widget.amount,
+                        startDate: dateFormat.format(_startDate!),
+                        endDate: dateFormat.format(_endDate!),
+                        intervalDaily: _selectedValidity.toLowerCase(),
+                      );
 
-                    if (activateRenewal.status == false && context.mounted) {
-                      showMessage(context, activateRenewal.errorMessage,
-                          isError: true);
+                      if (activateRenewal.status == false && context.mounted) {
+                        showMessage(context, activateRenewal.errorMessage,
+                            isError: true);
 
-                      debugPrint(activateRenewal.message.toString());
-                      return;
-                    }
-                    if (activateRenewal.status == true && context.mounted) {
-                      showMessage(context, activateRenewal.message,
-                          isError: false);
+                        debugPrint(activateRenewal.message.toString());
+                        return;
+                      }
+                      if (activateRenewal.status == true && context.mounted) {
+                        showMessage(context, activateRenewal.message,
+                            isError: false);
 
-                      nextScreen(
-                          context, BuyDataAutoRenewalConfirmationScreen());
-                    }
-                  },
-                  text: 'Set Auto Renewal')
-            ],
-          ),
-        )),
+                        nextScreen(
+                            context, BuyDataAutoRenewalConfirmationScreen());
+                      }
+                    },
+                    text: 'Set Auto Renewal')
+              ],
+            ),
+          )),
+        ),
       );
     });
   }

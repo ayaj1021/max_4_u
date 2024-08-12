@@ -5,7 +5,7 @@ import 'package:max_4_u/app/presentation/features/vendor_features/presentation/v
 import 'package:max_4_u/app/presentation/features/vendor_features/presentation/vendor_sections/customers_section/customers_transaction_screen.dart';
 import 'package:max_4_u/app/presentation/features/vendor_features/presentation/sell_airtime_data/sell_airtime_screen.dart';
 import 'package:max_4_u/app/presentation/features/vendor_features/presentation/sell_airtime_data/sell_data_screen.dart';
-import 'package:max_4_u/app/provider/vendor/remove_customer_provider.dart';
+import 'package:max_4_u/app/presentation/features/vendor_features/provider/remove_customer_provider.dart';
 import 'package:max_4_u/app/presentation/features/auto_renewal/presentation/auto_renewal_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';

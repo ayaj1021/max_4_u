@@ -17,13 +17,13 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   String userId = '';
   String level = '';
-  getNames() async {
-    final id = await SecureStorage().getEncryptedID();
-    print('this is user id: $id');
-    setState(() {
-      userId = id;
-    });
-  }
+  // getNames() async {
+  //   final id = await SecureStorage().getEncryptedID();
+  //   print('this is user id: $id');
+  //   setState(() {
+  //     userId = id;
+  //   });
+  // }
 
   getUserLevel() async {
     final userLevel = await SecureStorage().getUserLevel();
@@ -41,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen> {
     //       .reloadUserData();
     // });
 
-    getNames();
+  //  getNames();
     getUserLevel();
     // final id = Provider.of<AuthProviderImpl>(context, listen: false).resDataData.userData[0];
     Timer(const Duration(seconds: 3), () async {
