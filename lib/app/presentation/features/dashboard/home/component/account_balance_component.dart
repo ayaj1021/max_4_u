@@ -64,46 +64,52 @@ class _AccountBalanceWidgetState extends State<AccountBalanceWidget> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Row(
-                children: [
-                  Text(
-                    'Wallet Balance',
-                    style: AppTextStyles.font12.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.whiteColor,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      'Wallet Balance',
+                      style: AppTextStyles.font12.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.whiteColor,
+                      ),
                     ),
-                  ),
-                  horizontalSpace(5),
-                  GestureDetector(
-                    onTap: () => obscure.changeObscure(),
-                    child: Icon(
-                      obscure.isObscure
-                          ? Icons.visibility_off_outlined
-                          : Icons.visibility_outlined,
-                      size: 12,
-                      color: AppColors.whiteColor,
-                    ),
-                  )
-                ],
-              ),
-              verticalSpace(12),
-              // accountBalance == null
-              //     ? Text('')
-              //     :
-              Text(
-                obscure.isObscure ? '*****' : 'N${totalBalance}.00',
-                style: AppTextStyles.font12.copyWith(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 24,
-                  color: AppColors.whiteColor,
+                    horizontalSpace(5),
+                    GestureDetector(
+                      onTap: () => obscure.changeObscure(),
+                      child: Icon(
+                        obscure.isObscure
+                            ? Icons.visibility_off_outlined
+                            : Icons.visibility_outlined,
+                        size: 12,
+                        color: AppColors.whiteColor,
+                      ),
+                    )
+                  ],
                 ),
-              ),
-            ]),
+                verticalSpace(12),
+                // accountBalance == null
+                //     ? Text('')
+                //     :
+                Text(
+                  obscure.isObscure ? '*****' : 'N${totalBalance}.00',
+                  style: AppTextStyles.font12.copyWith(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 24,
+                    color: AppColors.whiteColor,
+                  ),
+                ),
+              ],
+            ),
             GestureDetector(
               onTap: () {
                 authProv.userLevel != '2'
-                    ? nextScreen(context, const AtmFundWallet())
+                    ? nextScreen(
+                        context,
+                        const AtmFundWallet(),
+                      )
                     : fundAccountTypeBottomSheet(context, authProv);
               },
               child: Container(
