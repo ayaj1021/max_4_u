@@ -3,12 +3,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/presentation/features/admin/presentation/admin_section/components/user_details_section/details_component.dart';
 import 'package:max_4_u/app/presentation/features/admin/presentation/admin_section/components/user_details_section/transaction_component.dart';
-import 'package:max_4_u/app/presentation/features/admin/presentation/admin_section/users_screen.dart';
+import 'package:max_4_u/app/presentation/features/super_admin_section/users/presentation/view/super_admin_users_screen.dart';
 import 'package:max_4_u/app/provider/auth_provider.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
-import 'package:max_4_u/app/provider/super_admin/deactivate_user_provider.dart';
-import 'package:max_4_u/app/provider/super_admin/make_admin_provider.dart';
-import 'package:max_4_u/app/provider/super_admin/remove_admin_provider.dart';
+import 'package:max_4_u/app/presentation/features/super_admin_section/providers/super_admin/deactivate_user_provider.dart';
+import 'package:max_4_u/app/presentation/features/super_admin_section/providers/super_admin/make_admin_provider.dart';
+import 'package:max_4_u/app/presentation/features/super_admin_section/providers/super_admin/remove_admin_provider.dart';
 import 'package:max_4_u/app/presentation/features/auto_renewal/presentation/auto_renewal_screen.dart';
 import 'package:max_4_u/app/presentation/features/dashboard/dashboard_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
@@ -564,7 +564,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen>
 
                                   await reloadData.reloadUserData();
 
-                                  nextScreen(context, UserScreen());
+                                  nextScreen(context, SuperAdminUserScreen());
                                 }
                               },
                             )),

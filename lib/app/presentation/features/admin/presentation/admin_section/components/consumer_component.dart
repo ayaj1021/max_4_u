@@ -27,7 +27,7 @@ class _CustomersComponentState extends State<CustomersComponent> {
       builder: (context, getAllAppUsers, _) {
         return SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Row(
                 children: [
@@ -57,98 +57,123 @@ class _CustomersComponentState extends State<CustomersComponent> {
                                 fontWeight: FontWeight.w400),
                           ),
                         )
-                      : Column(
-                          children: List.generate(
-                              getAllAppUsers.allAppUsers.data!.length, (index) {
-                            //  final data = getAllAppUsers.allAppUsers.data![index];
-                            return Column(
+                      : getAllAppUsers.allAppUsers.data!.isEmpty
+                          ? Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    final userId = EncryptData.decryptAES(
-                                        '${getAllAppUsers.allAppUsers.data![0].uniqueId}');
-                                    nextScreen(
-                                      context,
-                                      UserDetailsScreen(
-                                        name:
-                                            '${getAllAppUsers.firstName} ${getAllAppUsers.lastName}',
-                                        userType: 'Consumer',
-                                        userId: userId,
-                                      ),
-                                    );
-                                  },
-                                  child: SizedBox(
-                                    height: 48.h,
-                                    width: 332.w,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        CircleAvatar(
-                                          radius: 40,
-                                          backgroundImage: AssetImage(
-                                              'assets/images/profile_avatar.png'),
-                                        ),
-                                        // horizontalSpace(14),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                SizedBox(
+                                    height: 92.h,
+                                    width: 92.w,
+                                    child: Image.asset(
+                                        'assets/images/no_beneficiary_image.png')),
+                                verticalSpace(24),
+                                Text(
+                                  'No consumers yet',
+                                  style: AppTextStyles.font14.copyWith(
+                                      color: AppColors.textColor,
+                                      fontWeight: FontWeight.w400),
+                                )
+                              ],
+                            )
+                          : Column(
+                              children: List.generate(
+                                  getAllAppUsers.allAppUsers.data!.length,
+                                  (index) {
+                                //  final data = getAllAppUsers.allAppUsers.data![index];
+                                return Column(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        final userId = EncryptData.decryptAES(
+                                            '${getAllAppUsers.allAppUsers.data![0].uniqueId}');
+                                        nextScreen(
+                                          context,
+                                          UserDetailsScreen(
+                                            name:
+                                                '${getAllAppUsers.firstName} ${getAllAppUsers.lastName}',
+                                            userType: 'Consumer',
+                                            userId: userId,
+                                          ),
+                                        );
+                                      },
+                                      child: SizedBox(
+                                        height: 48.h,
+                                        width: 332.w,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
-                                            Text(
-                                              '${getAllAppUsers.firstName} ${getAllAppUsers.lastName}',
-                                              style: AppTextStyles.font14
-                                                  .copyWith(
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: Color(0xff475569)),
+                                            CircleAvatar(
+                                              radius: 40,
+                                              backgroundImage: AssetImage(
+                                                  'assets/images/profile_avatar.png'),
                                             ),
-                                            verticalSpace(4),
-                                            Text(
-                                              '${getAllAppUsers.phoneNumber}',
-                                              style: AppTextStyles.font16
-                                                  .copyWith(
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: Color(0xff475569)),
-                                            ),
-                                          ],
-                                        ),
-                                        horizontalSpace(41),
-                                        Container(
-                                            height: 30.h,
-                                            width: 94.w,
-                                            alignment: Alignment.center,
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(49),
-                                                color: getAllAppUsers
-                                                            .allAppUsers
-                                                            .data![index]
-                                                            .status ==
-                                                        'active'
-                                                    ? Color(0xff27AE60)
-                                                        .withOpacity(0.2)
-                                                    : Color(0xffA7A6A3)),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
+                                            // horizontalSpace(14),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
-                                                CircleAvatar(
-                                                  radius: 2,
-                                                  backgroundColor:
-                                                      getAllAppUsers
-                                                                  .allAppUsers
-                                                                  .data![index]
-                                                                  .status ==
-                                                              'active'
-                                                          ? Color(0xff27AE60)
-                                                          : Color(0xff4D4C4A),
-                                                ),
-                                                horizontalSpace(6),
                                                 Text(
-                                                  '${getAllAppUsers.allAppUsers.data![index].status}',
-                                                  style: AppTextStyles.font12
+                                                  '${getAllAppUsers.firstName} ${getAllAppUsers.lastName}',
+                                                  style: AppTextStyles.font14
                                                       .copyWith(
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: Color(
+                                                              0xff475569)),
+                                                ),
+                                                verticalSpace(4),
+                                                Text(
+                                                  '${getAllAppUsers.phoneNumber}',
+                                                  style: AppTextStyles.font16
+                                                      .copyWith(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color: Color(
+                                                              0xff475569)),
+                                                ),
+                                              ],
+                                            ),
+                                            horizontalSpace(41),
+                                            Container(
+                                                height: 30.h,
+                                                width: 94.w,
+                                                alignment: Alignment.center,
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            49),
+                                                    color: getAllAppUsers
+                                                                .allAppUsers
+                                                                .data![index]
+                                                                .status ==
+                                                            'active'
+                                                        ? Color(0xff27AE60)
+                                                            .withOpacity(0.2)
+                                                        : Color(0xffA7A6A3)),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    CircleAvatar(
+                                                      radius: 2,
+                                                      backgroundColor:
+                                                          getAllAppUsers
+                                                                      .allAppUsers
+                                                                      .data![
+                                                                          index]
+                                                                      .status ==
+                                                                  'active'
+                                                              ? Color(
+                                                                  0xff27AE60)
+                                                              : Color(
+                                                                  0xff4D4C4A),
+                                                    ),
+                                                    horizontalSpace(6),
+                                                    Text(
+                                                      '${getAllAppUsers.allAppUsers.data![index].status}',
+                                                      style: AppTextStyles.font12.copyWith(
                                                           fontWeight:
                                                               FontWeight.w600,
                                                           color: getAllAppUsers
@@ -161,22 +186,23 @@ class _CustomersComponentState extends State<CustomersComponent> {
                                                                   0xff27AE60)
                                                               : Color(
                                                                   0xff4D4C4A)),
-                                                )
-                                              ],
-                                            ))
-                                      ],
+                                                    )
+                                                  ],
+                                                ))
+                                          ],
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                verticalSpace(13),
-                                Divider(
-                                  color: AppColors.blackColor.withOpacity(0.05),
-                                ),
-                                verticalSpace(13),
-                              ],
-                            );
-                          }),
-                        )
+                                    verticalSpace(13),
+                                    Divider(
+                                      color: AppColors.blackColor
+                                          .withOpacity(0.05),
+                                    ),
+                                    verticalSpace(13),
+                                  ],
+                                );
+                              }),
+                            )
             ],
           ),
         );

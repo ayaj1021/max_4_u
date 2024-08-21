@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 
-
 class BusyOverlay extends StatelessWidget {
   const BusyOverlay({
     Key? key,
@@ -35,13 +34,20 @@ class BusyOverlay extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    const SizedBox(
+                    SizedBox(
                       height: 50,
                       width: 50,
-                      child: CircularProgressIndicator(
+                      child:
+                          // TweenAnimationBuilder(
+                          //     duration: Duration(seconds: 3),
+                          //     tween: Tween(begin: 0.0, end: 1.0),
+                          //     builder: (context, value, _) {
+                          //       return
+                          CircularProgressIndicator(
                         color: AppColors.blackColor,
                         backgroundColor: AppColors.primaryColor,
                       ),
+                      // }),
                     ),
                     const SizedBox(
                       height: 10,

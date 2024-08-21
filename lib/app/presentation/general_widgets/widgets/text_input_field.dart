@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
@@ -48,7 +47,7 @@ class TextInputField extends StatelessWidget {
         verticalSpace(8),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8),
-          height: 52.h,
+       //   height: 52.h,
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),

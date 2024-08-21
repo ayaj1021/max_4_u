@@ -4,7 +4,7 @@ import 'package:max_4_u/app/database/database.dart';
 
 import 'package:max_4_u/app/model/load_data_model.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
-import 'package:max_4_u/app/presentation/features/buy_data/data_verification_screen.dart';
+import 'package:max_4_u/app/presentation/features/buy_data/presentation/data_verification_screen.dart';
 import 'package:max_4_u/app/presentation/features/dashboard/dashboard_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';

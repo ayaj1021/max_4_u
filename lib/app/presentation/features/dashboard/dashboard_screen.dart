@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/presentation/features/admin/presentation/admin_section/requests_screen.dart';
-import 'package:max_4_u/app/presentation/features/admin/presentation/admin_section/users_screen.dart';
+import 'package:max_4_u/app/presentation/features/dashboard/users/presentation/view/users_screen.dart';
+import 'package:max_4_u/app/presentation/features/super_admin_section/users/presentation/view/super_admin_users_screen.dart';
 import 'package:max_4_u/app/presentation/features/dashboard/home/home_screen.dart';
 import 'package:max_4_u/app/presentation/features/dashboard/profile/profile_screen.dart';
 import 'package:max_4_u/app/presentation/features/dashboard/support/support_screen.dart';
 import 'package:max_4_u/app/presentation/features/dashboard/transaction/transaction_screen.dart';
-import 'package:max_4_u/app/presentation/features/vendor_features/presentation/vendor_sections/customers_section/customer_screen.dart';
+import 'package:max_4_u/app/presentation/features/vendor_features/presentation/customers_section/customer_screen.dart';
 import 'package:max_4_u/app/provider/auth_provider.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
@@ -64,7 +65,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 
   final adminPages = [
     const HomeScreen(),
-    const UserScreen(),
+    const UsersScreen(),
     const TransactionScreen(),
     const RequestsScreen(),
     const ProfileScreen(),
@@ -100,7 +101,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       case '4':
         pages = [
           const HomeScreen(),
-          const UserScreen(),
+          const SuperAdminUserScreen(),
           const TransactionScreen(),
           const RequestsScreen(),
           const ProfileScreen(),
@@ -109,7 +110,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       case '5':
         pages = [
           const HomeScreen(),
-          const UserScreen(),
+          const SuperAdminUserScreen(),
           const TransactionScreen(),
           const RequestsScreen(),
           const ProfileScreen(),

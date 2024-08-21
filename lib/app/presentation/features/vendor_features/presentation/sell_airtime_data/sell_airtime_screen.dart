@@ -3,10 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/enums/network_dropdown.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
-import 'package:max_4_u/app/presentation/features/vendor_features/presentation/vendor_sections/become_vendor_section/saved_customers_screen.dart';
+import 'package:max_4_u/app/presentation/features/vendor_features/presentation/become_vendor_section/saved_customers_screen.dart';
 import 'package:max_4_u/app/presentation/features/buy_airtime/provider/buy_airtime_provider.dart';
 
-import 'package:max_4_u/app/presentation/features/buy_airtime/presentation/airtime_verification_screen.dart';
+import 'package:max_4_u/app/presentation/features/buy_airtime/presentation/views/airtime_verification_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/busy_overlay.dart';

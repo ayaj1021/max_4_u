@@ -44,7 +44,7 @@ class _RequestsScreenState extends State<RequestsScreen>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Center(
-                    child:  Text(
+                    child: Text(
                       'Requests',
                       style: AppTextStyles.font18,
                     ),
@@ -76,6 +76,7 @@ class _RequestsScreenState extends State<RequestsScreen>
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: TabBar(
+                                  dividerHeight: 0,
                                   indicator: BoxDecoration(
                                       color: const Color(0xffB0D3EB),
                                       borderRadius: BorderRadius.circular(6)),
@@ -177,7 +178,7 @@ class _RequestsScreenState extends State<RequestsScreen>
                                                     BorderRadius.circular(17),
                                                 color: AppColors.subTextColor),
                                             child: Text(
-                                              '${getAllVendorRequest.allVendorRequest.totalIncomplete}',
+                                              '${getAllVendorRequest.allVendorRequest.totalDenied}',
                                               style: AppTextStyles.font12
                                                   .copyWith(
                                                       fontSize: 10,

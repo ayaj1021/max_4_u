@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/provider/get_all_customers_provider.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
@@ -30,7 +29,7 @@ class _OverViewContainerState extends State<OverViewContainer> {
   getAllTransactions() async {
     final transactions = await SecureStorage().getUserTransactionHistory();
     setState(() {
-      allTransactions = transactions;
+      allTransactions = transactions ?? [];
     });
     return transactions;
   }
@@ -39,10 +38,10 @@ class _OverViewContainerState extends State<OverViewContainer> {
   Widget build(BuildContext context) {
     return Consumer2<GetAllCustomersProvider, ReloadUserDataProvider>(
         builder: (context, getCustomers, reloadData, _) {
-      return reloadData.loadData.transactionHistory!.data == null
+      return reloadData.loadData.transactionHistory?.data == null
           ? SizedBox.shrink()
           : Container(
-              height: 103.h,
+            //  height: 103.h,
               width: MediaQuery.of(context).size.width,
               padding: const EdgeInsets.symmetric(vertical: 23, horizontal: 19),
               decoration: BoxDecoration(

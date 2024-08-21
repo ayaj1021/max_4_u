@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
-import 'package:max_4_u/app/presentation/features/vendor_features/presentation/vendor_sections/become_vendor_section/fund_wallet/account_no_payment_screen.dart';
-import 'package:max_4_u/app/presentation/features/vendor_features/presentation/vendor_sections/become_vendor_section/fund_wallet/atm_fund_wallet.dart';
+import 'package:max_4_u/app/presentation/features/vendor_features/presentation/become_vendor_section/fund_wallet/account_no_payment_screen.dart';
+import 'package:max_4_u/app/presentation/features/vendor_features/presentation/become_vendor_section/fund_wallet/atm_fund_wallet.dart';
 import 'package:max_4_u/app/provider/auth_provider.dart';
 import 'package:max_4_u/app/provider/obscure_text_provider.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
@@ -51,11 +51,11 @@ class _AccountBalanceWidgetState extends State<AccountBalanceWidget> {
     return Consumer3<AuthProviderImpl, ObscureTextProvider,
             ReloadUserDataProvider>(
         builder: (context, authProv, obscure, reloadData, _) {
-      final accountBalance = reloadData.loadData.userAccount!.balance;
+      final accountBalance = reloadData.loadData.userAccount?.balance;
       String totalBalance = NumberFormat('#,##0').format(accountBalance);
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 32),
-        height: 125.h,
+       // height: 125.h,
         width: 358.w,
         decoration: BoxDecoration(
           color: AppColors.primaryColor,

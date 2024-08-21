@@ -39,6 +39,7 @@ class VendorRequestResponseData {
   int? totalIncomplete;
   int? totalPending;
   int? totalConfirmed;
+  int? totalDenied;
 
   VendorRequestResponseData({
     this.data,
@@ -48,6 +49,7 @@ class VendorRequestResponseData {
     this.totalIncomplete,
     this.totalPending,
     this.totalConfirmed,
+    this.totalDenied,
   });
 
   factory VendorRequestResponseData.fromJson(Map<String, dynamic> json) {
@@ -59,6 +61,7 @@ class VendorRequestResponseData {
       totalIncomplete: json['total_incomplete'] as int?,
       totalPending: json['total_pending'] as int?,
       totalConfirmed: json['total_confirmed'] as int?,
+      totalDenied: json['total_denied'] as int?,
     );
   }
 

@@ -8,7 +8,7 @@ import 'package:max_4_u/app/provider/auth_provider.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/presentation/features/settings/settings_screen.dart';
-import 'package:max_4_u/app/presentation/features/super_admin_section/set_up_new_data_prices_screen.dart';
+import 'package:max_4_u/app/presentation/features/super_admin_section/presentation/views/set_up_new_data_prices_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/screen_navigator.dart';
@@ -38,14 +38,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   getNames() async {
-    final name = await SecureStorage().getFirstName();
-    final surname = await SecureStorage().getLastName();
-    final id = await SecureStorage().getUniqueId();
+    final storage = SecureStorage();
+    final name = await storage.getFirstName();
+    final surname = await storage.getLastName();
+    final id = await storage.getUniqueId();
 
     setState(() {
       firstName = name;
       lastName = surname;
-      userId = id;
+      userId = id ?? '';
     });
   }
 
@@ -163,7 +164,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         .copyWith(fontWeight: FontWeight.w500),
                   ),
                 ),
-                // vendor.isVendor == '5'
+
                 authProv.userLevel == '5'
                     ? ListTile(
                         onTap: () =>
@@ -179,7 +180,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       )
                     : SizedBox(),
-                //   vendor.isVendor == '5'
+
                 authProv.userLevel == '5'
                     ? ListTile(
                         onTap: () => nextScreen(
@@ -196,7 +197,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       )
                     : SizedBox(),
-                // vendor.isVendor == '1'
+             
                 authProv.userLevel == '1'
                     ? ListTile(
                         onTap: () {

@@ -6,7 +6,7 @@ import 'package:max_4_u/app/presentation/features/auth/presentation/login_screen
 import 'package:max_4_u/app/presentation/features/auto_renewal/presentation/auto_renewal_screen.dart';
 import 'package:max_4_u/app/presentation/features/dashboard/profile/profile_screen.dart';
 import 'package:max_4_u/app/presentation/features/dashboard/support/support_screen.dart';
-import 'package:max_4_u/app/presentation/features/vendor_features/presentation/vendor_sections/become_vendor_section/become_vendor_screen.dart';
+import 'package:max_4_u/app/presentation/features/vendor_features/presentation/become_vendor_section/become_vendor_screen.dart';
 import 'package:max_4_u/app/provider/auth_provider.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/presentation/features/settings/settings_screen.dart';

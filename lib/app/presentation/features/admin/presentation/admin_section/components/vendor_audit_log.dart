@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/presentation/features/admin/presentation/admin_section/components/log_details_screen.dart';
-import 'package:max_4_u/app/provider/super_admin/audit_log_provider.dart';
+import 'package:max_4_u/app/presentation/features/super_admin_section/providers/super_admin/audit_log_provider.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/screen_navigator.dart';

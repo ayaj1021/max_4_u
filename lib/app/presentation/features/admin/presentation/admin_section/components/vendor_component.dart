@@ -58,7 +58,7 @@ class _VendorsComponentState extends State<VendorsComponent> {
                           'No data',
                           style: AppTextStyles.font14.copyWith(
                               color: AppColors.textColor,
-                              fontWeight: FontWeight.w400),
+                              fontWeight: FontWeight.w400), 
                         ),
                       )
                     : getAllAppUsers.allAppVendors.data!.isEmpty

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/presentation/features/onboarding/onboard_screen.dart';
 
 import 'package:max_4_u/app/styles/app_colors.dart';
@@ -15,8 +14,6 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  String userId = '';
-  String level = '';
   // getNames() async {
   //   final id = await SecureStorage().getEncryptedID();
   //   print('this is user id: $id');
@@ -25,31 +22,10 @@ class _SplashScreenState extends State<SplashScreen> {
   //   });
   // }
 
-  getUserLevel() async {
-    final userLevel = await SecureStorage().getUserLevel();
-    print('this is user level: $userLevel');
-
-    setState(() {
-      level = userLevel;
-    });
-  }
-
   @override
   void initState() {
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   Provider.of<ReloadUserDataProvider>(context, listen: false)
-    //       .reloadUserData();
-    // });
-
-  //  getNames();
-    getUserLevel();
-    // final id = Provider.of<AuthProviderImpl>(context, listen: false).resDataData.userData[0];
     Timer(const Duration(seconds: 3), () async {
-      // if (userId.isNotEmpty && level.isNotEmpty) {
-      //   nextScreenReplace(context, DashBoardScreen());
-      // } else {
       nextScreenReplace(context, const OnboardScreen());
-      //}
     });
     super.initState();
   }

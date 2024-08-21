@@ -19,6 +19,12 @@ class BecomeAVendorProvider extends ChangeNotifier {
   String _ninMessage = '';
   String get ninMessage => _ninMessage;
 
+  double _uploadSent = 0;
+  double _uploadTotal = 0;
+
+  double get uploadSent => _uploadSent;
+  double get uploadTotal => _uploadTotal;
+
   Future<void> uploadNinBvn({
     required String bvn,
     required String nin,
@@ -37,7 +43,6 @@ class BecomeAVendorProvider extends ChangeNotifier {
 
     final response = await ApiService().servicePostRequest(
       body: body,
-      // message: _message,
     );
 
     _status = response['data']['status'];
@@ -55,9 +60,9 @@ class BecomeAVendorProvider extends ChangeNotifier {
       } else {
         _status = response['data']['status'];
         state = ViewState.Error;
-        _message = response['data']['message'];
-        _errorMessage = response['data']['error_data']['bvn'];
-        _errorMessage = response['data']['error_data']['nin'];
+
+        _message = response['data']['error_data']['bvn'] ??
+            response['data']['error_data']['nin'];
 
         notifyListeners();
       }
@@ -91,9 +96,18 @@ class BecomeAVendorProvider extends ChangeNotifier {
 
     final response = await ApiService().uploadFileServicePostRequest(
       data: data,
+      onSendProgress: (sent, total) {
+        log('count: $sent, total $total');
+        _uploadSent = ((sent / total) * 100);
+        print(((sent / total) * 100));
+        // _uploadSent = sent;
+        _uploadTotal = ((total / total) * 100);
+        ;
+        notifyListeners();
+        print('$sent, $total');
+      },
     );
 
-    //   _status = response['data']['status'];
     _message = response['data']['message'];
 
     log('$_status');
@@ -145,8 +159,16 @@ class BecomeAVendorProvider extends ChangeNotifier {
 
     final response = await ApiService().uploadFileServicePostRequest(
       data: data,
-
-      // message: _message,
+      onSendProgress: (sent, total) {
+        log('count: $sent, total $total');
+        _uploadSent = ((sent / total) * 100);
+        print(((sent / total) * 100));
+        // _uploadSent = sent;
+        _uploadTotal = ((total / total) * 100);
+        ;
+        notifyListeners();
+        print('$sent, $total');
+      },
     );
 
     _status = response['data']['status'];

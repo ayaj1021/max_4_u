@@ -1,7 +1,5 @@
-import 'dart:developer';
 import 'dart:io';
 import 'package:dio/dio.dart';
-
 
 import 'package:max_4_u/app/config/constants.dart';
 
@@ -83,7 +81,9 @@ class ApiService {
   }
 
   Future<dynamic> uploadFileServicePostRequest(
-      {Map<String, String>? headers, required FormData data}) async {
+      {Map<String, String>? headers,
+      required FormData data,
+      required Function(int, int) onSendProgress}) async {
     String url = AppConstants.baseUrl;
 
     final encryptedId = await SecureStorage().getUserEncryptedId();
@@ -92,9 +92,7 @@ class ApiService {
       final response = await dio.post(
         url,
         data: data,
-        onSendProgress: (count, total) {
-          log('count: $count, total $total');
-        },
+        onSendProgress: onSendProgress,
         options: Options(
           headers: {
             'Content-Type': 'application/json',
