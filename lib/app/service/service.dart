@@ -74,6 +74,7 @@ class ApiService {
       print('Server Error: ${e.response?.statusCode} ${e.response?.data}');
       return e.response?.data;
     } on SocketException catch (_) {
+      return;
       // state = ViewState.Error;
       // _message = 'Network error. Please try again later';
       // notifyListeners();

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/presentation/features/beneficiary/presentation/save_beneficiary_screen.dart';
-import 'package:max_4_u/app/presentation/features/buy_data/buy_data_auto_renewal_screen.dart';
+import 'package:max_4_u/app/presentation/features/buy_data/presentation/views/buy_data_auto_renewal_screen.dart';
 import 'package:max_4_u/app/presentation/features/dashboard/dashboard_screen.dart';
 import 'package:max_4_u/app/presentation/features/vendor_features/presentation/sell_airtime_data/save_customer_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';

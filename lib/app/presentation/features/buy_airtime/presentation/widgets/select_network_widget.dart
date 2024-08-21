@@ -4,6 +4,7 @@ import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
 
+// ignore: must_be_immutable
 class SelectNetworkWidget extends StatefulWidget {
   SelectNetworkWidget({super.key, required this.selectedNetwork, required this.networkProviders});
  late String selectedNetwork;
@@ -17,6 +18,7 @@ class _SelectNetworkWidgetState extends State<SelectNetworkWidget> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Select Network',

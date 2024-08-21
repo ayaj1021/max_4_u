@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/enums/network_dropdown.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/model/load_data_model.dart';
-import 'package:max_4_u/app/presentation/features/beneficiary/presentation/beneficiary_screen.dart';
 import 'package:max_4_u/app/presentation/features/buy_airtime/presentation/views/airtime_verification_screen.dart';
+import 'package:max_4_u/app/presentation/features/buy_airtime/presentation/widgets/input_phone_number_beneficiary_widget.dart';
+import 'package:max_4_u/app/presentation/features/buy_airtime/presentation/widgets/select_amount_section.dart';
 import 'package:max_4_u/app/presentation/features/buy_airtime/presentation/widgets/select_network_widget.dart';
 import 'package:max_4_u/app/presentation/features/buy_airtime/provider/buy_airtime_provider.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
 
-import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/busy_overlay.dart';
 import 'package:max_4_u/app/utils/screen_navigator.dart';
 import 'package:max_4_u/app/utils/show_message.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
 import 'package:max_4_u/app/presentation/general_widgets/widgets/button_widget.dart';
-import 'package:max_4_u/app/presentation/general_widgets/widgets/text_input_field.dart';
 import 'package:provider/provider.dart';
 
 class BuyAirtimeScreen extends StatefulWidget {
@@ -123,8 +121,6 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
   Widget build(BuildContext context) {
     return Consumer<BuyAirtimeProvider>(
       builder: (context, buyAirtime, _) {
-        // var logos =
-        //     retrievedProducts.map((product) => product.logo).toSet().toList();
         return BusyOverlay(
           show: buyAirtime.state == ViewState.Busy,
           title: buyAirtime.message,
@@ -158,117 +154,13 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
                       selectedNetwork: _selectedNetwork,
                     ),
                     verticalSpace(30),
-                    Stack(
-                      children: [
-                        TextInputField(
-                          controller: _phoneNumber,
-                          labelText: 'Phone Number',
-                          hintText: 'Receiver\'s number',
-                          textInputType: TextInputType.number,
-                          maxLength: 11,
-                          onChanged: (p0) {},
-                        ),
-                        Positioned(
-                          right: 0,
-                          child: GestureDetector(
-                            onTap: () async {
-                              var number = await Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          BeneficiaryScreen()));
-
-                              if (number != null) {
-                                _phoneNumber.text = number;
-                              }
-                            },
-                            child: Text(
-                              'select from beneficiary',
-                              style: AppTextStyles.font12.copyWith(
-                                color: AppColors.secondaryColor,
-                                fontWeight: FontWeight.w500,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
+                    InputPhoneNumberAndBeneficiaryWidget(
+                        phoneNumber: _phoneNumber),
                     verticalSpace(30),
-                    Text(
-                      'Amount',
-                      style: AppTextStyles.font14.copyWith(
-                        color: const Color(0xff475569),
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    verticalSpace(10),
-                    SizedBox(
-                      height: 100.h,
-                      child: GridView.builder(
-                          itemCount: amount.length,
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            mainAxisSpacing: 14,
-                            crossAxisSpacing: 35,
-                            childAspectRatio: 2.3,
-                          ),
-                          itemBuilder: (_, index) {
-                            return GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  selectedIndex = index;
-
-                                  airtimeAmount =
-                                      amount[selectedIndex!.toInt()];
-                                });
-
-                                if (_phoneNumber.text.isEmpty) {
-                                  return;
-                                } else {
-                                  nextScreen(
-                                      context,
-                                      AirtimeVerificationScreen(
-                                        network: '${_selectedNetwork}',
-                                        phoneNumber: _phoneNumber.text.trim(),
-                                        amount: airtimeAmount,
-                                      ));
-                                }
-                              },
-                              child: Container(
-                                alignment: Alignment.center,
-                                height: 42.h,
-                                width: 96.w,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
-                                  color: AppColors.whiteColor,
-                                  border: Border.all(
-                                    color: 
-                                    // selectedIndex == index
-                                    //     ? AppColors.primaryColor
-                                    //     : 
-                                        const Color(0xffCBD5E1),
-                                  ),
-                                ),
-                                child: Text(
-                                  'N${amount[index]}',
-                                  style: AppTextStyles.font14.copyWith(
-                                    color: const Color(0xff333333),
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                            );
-                          }),
-                    ),
-                    verticalSpace(14),
-                    TextInputField(
-                      controller: _amountController,
-                      hintText: '50-350,000',
-                      textInputType: TextInputType.number,
-                      onChanged: (p0) {
-                        airtimeAmount = _amountController.text;
-                      },
+                    SelectAmountSection(
+                      amount: amount,
+                      phoneNumber: _phoneNumber,
+                      amountController: _amountController,
                     ),
                     verticalSpace(68),
                     ButtonWidget(

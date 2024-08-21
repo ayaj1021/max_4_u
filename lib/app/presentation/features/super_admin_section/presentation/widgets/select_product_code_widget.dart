@@ -9,12 +9,12 @@ class SelectProductCodeWidget extends StatefulWidget {
       {super.key,
       required this.logos,
       required this.handleLogoSelection,
-      required this.selectedLogoIndex,
+  
       required this.networkProvidersImage});
 
   final List<String?> logos;
   final void Function(String logo) handleLogoSelection;
-   int? selectedLogoIndex;
+ 
 
   final List<String> networkProvidersImage;
 
@@ -24,6 +24,7 @@ class SelectProductCodeWidget extends StatefulWidget {
 }
 
 class _SelectProductCodeWidgetState extends State<SelectProductCodeWidget> {
+    int? selectedLogoIndex;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -54,7 +55,7 @@ class _SelectProductCodeWidgetState extends State<SelectProductCodeWidget> {
                           widget.handleLogoSelection(
                               widget.logos[index].toString());
                           setState(() {
-                            widget.selectedLogoIndex = index;
+                            selectedLogoIndex = index;
                           });
                         },
                         child: Container(
@@ -63,7 +64,7 @@ class _SelectProductCodeWidgetState extends State<SelectProductCodeWidget> {
                           padding: EdgeInsets.all(3),
                           decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: widget.selectedLogoIndex == index
+                              color: selectedLogoIndex == index
                                   ? AppColors.primaryColor
                                   : Colors.transparent),
                           child: CircleAvatar(

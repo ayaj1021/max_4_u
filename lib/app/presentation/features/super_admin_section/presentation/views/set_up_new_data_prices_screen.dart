@@ -53,6 +53,7 @@ class _SetupNewDataPricesScreenState extends State<SetupNewDataPricesScreen> {
   int? selectedDataPlanIndex;
   String? selectedBundlePrice;
   int? selectedValidityIndex;
+  List<Product> retrievedProducts = [];
 
   @override
   initState() {
@@ -62,6 +63,16 @@ class _SetupNewDataPricesScreenState extends State<SetupNewDataPricesScreen> {
           .reloadUserData();
     });
     super.initState();
+  }
+
+  getProduct() async {
+    final storage = await SecureStorage();
+
+    retrievedProducts = (await storage.getUserProducts())!;
+    // for (var products in retrievedProducts) {
+    //   print('${products.name}: ${products.price}');
+
+    // }
   }
 
   final Map<String, String> validityToDuration = {
@@ -85,8 +96,6 @@ class _SetupNewDataPricesScreenState extends State<SetupNewDataPricesScreen> {
     'assets/logo/9mobile.png',
   ];
 
-  List<Product> retrievedProducts = [];
-
   void handleBundleSelection(String bundle) {
     setState(() {
       selectedBundle = bundle;
@@ -101,16 +110,6 @@ class _SetupNewDataPricesScreenState extends State<SetupNewDataPricesScreen> {
     print('Selected logo: $_selectedNetwork');
     print(
         'Available logos in products: ${retrievedProducts.map((product) => product.logo).toSet().toList()}');
-  }
-
-  getProduct() async {
-    final storage = await SecureStorage();
-
-    retrievedProducts = (await storage.getUserProducts())!;
-    // for (var products in retrievedProducts) {
-    //   print('${products.name}: ${products.price}');
-
-    // }
   }
 
   void handleValiditySelection(String validity) {
@@ -146,8 +145,8 @@ class _SetupNewDataPricesScreenState extends State<SetupNewDataPricesScreen> {
   //String selectedService = _selectedServices!;
   @override
   Widget build(BuildContext context) {
-    return Consumer<SetupPricesProvider>(
-      builder: (context, setupPrice, _) {
+    return Consumer2<SetupPricesProvider, ReloadUserDataProvider>(
+      builder: (context, setupPrice, reloadData, _) {
         var logos =
             retrievedProducts.map((product) => product.logo).toSet().toList();
         return BusyOverlay(
@@ -175,14 +174,12 @@ class _SetupNewDataPricesScreenState extends State<SetupNewDataPricesScreen> {
                       SelectNetworkWidget(
                         logos: logos,
                         handleLogoSelection: handleLogoSelection,
-                        selectedLogoIndex: selectedLogoIndex,
                         networkProvidersImage: networkProvidersImage,
                       ),
                       verticalSpace(27),
                       SelectProductCodeWidget(
                         logos: logos,
                         handleLogoSelection: handleLogoSelection,
-                        selectedLogoIndex: selectedLogoIndex,
                         networkProvidersImage: networkProvidersImage,
                       ),
                       verticalSpace(27),
@@ -293,107 +290,102 @@ class _SetupNewDataPricesScreenState extends State<SetupNewDataPricesScreen> {
                                   ),
                                 ),
 
-                                Text(
-                                  'Data Bundle',
-                                  style: AppTextStyles.font14.copyWith(
-                                    color: const Color(0xff475569),
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                verticalSpace(8),
-
                                 if (_selectedNetwork != null &&
                                     selectedValidity != null)
-                                  SizedBox(
-                                    height: 150,
-                                    child: GridView.builder(
-                                      gridDelegate:
-                                          SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 3,
-                                        crossAxisSpacing: 10,
-                                        mainAxisSpacing: 10,
-                                      ),
-                                      itemCount: retrievedProducts
+                                  Text(
+                                    'Data Bundle',
+                                    style: AppTextStyles.font14.copyWith(
+                                      color: const Color(0xff475569),
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                verticalSpace(8),
+                                SizedBox(
+                                  height: 150,
+                                  child: GridView.builder(
+                                    gridDelegate:
+                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 3,
+                                      crossAxisSpacing: 10,
+                                      mainAxisSpacing: 10,
+                                    ),
+                                    itemCount: retrievedProducts
+                                        .where((product) =>
+                                            product.logo == _selectedNetwork &&
+                                            product.duration ==
+                                                validityToDuration[
+                                                    selectedValidity])
+                                        .length,
+                                    itemBuilder: (context, index) {
+                                      var filteredProducts = retrievedProducts
                                           .where((product) =>
                                               product.logo ==
                                                   _selectedNetwork &&
                                               product.duration ==
                                                   validityToDuration[
                                                       selectedValidity]!)
-                                          .length,
-                                      itemBuilder: (context, index) {
-                                        var filteredProducts = retrievedProducts
-                                            .where((product) =>
-                                                product.logo ==
-                                                    _selectedNetwork &&
-                                                product.duration ==
-                                                    validityToDuration[
-                                                        selectedValidity]!)
-                                            .toList();
-                                        final price =
-                                            filteredProducts[index].price;
-                                        return InkWell(
-                                          onTap: () {
-                                            print(
-                                              ' ${filteredProducts[index].code}',
-                                            );
+                                          .toList();
+                                      final price =
+                                          filteredProducts[index].price;
+                                      return InkWell(
+                                        onTap: () {
+                                          print(
+                                            ' ${filteredProducts[index].code}',
+                                          );
 
-                                            setState(() {
-                                              selectedDataPlanIndex = index;
-                                            });
-                                            handleBundleSelection(
-                                                filteredProducts[index]
-                                                    .code
-                                                    .toString());
-                                            handlePriceSelection(
-                                                price.toString());
-                                          },
-                                          child: Container(
-                                            height: 100.h,
-                                            width: 100.w,
-                                            decoration: BoxDecoration(
-                                              color: AppColors.whiteColor,
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                              border: Border.all(
-                                                  width: 3,
-                                                  color:
-                                                      selectedDataPlanIndex ==
-                                                              index
-                                                          ? AppColors
-                                                              .primaryColor
-                                                          : Colors.transparent),
-                                            ),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Text(
-                                                    filteredProducts[index]
-                                                        .name
-                                                        .toString(),
-                                                    style: TextStyle(
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                  SizedBox(height: 8),
-                                                  Text(
-                                                    ' ${filteredProducts[index].code}',
-                                                    style:
-                                                        TextStyle(fontSize: 14),
-                                                  ),
-                                                ],
-                                              ),
+                                          setState(() {
+                                            selectedDataPlanIndex = index;
+                                          });
+                                          handleBundleSelection(
+                                              filteredProducts[index]
+                                                  .code
+                                                  .toString());
+                                          handlePriceSelection(
+                                              price.toString());
+                                        },
+                                        child: Container(
+                                          height: 100.h,
+                                          width: 100.w,
+                                          decoration: BoxDecoration(
+                                            color: AppColors.whiteColor,
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            border: Border.all(
+                                                width: 3,
+                                                color: selectedDataPlanIndex ==
+                                                        index
+                                                    ? AppColors.primaryColor
+                                                    : Colors.transparent),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  filteredProducts[index]
+                                                      .name
+                                                      .toString(),
+                                                  style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                SizedBox(height: 8),
+                                                Text(
+                                                  ' ${filteredProducts[index].code}',
+                                                  style:
+                                                      TextStyle(fontSize: 14),
+                                                ),
+                                              ],
                                             ),
                                           ),
-                                        );
-                                      },
-                                    ),
+                                        ),
+                                      );
+                                    },
                                   ),
+                                ),
 
                                 // Container(
                                 //   // padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -498,36 +490,42 @@ class _SetupNewDataPricesScreenState extends State<SetupNewDataPricesScreen> {
                       verticalSpace(40),
                       ButtonWidget(
                           onTap: () async {
-                            if (_vendingCodeController.text.isEmpty) {
-                              showMessage(
-                                  context, 'Vending code cannot be empty',
+                            if (_setPriceController.text.isEmpty ||
+                                _customerDiscountController.text.isEmpty ||
+                                _vendorDiscountController.text.isEmpty ||
+                                _serviceFeeController.text.isEmpty ||
+                                _logoNameController.text.isEmpty ||
+                                _durationController.text.isEmpty ||
+                                _vendingCodeController.text.isEmpty) {
+                              showMessage(context, 'All fields are required',
                                   isError: true);
                               return;
                             }
 
                             final dataProductCodes = await ProductHelper()
-                                .getDataProducts(_selectedNetwork!);
+                                .getDataProducts("$_selectedNetwork");
                             print(
                                 'This is the code ${dataProductCodes.toString()}');
                             final airtimeProductCodes = await ProductHelper()
-                                .getAirtimeProducts(_selectedNetwork!);
+                                .getAirtimeProducts("$_selectedNetwork");
                             print(
                                 'This is the code ${dataProductCodes.toString()}');
-
+                            final productCode = _selectedServices == services[0]
+                                ? airtimeProductCodes
+                                : dataProductCodes;
+                                print(' This is: $productCode');
                             await setupPrice.setupPrices(
+                              productName: "$_selectedNetwork",
+                              productCode: "$_selectedNetwork",
+                              serviceName: _selectedNetwork!,
                               category: _selectedServices,
                               productPrice: _setPriceController.text.trim(),
-                              serviceName: _selectedNetwork!,
-                              logoName: _logoNameController.text.trim(),
-                              productName: _selectedNetwork!,
-                              productCode: _selectedServices == services[0]
-                                  ? airtimeProductCodes
-                                  : dataProductCodes,
                               customerDiscount:
                                   _customerDiscountController.text.trim(),
                               vendorDiscount:
                                   _vendorDiscountController.text.trim(),
                               serviceFee: _serviceFeeController.text.trim(),
+                              logoName: _logoNameController.text.trim(),
                               duration: _durationController.text.trim(),
                               vendingCode: _vendingCodeController.text.trim(),
                             );

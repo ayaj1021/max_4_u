@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/presentation/features/auto_renewal/presentation/auto_renewal_screen.dart';
+import 'package:max_4_u/app/presentation/features/auto_renewal/presentation/widgets/cancel_auto_renewal_alert_dialog.dart';
 import 'package:max_4_u/app/provider/cancel_auto_renewal_provider.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
@@ -31,23 +32,24 @@ class DataAutoRenewalPage extends StatelessWidget {
                   .isEmpty
               ? Center(
                   child: SizedBox(
-                    height: 108.h,
+                   // height: 108.h,
                     width: 300.w,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         SizedBox(
-                            height: 56.h,
+                           // height: 56.h,
                             width: 56.w,
                             child: Image.asset(
                                 'assets/images/no_request_image.png')),
                         verticalSpace(10),
                         Text(
-                          'No transaction set to auto renewals. Buy airtime or data and set to auto renewals.',
+                          'No transaction set to auto renewals. Buy data and set to auto renewals.',
                           style: AppTextStyles.font14.copyWith(
                               color: AppColors.textColor,
                               fontWeight: FontWeight.w400),
+                              textAlign: TextAlign.center,
                         )
                       ],
                     ),
@@ -75,7 +77,7 @@ class DataAutoRenewalPage extends StatelessWidget {
                         Stack(
                           children: [
                             Container(
-                              height: 174.h,
+                              //   height: 174.h,
                               width: MediaQuery.of(context).size.width,
                               padding: const EdgeInsets.symmetric(
                                   vertical: 12, horizontal: 14),
@@ -199,31 +201,38 @@ class DataAutoRenewalPage extends StatelessWidget {
                                   verticalSpace(8),
                                   ButtonWidget(
                                     onTap: () async {
-                                      await cancelRenewal.cancelAutoRenewal(
-                                        id: '${data[0].id}',
-                                      );
+                                 
+                                      // CancelAutoRenewalAlertDialog();
+                                      cancelAutoRenewalAlertBox(context,
+                                          () async {
+                                        Navigator.pop(context);
 
-                                      if (cancelRenewal.status == false &&
-                                          context.mounted) {
-                                        showMessage(
-                                          context,
-                                          cancelRenewal.message,
-                                          isError: true,
+                                        await cancelRenewal.cancelAutoRenewal(
+                                          id: '${data[0].id}',
                                         );
 
-                                        return;
-                                      }
+                                        if (cancelRenewal.status == false &&
+                                            context.mounted) {
+                                          showMessage(
+                                            context,
+                                            cancelRenewal.message,
+                                            isError: true,
+                                          );
 
-                                      if (cancelRenewal.status == true &&
-                                          context.mounted) {
-                                        showMessage(
-                                          context,
-                                          cancelRenewal.message,
-                                          // isError: false,
-                                        );
-                                        nextScreenReplace(
-                                            context, AutoRenewalScreen());
-                                      }
+                                          return;
+                                        }
+
+                                        if (cancelRenewal.status == true &&
+                                            context.mounted) {
+                                          showMessage(
+                                            context,
+                                            cancelRenewal.message,
+                                            // isError: false,
+                                          );
+                                          nextScreenReplace(
+                                              context, AutoRenewalScreen());
+                                        }
+                                      });
                                     },
                                     text: 'Cancel auto renewal',
                                     textColor: AppColors.primaryColor,
@@ -239,7 +248,8 @@ class DataAutoRenewalPage extends StatelessWidget {
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 12, horizontal: 14),
                                     decoration: BoxDecoration(
-                                      color: const Color(0xffE8E8E8).withOpacity(0.5),
+                                      color: const Color(0xffE8E8E8)
+                                          .withOpacity(0.5),
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     child: Center(

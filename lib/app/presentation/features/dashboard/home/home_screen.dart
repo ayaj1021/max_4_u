@@ -7,13 +7,13 @@ import 'package:max_4_u/app/presentation/features/dashboard/home/component/accou
 import 'package:max_4_u/app/presentation/features/dashboard/home/component/overview_container.dart';
 import 'package:max_4_u/app/presentation/features/dashboard/home/component/service_component.dart';
 import 'package:max_4_u/app/presentation/features/dashboard/home/component/transaction_history_component.dart';
-import 'package:max_4_u/app/presentation/features/dashboard/transaction/transaction_screen.dart';
+import 'package:max_4_u/app/presentation/features/dashboard/transaction/presentation/views/transaction_screen.dart';
 import 'package:max_4_u/app/presentation/features/vendor_features/presentation/sell_airtime_data/sell_airtime_screen.dart';
 import 'package:max_4_u/app/presentation/features/vendor_features/presentation/sell_airtime_data/sell_data_screen.dart';
 import 'package:max_4_u/app/provider/auth_provider.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/presentation/features/buy_airtime/presentation/views/buy_airtime_screen.dart';
-import 'package:max_4_u/app/presentation/features/buy_data/presentation/buy_data_screen.dart';
+import 'package:max_4_u/app/presentation/features/buy_data/presentation/views/buy_data_screen.dart';
 import 'package:max_4_u/app/presentation/features/dashboard/home/drawer/drawer.dart';
 import 'package:max_4_u/app/presentation/features/notification/notification_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
