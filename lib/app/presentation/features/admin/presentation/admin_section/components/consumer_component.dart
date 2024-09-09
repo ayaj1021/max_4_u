@@ -69,7 +69,7 @@ class _CustomersComponentState extends State<CustomersComponent> {
                                         'assets/images/no_beneficiary_image.png')),
                                 verticalSpace(24),
                                 Text(
-                                  'No consumers yet',
+                                  'No customers yet',
                                   style: AppTextStyles.font14.copyWith(
                                       color: AppColors.textColor,
                                       fontWeight: FontWeight.w400),

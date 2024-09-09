@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:max_4_u/app/domain/exception_handler.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/service/service.dart';
 import 'package:http_parser/http_parser.dart';
@@ -42,34 +43,36 @@ class BecomeAVendorProvider extends ChangeNotifier {
     log('$body');
 
     final response = await ApiService().servicePostRequest(
-      body: body,
+      data: body,
     );
-
-    _status = response['data']['status'];
-    _message = response['data']['message'];
+    final data = response.data;
+    _status = data['status'];
+    _message = data['message'];
 
     log('$_status');
     log('$response');
     try {
-      if (_status == true) {
-        _status = response['data']['status'];
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // if (_status == true) {
+        _status = data['status'];
         state = ViewState.Success;
-        _message = response['data']['message'];
+        _message = data['message'];
 
         notifyListeners();
+        return data;
       } else {
-        _status = response['data']['status'];
+        _status = data['status'];
         state = ViewState.Error;
 
-        _message = response['data']['error_data']['bvn'] ??
-            response['data']['error_data']['nin'];
+        _message = data['error_data']['bvn'] ?? data['error_data']['nin'];
 
         notifyListeners();
       }
-    } catch (e) {
-      log(e.toString());
-      _status = false;
-      notifyListeners();
+    } on DioException catch (e) {
+      return ExceptionHandler.handleError(e);
+      // log(e.toString());
+      // _status = false;
+      // notifyListeners();
     }
   }
 
@@ -83,7 +86,7 @@ class BecomeAVendorProvider extends ChangeNotifier {
 
     // String fileName = image.path.split('/').last;
 
-    final data = FormData.fromMap({
+    final body = FormData.fromMap({
       "request_type": "user",
       "action": "upload_nin",
       "nin_image": await MultipartFile.fromFile(
@@ -92,10 +95,10 @@ class BecomeAVendorProvider extends ChangeNotifier {
         contentType: MediaType("image", "jpeg"),
       ),
     });
-    log('${data}');
+    log('${body}');
 
     final response = await ApiService().uploadFileServicePostRequest(
-      data: data,
+      data: body,
       onSendProgress: (sent, total) {
         log('count: $sent, total $total');
         _uploadSent = ((sent / total) * 100);
@@ -107,30 +110,32 @@ class BecomeAVendorProvider extends ChangeNotifier {
         print('$sent, $total');
       },
     );
-
-    _message = response['data']['message'];
+    final data = response.data;
+    _message = data['message'];
 
     log('$_status');
     log('$response');
 
     try {
-      if (_status == true) {
-        _status = response['data']['status'];
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        _status = data['status'];
         state = ViewState.Success;
-        _message = response['data']['message'];
+        _message = data['message'];
 
         notifyListeners();
+        return data;
       } else {
-        _status = response['data']['status'];
+        _status = data['status'];
         state = ViewState.Error;
-        _message = response['data']['message'];
+        _message = data['message'];
 
         notifyListeners();
       }
-    } catch (e) {
-      log(e.toString());
-      _status = false;
-      notifyListeners();
+    } on DioException catch (e) {
+      return ExceptionHandler.handleError(e);
+      // log(e.toString());
+      // _status = false;
+      // notifyListeners();
     }
   }
 
@@ -145,7 +150,7 @@ class BecomeAVendorProvider extends ChangeNotifier {
     _message = 'uploading your image...';
     notifyListeners();
 
-    final data = FormData.fromMap({
+    final body = FormData.fromMap({
       "request_type": "user",
       "action": "upload_image",
       "selfie_image": await MultipartFile.fromFile(
@@ -155,10 +160,10 @@ class BecomeAVendorProvider extends ChangeNotifier {
         contentType: MediaType("image", "jpeg"),
       ),
     });
-    log('$data');
+    log('$body');
 
     final response = await ApiService().uploadFileServicePostRequest(
-      data: data,
+      data: body,
       onSendProgress: (sent, total) {
         log('count: $sent, total $total');
         _uploadSent = ((sent / total) * 100);
@@ -171,33 +176,36 @@ class BecomeAVendorProvider extends ChangeNotifier {
       },
     );
 
-    _status = response['data']['status'];
-    _message = response['data']['message'];
+    final data = response.data;
+
+    _status = data['status'];
+    _message = data['message'];
 
     log('$_status');
     log('$response');
     try {
-      if (_status == true) {
-        _status = response['data']['status'];
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        //if (_status == true) {
+        _status = data['status'];
         state = ViewState.Success;
-        _message = response['data']['message'];
+        _message = data['message'];
 
         notifyListeners();
+        return data;
       } else {
-        _status = response['data']['status'];
+        _status = data['status'];
         state = ViewState.Error;
-        _message = response['data']['message'];
+        _message = data['message'];
 
         notifyListeners();
       }
-    } catch (e) {
-      log(e.toString());
-      _status = false;
+    } on DioException catch (e) {
+      return ExceptionHandler.handleError(e);
+      // log(e.toString());
+      // _status = false;
       // _message =
       //     'An error occurred while uploading the image. Please try again.';
-      notifyListeners();
-    } finally {
-      notifyListeners();
+      // notifyListeners();
     }
   }
 
@@ -213,33 +221,38 @@ class BecomeAVendorProvider extends ChangeNotifier {
     log('$body');
 
     final response = await ApiService().servicePostRequest(
-      body: body,
+      data: body,
       // message: _message,
     );
 
-    _status = response['data']['status'];
-    _message = response['data']['message'];
+    final data = response.data;
+
+    _status = data['status'];
+    _message = data['message'];
 
     log('$_status');
     log('$response');
     try {
-      if (_status == true) {
-        _status = response['data']['status'];
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        //if (_status == true) {
+        _status = data['status'];
         state = ViewState.Success;
-        _message = response['data']['message'];
+        _message = data['message'];
 
         notifyListeners();
+        return data;
       } else {
-        _status = response['data']['status'];
+        _status = data['status'];
         state = ViewState.Error;
-        _message = response['data']['message'];
+        _message = data['message'];
 
         notifyListeners();
       }
-    } catch (e) {
-      log(e.toString());
-      _status = false;
-      notifyListeners();
+    } on DioException catch (e) {
+      return ExceptionHandler.handleError(e);
+      // log(e.toString());
+      // _status = false;
+      // notifyListeners();
     }
   }
 }

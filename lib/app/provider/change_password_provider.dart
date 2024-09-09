@@ -1,5 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
+import 'package:max_4_u/app/error_handler/error_handler.dart';
 import 'package:max_4_u/app/service/service.dart';
 
 class ChangePasswordProvider extends ChangeNotifier {
@@ -30,34 +32,39 @@ class ChangePasswordProvider extends ChangeNotifier {
 
     try {
       final response = await ApiService().servicePostRequest(
-        body: body,
+        data: body,
       );
-     print(response);
+      print(response);
+      final data = response.data;
 
-      _status = response['data']['status'];
-     // _message = response['data']['message'];
-      if (_status == true) {
+      _status = data['status'];
+      // _message = response['data']['message'];
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        //if (_status == true) {
         state = ViewState.Success;
-        _status = response['data']['status'];
+        _status = data['status'];
 
-        _message = response['data']['message'];
+        _message = data['message'];
         notifyListeners();
+        return data;
       } else {
         state = ViewState.Error;
         _status = false;
         // _status = response['data']['status'];
-         _message = response['data']['message'];
-        _message = response['data']['error_data']['password'];
-        _message = response['data']['error_data']['old_password'];
+        _message = data['message'];
+        _message = data['error_data']['password'];
+        _message = data['error_data']['old_password'];
 
         //  _message = res['data']['response_data']['error_data']['email'];
         notifyListeners();
       }
-    } catch (e) {
-      state = ViewState.Error;
-      _status = false;
+    } on DioException catch (e) {
+      return ExceptionHandler.handleError(e);
+      // state = ViewState.Error;
+      // _status = false;
       //_message = e.toString();
-      notifyListeners();
+      // notifyListeners();
     }
   }
 }

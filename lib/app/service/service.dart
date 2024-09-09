@@ -1,121 +1,156 @@
 import 'dart:io';
+
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 
 import 'package:max_4_u/app/config/constants.dart';
 
 import 'package:max_4_u/app/database/database.dart';
 
+import 'dart:developer';
+
 class ApiService {
-  Dio dio = Dio();
+  final Dio _dio;
+  String? message;
 
-  // ApiService.init();
-  // static final ApiService instance = ApiService.init();
-  //  ViewState state = ViewState.Idle;
-
-  Future<dynamic> authPostRequest(
-      {Map<String, String>? headers,
-      //String? message,
-      required Map<String, dynamic> body}) async {
-    String url = AppConstants.baseUrl;
-    try {
-      final response = await dio.post(
-        url,
-        data: body,
-        options: Options(
-          headers: {
-            'Content-Type': 'application/json',
-            'Site-From': 'postman',
-          },
-        ),
-      );
-
-      return response.data;
-      // } else {
-      //   throw Exception('Failed to authenticate: ${response.statusCode}');
-      // }
-    } on DioException catch (e) {
-      final statusCode = e.response?.statusCode ?? 'No Status Code';
-      final data = e.response?.data ?? 'No Data';
-      print('Server Error: $statusCode $data');
-      print('Server Error: ${e.response?.statusCode} ${e.response?.data}');
-      return e.response?.data;
-      // return Future.error('Server error: $statusCode $data');
-    } catch (e) {
-      //  message = e.toString();
-      print('General Error: $e');
-      return Future.error(e.toString());
-      // return Future.error(e.toString());
-    }
+  ApiService({Dio? dio}) : _dio = dio ?? Dio() {
+    _dio.options..baseUrl = AppConstants.baseUrl;
+    //..connectTimeout = const Duration(seconds: 60)
+    // ..receiveTimeout = const Duration(seconds: 60);
   }
 
-  Future<dynamic> servicePostRequest(
-      {Map<String, String>? headers,
-      required Map<String, dynamic> body}) async {
-    String url = AppConstants.baseUrl;
-
-    final encryptedId = await SecureStorage().getUserEncryptedId();
-
-    try {
-      final response = await dio.post(
-        url,
-        data: body,
-        options: Options(
-          headers: {
-            'Content-Type': 'application/json',
-            'Site-From': 'postman',
-            'User-Key': encryptedId
-          },
-        ),
-      );
-
-      return response.data;
-    } on DioException catch (e) {
-      // Server-side error
-      print('Server Error: ${e.response?.statusCode} ${e.response?.data}');
-      return e.response?.data;
-    } on SocketException catch (_) {
-      return;
-      // state = ViewState.Error;
-      // _message = 'Network error. Please try again later';
-      // notifyListeners();
-    }
+  Future<Response> get(String path,
+      {Map<String, dynamic>? queryParameters, String? token}) async {
+    // final storage = await SecureStorage();
+    final _token = '';
+    //await storage.getUserToken();
+    //final _token = await SecureStorage().getUserToken();
+    final response = await _dio.get(
+      path,
+      queryParameters: queryParameters,
+      options: Options(headers: _buildHeaders(_token)),
+    );
+    return response;
   }
 
-  Future<dynamic> uploadFileServicePostRequest(
-      {Map<String, String>? headers,
-      required FormData data,
-      required Function(int, int) onSendProgress}) async {
-    String url = AppConstants.baseUrl;
-
-    final encryptedId = await SecureStorage().getUserEncryptedId();
-
-    try {
-      final response = await dio.post(
-        url,
-        data: data,
-        onSendProgress: onSendProgress,
-        options: Options(
-          headers: {
-            'Content-Type': 'application/json',
-            'Site-From': 'postman',
-            'User-Key': encryptedId
-          },
+  Future<Response> authPostRequest(
+      {
+      //required String path,
+      String? message,
+      required Map<String, dynamic>? data,
+      String? token}) async {
+    log('$data');
+    // final storage = await SecureStorage();
+    // final _token = '';
+    // await storage.getUserToken();
+    //  final _token = await SecureStorage().getUserToken();
+    final response = await _dio.post(
+      AppConstants.baseUrl,
+      data: data,
+      options: Options(
+          validateStatus: (_) => true,
           contentType: Headers.jsonContentType,
-        ),
-      );
+          responseType: ResponseType.json,
+          headers: {
+            HttpHeaders.contentTypeHeader: 'application/json',
+            'Content-Type': 'application/json',
+            'Site-From': 'postman',
+          }
 
-      print('This is this source response ${response.data}');
-      return response.data;
-    } on DioException catch (e) {
-      // Server-side error
-      print('Server Error: ${e.response?.statusCode} ${e.response?.data}');
-      return e.response?.data;
-    } on SocketException catch (_) {
-      // state = ViewState.Error;
-      // _message = 'Network error. Please try again later';
-      // notifyListeners();
-    }
+          // _buildHeaders(_token)
+
+          ),
+    );
+    log('${response.data}');
+
+    return response;
   }
+
+  Future<Response> servicePostRequest(
+      {
+      //required String path,
+      String? message,
+      required Map<String, dynamic>? data,
+      String? token}) async {
+    log('$data');
+    final encryptedId = await SecureStorage().getUserEncryptedId();
+    final response = await _dio.post(
+      AppConstants.baseUrl,
+      data: data,
+      options: Options(
+
+          validateStatus: (_) => true,
+          // contentType: Headers.jsonContentType,
+          // responseType: ResponseType.json,
+          headers: {
+            'Content-Type': 'application/json',
+            'Site-From': 'postman',
+            'User-Key': encryptedId
+          }
+          //_buildHeaders(_token)
+          ),
+    );
+    debugPrint('${response.data}');
+
+    return response;
+  }
+
+  Future<Response> uploadFileServicePostRequest(
+      {
+      //required String path,
+      String? message,
+      required FormData data,
+      required Function(int, int) onSendProgress,
+      //required Map<String, dynamic>? data,
+      String? token}) async {
+    log('$data');
+    final encryptedId = await SecureStorage().getUserEncryptedId();
+    final response = await _dio.post(
+      AppConstants.baseUrl,
+      data: data,
+      onSendProgress: onSendProgress,
+      options: Options(
+        headers: {
+          'Content-Type': 'application/json',
+          'Site-From': 'postman',
+          'User-Key': encryptedId
+        },
+        contentType: Headers.jsonContentType,
+        //_buildHeaders(_token)
+      ),
+    );
+    log('${response.data}');
+
+    return response;
+  }
+
+  Future<Response> delete(
+      {required String path,
+      String? message,
+      required Map<String, dynamic>? data,
+      String? token}) async {
+    log('$data');
+    // final storage = await SecureStorage();
+    final _token = '';
+    // await storage.getUserToken();
+    //  final _token = await SecureStorage().getUserToken();
+    final response = await _dio.delete(
+      path,
+      data: data,
+      options: Options(headers: _buildHeaders(_token)),
+    );
+    log('${response.data}');
+
+    return response;
+  }
+}
+
+Map<String, dynamic> _buildHeaders(String? token) {
+  final headers = <String, dynamic>{};
+  if (token != null && token.isNotEmpty) {
+    headers['Authorization'] = 'Bearer $token';
+  }
+  return headers;
 }
 
 class ApiError {

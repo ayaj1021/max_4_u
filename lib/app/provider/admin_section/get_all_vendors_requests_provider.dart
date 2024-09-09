@@ -1,7 +1,9 @@
 import 'dart:developer';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/encryt_data/encrypt_data.dart';
+import 'package:max_4_u/app/error_handler/error_handler.dart';
 import 'package:max_4_u/app/model/admin/get_all_requests_model.dart';
 import 'package:max_4_u/app/service/service.dart';
 
@@ -31,24 +33,24 @@ class GetAllVendorRequestsProvider extends ChangeNotifier {
     log('$body');
 
     final response = await ApiService().servicePostRequest(
-      body: body,
-      // message: _message,
+      data: body,
     );
-    _status = response['data']['status'];
+    final data = response.data;
+
     log('this is all user response $response');
     try {
-      if (_status == true) {
-        _status = response['data']['status'];
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        _status = data['data']['status'];
 
-        allVendorRequest = VendorRequestResponseData.fromJson(
-            response['data']['response_data']);
+        allVendorRequest =
+            VendorRequestResponseData.fromJson(data['data']['response_data']);
         isLoading = false;
 
         firstName =
             EncryptData.decryptAES('${allVendorRequest.data![0].firstName}');
         lastName =
             EncryptData.decryptAES('${allVendorRequest.data![0].lastName}');
-    
+
         uniqueId =
             EncryptData.decryptAES('${allVendorRequest.data![0].uniqueId}');
         log('This is $allVendorRequest');
@@ -56,15 +58,13 @@ class GetAllVendorRequestsProvider extends ChangeNotifier {
         notifyListeners();
         return allVendorRequest;
       } else {
-        _status = response['data']['status'];
+        _status = data['data']['status'];
         isLoading = false;
 
         notifyListeners();
       }
-    } catch (e) {
-      log(e.toString());
-      _status = false;
-      notifyListeners();
+    } on DioException catch (e) {
+      return ExceptionHandler.handleError(e);
     }
   }
 }

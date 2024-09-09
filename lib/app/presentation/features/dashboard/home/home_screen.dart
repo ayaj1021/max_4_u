@@ -10,7 +10,7 @@ import 'package:max_4_u/app/presentation/features/dashboard/home/component/trans
 import 'package:max_4_u/app/presentation/features/dashboard/transaction/presentation/views/transaction_screen.dart';
 import 'package:max_4_u/app/presentation/features/vendor_features/presentation/sell_airtime_data/sell_airtime_screen.dart';
 import 'package:max_4_u/app/presentation/features/vendor_features/presentation/sell_airtime_data/sell_data_screen.dart';
-import 'package:max_4_u/app/provider/auth_provider.dart';
+import 'package:max_4_u/app/presentation/features/auth/provider/auth_provider.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/presentation/features/buy_airtime/presentation/views/buy_airtime_screen.dart';
 import 'package:max_4_u/app/presentation/features/buy_data/presentation/views/buy_data_screen.dart';

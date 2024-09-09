@@ -1,6 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import 'package:max_4_u/app/enums/view_state_enum.dart';
+import 'package:max_4_u/app/error_handler/error_handler.dart';
 import 'package:max_4_u/app/service/service.dart';
 
 class CancelAutoRenewalProvider extends ChangeNotifier {
@@ -13,40 +15,45 @@ class CancelAutoRenewalProvider extends ChangeNotifier {
 
   Future<void> cancelAutoRenewal({
     required String id,
-
   }) async {
     state = ViewState.Busy;
     _message = 'Processing your request...';
     notifyListeners();
-   
+
     final body = {
       "request_type": "user",
       "action": "cancel_renewal",
-     
       "renewal_id": id
     };
 
     debugPrint(body.toString());
 
     final response = await ApiService().servicePostRequest(
-      body: body,
+      data: body,
       // message: _message,
     );
 
-    _status = response['data']['status'];
-    if (_status == true) {
-      _status = response['data']['status'];
-      state = ViewState.Success;
-      _message = response['data']['message'];
+    final data = response.data;
 
-      notifyListeners();
-    } else {
-      state = ViewState.Error;
-      _status = response['data']['status'];
-      _message = response['data']['message'];
-    
+    _status = data['status'];
+    try {
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // if (_status == true) {
+        _status = data['status'];
+        state = ViewState.Success;
+        _message = data['message'];
 
-      notifyListeners();
+        notifyListeners();
+        return data;
+      } else {
+        state = ViewState.Error;
+        _status = data['status'];
+        _message = data['message'];
+
+        notifyListeners();
+      }
+    } on DioException catch (e) {
+      return ExceptionHandler.handleError(e);
     }
   }
 }

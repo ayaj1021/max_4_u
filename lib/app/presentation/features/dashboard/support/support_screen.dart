@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/encryt_data/encrypt_data.dart';
-import 'package:max_4_u/app/provider/auth_provider.dart';
+import 'package:max_4_u/app/presentation/features/auth/provider/auth_provider.dart';
 import 'package:max_4_u/app/provider/faq_provider.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';

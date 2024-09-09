@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/encryt_data/encrypt_data.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
@@ -11,7 +10,7 @@ import 'package:max_4_u/app/utils/busy_overlay.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
 import 'package:provider/provider.dart';
 
-class EditProfileScreen extends StatefulWidget {
+class EditProfileScreen extends StatefulWidget { 
   const EditProfileScreen({super.key});
 
   @override
@@ -41,7 +40,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     setState(() {
       firstName = name;
       lastName = surname;
-      userId = id;
+      userId = id ?? '';
       phoneNumber = number;
       email = userEmail;
     });
@@ -98,7 +97,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 horizontalSpace(16),
                 verticalSpace(20),
                 Container(
-                  height: 400.h,
+                 // height: 400.h,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 13, vertical: 25),
                   width: MediaQuery.of(context).size.width,

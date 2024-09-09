@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/database/database.dart';
-import 'package:max_4_u/app/enums/network_dropdown.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/model/load_data_model.dart';
-import 'package:max_4_u/app/presentation/features/super_admin_section/presentation/widgets/select_network_widget.dart';
-import 'package:max_4_u/app/presentation/features/super_admin_section/presentation/widgets/select_product_code_widget.dart';
 import 'package:max_4_u/app/presentation/features/super_admin_section/successful_price_set_screen.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/presentation/features/super_admin_section/providers/super_admin/setup_prices_provider.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/busy_overlay.dart';
-import 'package:max_4_u/app/utils/helper.dart';
 import 'package:max_4_u/app/utils/screen_navigator.dart';
 import 'package:max_4_u/app/utils/show_message.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
@@ -22,6 +18,7 @@ import 'package:provider/provider.dart';
 
 class SetupNewDataPricesScreen extends StatefulWidget {
   const SetupNewDataPricesScreen({super.key});
+  static const routeName = '/setPricesScreen';
 
   @override
   State<SetupNewDataPricesScreen> createState() =>
@@ -31,7 +28,6 @@ class SetupNewDataPricesScreen extends StatefulWidget {
 class _SetupNewDataPricesScreenState extends State<SetupNewDataPricesScreen> {
   //String _selectedNetwork = networkProviders[0];
 
-  String _selectedServices = services[0];
   // String? _selectedDataPrice = dataPrices[0];
   // String _selectedBundle = dataBundles['mtn']![0];
 
@@ -42,18 +38,12 @@ class _SetupNewDataPricesScreenState extends State<SetupNewDataPricesScreen> {
   final _serviceFeeController = TextEditingController();
   final _logoNameController = TextEditingController();
   final _durationController = TextEditingController();
-  final _vendingCodeController = TextEditingController();
 
-  String? _selectedNetwork;
-  String? selectedValidity;
-  int? selectedLogoIndex;
-  String? selectedBundle;
-  String? selectedLogo;
+  final _productNameController = TextEditingController();
+  final _productCodeController = TextEditingController();
 
-  int? selectedDataPlanIndex;
-  String? selectedBundlePrice;
-  int? selectedValidityIndex;
   List<Product> retrievedProducts = [];
+  List<VendingCode> vendingCode = [];
 
   @override
   initState() {
@@ -69,65 +59,11 @@ class _SetupNewDataPricesScreenState extends State<SetupNewDataPricesScreen> {
     final storage = await SecureStorage();
 
     retrievedProducts = (await storage.getUserProducts())!;
-    // for (var products in retrievedProducts) {
-    //   print('${products.name}: ${products.price}');
-
-    // }
   }
 
-  final Map<String, String> validityToDuration = {
-    'Daily': '1',
-    'Weekly': '7',
-    'Monthly': '30',
-    '3 Months': '90',
-    'Yearly': '365',
-  };
-
-  void handlePriceSelection(String price) {
-    setState(() {
-      selectedBundlePrice = price;
-    });
-  }
-
-  List<String> networkProvidersImage = [
-    'assets/logo/mtn.png',
-    'assets/logo/glo.png',
-    'assets/logo/airtel.png',
-    'assets/logo/9mobile.png',
-  ];
-
-  void handleBundleSelection(String bundle) {
-    setState(() {
-      selectedBundle = bundle;
-    });
-  }
-
-  void handleLogoSelection(String logo) {
-    setState(() {
-      _selectedNetwork = logo;
-      selectedValidity = null;
-    });
-    print('Selected logo: $_selectedNetwork');
-    print(
-        'Available logos in products: ${retrievedProducts.map((product) => product.logo).toSet().toList()}');
-  }
-
-  void handleValiditySelection(String validity) {
-    setState(() {
-      selectedValidity = validity;
-    });
-
-    String duration = validityToDuration[validity]!;
-
-    var filteredProducts = retrievedProducts
-        .where((product) =>
-            product.duration == duration && product.logo == selectedLogo)
-        .toList();
-    for (var product in filteredProducts) {
-      print(
-          'Selected Product: ${product.name}, Duration: ${product.duration}, Code: ${product.code}');
-    }
-  }
+  String? _selectedServices;
+  String? _selectedCategory;
+  String? _selectedVendingCode;
 
   @override
   void dispose() {
@@ -138,17 +74,43 @@ class _SetupNewDataPricesScreenState extends State<SetupNewDataPricesScreen> {
     _serviceFeeController.dispose();
     _logoNameController.dispose();
     _durationController.dispose();
-    _vendingCodeController.dispose();
+
     super.dispose();
   }
 
   //String selectedService = _selectedServices!;
+
+  List<VendingCode> getFilteredVendingCodes(
+      String provider, ReloadUserDataProvider reloadData) {
+    return reloadData.loadData.vendingCode!
+        .where((code) => code.code?.contains(provider) ?? false)
+        .toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer2<SetupPricesProvider, ReloadUserDataProvider>(
       builder: (context, setupPrice, reloadData, _) {
-        var logos =
-            retrievedProducts.map((product) => product.logo).toSet().toList();
+        final serviceNames = retrievedProducts
+            .map((product) => product.serviceName)
+            .toSet()
+            .toList();
+
+        final categories = retrievedProducts
+            .map((products) => products.category)
+            .toSet()
+            .toList();
+
+        // final vendingCode = reloadData.loadData.vendingCode
+        //     ?.map((vending) => vending.code)
+        //     .toSet()
+        //     .toList();
+
+        // final vendingCodes = reloadData.loadData.vendingCode
+        //     ?.where((vending) => vending.code == serviceNames)
+        //     .toSet()
+        //     .toList();
+
         return BusyOverlay(
           show: setupPrice.state == ViewState.Busy,
           title: setupPrice.message,
@@ -171,16 +133,66 @@ class _SetupNewDataPricesScreenState extends State<SetupNewDataPricesScreen> {
                         ),
                       ),
                       verticalSpace(64),
-                      SelectNetworkWidget(
-                        logos: logos,
-                        handleLogoSelection: handleLogoSelection,
-                        networkProvidersImage: networkProvidersImage,
+                      TextInputField(
+                        controller: _productNameController,
+                        labelText: 'Product name',
+                        hintText: 'product name',
                       ),
                       verticalSpace(27),
-                      SelectProductCodeWidget(
-                        logos: logos,
-                        handleLogoSelection: handleLogoSelection,
-                        networkProvidersImage: networkProvidersImage,
+                      TextInputField(
+                        controller: _productCodeController,
+                        labelText: 'Product code',
+                        hintText: 'product code',
+                      ),
+                      verticalSpace(27),
+                      Text(
+                        'Service name',
+                        style: AppTextStyles.font14.copyWith(
+                          color: const Color(0xff475569),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      verticalSpace(8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        height: 52.h,
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: AppColors.whiteColor,
+                          border: Border.all(
+                            color: const Color(0xffCBD5E1),
+                          ),
+                        ),
+                        child: DropdownButton<String>(
+                          isExpanded: true,
+                          elevation: 0,
+                          hint: Text('Select a service'),
+                          borderRadius: BorderRadius.circular(12),
+                          underline: const SizedBox(),
+                          value: _selectedServices,
+                          onChanged: (newValue) {
+                            setState(() {
+                              _selectedServices = newValue;
+                            });
+                          },
+                          // retrievedProducts.map((product) => product.serviceName).toSet().toList()}
+                          items: serviceNames
+                              .map((service) {
+                                return DropdownMenuItem<String>(
+                                  value: service,
+                                  child: Text(
+                                    "${service!.toUpperCase()}",
+                                    style: AppTextStyles.font14.copyWith(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                );
+                              })
+                              .toSet()
+                              .toList(),
+                        ),
                       ),
                       verticalSpace(27),
                       Text(
@@ -203,243 +215,44 @@ class _SetupNewDataPricesScreenState extends State<SetupNewDataPricesScreen> {
                           ),
                         ),
                         child: DropdownButton<String>(
+                          isExpanded: true,
+                          hint: Text('Select a category'),
                           elevation: 0,
                           borderRadius: BorderRadius.circular(12),
                           underline: const SizedBox(),
-                          value: _selectedServices,
-                          onChanged: (String? newValue) {
+                          value: _selectedCategory,
+                          onChanged: (newValue) {
                             setState(() {
-                              _selectedServices = newValue!;
+                              _selectedCategory = newValue;
                             });
                           },
-                          items: services.map((String service) {
-                            return DropdownMenuItem(
-                              value: service,
-                              onTap: () {
-                                // setState(() {
-                                //   network =
-                                //       _networkToString(network) as NetworkProvider;
-                                // });
-                              },
-                              child: Container(
-                                margin: const EdgeInsets.only(right: 265),
-                                child: Container(
-                                  margin: const EdgeInsets.only(top: 8),
-                                  child: Text(
-                                    service,
-                                    style: AppTextStyles.font14.copyWith(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w400,
+                          items: categories
+                              .map((category) {
+                                return DropdownMenuItem(
+                                  value: category,
+                                  child: Container(
+                                    margin: const EdgeInsets.only(right: 265),
+                                    child: Text(
+                                      category.toString().toUpperCase(),
+                                      style: AppTextStyles.font14.copyWith(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
-                            );
-                          }).toList(),
+                                );
+                              })
+                              .toSet()
+                              .toList(),
                         ),
                       ),
                       verticalSpace(24),
-                      _selectedServices == services[0]
-                          ? TextInputField(
-                              controller: _productPriceController,
-                              labelText: 'Airtime Rate',
-                              hintText: 'N50',
-                              textInputType: TextInputType.number,
-                            )
-                          : Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  height: 60,
-                                  child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: dataValidityProvider.length,
-                                    itemBuilder: (context, index) {
-                                      return InkWell(
-                                        onTap: () {
-                                          handleValiditySelection(
-                                              dataValidityProvider[index]);
-                                          setState(() {
-                                            selectedValidityIndex = index;
-                                          });
-                                        },
-                                        child: Container(
-                                          height: 45,
-                                          width: 80,
-                                          margin: EdgeInsets.all(5),
-                                          decoration: BoxDecoration(
-                                            color: AppColors.whiteColor,
-                                            border: Border.all(
-                                                width: 2,
-                                                color: selectedValidityIndex ==
-                                                        index
-                                                    ? AppColors.primaryColor
-                                                    : Colors.transparent),
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                          ),
-                                          child: Center(
-                                            child: Text(
-                                              dataValidityProvider[index],
-                                              style: AppTextStyles.font14,
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-
-                                if (_selectedNetwork != null &&
-                                    selectedValidity != null)
-                                  Text(
-                                    'Data Bundle',
-                                    style: AppTextStyles.font14.copyWith(
-                                      color: const Color(0xff475569),
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                verticalSpace(8),
-                                SizedBox(
-                                  height: 150,
-                                  child: GridView.builder(
-                                    gridDelegate:
-                                        SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 3,
-                                      crossAxisSpacing: 10,
-                                      mainAxisSpacing: 10,
-                                    ),
-                                    itemCount: retrievedProducts
-                                        .where((product) =>
-                                            product.logo == _selectedNetwork &&
-                                            product.duration ==
-                                                validityToDuration[
-                                                    selectedValidity])
-                                        .length,
-                                    itemBuilder: (context, index) {
-                                      var filteredProducts = retrievedProducts
-                                          .where((product) =>
-                                              product.logo ==
-                                                  _selectedNetwork &&
-                                              product.duration ==
-                                                  validityToDuration[
-                                                      selectedValidity]!)
-                                          .toList();
-                                      final price =
-                                          filteredProducts[index].price;
-                                      return InkWell(
-                                        onTap: () {
-                                          print(
-                                            ' ${filteredProducts[index].code}',
-                                          );
-
-                                          setState(() {
-                                            selectedDataPlanIndex = index;
-                                          });
-                                          handleBundleSelection(
-                                              filteredProducts[index]
-                                                  .code
-                                                  .toString());
-                                          handlePriceSelection(
-                                              price.toString());
-                                        },
-                                        child: Container(
-                                          height: 100.h,
-                                          width: 100.w,
-                                          decoration: BoxDecoration(
-                                            color: AppColors.whiteColor,
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            border: Border.all(
-                                                width: 3,
-                                                color: selectedDataPlanIndex ==
-                                                        index
-                                                    ? AppColors.primaryColor
-                                                    : Colors.transparent),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Text(
-                                                  filteredProducts[index]
-                                                      .name
-                                                      .toString(),
-                                                  style: TextStyle(
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                                SizedBox(height: 8),
-                                                Text(
-                                                  ' ${filteredProducts[index].code}',
-                                                  style:
-                                                      TextStyle(fontSize: 14),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-
-                                // Container(
-                                //   // padding: const EdgeInsets.symmetric(horizontal: 15),
-                                //   height: 52.h,
-                                //   width: 110.w,
-                                //   decoration: BoxDecoration(
-                                //     borderRadius: BorderRadius.circular(12),
-                                //     color: AppColors.whiteColor,
-                                //     border: Border.all(
-                                //       color: const Color(0xffCBD5E1),
-                                //     ),
-                                //   ),
-                                //   child: DropdownButton<String>(
-                                //     // hint: Text('MTN'),
-                                //     elevation: 0,
-                                //     borderRadius: BorderRadius.circular(12),
-                                //     underline: const SizedBox(),
-                                //     value: _selectedDataPrice,
-                                //     onChanged: (String? newValue) {
-                                //       setState(() {
-                                //         _selectedDataPrice = newValue!;
-                                //       });
-                                //     },
-                                //     items: dataPrices.map((String dataPrice) {
-                                //       return DropdownMenuItem(
-                                //         value: dataPrice,
-                                //         onTap: () {
-                                //           // setState(() {
-                                //           //   network =
-                                //           //       _networkToString(network) as NetworkProvider;
-                                //           // });
-                                //         },
-                                //         child: Container(
-                                //           //margin: const EdgeInsets.only(right: 250),
-                                //           child: Container(
-                                //             margin: const EdgeInsets.only(
-                                //                 top: 8, left: 5),
-                                //             child: Text(
-                                //               dataPrice,
-                                //               style:
-                                //                   AppTextStyles.font14.copyWith(
-                                //                 fontSize: 14,
-                                //                 fontWeight: FontWeight.w400,
-                                //                 color: Color(0xffBDBDBD),
-                                //               ),
-                                //             ),
-                                //           ),
-                                //         ),
-                                //       );
-                                //     }).toList(),
-                                //   ),
-                                // ),
-                              ],
-                            ),
+                      TextInputField(
+                        controller: _productPriceController,
+                        labelText: 'Product price',
+                        hintText: 'N50',
+                        textInputType: TextInputType.number,
+                      ),
                       verticalSpace(24),
                       TextInputField(
                         controller: _setPriceController,
@@ -482,10 +295,55 @@ class _SetupNewDataPricesScreenState extends State<SetupNewDataPricesScreen> {
                         textInputType: TextInputType.number,
                       ),
                       verticalSpace(24),
-                      TextInputField(
-                        controller: _vendingCodeController,
-                        labelText: 'Vending code',
-                        hintText: 'not yet',
+                      Text(
+                        'Vending code',
+                        style: AppTextStyles.font14.copyWith(
+                          color: const Color(0xff475569),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      verticalSpace(8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        height: 52.h,
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: AppColors.whiteColor,
+                          border: Border.all(
+                            color: const Color(0xffCBD5E1),
+                          ),
+                        ),
+                        child: DropdownButton<String>(
+                          isExpanded: true,
+                          elevation: 0,
+                          hint: Text('Select vending code'),
+                          borderRadius: BorderRadius.circular(12),
+                          underline: const SizedBox(),
+                          value: _selectedVendingCode,
+                          onChanged: (newValue) {
+                            setState(() {
+                              _selectedVendingCode = newValue;
+                            });
+                          },
+                          // retrievedProducts.map((product) => product.serviceName).toSet().toList()}
+                          items: getFilteredVendingCodes(
+                                  _selectedServices.toString(), reloadData)
+                              .map((vending) {
+                                return DropdownMenuItem<String>(
+                                  value: vending.code,
+                                  child: Text(
+                                    "${vending.code!.toUpperCase()}",
+                                    style: AppTextStyles.font14.copyWith(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                );
+                              })
+                              .toSet()
+                              .toList(),
+                        ),
                       ),
                       verticalSpace(40),
                       ButtonWidget(
@@ -496,29 +354,17 @@ class _SetupNewDataPricesScreenState extends State<SetupNewDataPricesScreen> {
                                 _serviceFeeController.text.isEmpty ||
                                 _logoNameController.text.isEmpty ||
                                 _durationController.text.isEmpty ||
-                                _vendingCodeController.text.isEmpty) {
+                                _selectedVendingCode == null) {
                               showMessage(context, 'All fields are required',
                                   isError: true);
                               return;
                             }
 
-                            final dataProductCodes = await ProductHelper()
-                                .getDataProducts("$_selectedNetwork");
-                            print(
-                                'This is the code ${dataProductCodes.toString()}');
-                            final airtimeProductCodes = await ProductHelper()
-                                .getAirtimeProducts("$_selectedNetwork");
-                            print(
-                                'This is the code ${dataProductCodes.toString()}');
-                            final productCode = _selectedServices == services[0]
-                                ? airtimeProductCodes
-                                : dataProductCodes;
-                                print(' This is: $productCode');
                             await setupPrice.setupPrices(
-                              productName: "$_selectedNetwork",
-                              productCode: "$_selectedNetwork",
-                              serviceName: _selectedNetwork!,
-                              category: _selectedServices,
+                              productName: _productNameController.text.trim(),
+                              productCode: _productCodeController.text.trim(),
+                              serviceName: _selectedServices.toString(),
+                              category: _selectedCategory.toString(),
                               productPrice: _setPriceController.text.trim(),
                               customerDiscount:
                                   _customerDiscountController.text.trim(),
@@ -527,7 +373,7 @@ class _SetupNewDataPricesScreenState extends State<SetupNewDataPricesScreen> {
                               serviceFee: _serviceFeeController.text.trim(),
                               logoName: _logoNameController.text.trim(),
                               duration: _durationController.text.trim(),
-                              vendingCode: _vendingCodeController.text.trim(),
+                              vendingCode: _selectedVendingCode.toString(),
                             );
 
                             if (setupPrice.status == false && context.mounted) {
@@ -552,36 +398,6 @@ class _SetupNewDataPricesScreenState extends State<SetupNewDataPricesScreen> {
           ),
         );
       },
-    );
-  }
-
-  Widget _logoItem(String logo, int index, List<String> logos) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: [
-          InkWell(
-            onTap: () {
-              handleLogoSelection(logos[index].toString());
-              setState(() {
-                selectedLogoIndex = index;
-              });
-            },
-            child: Container(
-              height: 60,
-              width: 60,
-              padding: EdgeInsets.all(3),
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: selectedLogoIndex == index
-                      ? AppColors.primaryColor
-                      : Colors.transparent),
-              child: CircleAvatar(
-                  radius: 25, child: Image.asset(networkProvidersImage[index])),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

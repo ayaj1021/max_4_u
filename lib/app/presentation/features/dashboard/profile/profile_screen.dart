@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max_4_u/app/core/build_context_extension.dart';
+
 import 'package:max_4_u/app/encryt_data/encrypt_data.dart';
 import 'package:max_4_u/app/presentation/features/admin/presentation/admin_section/audit_log_screen.dart';
 import 'package:max_4_u/app/presentation/features/dashboard/profile/edit_profile_screen.dart';
 import 'package:max_4_u/app/presentation/features/dashboard/support/support_screen.dart';
-import 'package:max_4_u/app/provider/auth_provider.dart';
+import 'package:max_4_u/app/presentation/features/auth/provider/auth_provider.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/presentation/features/settings/settings_screen.dart';
@@ -164,7 +166,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         .copyWith(fontWeight: FontWeight.w500),
                   ),
                 ),
-
                 authProv.userLevel == '5'
                     ? ListTile(
                         onTap: () =>
@@ -180,11 +181,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       )
                     : SizedBox(),
-
                 authProv.userLevel == '5'
                     ? ListTile(
-                        onTap: () => nextScreen(
-                            context, const SetupNewDataPricesScreen()),
+                        onTap: () {
+                          context.pushNamed(SetupNewDataPricesScreen.routeName);
+                        },
                         leading: SizedBox(
                             height: 24,
                             width: 24,
@@ -197,7 +198,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       )
                     : SizedBox(),
-             
                 authProv.userLevel == '1'
                     ? ListTile(
                         onTap: () {

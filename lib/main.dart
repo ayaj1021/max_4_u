@@ -4,15 +4,15 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max_4_u/app/navigation/router.dart';
 import 'package:max_4_u/app/presentation/features/vendor_features/provider/generate_account_number_provider.dart';
-import 'package:max_4_u/app/presentation/general_widgets/splash/splash_screen.dart';
 import 'package:max_4_u/app/provider/activate_auto_renewal_provider.dart';
 import 'package:max_4_u/app/provider/add_customer_provider.dart';
 import 'package:max_4_u/app/provider/admin_section/approve_vendor_request_provider.dart';
 import 'package:max_4_u/app/provider/admin_section/deny_vendor_request_provider.dart';
 import 'package:max_4_u/app/provider/admin_section/get_all_app_users_provider.dart';
 import 'package:max_4_u/app/provider/admin_section/get_all_vendors_requests_provider.dart';
-import 'package:max_4_u/app/provider/auth_provider.dart';
+import 'package:max_4_u/app/presentation/features/auth/provider/auth_provider.dart';
 import 'package:max_4_u/app/presentation/features/buy_airtime/provider/buy_airtime_provider.dart';
 import 'package:max_4_u/app/presentation/features/buy_data/provider/buy_data_provider.dart';
 import 'package:max_4_u/app/provider/cancel_auto_renewal_provider.dart';
@@ -37,13 +37,14 @@ import 'package:max_4_u/app/presentation/features/vendor_features/provider/remov
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:provider/provider.dart';
 
-import 'package:upgrader/upgrader.dart';
 
-void main() async{
-  WidgetsFlutterBinding.ensureInitialized();
+final navigatorKey = GlobalKey<NavigatorState>();
+
+void main() async {
+  // WidgetsFlutterBinding.ensureInitialized();
   // await Firebase.initializeApp();
-  //   await FirebaseMessaging.instance.getInitialMessage();
-  //await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  // await FirebaseMessaging.instance.getInitialMessage();
+  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   // await FirebaseApi().initNotification();
   // NotificationService.initNotification();
 
@@ -136,12 +137,15 @@ class _MyAppState extends State<MyApp> {
             ChangeNotifierProvider(create: (_) => DeactivateUserProvider()),
             ChangeNotifierProvider(create: (_) => MakeAdminProvider()),
             ChangeNotifierProvider(create: (_) => AuditLogProvider()),
-            ChangeNotifierProvider(create: (_) => GetAllVendorRequestsProvider()),
-            ChangeNotifierProvider(create: (_) => ApproveVendorRequestProvider()),
+            ChangeNotifierProvider(
+                create: (_) => GetAllVendorRequestsProvider()),
+            ChangeNotifierProvider(
+                create: (_) => ApproveVendorRequestProvider()),
             ChangeNotifierProvider(create: (_) => DenyVendorRequestProvider()),
             ChangeNotifierProvider(create: (_) => GetAllAppUsers()),
             ChangeNotifierProvider(create: (_) => RemoveCustomerProvider()),
-            ChangeNotifierProvider(create: (_) => ActivateAutoRenewalProvider()),
+            ChangeNotifierProvider(
+                create: (_) => ActivateAutoRenewalProvider()),
             ChangeNotifierProvider(create: (_) => GetAllCustomersProvider()),
             ChangeNotifierProvider(create: (_) => GetNotificationProvider()),
             ChangeNotifierProvider(create: (_) => AddCustomerProvider()),
@@ -161,7 +165,8 @@ class _MyAppState extends State<MyApp> {
             theme: ThemeData(
               scaffoldBackgroundColor: AppColors.scaffoldBgColor2,
             ),
-            home: UpgradeAlert(child: const SplashScreen()),
+            routes: AppRouter.routes,
+            initialRoute: '/',
             // home: TestData(),
           ),
         );

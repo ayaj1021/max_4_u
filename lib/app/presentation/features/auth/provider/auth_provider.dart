@@ -1,6 +1,9 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/abstract_class/auth_abstract_class.dart';
 import 'package:max_4_u/app/database/database.dart';
+import 'package:max_4_u/app/domain/exception_handler.dart';
+import 'package:max_4_u/app/domain/model.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/model/user_response_model.dart';
 import 'package:max_4_u/app/service/service.dart';
@@ -43,7 +46,7 @@ class AuthProviderImpl extends ChangeNotifier
 
 //Sign up user
   @override
-  Future<void> signUp({required String phoneNumber}) async {
+  Future<AppResponseModelData> signUp({required String phoneNumber}) async {
     state = ViewState.Busy;
     _message = 'Creating your account...';
     notifyListeners();
@@ -57,35 +60,29 @@ class AuthProviderImpl extends ChangeNotifier
     await SecureStorage().saveUserPhone(phoneNumber);
     try {
       final response = await ApiService().authPostRequest(
-        body: body,
-        // message: _message,
+        data: body,
       );
-
+      final data = response.data;
       print('$_status');
-      _status = response['data']['status'];
+      _status = data['status'];
 
       if (_status == true) {
-        _status = response['data']['status'];
-        _message = response['data']['message'];
+        _status = data['status'];
+        _message = data['message'];
 
         state = ViewState.Success;
 
         notifyListeners();
       } else {
-        _message = response['data']['message'];
-        _status = response['data']['status'];
+        _message = data['message'];
+        _status = data['status'];
         state = ViewState.Error;
-        _message = response['data']['error_data']['mobile_number'];
+        _message = data['error_data']['mobile_number'];
         notifyListeners();
       }
-    } catch (e) {
-      debugPrint(e.toString());
-
-      state = ViewState.Error;
-      _status = false;
-
-      notifyListeners();
-      // return ExceptionHandler.handleError(e);
+      return data;
+    } on DioException catch (e) {
+      return ExceptionHandler.handleError(e);
     }
   }
 
@@ -95,7 +92,6 @@ class AuthProviderImpl extends ChangeNotifier
     state = ViewState.Busy;
     _message = 'Verifying otp...';
     notifyListeners();
-    
 
     _number = await SecureStorage().getUserPhone();
     final body = {
@@ -109,39 +105,34 @@ class AuthProviderImpl extends ChangeNotifier
     await SecureStorage().saveUserOtp(otp);
     try {
       final response = await ApiService().authPostRequest(
-        body: body,
+        data: body,
       );
-      _status = response['data']['status'];
-      print(response);
 
-      _message = response['data']['message'];
+      final data = response.data;
 
-      if (_status == true) {
-        _message = response['data']['message'];
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        _message = data['data']['message'];
 
         state = ViewState.Success;
 
         notifyListeners();
+        return data['data'];
       } else {
         _status = false;
-        _message = response['data']['message'];
+        _message = data['data']['message'];
         state = ViewState.Error;
 
         notifyListeners();
       }
-    } catch (e) {
-      state = ViewState.Error;
-      _status = false;
-//_message = e.toString();
-      notifyListeners();
-      // return ExceptionHandler.handleError(e);
+    } on DioException catch (e) {
+      return ExceptionHandler.handleError(e);
     }
   }
 
   //To fully register a user
 
   @override
-  Future registerUser({
+  Future<void> registerUser({
     required String email,
     required String password,
     required String firstName,
@@ -171,47 +162,41 @@ class AuthProviderImpl extends ChangeNotifier
 
     try {
       final response = await ApiService().authPostRequest(
-        body: body,
-        // message: _message,
+        data: body,
       );
 
-      _status = response['data']['status'];
-      _message = response['data']['message'];
-      if (_status == true) {
-        _status = response['data']['status'];
-        _message = response['data']['message'];
+      final data = response.data;
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        _status = data['data']['status'];
+        _message = data['data']['message'];
         state = ViewState.Success;
         notifyListeners();
-        resDataData =
-            ResponseDataData.fromJson(response['data']['response_data']);
+        resDataData = ResponseDataData.fromJson(data['data']['response_data']);
         _userLevel = resDataData.userData![0].level!;
 
         await SecureStorage().saveUserLevel(_userLevel);
 
         updateNumber(_userLevel);
-
-        return resDataData;
+        return data['data'];
       } else {
-        _message = response['data']['message'];
+        _message = data['data']['message'];
         state = ViewState.Error;
-        _status = response['data']['status'];
+        _status = data['data']['status'];
 
-        _message = response['data']['error_data']['password'];
-        _message = response['data']['error_data']['email'];
+        _message = data['data']['error_data']['password'];
+        _message = data['data']['error_data']['email'];
         notifyListeners();
       }
-    } catch (e) {
-      state = ViewState.Error;
-      _status = false;
-
-      notifyListeners();
-      //  return ExceptionHandler.handleError(e);
+    } on DioException catch (e) {
+      return ExceptionHandler.handleError(e);
     }
   }
 
 //Login user method
   @override
-  Future loginUser({required String email, required String password}) async {
+  Future<void> loginUser(
+      {required String email, required String password}) async {
     state = ViewState.Busy;
     _message = 'Logging in your account...';
     notifyListeners();
@@ -222,46 +207,38 @@ class AuthProviderImpl extends ChangeNotifier
       "password": password,
     };
     print(body.toString());
-
-    // await SecureStorage().saveUserPassword(password);
     try {
       final response = await ApiService().authPostRequest(
-        body: body,
+        data: body,
       );
 
-      _status = response['data']['status'];
-      
-      // _message = response['data']['message'];
+      final data = response.data;
+      debugPrint(data.toString());
 
-      if (_status == true) {
-        _status = response['data']['status'];
-        _message = response['data']['message'];
-      
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        _status = data['data']['status'];
+        _message = data['data']['message'];
+
         state = ViewState.Success;
-        resDataData =
-            ResponseDataData.fromJson(response['data']['response_data']);
+        resDataData = ResponseDataData.fromJson(data['data']['response_data']);
         _userLevel = resDataData.userData![0].level!;
         updateNumber(_userLevel);
 
         notifyListeners();
-        return resDataData;
+        return data;
       } else {
-        _status = response['data']['status'];
+        _status = data['data']['status'];
         state = ViewState.Error;
-        // _status = false;
 
-        _errorMessage = response['data']['message'];
+        _errorMessage = data['data']['message'];
 
-        _errorMessage = response['data']['error_data']['login_id'];
-    
+        _errorMessage = data['data']['error_data']['login_id'];
+
         notifyListeners();
+        //return data['data'];
       }
-    } catch (e) {
-      state = ViewState.Error;
-      _status = false;
-      // _errorMessage = e.toString();
-      // _message = e.toString();
-      notifyListeners();
+    } on DioException catch (e) {
+      return ExceptionHandler.handleError(e);
     }
   }
 
@@ -282,30 +259,27 @@ class AuthProviderImpl extends ChangeNotifier
     await SecureStorage().saveUserEmail(_email);
     _email = await SecureStorage().getUserEmail();
 
-  
     try {
       final response = await ApiService().authPostRequest(
-        body: body,
+        data: body,
       );
-      _status = response['data']['status'];
-      _message = response['data']['message'];
 
-      if (_status == true) {
+      final data = response.data;
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
         state = ViewState.Success;
-
-        _message = response['data']['message'];
+        _status = data['data']['status'];
+        _message = data['data']['message'];
         notifyListeners();
+        return data['data'];
       } else {
         state = ViewState.Error;
-        _message = response['data']['error_data']['receiving_medium'];
+        _message = data['data']['error_data']['receiving_medium'];
 
         notifyListeners();
       }
-    } catch (e) {
-      state = ViewState.Error;
-      _status = false;
-      //  _message = e.toString();
-      notifyListeners();
+    } on DioException catch (e) {
+      return ExceptionHandler.handleError(e);
     }
   }
 
@@ -330,31 +304,28 @@ class AuthProviderImpl extends ChangeNotifier
     print(body);
     try {
       final response = await ApiService().authPostRequest(
-        body: body,
+        data: body,
       );
+      final data = response.data;
 
-      _message = response['data']['message'];
-
-      _status = response['data']['status'];
-      if (_status == true) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        _status = data['data']['status'];
         state = ViewState.Success;
 
-        _message = response['data']['message'];
+        _message = data['data']['message'];
 
         notifyListeners();
+        return data['data'];
       } else {
-        // print(status);
+        _status = data['data']['status'];
+
         state = ViewState.Error;
-        _message = response['data']['message'];
-        //  _message = res['data']['error_data']['receiving_medium'];
+        _message = data['data']['message'];
 
         notifyListeners();
       }
-    } catch (e) {
-      state = ViewState.Error;
-      _status = false;
-      // _message = e.toString();
-      notifyListeners();
+    } on DioException catch (e) {
+      return ExceptionHandler.handleError(e);
     }
   }
 
@@ -381,35 +352,30 @@ class AuthProviderImpl extends ChangeNotifier
     print(body);
     try {
       final response = await ApiService().authPostRequest(
-        body: body,
+        data: body,
       );
+      final data = response.data;
 
-      _message = response['data']['message'];
-
-      _status = response['data']['status'];
-
-      if (_status == true) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        _status = data['data']['status'];
         state = ViewState.Success;
 
-        _message = response['data']['message'];
+        _message = data['message'];
 
         notifyListeners();
+        return data['data'];
       } else {
         // print(status);
         state = ViewState.Error;
-        _message = response['data']['message'];
+        _message = data['message'];
 
-        wrongPassword = response['data']['error_data']['password'];
-        existEmail = response['data']['error_data']['email'];
-        //  _message = res['data']['error_data']['receiving_medium'];
+        wrongPassword = data['error_data']['password'];
+        existEmail = data['error_data']['email'];
 
         notifyListeners();
       }
-    } catch (e) {
-      state = ViewState.Error;
-      _status = false;
-      // _message = e.toString();
-      notifyListeners();
+    } on DioException catch (e) {
+      return ExceptionHandler.handleError(e);
     }
   }
 

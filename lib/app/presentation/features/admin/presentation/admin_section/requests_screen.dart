@@ -39,7 +39,7 @@ class _RequestsScreenState extends State<RequestsScreen>
         body: SafeArea(
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 30),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -59,7 +59,7 @@ class _RequestsScreenState extends State<RequestsScreen>
                       : Container(
                           height: MediaQuery.of(context).size.height,
                           width: MediaQuery.of(context).size.width,
-                          padding: EdgeInsets.all(13),
+                          padding: EdgeInsets.all(8),
                           decoration: BoxDecoration(
                             color: Color(0xffE8E8E8),
                             borderRadius: BorderRadius.circular(8),
@@ -67,8 +67,8 @@ class _RequestsScreenState extends State<RequestsScreen>
                           child: Column(
                             children: [
                               Container(
-                                height: 38.h,
-                                width: 345.w,
+                                height: 45.h,
+                                width: MediaQuery.of(context).size.width,
                                 alignment: Alignment.center,
                                 //  padding: const EdgeInsets.symmetric(vertical: 3),
                                 decoration: BoxDecoration(
@@ -76,6 +76,8 @@ class _RequestsScreenState extends State<RequestsScreen>
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: TabBar(
+                                  
+                                  padding: EdgeInsets.zero,
                                   dividerHeight: 0,
                                   indicator: BoxDecoration(
                                       color: const Color(0xffB0D3EB),
@@ -83,36 +85,38 @@ class _RequestsScreenState extends State<RequestsScreen>
                                   controller: _tabController,
                                   indicatorColor: Colors.transparent,
                                   labelColor: AppColors.blackColor,
+                                 // labelPadding: EdgeInsets.symmetric(horizontal:  13),
                                   tabs: [
-                                    Container(
-                                      height: 31.h,
-                                      width: 94.w,
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(6)),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
+                                           // mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          const Text('Pending'),
+                                          Expanded(
+                                            child: Text(
+                                              'Pending',
+                                              style:
+                                                  AppTextStyles.font10.copyWith(
+                                                fontSize: 11,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
                                           horizontalSpace(7),
-                                          Container(
-                                            height: 12.h,
-                                            width: 17.w,
-                                            alignment: Alignment.center,
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(17),
-                                                color: AppColors.subTextColor),
+                                          CircleAvatar(
+                                            radius: 9,
+                                            backgroundColor:
+                                                AppColors.subTextColor,
                                             child: Text(
                                               '${getAllVendorRequest.allVendorRequest.totalPending}',
                                               //  '${getAllAppUsers.allAppUsers.totalConsumer}',
                                               style: AppTextStyles.font12
                                                   .copyWith(
                                                       fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.w500,
+                                                      fontWeight: FontWeight.w500,
                                                       color:
                                                           AppColors.whiteColor),
                                             ),
@@ -120,35 +124,33 @@ class _RequestsScreenState extends State<RequestsScreen>
                                         ],
                                       ),
                                     ),
-                                    Container(
-                                      height: 31.h,
-                                      width: 94.w,
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(6)),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
-                                          const Text('Approved'),
+                                          Expanded(
+                                              child: Text(
+                                            'Approved',
+                                            style: AppTextStyles.font10.copyWith(
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                          )),
                                           horizontalSpace(4),
-                                          Container(
-                                            height: 12.h,
-                                            width: 17.w,
-                                            alignment: Alignment.center,
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(17),
-                                                color: AppColors.subTextColor),
+                                          CircleAvatar(
+                                            radius: 9,
+                                            backgroundColor:
+                                                AppColors.subTextColor,
                                             child: Text(
                                               '${getAllVendorRequest.allVendorRequest.totalConfirmed}',
                                               // '${getAllAppUsers.allAppUsers.totalVendor}',
                                               style: AppTextStyles.font12
                                                   .copyWith(
                                                       fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.w500,
+                                                      fontWeight: FontWeight.w500,
                                                       color:
                                                           AppColors.whiteColor),
                                             ),
@@ -156,34 +158,35 @@ class _RequestsScreenState extends State<RequestsScreen>
                                         ],
                                       ),
                                     ),
-                                    Container(
-                                      height: 31.h,
-                                      width: 94.w,
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(6)),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
-                                          const Text('Denied'),
-                                          horizontalSpace(7),
-                                          Container(
-                                            height: 12.h,
-                                            width: 17.w,
-                                            alignment: Alignment.center,
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(17),
-                                                color: AppColors.subTextColor),
+                                          Expanded(
+                                            child: Text(
+                                              'Denied',
+                                              style:
+                                                  AppTextStyles.font10.copyWith(
+                                                fontSize: 11,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ),
+                                          //horizontalSpace(7),
+                                          CircleAvatar(
+                                            radius: 9,
+                                            //height: 12.h,
+                                            backgroundColor:
+                                                AppColors.subTextColor,
+                                      
                                             child: Text(
                                               '${getAllVendorRequest.allVendorRequest.totalDenied}',
                                               style: AppTextStyles.font12
                                                   .copyWith(
                                                       fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.w500,
+                                                      fontWeight: FontWeight.w500,
                                                       color:
                                                           AppColors.whiteColor),
                                             ),

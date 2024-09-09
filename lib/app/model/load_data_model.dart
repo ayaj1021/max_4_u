@@ -155,7 +155,7 @@ class Product {
     this.logo,
     this.duration,
     this.status,
-     this.selected = false,
+    this.selected = false,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -191,7 +191,6 @@ class Product {
   }
 }
 
-
 class Transaction {
   String? referenceId;
   String? number;
@@ -226,9 +225,9 @@ class Transaction {
       referenceId: json['reference_id'] as String?,
       number: json['number'] as String?,
       type: json['type'] as String?,
-      subType: json['sub_type']as String?,
-      purchaseType: json['purchase_type']as String?,
-      productCode: json['product_code']as String?,
+      subType: json['sub_type'] as String?,
+      purchaseType: json['purchase_type'] as String?,
+      productCode: json['product_code'] as String?,
       productAmount: json['product_amount'] as String?,
       amountPaid: json['amount_paid'] as String?,
       discount: json['discount'] as String?,
@@ -291,7 +290,6 @@ class TransactionHistory {
     };
   }
 }
-
 
 class AutoRenewal {
   List<AutoRenewalData>? data;
@@ -435,11 +433,53 @@ class VerificationStatus {
   }
 }
 
+class VendingCode {
+  String? category;
+  String? code;
+
+  VendingCode({this.category, this.code});
+
+  factory VendingCode.fromJson(Map<String, dynamic> json) {
+    return VendingCode(
+      category: json['category'] as String?,
+      code: json['code'] as String?,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'category': category,
+      'code': code,
+    };
+  }
+}
+
+class VendingCodeList {
+  List<VendingCode>? vendingCodes;
+
+  VendingCodeList({this.vendingCodes});
+
+  factory VendingCodeList.fromJson(Map<String, dynamic> json) {
+    return VendingCodeList(
+      vendingCodes: (json['vending_code'] as List<dynamic>?)
+          ?.map((item) => VendingCode.fromJson(item as Map<String, dynamic>))
+          .toList(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'vending_code': vendingCodes?.map((item) => item.toJson()).toList(),
+    };
+  }
+}
+
 class LoadDataData {
   List<UserData>? userData;
   UserAccount? userAccount;
   List<UserSettingsData>? userSettingsData;
   List<BeneficiaryData>? beneficiaryData;
+  List<VendingCode>? vendingCode;
   List<Service>? services;
   List<Product>? products;
   TransactionHistory? transactionHistory;
@@ -453,6 +493,7 @@ class LoadDataData {
     this.userAccount,
     this.userSettingsData,
     this.beneficiaryData,
+    this.vendingCode,
     this.services,
     this.products,
     this.transactionHistory,
@@ -472,6 +513,9 @@ class LoadDataData {
     var beneficiaryDataList = (json['beneficiary_data'] as List?)
         ?.map((beneficiary) => BeneficiaryData.fromJson(beneficiary))
         .toList();
+    var vendingCodeList = (json['vending_code'] as List?)
+        ?.map((vendingCode) => VendingCode.fromJson(vendingCode))
+        .toList();
     var servicesList = (json['services'] as List?)
         ?.map((service) => Service.fromJson(service))
         .toList();
@@ -486,6 +530,7 @@ class LoadDataData {
           : null,
       userSettingsData: userSettingsDataList,
       beneficiaryData: beneficiaryDataList,
+      vendingCode: vendingCodeList,
       services: servicesList,
       products: productsList,
       transactionHistory: json['transaction_history'] != null
@@ -510,6 +555,8 @@ class LoadDataData {
           userSettingsData?.map((setting) => setting.toJson()).toList(),
       'beneficiary_data':
           beneficiaryData?.map((beneficiary) => beneficiary.toJson()).toList(),
+      'vending_code':
+          vendingCode?.map((vendingCode) => vendingCode.toJson()).toList(),
       'services': services?.map((service) => service.toJson()).toList(),
       'products': products?.map((product) => product.toJson()).toList(),
       'transaction_history': transactionHistory?.toJson(),

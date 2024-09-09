@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/service/service.dart';
@@ -24,21 +23,24 @@ class DeleteAccountProvider extends ChangeNotifier {
     debugPrint(body.toString());
     try {
       final response = await ApiService().servicePostRequest(
-        body: body,
+        data: body,
       );
 
-      _status = response['data']['status'];
-      _message = response['data']['message'];
+      final data = response.data;
 
-      if (_status == true) {
-        _status = response['data']['status'];
+      _status = data['status'];
+      _message = data['message'];
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // if (_status == true) {
+        _status = data['status'];
         state = ViewState.Success;
 
-        _message = response['data']['message'];
+        _message = data['message'];
         notifyListeners();
+        return data;
       } else {
-        _message = response['data']['message'];
-        _status = response['data']['status'];
+        _message = data['message'];
+        _status = data['status'];
         state = ViewState.Error;
         notifyListeners();
       }

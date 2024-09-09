@@ -7,7 +7,7 @@ import 'package:max_4_u/app/presentation/features/dashboard/profile/profile_scre
 import 'package:max_4_u/app/presentation/features/dashboard/support/support_screen.dart';
 import 'package:max_4_u/app/presentation/features/dashboard/transaction/presentation/views/transaction_screen.dart';
 import 'package:max_4_u/app/presentation/features/vendor_features/presentation/customers_section/customer_screen.dart';
-import 'package:max_4_u/app/provider/auth_provider.dart';
+import 'package:max_4_u/app/presentation/features/auth/provider/auth_provider.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:provider/provider.dart';

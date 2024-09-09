@@ -1,8 +1,10 @@
 import 'dart:developer';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
+import 'package:max_4_u/app/error_handler/error_handler.dart';
 import 'package:max_4_u/app/service/service.dart';
 
 class AddCustomerProvider extends ChangeNotifier {
@@ -29,33 +31,37 @@ class AddCustomerProvider extends ChangeNotifier {
     log('$body');
     await SecureStorage().saveCustomerPhoneNumber(phoneNumber);
     final response = await ApiService().servicePostRequest(
-      body: body,
+      data: body,
       // message: _message,
     );
-
-    _status = response['data']['status'];
-    _message = response['data']['message'];
+    final data = response.data;
+    _status = data['status'];
+    _message = data['message'];
 
     log('$_status');
     log('$response');
     try {
-      if (_status == true) {
-        _status = response['data']['status'];
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        //if (_status == true) {
+        _status = data['status'];
         state = ViewState.Success;
-        _message = response['data']['message'];
+        _message = data['message'];
 
         notifyListeners();
+
+        return data;
       } else {
-        _status = response['data']['status'];
+        _status = data['status'];
         state = ViewState.Error;
-        _message = response['data']['message'];
-        _message = response['data']['error_data']['mobile_number'];
+        _message = data['message'];
+        _message = data['error_data']['mobile_number'];
         notifyListeners();
       }
-    } catch (e) {
-      log(e.toString());
-      _status = false;
-      notifyListeners();
+    } on DioException catch (e) {
+      return ExceptionHandler.handleError(e);
+      // log(e.toString());
+      // _status = false;
+      // notifyListeners();
     }
   }
 
@@ -75,34 +81,38 @@ class AddCustomerProvider extends ChangeNotifier {
     log('$body');
 
     final response = await ApiService().servicePostRequest(
-      body: body,
+      data: body,
       // message: _message,
     );
+    final data = response.data;
 
-    _status = response['data']['status'];
-    _message = response['data']['message'];
+    _status = data['status'];
+    _message = data['message'];
 
     log('$_status');
-    log('$response');
+    log('${response.data}');
     try {
-      if (_status == true) {
-        _status = response['data']['status'];
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // if (_status == true) {
+        _status = data['status'];
         state = ViewState.Success;
-        _message = response['data']['message'];
+        _message = data['message'];
 
         notifyListeners();
+        return data;
       } else {
-        _status = response['data']['status'];
+        _status = data['status'];
         state = ViewState.Error;
-        _message = response['data']['message'];
+        _message = data['message'];
         //  _message = response['data']['error_data']['mobile_number'];
 
         notifyListeners();
       }
-    } catch (e) {
-      log(e.toString());
-      _status = false;
-      notifyListeners();
+    } on DioException catch (e) {
+      return ExceptionHandler.handleError(e);
+      // log(e.toString());
+      // _status = false;
+      // notifyListeners();
     }
   }
 
@@ -126,34 +136,39 @@ class AddCustomerProvider extends ChangeNotifier {
     log('$body');
 
     final response = await ApiService().authPostRequest(
-      body: body,
+      data: body,
       // message: _message,
     );
 
-    _status = response.data['data']['status'];
-    _message = response.data['data']['message'];
+    final data = response.data;
+
+    _status = data['status'];
+    _message = data['message'];
 
     log('$_status');
-    log('$response');
+    log('${response.data}');
     try {
-      if (_status == true) {
-        _status = response.data['data']['status'];
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // if (_status == true) {
+        _status = data['status'];
         state = ViewState.Success;
-        _message = response.data['data']['message'];
+        _message = data['message'];
 
         notifyListeners();
+        return data;
       } else {
-        _status = response.data['data']['status'];
+        _status = data['status'];
         state = ViewState.Error;
-        _message = response.data['data']['message'];
+        _message = data['message'];
         //  _message = response['data']['error_data']['mobile_number'];
 
         notifyListeners();
       }
-    } catch (e) {
-      log(e.toString());
-      _status = false;
-      notifyListeners();
+    } on DioException catch (e) {
+      return ExceptionHandler.handleError(e);
+      // log(e.toString());
+      // _status = false;
+      // notifyListeners();
     }
   }
 
@@ -184,27 +199,35 @@ class AddCustomerProvider extends ChangeNotifier {
 
     log(body.toString());
     final response = await ApiService().servicePostRequest(
-      body: body,
+      data: body,
       // message: _message,
     );
     // log(response);
-    _status = response['data']['status'];
-    _message = response['data']['message'];
 
-    if (_status == true) {
-      _status = response['data']['status'];
-      state = ViewState.Success;
-      _message = response['data']['message'];
+    final data = response.data;
+    _status = data['status'];
+    _message = data['message'];
 
-      notifyListeners();
-    } else {
-      _message = response['data']['message'];
-      ViewState.Error;
-      _status = response['data']['status'];
+    try {
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        //if (_status == true) {
+        _status = data['status'];
+        state = ViewState.Success;
+        _message = data['message'];
 
-      wrongPassword = response['data']['error_data']['password'];
-      existEmail = response['data']['error_data']['email'];
-      notifyListeners();
+        notifyListeners();
+        return data;
+      } else {
+        _message = data['message'];
+        ViewState.Error;
+        _status = data['status'];
+
+        wrongPassword = data['error_data']['password'];
+        existEmail = data['error_data']['email'];
+        notifyListeners();
+      }
+    } on DioException catch (e) {
+      return ExceptionHandler.handleError(e);
     }
   }
 }

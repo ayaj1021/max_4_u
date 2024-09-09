@@ -1,7 +1,8 @@
-import 'dart:developer';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
+import 'package:max_4_u/app/error_handler/error_handler.dart';
 import 'package:max_4_u/app/service/service.dart';
 
 class BuyDataProvider extends ChangeNotifier {
@@ -13,7 +14,7 @@ class BuyDataProvider extends ChangeNotifier {
 
   Future<void> buyData(
       {
-        //required String amount,
+      //required String amount,
       required String productCode,
       required String phoneNumber}) async {
     state = ViewState.Busy;
@@ -28,44 +29,43 @@ class BuyDataProvider extends ChangeNotifier {
       "product_code": productCode,
       "user_id": id,
       "number": phoneNumber,
-    //  "amount": amount,
     };
-    log('$body');
-
-   // final encryptedId = await SecureStorage().getUserEncryptedId();
-
-   // log('this is $encryptedId');
+    debugPrint('$body');
 
     final response = await ApiService().servicePostRequest(
-      body: body,
-      // message: _message,
+      data: body,
     );
 
-    _status = response['data']['status'];
-    _message = response['data']['message'];
+    final data = response.data;
 
-    log('$_status');
-    log('$response');
+    _status = data['data']['status'];
+    //_message = data['data']['message'];
+
+    debugPrint('$_status');
+    debugPrint('$response');
     try {
-      if (_status == true) {
-        _status = response['data']['status'];
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        //if (_status == true) {
+        _status = data['data']['status'];
         state = ViewState.Success;
-        _message = response['data']['message'];
+        _message = data['data']['message'];
 
         // // statusCode: statusCode,
 
         notifyListeners();
+        return data;
       } else {
-        _status = response['data']['status'];
+        _status = data['data']['status'];
         state = ViewState.Error;
-        _message = response['data']['message'];
-         _message = response['data']['error_data']['number'];
+        _message = data['data']['message'];
+        _message = data['error_data']['number'];
         notifyListeners();
       }
-    } catch (e) {
-      log(e.toString());
-      _status = false;
-      notifyListeners();
+    } on DioException catch (e) {
+      return ExceptionHandler.handleError(e);
+      // log(e.toString());
+      // _status = false;
+      // notifyListeners();
     }
   }
 }

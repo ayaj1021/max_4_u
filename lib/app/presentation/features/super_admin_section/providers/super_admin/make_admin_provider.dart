@@ -1,6 +1,8 @@
 import 'dart:developer';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
+import 'package:max_4_u/app/error_handler/error_handler.dart';
 import 'package:max_4_u/app/service/service.dart';
 
 class MakeAdminProvider extends ChangeNotifier {
@@ -24,30 +26,35 @@ class MakeAdminProvider extends ChangeNotifier {
     log('$body');
 
     final response = await ApiService().servicePostRequest(
-      body: body,
+      data: body,
       // message: _message,
     );
-    _status = response['data']['status'];
-    log('this is all user response $response');
+    final data = response.data;
+    _status = data['status'];
+    log('this is all user response ${response.data}');
     try {
-      if (_status == true) {
-        _status = response['data']['status'];
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        //if (_status == true) {
+        _status = data['status'];
 
-        _message = response['data']['message'];
+        _message = data['message'];
         state = ViewState.Success;
 
         notifyListeners();
+        return data;
+        //}
       } else {
-        _message = response['data']['message'];
-        _status = response['data']['status'];
+        _message = data['message'];
+        _status = data['status'];
         state = ViewState.Error;
         notifyListeners();
       }
-    } catch (e) {
-      log(e.toString());
-      _status = false;
-      state = ViewState.Error;
-      notifyListeners();
+    } on DioException catch (e) {
+      return ExceptionHandler.handleError(e);
+      // log(e.toString());
+      // _status = false;
+      // state = ViewState.Error;
+      // notifyListeners();
     }
   }
 }

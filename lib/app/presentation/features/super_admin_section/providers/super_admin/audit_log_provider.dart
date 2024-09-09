@@ -1,7 +1,9 @@
 import 'dart:developer';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/encryt_data/encrypt_data.dart';
+import 'package:max_4_u/app/error_handler/error_handler.dart';
 import 'package:max_4_u/app/model/super_admin/audit_log_model.dart';
 import 'package:max_4_u/app/service/service.dart';
 
@@ -27,17 +29,18 @@ class AuditLogProvider extends ChangeNotifier {
     log('$body');
 
     final response = await ApiService().servicePostRequest(
-      body: body,
+      data: body,
       // message: _message,
     );
-    _status = response['data']['status'];
+    final data = response.data;
+    _status = data['status'];
     log('this is all user response $response');
     try {
-      if (_status == true) {
-        _status = response['data']['status'];
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        //if (_status == true) {
+        _status = data['status'];
 
-        allAuditResponse =
-            AuditLogResponseData.fromJson(response['data']['response_data']);
+        allAuditResponse = AuditLogResponseData.fromJson(data['response_data']);
         isLoading = false;
 
         firstName =
@@ -51,15 +54,16 @@ class AuditLogProvider extends ChangeNotifier {
         notifyListeners();
         return allAuditResponse;
       } else {
-        _status = response['data']['status'];
+        _status = data['status'];
         isLoading = false;
 
         notifyListeners();
       }
-    } catch (e) {
-      log(e.toString());
-      _status = false;
-      notifyListeners();
+    } on DioException catch (e) {
+      return ExceptionHandler.handleError(e);
+      // log(e.toString());
+      // _status = false;
+      // notifyListeners();
     }
   }
 }

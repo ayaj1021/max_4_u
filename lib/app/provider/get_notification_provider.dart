@@ -1,5 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
+import 'package:max_4_u/app/error_handler/error_handler.dart';
 import 'package:max_4_u/app/model/notification_model.dart';
 import 'package:max_4_u/app/service/service.dart';
 
@@ -21,23 +23,29 @@ class GetNotificationProvider extends ChangeNotifier {
     };
     _isLoading = true;
     final response = await ApiService().servicePostRequest(
-      body: body,
+      data: body,
       // message: _message,
     );
-    _status = response['data']['status'];
 
-    if (_status == true) {
-      allNotifications = NotificationResponseData.fromJson(response['data']);
-      state = ViewState.Success;
-      _isLoading = false;
-      notifyListeners();
-      return allNotifications;
-    } else {
-      _isLoading = false;
-      state = ViewState.Error;
-      _status = response['data']['status'];
-      _message = response['data']['message'];
-      notifyListeners();
+    final data = response.data;
+    _status = data['status'];
+    try {
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // if (_status == true) {
+        allNotifications = NotificationResponseData.fromJson(data);
+        state = ViewState.Success;
+        _isLoading = false;
+        notifyListeners();
+        return allNotifications;
+      } else {
+        _isLoading = false;
+        state = ViewState.Error;
+        _status = data['status'];
+        _message = data['message'];
+        notifyListeners();
+      }
+    } on DioException catch (e) {
+      return ExceptionHandler.handleError(e);
     }
   }
 }

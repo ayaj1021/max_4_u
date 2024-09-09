@@ -1,7 +1,9 @@
 import 'dart:developer';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
+import 'package:max_4_u/app/error_handler/error_handler.dart';
 import 'package:max_4_u/app/service/service.dart';
 
 class DenyVendorRequestProvider extends ChangeNotifier {
@@ -12,7 +14,8 @@ class DenyVendorRequestProvider extends ChangeNotifier {
   String _message = '';
   String get message => _message;
 
-  Future<void> denyVendorRequest({required String userId, required String reason}) async {
+  Future<void> denyVendorRequest(
+      {required String userId, required String reason}) async {
     state = ViewState.Busy;
     _message = 'Deleting request...';
     notifyListeners();
@@ -20,37 +23,41 @@ class DenyVendorRequestProvider extends ChangeNotifier {
     final body = {
       "request_type": "normal_admin",
       "action": "reject_request",
-      "reason" : reason,
+      "reason": reason,
       "user_id": userId //unique id
     };
 
     log('$body');
 
     final response = await ApiService().servicePostRequest(
-      body: body,
+      data: body,
       // message: _message,
     );
-    _status = response['data']['status'];
+    final data = response.data;
+    _status = data['status'];
     log('this is all user response $response');
     try {
-      if (_status == true) {
-        _status = response['data']['status'];
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        //if (_status == true) {
+        _status = data['status'];
 
-        _message = response['data']['message'];
+        _message = data['message'];
         state = ViewState.Success;
 
         notifyListeners();
+        return data;
       } else {
-        _message = response['data']['message'];
-        _status = response['data']['status'];
+        _message = data['message'];
+        _status = data['status'];
         state = ViewState.Error;
         notifyListeners();
       }
-    } catch (e) {
-      log(e.toString());
-      _status = false;
-      state = ViewState.Error;
-      notifyListeners();
+    } on DioException catch (e) {
+      return ExceptionHandler.handleError(e);
+      // log(e.toString());
+      // _status = false;
+      // state = ViewState.Error;
+      // notifyListeners();
     }
   }
 }

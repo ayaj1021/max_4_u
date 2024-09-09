@@ -35,7 +35,7 @@ class ReloadUserDataProvider extends ChangeNotifier {
    
 
     final response = await ApiService().servicePostRequest(
-      body: body,
+      data: body,
       // message: _message,
     );
 
@@ -44,7 +44,9 @@ class ReloadUserDataProvider extends ChangeNotifier {
 
     try {
       isLoading = false;
-      loadData = LoadDataData.fromJson(response['data']);
+
+      final data = response.data;
+      loadData = LoadDataData.fromJson(data['data']);
 
       final firstName =
           EncryptData.decryptAES('${loadData.userData![0].firstName}');

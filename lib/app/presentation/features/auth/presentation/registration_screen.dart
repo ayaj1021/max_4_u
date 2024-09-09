@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/encryt_data/encrypt_data.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
-import 'package:max_4_u/app/provider/auth_provider.dart';
+import 'package:max_4_u/app/presentation/features/auth/provider/auth_provider.dart';
 import 'package:max_4_u/app/provider/obscure_text_provider.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/presentation/features/dashboard/dashboard_screen.dart';
@@ -183,7 +183,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         return;
                       }
 
-                      final result = await authProv.registerUser(
+                      await authProv.registerUser(
                           email: emailController.text.trim(),
                           firstName: firstNameController.text.trim(),
                           lastName: lastNameController.text.trim(),
@@ -206,41 +206,41 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       }
 
                       final firstName = EncryptData.decryptAES(
-                          '${result.userData![0].firstName}');
+                          '${authProv.resDataData.userData![0].firstName}');
                       // '${result.data!.userData![0].firstName}');
                       await SecureStorage().saveFirstName(firstName);
 
                       final lastName = EncryptData.decryptAES(
-                          '${result.userData![0].lastName}');
+                          '${authProv.resDataData.userData![0].lastName}');
                       log('last name is $lastName');
                       final uniqueId = EncryptData.decryptAES(
-                          '${result.userData![0].uniqueId}');
+                          '${authProv.resDataData.userData![0].uniqueId}');
                       log('uniqueId is $uniqueId');
                       final email = EncryptData.decryptAES(
-                          '${result.userData![0].email}');
+                          '${authProv.resDataData.userData![0].email}');
                       log('uniqueId is $email');
                       final number = EncryptData.decryptAES(
-                          '${result.userData![0].mobileNumber}');
+                          '${authProv.resDataData.userData![0].mobileNumber}');
                       log('number is $number');
-                      final balance = result.userAccount!.balance;
-                      final userType = result.userData![0].level;
+                      final balance = authProv.resDataData.userAccount!.balance;
+                      final userType = authProv.resDataData.userData![0].level;
                       final transactionHistory =
-                          result.transactionHistory!.data;
-                      final beneficiary = result.beneficiaryData;
+                          authProv.resDataData.transactionHistory!.data;
+                      final beneficiary = authProv.resDataData.beneficiaryData;
                       log('user type is $userType');
                       log('user balance is $balance');
-                      final services = result.services!;
-                      final products = result.products!;
+                      // final services = authProv.resDataData.services;
+                      // final products = authProv.resDataData.products;
                       //                  final transactions = result.data.;
                       // await SecureStorage().saveUserTransactions(transactions);
 
                       await SecureStorage().saveUserEncryptedId(
-                          '${result.userData![0].uniqueId}');
+                          '${authProv.resDataData.userData![0].uniqueId}');
                       await SecureStorage()
                           .saveUserTransactionHistory(transactionHistory!);
                       await SecureStorage().saveUserBeneficiary(beneficiary!);
-                      await SecureStorage().saveUserProducts(products);
-                      await SecureStorage().saveUserServices(services);
+                      // await SecureStorage().saveUserProducts(products);
+                      // await SecureStorage().saveUserServices(services);
                       await SecureStorage().saveUserType(userType.toString());
                       await SecureStorage().saveEncryptedID(uniqueId);
                       await SecureStorage().saveUserBalance(balance.toString());

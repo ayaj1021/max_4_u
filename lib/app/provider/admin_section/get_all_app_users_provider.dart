@@ -1,7 +1,9 @@
 import 'dart:developer';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/encryt_data/encrypt_data.dart';
+import 'package:max_4_u/app/error_handler/error_handler.dart';
 import 'package:max_4_u/app/model/admin/get_all_app_admins_model.dart';
 import 'package:max_4_u/app/model/admin/get_all_app_users_model.dart';
 import 'package:max_4_u/app/model/admin/get_all_app_vendors_model.dart';
@@ -48,39 +50,45 @@ class GetAllAppUsers extends ChangeNotifier {
     log('$body');
 
     final response = await ApiService().servicePostRequest(
-      body: body,
+      data: body,
       // message: _message,
     );
-    _status = response['data']['status'];
+    final data = response.data;
+
     log('this is all user response $response');
     try {
-      if (_status == true) {
-        _status = response['data']['status'];
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // if (_status == true) {
+        _status = data['data']['status'];
 
         allAppUsers =
-            AllAppUsersResponseData.fromJson(response['data']['response_data']);
+            AllAppUsersResponseData.fromJson(data['data']['response_data']);
         isLoading = false;
 
-        firstName = EncryptData.decryptAES('${allAppUsers.data![0].firstName}');
-        lastName = EncryptData.decryptAES('${allAppUsers.data![0].lastName}');
-        phoneNumber =
-            EncryptData.decryptAES('${allAppUsers.data![0].mobileNumber}');
-        email = EncryptData.decryptAES('${allAppUsers.data![0].email}');
+        firstName = EncryptData.decryptAES(
+            '${allAppUsers.data?.map((e)=>e.firstName)}');
+        lastName =
+            EncryptData.decryptAES('${allAppUsers.data?.map((e)=> e.lastName)}');
+        phoneNumber = EncryptData.decryptAES(
+            '${allAppUsers.data?.map((e)=>e.mobileNumber)}');
+        email =
+            EncryptData.decryptAES('${allAppUsers.data?.map((e)=> e.email)}');
         //log('This is $allAppUsers');
-          updateSearch();
+        updateSearch();
 
         notifyListeners();
         return allAppUsers;
       } else {
-        _status = response['data']['status'];
+        _status = data['data']['status'];
         isLoading = false;
 
         notifyListeners();
       }
-    } catch (e) {
-      log(e.toString());
-      _status = false;
-      notifyListeners();
+    } on DioException catch (e) {
+      return ExceptionHandler.handleError(e);
+      // log(e.toString());
+      // _status = false;
+      // notifyListeners();
     }
   }
 
@@ -117,39 +125,42 @@ class GetAllAppUsers extends ChangeNotifier {
     log('$body');
 
     final response = await ApiService().servicePostRequest(
-      body: body,
+      data: body,
       // message: _message,
     );
-    _status = response['data']['status'];
+    final data = response.data;
+
     log('this is all user response $response');
     try {
-      if (_status == true) {
-        _status = response['data']['status'];
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // if (_status == true) {
+        _status = data['data']['status'];
 
-        allAppVendors = AllAppVendorsResponseData.fromJson(
-            response['data']['response_data']);
+        allAppVendors =
+            AllAppVendorsResponseData.fromJson(data['data']['response_data']);
         isLoading = false;
 
-        vendorFirstName =
-            EncryptData.decryptAES('${allAppVendors.data![0].firstName}');
-        vendorLastName =
-            EncryptData.decryptAES('${allAppVendors.data![0].lastName}');
-        vendorPhoneNumber =
-            EncryptData.decryptAES('${allAppVendors.data![0].mobileNumber}');
+        vendorFirstName = EncryptData.decryptAES(
+            '${allAppVendors.data?.map((e)=> e.firstName)}');
+        vendorLastName = EncryptData.decryptAES(
+            '${allAppVendors.data?.map((e)=> e.lastName)}');
+        vendorPhoneNumber = EncryptData.decryptAES(
+            '${allAppVendors.data?.map((e)=> e.mobileNumber)}');
         log('This is $allAppVendors');
 
         notifyListeners();
         return allAppUsers;
       } else {
-        _status = response['data']['status'];
+        _status = data['data']['status'];
         isLoading = false;
 
         notifyListeners();
       }
-    } catch (e) {
-      log(e.toString());
-      _status = false;
-      notifyListeners();
+    } on DioException catch (e) {
+      return ExceptionHandler.handleError(e);
+      // log(e.toString());
+      // _status = false;
+      // notifyListeners();
     }
   }
 
@@ -169,39 +180,43 @@ class GetAllAppUsers extends ChangeNotifier {
     log('$body');
 
     final response = await ApiService().servicePostRequest(
-      body: body,
+      data: body,
       // message: _message,
     );
-    _status = response['data']['status'];
+
+    final data = response.data;
+
     log('this is all admin response $response');
     try {
-      if (_status == true) {
-        _status = response['data']['status'];
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        //  if (_status == true) {
+        _status = data['data']['status'];
 
-        allAppAdmins = AllAppAdminsResponseData.fromJson(
-            response['data']['response_data']);
+        allAppAdmins =
+            AllAppAdminsResponseData.fromJson(data['data']['response_data']);
         isLoading = false;
 
-        adminFirstName =
-            EncryptData.decryptAES('${allAppAdmins.data![0].firstName}');
-        adminLastName =
-            EncryptData.decryptAES('${allAppAdmins.data![0].lastName}');
-        adminPhoneNumber =
-            EncryptData.decryptAES('${allAppAdmins.data![0].mobileNumber}');
+        adminFirstName = EncryptData.decryptAES(
+            '${allAppAdmins.data?.map((e)=> e.firstName)}');
+        adminLastName = EncryptData.decryptAES(
+            '${allAppAdmins.data?.map((e)=> e.lastName)}');
+        adminPhoneNumber = EncryptData.decryptAES(
+            '${allAppAdmins.data?.map((e)=> e.mobileNumber)}');
         log('This is $allAppAdmins');
 
         notifyListeners();
         return allAppAdmins;
       } else {
-        _status = response['data']['status'];
+        _status = data['data']['status'];
         isLoading = false;
 
         notifyListeners();
       }
-    } catch (e) {
-      log(e.toString());
-      _status = false;
-      notifyListeners();
+    } on DioException catch (e) {
+      return ExceptionHandler.handleError(e);
+      // log(e.toString());
+      // _status = false;
+      // notifyListeners();
     }
   }
 }

@@ -1,8 +1,9 @@
-import 'dart:developer';
-
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:max_4_u/app/config/constants.dart';
+import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
-import 'package:max_4_u/app/service/service.dart';
+import 'package:max_4_u/app/error_handler/error_handler.dart';
 
 class SetupPricesProvider extends ChangeNotifier {
   ViewState state = ViewState.Idle;
@@ -11,6 +12,7 @@ class SetupPricesProvider extends ChangeNotifier {
 
   String _message = '';
   String get message => _message;
+  final _dio = Dio();
 
   Future<void> setupPrices({
     required String category,
@@ -44,34 +46,47 @@ class SetupPricesProvider extends ChangeNotifier {
       "duration": duration,
       "vending_code": vendingCode
     };
-    log('$body');
+    debugPrint('$body');
 
-    final response = await ApiService().servicePostRequest(
-      body: body,
-      // message: _message,
-    );
-    _status = response['status'];
-    log('this is all user response $response');
+    final id = await SecureStorage().getEncryptedID();
+
+    final response = await _dio.post(AppConstants.baseUrl,
+        data: body,
+        options: Options(headers: {
+          'Content-Type': 'application/json',
+          'Site-From': 'postman',
+          'User-Key': id
+        }));
+
+    // ApiService().servicePostRequest(
+    //   data: body,
+    // );
+    final data = response.data['data'];
+    _status = data['data']['status'];
+
+    debugPrint('$response');
+    debugPrint('$_status');
+
     try {
-      if (_status == true) {
-        _status = response['data']['status'];
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // if (_status == true) {
+        _status = data['data']['status'];
 
-        _message = response['data']['message'];
         state = ViewState.Success;
+        _message = data['data']['message'];
 
         notifyListeners();
+        //}
+        return data;
       } else {
-        _message = response['data']['message'];
-       // _message = response['data']['error_data']['vending_code'];
-        _status = response['data']['status'];
+        _status = data['data']['status'];
+        _message = data['data']['message'];
+        // _message = response['data']['error_data']['vending_code'];
         state = ViewState.Error;
         notifyListeners();
       }
-    } catch (e) {
-      log(e.toString());
-      _status = false;
-      state = ViewState.Error;
-      notifyListeners();
+    } on DioException catch (e) {
+      return ExceptionHandler.handleError(e);
     }
   }
 }

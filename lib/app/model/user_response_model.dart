@@ -1,4 +1,4 @@
-
+import 'package:max_4_u/app/model/load_data_model.dart';
 
 class ResponseModel {
   final bool? status;
@@ -12,7 +12,9 @@ class ResponseModel {
     return ResponseModel(
       status: json['status'] as bool?,
       message: json['message'] as String?,
-      responseData: json['response_data'] != null ? ResponseDataData.fromJson(json['response_data']) : null,
+      responseData: json['response_data'] != null
+          ? ResponseDataData.fromJson(json['response_data'])
+          : null,
       errorData: json['error_data'] as List<dynamic>?,
     );
   }
@@ -22,7 +24,7 @@ class ResponseDataData {
   final List<UserData>? userData;
   final UserAccount? userAccount;
   final List<UserSettingsData>? userSettingsData;
-  final List<dynamic>? beneficiaryData;
+  final List<BeneficiaryData>? beneficiaryData;
   final List<Service>? services;
   final List<Product>? products;
   final TransactionHistory? transactionHistory;
@@ -50,11 +52,15 @@ class ResponseDataData {
       userData: (json['user_data'] as List<dynamic>?)
           ?.map((e) => UserData.fromJson(e as Map<String, dynamic>))
           .toList(),
-      userAccount: json['user_account'] != null ? UserAccount.fromJson(json['user_account']) : null,
+      userAccount: json['user_account'] != null
+          ? UserAccount.fromJson(json['user_account'])
+          : null,
       userSettingsData: (json['user_settings_data'] as List<dynamic>?)
           ?.map((e) => UserSettingsData.fromJson(e as Map<String, dynamic>))
           .toList(),
-      beneficiaryData: json['beneficiary_data'] as List<dynamic>?,
+      beneficiaryData: (json['beneficiary_data'] as List<dynamic>?)
+          ?.map((e) => BeneficiaryData.fromJson(e as Map<String, dynamic>))
+          .toList(),
       services: (json['services'] as List<dynamic>?)
           ?.map((e) => Service.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -64,8 +70,12 @@ class ResponseDataData {
       transactionHistory: json['transaction_history'] != null
           ? TransactionHistory.fromJson(json['transaction_history'])
           : null,
-      autoRenewal: json['auto_renewal'] != null ? AutoRenewal.fromJson(json['auto_renewal']) : null,
-      siteData: json['site_data'] != null ? SiteData.fromJson(json['site_data']) : null,
+      autoRenewal: json['auto_renewal'] != null
+          ? AutoRenewal.fromJson(json['auto_renewal'])
+          : null,
+      siteData: json['site_data'] != null
+          ? SiteData.fromJson(json['site_data'])
+          : null,
       subServices: (json['sub_services'] as List<dynamic>?)
           ?.map((e) => SubService.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -151,7 +161,6 @@ class Service {
     );
   }
 }
-
 
 class Product {
   String? name;
@@ -314,6 +323,7 @@ class AutoRenewal {
     );
   }
 }
+
 class SiteData {
   final String? idCardUrl;
   final String? userImageUrl;
@@ -334,6 +344,7 @@ class SiteData {
     };
   }
 }
+
 class SubService {
   final String? category;
 

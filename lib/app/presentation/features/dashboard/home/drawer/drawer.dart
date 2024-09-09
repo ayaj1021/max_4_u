@@ -7,7 +7,7 @@ import 'package:max_4_u/app/presentation/features/auto_renewal/presentation/auto
 import 'package:max_4_u/app/presentation/features/dashboard/profile/profile_screen.dart';
 import 'package:max_4_u/app/presentation/features/dashboard/support/support_screen.dart';
 import 'package:max_4_u/app/presentation/features/vendor_features/presentation/become_vendor_section/become_vendor_screen.dart';
-import 'package:max_4_u/app/provider/auth_provider.dart';
+import 'package:max_4_u/app/presentation/features/auth/provider/auth_provider.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/presentation/features/settings/settings_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
@@ -45,7 +45,7 @@ class _SideDrawerState extends State<SideDrawer> {
     setState(() {
       firstName = name;
       lastName = surname;
-      userId = id;
+      userId = id ?? '';
     });
   }
 

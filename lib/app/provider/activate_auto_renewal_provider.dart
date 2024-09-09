@@ -1,6 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
+import 'package:max_4_u/app/error_handler/error_handler.dart';
 import 'package:max_4_u/app/service/service.dart';
 
 class ActivateAutoRenewalProvider extends ChangeNotifier {
@@ -40,28 +42,35 @@ class ActivateAutoRenewalProvider extends ChangeNotifier {
     debugPrint(body.toString());
 
     final response = await ApiService().servicePostRequest(
-      body: body,
+      data: body,
       // message: _message,
     );
+    final data = response.data;
 
-    _status = response['data']['status'];
-    if (_status == true) {
-      _status = response['data']['status'];
-      state = ViewState.Success;
-      _message = response['data']['message'];
+    _status = data['status'];
 
-      notifyListeners();
-    } else {
-      state = ViewState.Error;
-      _status = response['data']['status'];
-      _message = response['data']['message'];
+    try {
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        //if (_status == true) {
+        _status = data['status'];
+        state = ViewState.Success;
+        _message = data['message'];
 
-      _errorMessage = response['data']['error_data']['start_date'] ??
-          response['data']['error_data']['end_date'];
-      // _message = response['data']['error_data']['start_date'];
-      // _message = response['data']['error_data']['end_date'];
+        notifyListeners();
+      } else {
+        state = ViewState.Error;
+        _status = data['status'];
+        _message = data['message'];
 
-      notifyListeners();
+        _errorMessage =
+            data['error_data']['start_date'] ?? data['error_data']['end_date'];
+        // _message = response['data']['error_data']['start_date'];
+        // _message = response['data']['error_data']['end_date'];
+
+        notifyListeners();
+      }
+    } on DioException catch (e) {
+      return ExceptionHandler.handleError(e);
     }
   }
 }

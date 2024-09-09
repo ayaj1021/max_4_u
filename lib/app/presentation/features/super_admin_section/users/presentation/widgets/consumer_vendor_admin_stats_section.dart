@@ -43,6 +43,7 @@ class ConsumerVendorAdminStatsSection extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: TabBar(
+                padding: EdgeInsets.zero,
                 dividerHeight: 0,
                 indicator: BoxDecoration(
                     color: const Color(0xffB0D3EB),
@@ -51,29 +52,27 @@ class ConsumerVendorAdminStatsSection extends StatelessWidget {
                 indicatorColor: Colors.transparent,
                 labelColor: AppColors.blackColor,
                 tabs: [
-                  Container(
-                    // height: 31.h,
-                    // width: 192.w,
-                    alignment: Alignment.center,
-                    padding: EdgeInsets.symmetric(vertical: 7, horizontal: 3),
-                    decoration:
-                        BoxDecoration(borderRadius: BorderRadius.circular(6)),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          'Consumers',
-                          style: AppTextStyles.font10,
+                        Expanded(
+                          child: Text(
+                            'Customers',
+                            style: AppTextStyles.font10.copyWith(
+                              fontSize: 11.sp,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
-                        horizontalSpace(4),
-                        Container(
+                       // horizontalSpace(4),
+                        CircleAvatar(
                           //  height: 12.h,
                           // width: 12.w,
-                          padding: EdgeInsets.all(3),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(17),
-                              color: AppColors.subTextColor),
+                          radius: 9,
+                          backgroundColor: AppColors.subTextColor,
                           child: Text(
                             getAllAppUsers.allAppUsers.totalConsumer == null
                                 ? ''
@@ -87,28 +86,26 @@ class ConsumerVendorAdminStatsSection extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Container(
-                    // height: 31.h,
-                    // width: 162.w,
-                    alignment: Alignment.center,
-                    padding: EdgeInsets.symmetric(vertical: 7, horizontal: 3),
-                    decoration:
-                        BoxDecoration(borderRadius: BorderRadius.circular(6)),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          'Vendors',
-                          style: AppTextStyles.font10,
+                        Expanded(
+                          child: Text(
+                            'Vendors',
+                            style: AppTextStyles.font10.copyWith(
+                              fontSize: 11.sp,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                         horizontalSpace(7),
-                        Container(
+                        CircleAvatar(
                           // height: 12.h,
-                          width: 17.w,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(17),
-                              color: AppColors.subTextColor),
+                          radius: 9,
+                          backgroundColor: AppColors.subTextColor,
                           child: Text(
                             getAllAppUsers.allAppUsers.totalVendor == null
                                 ? ''
@@ -122,27 +119,26 @@ class ConsumerVendorAdminStatsSection extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Container(
-                    // height: 31.h,
-                    width: 162.w,
-                    alignment: Alignment.center,
-                    decoration:
-                        BoxDecoration(borderRadius: BorderRadius.circular(6)),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          'Admins',
-                          style: AppTextStyles.font12,
+                        Expanded(
+                          child: Text(
+                            'Admins',
+                            style: AppTextStyles.font10.copyWith(
+                              fontSize: 11.sp,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                         horizontalSpace(7),
-                        Container(
+                        CircleAvatar(
                           // height: 12.h,
-                          width: 17.w,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(17),
-                              color: AppColors.subTextColor),
+                          radius: 9,
+                          backgroundColor: AppColors.subTextColor,
                           child: Text(
                             getAllAppUsers.allAppAdmins.totalData == null
                                 ? ''
@@ -176,4 +172,3 @@ class ConsumerVendorAdminStatsSection extends StatelessWidget {
     });
   }
 }
-

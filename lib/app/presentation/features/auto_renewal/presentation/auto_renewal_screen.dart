@@ -5,7 +5,7 @@ import 'package:max_4_u/app/presentation/features/auto_renewal/presentation/airt
 import 'package:max_4_u/app/presentation/features/auto_renewal/presentation/data_autorenewal_page.dart';
 import 'package:max_4_u/app/presentation/features/auto_renewal/presentation/widgets/cancel_auto_renewal_alert_dialog.dart';
 import 'package:max_4_u/app/presentation/features/dashboard/dashboard_screen.dart';
-import 'package:max_4_u/app/provider/auth_provider.dart';
+import 'package:max_4_u/app/presentation/features/auth/provider/auth_provider.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';

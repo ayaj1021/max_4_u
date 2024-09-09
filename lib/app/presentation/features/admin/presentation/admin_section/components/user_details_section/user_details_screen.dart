@@ -4,7 +4,7 @@ import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/presentation/features/admin/presentation/admin_section/components/user_details_section/details_component.dart';
 import 'package:max_4_u/app/presentation/features/admin/presentation/admin_section/components/user_details_section/transaction_component.dart';
 import 'package:max_4_u/app/presentation/features/super_admin_section/users/presentation/view/super_admin_users_screen.dart';
-import 'package:max_4_u/app/provider/auth_provider.dart';
+import 'package:max_4_u/app/presentation/features/auth/provider/auth_provider.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/presentation/features/super_admin_section/providers/super_admin/deactivate_user_provider.dart';
 import 'package:max_4_u/app/presentation/features/super_admin_section/providers/super_admin/make_admin_provider.dart';
