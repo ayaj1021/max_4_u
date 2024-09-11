@@ -50,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
   getServices() async {
     final storage = await SecureStorage();
 
-    userServices = (await storage.getUserServices())!;
+    userServices = (await storage.getUserServices())?? [];
     for (var services in userServices) {
       print('${services.category}: ${services.category}');
     }

@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/abstract_class/auth_abstract_class.dart';
+import 'package:max_4_u/app/config/base_response/updated_base_response.dart';
+import 'package:max_4_u/app/config/exception/app_exception.dart';
 import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/domain/exception_handler.dart';
 import 'package:max_4_u/app/domain/model.dart';
@@ -195,7 +197,7 @@ class AuthProviderImpl extends ChangeNotifier
 
 //Login user method
   @override
-  Future<void> loginUser(
+  Future<UpdatedBaseResponse> loginUser(
       {required String email, required String password}) async {
     state = ViewState.Busy;
     _message = 'Logging in your account...';
@@ -225,7 +227,9 @@ class AuthProviderImpl extends ChangeNotifier
         updateNumber(_userLevel);
 
         notifyListeners();
-        return data;
+        //  return data;
+
+        return UpdatedBaseResponse.fromSuccess(data);
       } else {
         _status = data['data']['status'];
         state = ViewState.Error;
@@ -236,8 +240,16 @@ class AuthProviderImpl extends ChangeNotifier
 
         notifyListeners();
         //return data['data'];
+        return UpdatedBaseResponse.fromError(_message);
       }
     } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        _message = 'Unauthorized request. Please check your credentials.';
+      } else {
+        _message = AppException.handleError(e).toString();
+      }
+      _message = AppException.handleError(e).toString();
+      //  return UpdatedBaseResponse.fromError(_message);
       return ExceptionHandler.handleError(e);
     }
   }

@@ -224,8 +224,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       log('number is $number');
                       final balance = authProv.resDataData.userAccount!.balance;
                       final userType = authProv.resDataData.userData![0].level;
-                      final transactionHistory =
-                          authProv.resDataData.transactionHistory!.data;
+                      // final transactionHistory =
+                      //     authProv.resDataData.transactionHistory!.data;
                       final beneficiary = authProv.resDataData.beneficiaryData;
                       log('user type is $userType');
                       log('user balance is $balance');
@@ -236,8 +236,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
                       await SecureStorage().saveUserEncryptedId(
                           '${authProv.resDataData.userData![0].uniqueId}');
-                      await SecureStorage()
-                          .saveUserTransactionHistory(transactionHistory!);
+                      // await SecureStorage()
+                      //     .saveUserTransactionHistory(transactionHistory!);
                       await SecureStorage().saveUserBeneficiary(beneficiary!);
                       // await SecureStorage().saveUserProducts(products);
                       // await SecureStorage().saveUserServices(services);

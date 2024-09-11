@@ -83,7 +83,7 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
               Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 14, vertical: 20),
-                height: 88.h,
+               // height: 88.h,
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),

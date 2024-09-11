@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:max_4_u/app/navigation/router.dart';
 import 'package:max_4_u/app/presentation/features/vendor_features/provider/generate_account_number_provider.dart';
 import 'package:max_4_u/app/provider/activate_auto_renewal_provider.dart';
@@ -37,7 +39,6 @@ import 'package:max_4_u/app/presentation/features/vendor_features/provider/remov
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:provider/provider.dart';
 
-
 final navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
@@ -50,6 +51,21 @@ void main() async {
 
   // final fcmToken = await FirebaseMessaging.instance.getToken();
   // print(fcmToken);
+
+  final connectionChecker = InternetConnectionChecker();
+
+  final subscription = connectionChecker.onStatusChange.listen(
+    (InternetConnectionStatus status) {
+      if (status == InternetConnectionStatus.connected) {
+        print('Connected to the internet');
+      } else {
+        print('Disconnected from the internet');
+      }
+    },
+  );
+
+  // Remember to cancel the subscription when it's no longer needed
+  subscription.cancel();
   runApp(const MyApp());
 }
 
@@ -66,12 +82,13 @@ class _MyAppState extends State<MyApp> {
   String os = '';
   String location = '';
   String ipAddress = '';
-
-  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-  AndroidDeviceInfo? androidDeviceInfo;
-  Future<AndroidDeviceInfo> getInfo() async {
-    return await deviceInfo.androidInfo;
-  }
+  // late StreamSubscription internetSubscription;
+  // bool hasInternet = false;
+  // DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+  // AndroidDeviceInfo? androidDeviceInfo;
+  // Future<AndroidDeviceInfo> getInfo() async {
+  //   return await deviceInfo.androidInfo;
+  // }
 
   @override
   void initState() {
@@ -79,6 +96,12 @@ class _MyAppState extends State<MyApp> {
     _getDeviceInfo();
     // _getLocation();
     _getIPAddress();
+    // internetSubscription = InternetConnectionChecker().onStatusChange.listen((status){});
+    // final hasInternet = status  == InternetConnectionStatus.connected;
+
+    // setState(() => this.hasInternet = hasInternet
+
+    // );
 
     debugPrint(ipAddress);
     debugPrint(deviceModel);

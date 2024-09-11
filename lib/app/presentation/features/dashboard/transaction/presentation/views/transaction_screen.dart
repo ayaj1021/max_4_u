@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:max_4_u/app/database/database.dart';
-import 'package:max_4_u/app/enums/month_dropdown_enum.dart';
 import 'package:max_4_u/app/model/load_data_model.dart';
+import 'package:max_4_u/app/presentation/features/dashboard/transaction/presentation/views/widgets/empty_transaction_section.dart';
 import 'package:max_4_u/app/presentation/features/dashboard/transaction/presentation/views/widgets/transaction_list_section.dart';
 
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
@@ -27,7 +26,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
   final _searchController = TextEditingController();
 
   TransactionHistory? retrievedTransactionHistory;
-
   bool isSearching = false;
   @override
   void initState() {
@@ -39,22 +37,47 @@ class _TransactionScreenState extends State<TransactionScreen> {
 
   List<Transaction>? filteredTransactions = [];
 
+
   void _filterTransactions() {
     final query = _searchController.text.toLowerCase();
+
     setState(() {
       filteredTransactions =
           retrievedTransactionHistory?.data?.where((transaction) {
-        return (transaction.number?.toLowerCase().contains(query) ?? false) ||
-            (transaction.type?.toLowerCase().contains(query) ?? false) ||
-            (transaction.subType?.toLowerCase().contains(query) ?? false) ||
-            (transaction.purchaseType?.toLowerCase().contains(query) ??
-                false) ||
-            (transaction.productAmount?.toLowerCase().contains(query) ??
-                false) ||
-            (transaction.amountPaid?.toLowerCase().contains(query) ?? false);
+        bool matchesSearch =
+            (transaction.number?.toLowerCase().contains(query) ?? false) ||
+                (transaction.type?.toLowerCase().contains(query) ?? false) ||
+                (transaction.subType?.toLowerCase().contains(query) ?? false) ||
+                (transaction.purchaseType?.toLowerCase().contains(query) ??
+                    false) ||
+                (transaction.productAmount?.toLowerCase().contains(query) ??
+                    false) ||
+                (transaction.amountPaid?.toLowerCase().contains(query) ??
+                    false);
+
+        return matchesSearch;
       }).toList();
     });
   }
+
+  void filterPendingTransactions({required String selectedStatus}) {
+    final List<Transaction>? retrieveDataTransactions =
+        retrievedTransactionHistory?.data?.where((transaction) {
+      return transaction.status?.toLowerCase().contains(selectedStatus) ??
+          false;
+    }).toList();
+
+    setState(() {
+      filteredTransactions = retrieveDataTransactions;
+
+     // print(selectedStatus);
+    });
+  }
+
+  //  retrievedTransactionHistory?.data?.where((transaction) {
+  //   return transaction.status?.toLowerCase().contains(selectedStatus) ??
+  //       false;
+  // }).toList();
 
   getTransactions() async {
     final storage = await SecureStorage();
@@ -76,13 +99,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
     'Added funds',
     'Data',
     'Airtime',
-  ];
-
-  final status = [
-    'All',
-    'Successful',
-    'Pending',
-    'Failed',
   ];
 
   int? categoryIndex;
@@ -166,32 +182,19 @@ class _TransactionScreenState extends State<TransactionScreen> {
                             ),
                           )
                         : dataList.isEmpty
-                            ? Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                        height: 92.h,
-                                        width: 92.w,
-                                        child: Image.asset(
-                                            'assets/images/no_beneficiary_image.png')),
-                                    verticalSpace(24),
-                                    Text(
-                                      'You have no transaction yet',
-                                      style: AppTextStyles.font14.copyWith(
-                                          color: AppColors.textColor,
-                                          fontWeight: FontWeight.w400),
-                                    )
-                                  ],
-                                ),
-                              )
+                            ? EmptyTransactionSection()
                             : TransactionListSection(
                                 searchController: _searchController,
                                 filteredTransactions: filteredTransactions,
                                 dateFormat: dateFormat,
                                 icons: icons,
-                                colors: colors),
+                                colors: colors,
+                              
+                                filterItems: (p) {
+                                  filterPendingTransactions(
+                                      selectedStatus: p);
+                                },
+                              ),
                   ],
                 ),
               ),
@@ -203,34 +206,14 @@ class _TransactionScreenState extends State<TransactionScreen> {
   }
 }
 
-String _monthToString(Months month) {
-  switch (month) {
-    case Months.January:
-      return 'January';
-    case Months.February:
-      return 'February';
-    case Months.March:
-      return 'March';
-    case Months.April:
-      return 'April';
-    case Months.May:
-      return 'May';
-    case Months.June:
-      return 'June';
-    case Months.July:
-      return 'July';
-    case Months.August:
-      return 'August';
-    case Months.September:
-      return 'September';
-    case Months.October:
-      return 'October';
-    case Months.November:
-      return 'November';
-    case Months.December:
-      return 'December';
 
-    default:
-      return '';
-  }
-}
+
+// I have a list of transactions that i can also filter with a search button. I want to also filter the transaction with a modalbottomsheet that has a list of values of    '
+//     All',
+//     'Successful',
+//     'Pending',
+//     'Failed',
+
+// When no value is selected from the bottomesheet it should so all the transactions that can also be filtered with the search controller, but once a value is shown in the bottom sheet it should mark where the value in the bottomsheet matches the any object in the list.
+
+// Do this in flutter

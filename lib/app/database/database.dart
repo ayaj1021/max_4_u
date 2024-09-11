@@ -244,8 +244,8 @@ class SecureStorage {
     return null;
   }
 
-  Future<void> saveUserTransactionHistory(List transactionHistory) async {
-    String jsonString = jsonEncode(transactionHistory);
+  Future<void> saveUserTransactionHistory(List<TransactionHistory> transactionHistory) async {
+    String jsonString = jsonEncode(transactionHistory.map((t)=> t.toJson()).toList());
     await _storage.write(key: 'transaction_history', value: jsonString);
   }
 

@@ -158,16 +158,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       final balance = authProv.resDataData.userAccount!.balance;
                       final userType = authProv.resDataData.userData![0].level;
 
-                      final transactionHistory =
-                          authProv.resDataData.transactionHistory!.data;
+                      // final transactionHistory =
+                      //     authProv.resDataData.transactionHistory!.data;
                       final autoRenewal =
                           authProv.resDataData.autoRenewal!.data;
 
                       await SecureStorage().saveUserEncryptedId(
                           '${authProv.resDataData.userData![0].uniqueId}');
 
-                      await SecureStorage()
-                          .saveUserTransactionHistory(transactionHistory!);
+                      // await SecureStorage()
+                      //     .saveUserTransactionHistory(transactionHistory!);
 
                       await SecureStorage().saveUserAutoRenewal(autoRenewal!);
 

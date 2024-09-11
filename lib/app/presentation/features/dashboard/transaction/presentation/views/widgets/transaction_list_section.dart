@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:max_4_u/app/enums/month_dropdown_enum.dart';
 import 'package:max_4_u/app/model/load_data_model.dart';
 import 'package:max_4_u/app/presentation/features/dashboard/home/component/transaction_history_component.dart';
 import 'package:max_4_u/app/presentation/features/dashboard/transaction/presentation/views/transaction_detail_screen.dart';
+import 'package:max_4_u/app/presentation/features/dashboard/transaction/presentation/views/widgets/filter_transaction_bottom_sheet.dart';
 import 'package:max_4_u/app/presentation/general_widgets/widgets/text_input_field.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
+import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/screen_navigator.dart';
 import 'package:max_4_u/app/utils/text_capitalization_extension.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
 
-class TransactionListSection extends StatelessWidget {
+class TransactionListSection extends StatefulWidget {
   const TransactionListSection({
     super.key,
     required TextEditingController searchController,
@@ -17,20 +20,33 @@ class TransactionListSection extends StatelessWidget {
     required this.dateFormat,
     required this.icons,
     required this.colors,
+ 
+    required this.filterItems,
   }) : _searchController = searchController;
 
   final TextEditingController _searchController;
+
   final List<Transaction>? filteredTransactions;
   final DateFormat dateFormat;
   final List icons;
   final List colors;
+  final void Function(String) filterItems;
+
+
+
+  @override
+  State<TransactionListSection> createState() => _TransactionListSectionState();
+}
+
+class _TransactionListSectionState extends State<TransactionListSection> {
+  //var _selectedMonth = Months.January;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         TextInputField(
-          controller: _searchController,
+          controller: widget._searchController,
           hintText: 'Search in transactions',
           prefixIcon: const Icon(
             Icons.search,
@@ -38,51 +54,49 @@ class TransactionListSection extends StatelessWidget {
           ),
         ),
         verticalSpace(18),
-        // Row(
-        //   mainAxisAlignment:
-        //       MainAxisAlignment.spaceBetween,
-        //   children: [
-        //     DropdownButton<Months>(
-        //       underline: const SizedBox(),
-        //       value: _selectedMonth,
-        //       items:
-        //           Months.values.map((Months month) {
-        //         return DropdownMenuItem(
-        //             value: month,
-        //             child: Container(
-        //                 padding: EdgeInsets.zero,
-        //                 child: Text(
-        //                     _monthToString(month))));
-        //       }).toList(),
-        //       onChanged: (newValue) {
-        //         setState(() {
-        //           _selectedMonth = newValue!;
-        //         });
-        //       },
-        //     ),
-        //     GestureDetector(
-        //       onTap: () {
-        //         filterTransactionBottomSheet(context);
-        //       },
-        //       child: Row(
-        //         children: [
-        //           Text(
-        //             'Filter',
-        //             style: AppTextStyles.font16,
-        //           ),
-        //           Icon(Icons.filter_alt_outlined)
-        //         ],
-        //       ),
-        //     )
-        //   ],
-        // ),
-
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            // DropdownButton<Months>(
+            //   underline: const SizedBox(),
+            //   value: _selectedMonth,
+            //   items: Months.values.map((Months month) {
+            //     return DropdownMenuItem(
+            //         value: month,
+            //         child: Container(
+            //             padding: EdgeInsets.zero,
+            //             child: Text(_monthToString(month))));
+            //   }).toList(),
+            //   onChanged: (newValue) {
+            //     setState(() {
+            //       _selectedMonth = newValue!;
+            //     });
+            //   },
+            // ),
+            GestureDetector(
+              onTap: () {
+                filterTransactionBottomSheet(context,
+                 
+                    filterItems: widget.filterItems);
+              },
+              child: Row(
+                children: [
+                  Text(
+                    'Filter',
+                    style: AppTextStyles.font16,
+                  ),
+                  Icon(Icons.filter_alt_outlined)
+                ],
+              ),
+            )
+          ],
+        ),
         Column(
           children: List.generate(
             // data.length,
-            filteredTransactions!.length,
+            widget.filteredTransactions!.length,
             (index) {
-              final data = filteredTransactions!;
+              final data = widget.filteredTransactions!;
 
               return InkWell(
                 onTap: () => nextScreen(
@@ -92,7 +106,7 @@ class TransactionListSection extends StatelessWidget {
                       referenceId: '${data[index].referenceId}',
                       status: '${data[index].status}',
                       date:
-                          '${dateFormat.format(data[index].regDate as DateTime)}',
+                          '${widget.dateFormat.format(data[index].regDate as DateTime)}',
                       type: '${data[index].type}',
                       number: '${data[index].number}',
                       subType: '${data[index].subType}',
@@ -101,20 +115,20 @@ class TransactionListSection extends StatelessWidget {
                   children: [
                     TransactionSection(
                       transactionIcon: data[index].subType!.contains('card')
-                          ? icons[2]
+                          ? widget.icons[2]
                           : data[index].subType!.contains('data')
-                              ? icons[1]
-                              : icons[0],
+                              ? widget.icons[1]
+                              : widget.icons[0],
                       transactionType: '${data[index].subType}'.capitalize(),
                       transactionDate:
-                          '${dateFormat.format(data[index].regDate as DateTime)}',
+                          '${widget.dateFormat.format(data[index].regDate as DateTime)}',
                       transactionAmount: 'N${data[index].amountPaid}',
                       transactionStatus: '${data[index].status}',
                       transactionColor: data[index].subType!.contains('card')
-                          ? colors[1]
+                          ? widget.colors[1]
                           : data[index].subType!.contains('data')
-                              ? colors[2]
-                              : colors[0],
+                              ? widget.colors[2]
+                              : widget.colors[0],
                       // Color(0xffD6DDFE),
                       transactionStatusColor: data[index].status == 'success'
                           ? Colors.green
@@ -137,5 +151,37 @@ class TransactionListSection extends StatelessWidget {
         )
       ],
     );
+  }
+}
+
+String _monthToString(Months month) {
+  switch (month) {
+    case Months.January:
+      return 'January';
+    case Months.February:
+      return 'February';
+    case Months.March:
+      return 'March';
+    case Months.April:
+      return 'April';
+    case Months.May:
+      return 'May';
+    case Months.June:
+      return 'June';
+    case Months.July:
+      return 'July';
+    case Months.August:
+      return 'August';
+    case Months.September:
+      return 'September';
+    case Months.October:
+      return 'October';
+    case Months.November:
+      return 'November';
+    case Months.December:
+      return 'December';
+
+    default:
+      return '';
   }
 }

@@ -94,7 +94,7 @@ class GetAllAppUsers extends ChangeNotifier {
 
   updateSearch() {
     if (searchedText.isEmpty) {
-      searchUsers.data!.addAll(allAppUsers.data!);
+      searchUsers.data?.addAll(allAppUsers.data!);
     } else {
       searchUsers.data!.addAll(allAppUsers.data!
           .where((element) =>

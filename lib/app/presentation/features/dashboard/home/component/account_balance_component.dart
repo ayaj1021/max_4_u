@@ -51,7 +51,7 @@ class _AccountBalanceWidgetState extends State<AccountBalanceWidget> {
     return Consumer3<AuthProviderImpl, ObscureTextProvider,
             ReloadUserDataProvider>(
         builder: (context, authProv, obscure, reloadData, _) {
-      final accountBalance = reloadData.loadData.userAccount?.balance;
+      final accountBalance = reloadData.loadData.userAccount?.balance ?? 0;
       String totalBalance = NumberFormat('#,##0').format(accountBalance);
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 32),
