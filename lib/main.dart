@@ -52,20 +52,20 @@ void main() async {
   // final fcmToken = await FirebaseMessaging.instance.getToken();
   // print(fcmToken);
 
-  final connectionChecker = InternetConnectionChecker();
+  // final connectionChecker = InternetConnectionChecker();
 
-  final subscription = connectionChecker.onStatusChange.listen(
-    (InternetConnectionStatus status) {
-      if (status == InternetConnectionStatus.connected) {
-        print('Connected to the internet');
-      } else {
-        print('Disconnected from the internet');
-      }
-    },
-  );
+  // final subscription = connectionChecker.onStatusChange.listen(
+  //   (InternetConnectionStatus status) {
+  //     if (status == InternetConnectionStatus.connected) {
+  //       print('Connected to the internet');
+  //     } else {
+  //       print('Disconnected from the internet');
+  //     }
+  //   },
+  // );
 
   // Remember to cancel the subscription when it's no longer needed
-  subscription.cancel();
+  //subscription.cancel();
   runApp(const MyApp());
 }
 

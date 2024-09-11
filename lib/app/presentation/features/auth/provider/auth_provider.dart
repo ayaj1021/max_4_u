@@ -5,7 +5,6 @@ import 'package:max_4_u/app/config/base_response/updated_base_response.dart';
 import 'package:max_4_u/app/config/exception/app_exception.dart';
 import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/domain/exception_handler.dart';
-import 'package:max_4_u/app/domain/model.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/model/user_response_model.dart';
 import 'package:max_4_u/app/service/service.dart';
@@ -48,7 +47,7 @@ class AuthProviderImpl extends ChangeNotifier
 
 //Sign up user
   @override
-  Future<AppResponseModelData> signUp({required String phoneNumber}) async {
+  Future<void> signUp({required String phoneNumber}) async {
     state = ViewState.Busy;
     _message = 'Creating your account...';
     notifyListeners();
@@ -66,22 +65,31 @@ class AuthProviderImpl extends ChangeNotifier
       );
       final data = response.data;
       print('$_status');
-      _status = data['status'];
+      _status = data['data']['status'];
 
-      if (_status == true) {
-        _status = data['status'];
-        _message = data['message'];
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        state = ViewState.Success;
+
+        notifyListeners();
+
+        _status = data['data']['status'];
+        _message = data['data']['message'];
 
         state = ViewState.Success;
 
         notifyListeners();
       } else {
-        _message = data['message'];
-        _status = data['status'];
+        _status = false;
+
         state = ViewState.Error;
-        _message = data['error_data']['mobile_number'];
+        _message = data['data']['message'];
+        _status = data['data']['status'];
+
+        _message = data['data']['error_data']['mobile_number'];
+
         notifyListeners();
       }
+
       return data;
     } on DioException catch (e) {
       return ExceptionHandler.handleError(e);
