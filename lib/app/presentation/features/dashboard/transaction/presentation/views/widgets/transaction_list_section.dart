@@ -20,8 +20,8 @@ class TransactionListSection extends StatefulWidget {
     required this.dateFormat,
     required this.icons,
     required this.colors,
- 
     required this.filterItems,
+    required this.allItems,
   }) : _searchController = searchController;
 
   final TextEditingController _searchController;
@@ -31,8 +31,7 @@ class TransactionListSection extends StatefulWidget {
   final List icons;
   final List colors;
   final void Function(String) filterItems;
-
-
+  final void Function(String) allItems;
 
   @override
   State<TransactionListSection> createState() => _TransactionListSectionState();
@@ -76,8 +75,7 @@ class _TransactionListSectionState extends State<TransactionListSection> {
             GestureDetector(
               onTap: () {
                 filterTransactionBottomSheet(context,
-                 
-                    filterItems: widget.filterItems);
+                    filterItems: widget.filterItems, allItems: widget.allItems);
               },
               child: Row(
                 children: [

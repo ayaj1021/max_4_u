@@ -56,7 +56,7 @@ final NotificationResponseData notificationResponseData;
                       // ),
                       horizontalSpace(5),
                        Text(
-                        '${notificationResponseData.transactions?.first.heading}',
+                        '${notificationResponseData.data?.transactions?.map((e)=>e.regDate)}',
                         style: AppTextStyles.font14,
                       )
                     ],

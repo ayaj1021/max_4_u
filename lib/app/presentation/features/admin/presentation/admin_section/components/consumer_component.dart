@@ -98,14 +98,14 @@ class _CustomersComponentState extends State<CustomersComponent> {
                                         );
                                       },
                                       child: SizedBox(
-                                        height: 48.h,
-                                        width: 332.w,
+                                       // height: 48.h,
+                                       // width: 332.w,
                                         child: Row(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             CircleAvatar(
-                                              radius: 40,
+                                              radius: 20,
                                               backgroundImage: AssetImage(
                                                   'assets/images/profile_avatar.png'),
                                             ),

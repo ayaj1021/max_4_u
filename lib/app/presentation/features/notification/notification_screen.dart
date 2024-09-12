@@ -65,9 +65,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
                               color: AppColors.primaryColor,
                             ),
                           )
-                        : getNot.allNotifications.transactions == null
+                        : getNot.allNotifications.data == null
                             ? SizedBox.shrink()
-                            : getNot.allNotifications.transactions!.isEmpty
+                            : getNot.allNotifications.data!.transactions!.isEmpty
                                 ? Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment:
@@ -91,10 +91,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                     children: [
                                       Column(
                                         children: List.generate(
-                                            getNot.allNotifications
-                                                .transactions!.length, (index) {
+                                            getNot.allNotifications.data!.transactions!
+                                                .length, (index) {
                                           final data = getNot.allNotifications
-                                              .transactions![index];
+                                              .data!.transactions![index];
                                           return Column(
                                             children: [
                                               GestureDetector(

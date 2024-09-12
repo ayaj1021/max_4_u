@@ -55,7 +55,7 @@ class TransactionDetailComponent extends StatelessWidget {
                       children: [
                         TextSpan(
                           text:
-                              ' $message',
+                              '\n$message',
                           style: AppTextStyles.font12.copyWith(
                             fontWeight: FontWeight.w500,
                             color:

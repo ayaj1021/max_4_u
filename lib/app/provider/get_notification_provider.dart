@@ -28,7 +28,7 @@ class GetNotificationProvider extends ChangeNotifier {
     );
 
     final data = response.data;
-    _status = data['status'];
+    _status = data['data']['status'];
     try {
       if (response.statusCode == 200 || response.statusCode == 201) {
         // if (_status == true) {
@@ -40,8 +40,8 @@ class GetNotificationProvider extends ChangeNotifier {
       } else {
         _isLoading = false;
         state = ViewState.Error;
-        _status = data['status'];
-        _message = data['message'];
+        _status = data['data']['status'];
+        _message = data['data']['message'];
         notifyListeners();
       }
     } on DioException catch (e) {

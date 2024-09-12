@@ -37,7 +37,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
 
   List<Transaction>? filteredTransactions = [];
 
-
   void _filterTransactions() {
     final query = _searchController.text.toLowerCase();
 
@@ -63,21 +62,28 @@ class _TransactionScreenState extends State<TransactionScreen> {
   void filterPendingTransactions({required String selectedStatus}) {
     final List<Transaction>? retrieveDataTransactions =
         retrievedTransactionHistory?.data?.where((transaction) {
-      return transaction.status?.toLowerCase().contains(selectedStatus) ??
-          false;
+      return (transaction.status?.toLowerCase().contains(selectedStatus) ??
+          false);
     }).toList();
 
     setState(() {
       filteredTransactions = retrieveDataTransactions;
-
-     // print(selectedStatus);
     });
   }
 
-  //  retrievedTransactionHistory?.data?.where((transaction) {
-  //   return transaction.status?.toLowerCase().contains(selectedStatus) ??
-  //       false;
-  // }).toList();
+  void filterAllTransactions({required String selectedStatus}) {
+    final List<Transaction>? allDataTransactions =
+        retrievedTransactionHistory?.data?.where((transaction) {
+      bool allTransactions =
+          (!transaction.status!.toLowerCase().contains(selectedStatus));
+
+      return allTransactions;
+    }).toList();
+
+    setState(() {
+      filteredTransactions = allDataTransactions;
+    });
+  }
 
   getTransactions() async {
     final storage = await SecureStorage();
@@ -93,18 +99,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
     _searchController.dispose();
     super.dispose();
   }
-
-  final categories = [
-    'All',
-    'Added funds',
-    'Data',
-    'Airtime',
-  ];
-
-  int? categoryIndex;
-  int? statusIndex;
-
-  String? dateString;
 
   void shareContent(String content) {
     Share.share(content);
@@ -189,10 +183,11 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                 dateFormat: dateFormat,
                                 icons: icons,
                                 colors: colors,
-                              
                                 filterItems: (p) {
-                                  filterPendingTransactions(
-                                      selectedStatus: p);
+                                  filterPendingTransactions(selectedStatus: p);
+                                },
+                                allItems: (p) {
+                                  filterAllTransactions(selectedStatus: p);
                                 },
                               ),
                   ],

@@ -5,7 +5,6 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:max_4_u/app/navigation/router.dart';
 import 'package:max_4_u/app/presentation/features/vendor_features/provider/generate_account_number_provider.dart';
 import 'package:max_4_u/app/provider/activate_auto_renewal_provider.dart';
@@ -93,9 +92,9 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    _getDeviceInfo();
+   // _getDeviceInfo();
     // _getLocation();
-    _getIPAddress();
+   // _getIPAddress();
     // internetSubscription = InternetConnectionChecker().onStatusChange.listen((status){});
     // final hasInternet = status  == InternetConnectionStatus.connected;
 
@@ -110,35 +109,35 @@ class _MyAppState extends State<MyApp> {
     debugPrint(ipAddress);
   }
 
-  Future<void> _getDeviceInfo() async {
-    final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
-    if (Platform.isAndroid) {
-      final androidInfo = await deviceInfoPlugin.androidInfo;
-      setState(() {
-        deviceName = androidInfo.device;
-        deviceModel = androidInfo.model;
-        os = 'Android ${androidInfo.version.release}';
-      });
-    } else if (Platform.isIOS) {
-      final iosInfo = await deviceInfoPlugin.iosInfo;
-      setState(() {
-        deviceName = iosInfo.name;
-        deviceModel = iosInfo.model;
-        os = 'iOS ${iosInfo.systemVersion}';
-      });
-    }
-  }
+ // Future<void> _getDeviceInfo() async {
+    // final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+    // if (Platform.isAndroid) {
+    //   final androidInfo = await deviceInfoPlugin.androidInfo;
+    //   setState(() {
+    //     deviceName = androidInfo.device;
+    //     deviceModel = androidInfo.model;
+    //     os = 'Android ${androidInfo.version.release}';
+    //   });
+    // } else if (Platform.isIOS) {
+    //   final iosInfo = await deviceInfoPlugin.iosInfo;
+    //   setState(() {
+    //     deviceName = iosInfo.name;
+    //     deviceModel = iosInfo.model;
+    //     os = 'iOS ${iosInfo.systemVersion}';
+    //   });
+    // }
+//  }
 
-  Future<void> _getIPAddress() async {
-    final dio = Dio();
-    final response = await dio.get('https://api.ipify.org?format=json');
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = (response.data);
-      setState(() {
-        ipAddress = data['ip'];
-      });
-    }
-  }
+//  Future<void> _getIPAddress() async {
+    // final dio = Dio();
+    // final response = await dio.get('https://api.ipify.org?format=json');
+    // if (response.statusCode == 200) {
+    //   final Map<String, dynamic> data = (response.data);
+    //   setState(() {
+    //     ipAddress = data['ip'];
+    //   });
+    // }
+ // }
 
   @override
   Widget build(BuildContext context) {

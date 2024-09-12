@@ -1,35 +1,55 @@
 class NotificationResponseData {
-  bool? status;
-  List<Notifications>? transactions;
+  final bool? status;
+  final TransactionData? data;
 
-  NotificationResponseData({this.status, this.transactions});
+  NotificationResponseData({this.status, this.data});
 
   factory NotificationResponseData.fromJson(Map<String, dynamic> json) {
     return NotificationResponseData(
-      status: json['status'],
-      transactions: (json['data'] as List<dynamic>?)
-          ?.map((item) => Notifications.fromJson(item))
-          .toList(),
+      status: json['status'] as bool?,
+      data: json['data'] != null
+          ? TransactionData.fromJson(json['data'] as Map<String, dynamic>)
+          : null,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'status': status,
-      'data': transactions?.map((item) => item.toJson()).toList(),
+      'data': data?.toJson(),
     };
   }
 }
 
-class Notifications {
-  int? id;
-  String? heading;
-  String? message;
-  String? status;
-  String? regDate;
-  int? userId;
+class TransactionData {
+  final List<Transaction>? transactions;
 
-  Notifications({
+  TransactionData({this.transactions});
+
+  factory TransactionData.fromJson(Map<String, dynamic> json) {
+    return TransactionData(
+      transactions: (json['data'] as List<dynamic>?)
+          ?.map((item) => Transaction.fromJson(item as Map<String, dynamic>))
+          .toList(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'data': transactions?.map((transaction) => transaction.toJson()).toList(),
+    };
+  }
+}
+
+class Transaction {
+  final int? id;
+  final String? heading;
+  final String? message;
+  final String? status;
+  final String? regDate;
+  final int? userId;
+
+  Transaction({
     this.id,
     this.heading,
     this.message,
@@ -38,14 +58,14 @@ class Notifications {
     this.userId,
   });
 
-  factory Notifications.fromJson(Map<String, dynamic> json) {
-    return Notifications(
-      id: json['id'],
-      heading: json['heading'],
-      message: json['message'],
-      status: json['status'],
-      regDate: json['reg_date'],
-      userId: json['user_id'],
+  factory Transaction.fromJson(Map<String, dynamic> json) {
+    return Transaction(
+      id: json['id'] as int?,
+      heading: json['heading'] as String?,
+      message: json['message'] as String?,
+      status: json['status'] as String?,
+      regDate: json['reg_date'] as String?,
+      userId: json['user_id'] as int?,
     );
   }
 

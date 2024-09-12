@@ -66,13 +66,14 @@ class GetAllAppUsers extends ChangeNotifier {
         isLoading = false;
 
         firstName = EncryptData.decryptAES(
-            '${allAppUsers.data?.map((e)=>e.firstName)}');
+            '${allAppUsers.data?.first.firstName}');
+       
         lastName =
-            EncryptData.decryptAES('${allAppUsers.data?.map((e)=> e.lastName)}');
+            EncryptData.decryptAES('${allAppUsers.data?.first.lastName}');
         phoneNumber = EncryptData.decryptAES(
-            '${allAppUsers.data?.map((e)=>e.mobileNumber)}');
+            '${allAppUsers.data?.first.mobileNumber}');
         email =
-            EncryptData.decryptAES('${allAppUsers.data?.map((e)=> e.email)}');
+            EncryptData.decryptAES('${allAppUsers.data?.first.email}');
         //log('This is $allAppUsers');
         updateSearch();
 
@@ -141,11 +142,11 @@ class GetAllAppUsers extends ChangeNotifier {
         isLoading = false;
 
         vendorFirstName = EncryptData.decryptAES(
-            '${allAppVendors.data?.map((e)=> e.firstName)}');
+            '${allAppVendors.data?.first.firstName}');
         vendorLastName = EncryptData.decryptAES(
-            '${allAppVendors.data?.map((e)=> e.lastName)}');
+            '${allAppVendors.data?.first.lastName}');
         vendorPhoneNumber = EncryptData.decryptAES(
-            '${allAppVendors.data?.map((e)=> e.mobileNumber)}');
+            '${allAppVendors.data?.first.mobileNumber}');
         log('This is $allAppVendors');
 
         notifyListeners();
@@ -197,11 +198,11 @@ class GetAllAppUsers extends ChangeNotifier {
         isLoading = false;
 
         adminFirstName = EncryptData.decryptAES(
-            '${allAppAdmins.data?.map((e)=> e.firstName)}');
+            '${allAppAdmins.data?.first.firstName}');
         adminLastName = EncryptData.decryptAES(
-            '${allAppAdmins.data?.map((e)=> e.lastName)}');
+            '${allAppAdmins.data?.first.lastName}');
         adminPhoneNumber = EncryptData.decryptAES(
-            '${allAppAdmins.data?.map((e)=> e.mobileNumber)}');
+            '${allAppAdmins.data?.first.mobileNumber}');
         log('This is $allAppAdmins');
 
         notifyListeners();

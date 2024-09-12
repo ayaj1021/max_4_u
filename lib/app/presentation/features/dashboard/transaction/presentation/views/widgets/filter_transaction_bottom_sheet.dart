@@ -3,27 +3,8 @@ import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
 
-final categories = [
-  'All',
-  'Added funds',
-  'Data',
-  'Airtime',
-];
-
-final status = [
-  'All',
-  'success',
-  'pending',
-  'failed',
-];
-
-String? selectedStatus;
-
-int? categoryIndex;
-int? statusIndex;
-
 Future<dynamic> filterTransactionBottomSheet(BuildContext context,
-    {required void Function(String) filterItems}) {
+    {required void Function(String) filterItems ,required void Function(String) allItems}) {
   return showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -43,10 +24,13 @@ Future<dynamic> filterTransactionBottomSheet(BuildContext context,
               children: [
                 Align(
                   alignment: Alignment.topRight,
-                  child: SizedBox(
-                    height: 24,
-                    width: 24,
-                    child: Image.asset('assets/icons/cancel_icon.png'),
+                  child: GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: SizedBox(
+                      height: 24,
+                      width: 24,
+                      child: Image.asset('assets/icons/cancel_icon.png'),
+                    ),
                   ),
                 ),
                 // verticalSpace(9),
@@ -143,11 +127,11 @@ Future<dynamic> filterTransactionBottomSheet(BuildContext context,
                           contentPadding: EdgeInsets.zero,
                           title: Text('All'),
                           onTap: () {
-                            filterItems('all');
+                            allItems('all');
                             // setState(() {
                             //   selectedStatus = 'all';
                             // });
-                            print(selectedStatus);
+
                             Navigator.pop(context);
                           },
                         ),
@@ -159,7 +143,7 @@ Future<dynamic> filterTransactionBottomSheet(BuildContext context,
                             // setState(() {
                             //   selectedStatus = 'success';
                             // });
-                            print(selectedStatus);
+
                             Navigator.pop(context);
                           },
                         ),
@@ -171,7 +155,7 @@ Future<dynamic> filterTransactionBottomSheet(BuildContext context,
                             // setState(() {
                             //   selectedStatus = 'pending';
                             // });
-                            print(selectedStatus);
+
                             Navigator.pop(context);
                           },
                         ),
@@ -183,7 +167,7 @@ Future<dynamic> filterTransactionBottomSheet(BuildContext context,
                             // setState(() {
                             //   selectedStatus = 'failed';
                             // });
-                            print(selectedStatus);
+
                             Navigator.pop(context);
                           },
                         ),

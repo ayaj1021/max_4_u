@@ -205,7 +205,7 @@ class AuthProviderImpl extends ChangeNotifier
 
 //Login user method
   @override
-  Future<UpdatedBaseResponse> loginUser(
+  Future<UpdatedBaseResponse<dynamic>> loginUser(
       {required String email, required String password}) async {
     state = ViewState.Busy;
     _message = 'Logging in your account...';
@@ -259,7 +259,14 @@ class AuthProviderImpl extends ChangeNotifier
       _message = AppException.handleError(e).toString();
       //  return UpdatedBaseResponse.fromError(_message);
       return ExceptionHandler.handleError(e);
-    }
+    }  catch (e) {
+    // Handle any other exceptions
+    _message = 'An unexpected error occurred: $e';
+    _status = false;
+    state = ViewState.Error;
+    notifyListeners();
+    return UpdatedBaseResponse.fromError(_message);
+  }
   }
 
 //Forgot password user method
