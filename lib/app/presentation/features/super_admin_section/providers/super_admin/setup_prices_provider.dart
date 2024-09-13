@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/config/base_response/updated_base_response.dart';
@@ -92,103 +94,112 @@ class SetupPricesProvider extends ChangeNotifier {
   //     return AppException.handleError(e);
   //   }
   // }
-Future<UpdatedBaseResponse<dynamic>> setupPrices({
-  required String category,
-  required String productPrice,
-  required String serviceName,
-  required String logoName,
-  required String productName,
-  required String productCode,
-  required String customerDiscount,
-  required String vendorDiscount,
-  required String serviceFee,
-  required String duration,
-  required String vendingCode,
-}) async {
-  state = ViewState.Busy;
-  _message = 'Setting up prices...';
-  notifyListeners();
+  Future<UpdatedBaseResponse<dynamic>> setupPrices({
+    required String category,
+    required String productPrice,
+    required String serviceName,
+    required String logoName,
+    required String productName,
+    required String productCode,
+    required String customerDiscount,
+    required String vendorDiscount,
+    required String serviceFee,
+    required String duration,
+    required String vendingCode,
+  }) async {
+    state = ViewState.Busy;
+    _message = 'Setting up prices...';
+    notifyListeners();
 
-  final body = {
-    "request_type": "grand_admin",
-    "action": "set_product",
-    "product_name": productName,
-    "product_code": productCode,
-    "service_name": serviceName,
-    "category": category,
-    "product_price": productPrice,
-    "consumer_discount": customerDiscount,
-    "vendor_discount": vendorDiscount,
-    "service_fee": serviceFee,
-    "logo_name": logoName,
-    "duration": duration,
-    "vending_code": vendingCode
-  };
+    try {
+      // Get the encrypted user ID
 
-  debugPrint('$body');
+      final storage = await SecureStorage();
+      final id = await storage.getUserEncryptedId();
+  
 
-  try {
-    // Get the encrypted user ID
-    final id = await SecureStorage().getEncryptedID();
-    print("This is userId: $id");
+      // Make the API request using Dio
 
-    // Make the API request using Dio
-    final response = await _dio.post(AppConstants.baseUrl,
-      data: body,
-      options: Options(headers: {
-        'Content-Type': 'application/json',
-        'Site-From': 'postman',
-        'User-Key': id // Ensure the ID is correct
-      }),
-    );
+      final body = {
+        "request_type": "grand_admin",
+        "action": "set_product",
+        "product_name": productName,
+        "product_code": productCode,
+        "service_name": serviceName,
+        "category": category,
+        "product_price": productPrice,
+        "consumer_discount": customerDiscount,
+        "vendor_discount": vendorDiscount,
+        "service_fee": serviceFee,
+        "logo_name": logoName,
+        "duration": duration,
+        "vending_code": vendingCode
+      };
 
-    // Parse response and update status accordingly
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      final data = response.data['data'];
-      _status = data['status'];
-      _message = data['message'];
-      
-      state = ViewState.Success;
-      notifyListeners();
+      log('$body');
 
-      return UpdatedBaseResponse.fromSuccess(data);
-    } else {
-      // Handle non-success status codes
-      final errorData = response.data['error_data'];
-      _message = errorData['message'] ?? 'Unknown error occurred';
+      //  _dio.options.baseUrl = AppConstants.baseUrl;
+
+      // print('$headers');
+      final response = await _dio.post(
+        AppConstants.baseUrl,
+        data: body,
+        options: Options(
+          validateStatus: (_) => true,
+          // contentType: Headers.jsonContentType,
+           responseType: ResponseType.json,
+          headers: {
+            'Content-Type': 'application/json',
+            'Site-From': 'postman',
+            'User-Key': id
+          },
+          contentType: Headers.jsonContentType,
+        ),
+      );
+
+      print('${response.data}');
+      print('${response.statusCode}');
+
+      final data = response.data;
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        _status = data['data']['status'];
+        _message = data['data']['message'];
+
+        state = ViewState.Success;
+        notifyListeners();
+        // return data;
+        return UpdatedBaseResponse.fromSuccess(data);
+      } else {
+        // Handle non-success status codes
+        // final errorData = response.data['data']['error_data'];
+        final errorData = response.data['data']['message'];
+        _message = errorData ?? 'Unknown error occurred';
+        _status = false;
+
+        state = ViewState.Error;
+        notifyListeners();
+
+        return UpdatedBaseResponse.fromError(_message);
+      }
+    } on DioException catch (e) {
+      // Handle DioException, check for 401 Unauthorized and other errors
+      if (e.response?.statusCode == 401) {
+        _message = e.toString();
+      } else {
+        _message = AppException.handleError(e).toString();
+      }
+
       _status = false;
-      
       state = ViewState.Error;
       notifyListeners();
-
+      return UpdatedBaseResponse.fromError(_message);
+    } catch (e) {
+      // Handle any other exceptions
+      _message = 'An unexpected error occurred: $e';
+      _status = false;
+      state = ViewState.Error;
+      notifyListeners();
       return UpdatedBaseResponse.fromError(_message);
     }
-
-  } on DioException catch (e) {
-    // Handle DioException, check for 401 Unauthorized and other errors
-    if (e.response?.statusCode == 401) {
-      _message = 'Unauthorized request. Please check your credentials.';
-    } else {
-      _message = AppException.handleError(e).toString();
-    }
-
-    _status = false;
-    state = ViewState.Error;
-    notifyListeners();
-    return UpdatedBaseResponse.fromError(_message);
-  } catch (e) {
-    // Handle any other exceptions
-    _message = 'An unexpected error occurred: $e';
-    _status = false;
-    state = ViewState.Error;
-    notifyListeners();
-    return UpdatedBaseResponse.fromError(_message);
   }
 }
-
-
-
-
-}
-
-

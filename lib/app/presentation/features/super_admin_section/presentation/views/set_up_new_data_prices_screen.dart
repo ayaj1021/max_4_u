@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/model/load_data_model.dart';
-import 'package:max_4_u/app/presentation/features/super_admin_section/successful_price_set_screen.dart';
+import 'package:max_4_u/app/presentation/features/super_admin_section/presentation/views/successful_price_set_screen.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/presentation/features/super_admin_section/providers/super_admin/setup_prices_provider.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
@@ -133,18 +133,6 @@ class _SetupNewDataPricesScreenState extends State<SetupNewDataPricesScreen> {
                         ),
                       ),
                       verticalSpace(64),
-                      TextInputField(
-                        controller: _productNameController,
-                        labelText: 'Product name',
-                        hintText: 'product name',
-                      ),
-                      verticalSpace(27),
-                      TextInputField(
-                        controller: _productCodeController,
-                        labelText: 'Product code',
-                        hintText: 'product code',
-                      ),
-                      verticalSpace(27),
                       Text(
                         'Service name',
                         style: AppTextStyles.font14.copyWith(
@@ -248,6 +236,18 @@ class _SetupNewDataPricesScreenState extends State<SetupNewDataPricesScreen> {
                       ),
                       verticalSpace(24),
                       TextInputField(
+                        controller: _productNameController,
+                        labelText: 'Product name',
+                        hintText: 'product name',
+                      ),
+                      verticalSpace(27),
+                      TextInputField(
+                        controller: _productCodeController,
+                        labelText: 'Product code',
+                        hintText: 'product code',
+                      ),
+                      verticalSpace(27),
+                      TextInputField(
                         controller: _productPriceController,
                         labelText: 'Product price',
                         hintText: 'N50',
@@ -282,11 +282,39 @@ class _SetupNewDataPricesScreenState extends State<SetupNewDataPricesScreen> {
                         textInputType: TextInputType.number,
                       ),
                       verticalSpace(24),
-                      TextInputField(
-                        controller: _logoNameController,
-                        labelText: 'Logo name',
-                        hintText: 'Glo',
+                      Text(
+                        'Logo name',
+                        style: AppTextStyles.font14.copyWith(
+                          color: const Color(0xff475569),
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
+                      verticalSpace(8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        alignment: Alignment.centerLeft,
+                        height: 52.h,
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: AppColors.whiteColor,
+                          border: Border.all(
+                            color: const Color(0xffCBD5E1),
+                          ),
+                        ),
+                        child: Text(
+                          "${_selectedServices?.toUpperCase() ?? ''}",
+                          style: AppTextStyles.font14.copyWith(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                      // TextInputField(
+                      //   controller: _logoNameController,
+                      //   labelText: 'Logo name',
+                      //   hintText: 'Glo',
+                      // ),
                       verticalSpace(24),
                       TextInputField(
                         controller: _durationController,
@@ -352,7 +380,7 @@ class _SetupNewDataPricesScreenState extends State<SetupNewDataPricesScreen> {
                                 _customerDiscountController.text.isEmpty ||
                                 _vendorDiscountController.text.isEmpty ||
                                 _serviceFeeController.text.isEmpty ||
-                                _logoNameController.text.isEmpty ||
+                                // _logoNameController.text.isEmpty ||
                                 _durationController.text.isEmpty ||
                                 _selectedVendingCode == null) {
                               showMessage(context, 'All fields are required',
@@ -363,17 +391,23 @@ class _SetupNewDataPricesScreenState extends State<SetupNewDataPricesScreen> {
                             await setupPrice.setupPrices(
                               productName: _productNameController.text.trim(),
                               productCode: _productCodeController.text.trim(),
-                              serviceName: _selectedServices.toString(),
-                              category: _selectedCategory.toString(),
+                              serviceName:
+                                  _selectedServices!.toLowerCase().toString(),
+                              category:
+                                  _selectedCategory!.toLowerCase().toString(),
                               productPrice: _setPriceController.text.trim(),
                               customerDiscount:
                                   _customerDiscountController.text.trim(),
                               vendorDiscount:
                                   _vendorDiscountController.text.trim(),
                               serviceFee: _serviceFeeController.text.trim(),
-                              logoName: _logoNameController.text.trim(),
+                              logoName:
+                                  _selectedServices!.toLowerCase().toString(),
+                              //_logoNameController.text.trim(),
                               duration: _durationController.text.trim(),
-                              vendingCode: _selectedVendingCode.toString(),
+                              vendingCode: _selectedVendingCode!
+                                  .toLowerCase()
+                                  .toString(),
                             );
 
                             if (setupPrice.status == false && context.mounted) {
@@ -385,7 +419,7 @@ class _SetupNewDataPricesScreenState extends State<SetupNewDataPricesScreen> {
 
                             if (setupPrice.status == true && context.mounted) {
                               showMessage(context, setupPrice.message,
-                                  isError: true);
+                                  isError: false);
                               nextScreen(context, SuccessfulPriceSetScreen());
                             }
                           },
