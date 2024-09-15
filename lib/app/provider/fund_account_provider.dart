@@ -36,23 +36,23 @@ class FundAccountProvider extends ChangeNotifier {
       // message: _message,
     );
     final data = response.data;
-    _status = data['status'];
+    _status = data['data']['status'];
     log('this is all user response $response');
     try {
       if (response.statusCode == 200 || response.statusCode == 201) {
         //if (_status == true) {
-        _status = data['status'];
+        _status = data['data']['status'];
 
-        _message = data['message'];
+        _message = data['data']['message'];
         state = ViewState.Success;
-        paymentUrl = data['response_data']['payment_link'];
-        token = data['response_data']['token'];
+        paymentUrl = data['data']['response_data']['payment_link'];
+        token = data['data']['response_data']['token'];
         log('this is payment url $paymentUrl');
 
         notifyListeners();
       } else {
-        _message = data['message'];
-        _status = data['status'];
+        _message = data['data']['message'];
+        _status = data['data']['status'];
         state = ViewState.Error;
         notifyListeners();
       }
@@ -84,24 +84,24 @@ class FundAccountProvider extends ChangeNotifier {
     );
 
     final data = response.data;
-    _status = data['status'];
+    _status = data['data']['status'];
     log('this is all user response $response');
     try {
       if (response.statusCode == 200 || response.statusCode == 201) {
         // if (_status == true) {
-        _status = data['status'];
+        _status = data['data']['status'];
         //  displayPaymentTransactionStatus(context, response['data']['message']);
 
-        _message = data['message'];
+        _message = data['data']['message'];
         _isLoading = false;
-        paymentUrl = data['response_data']['payment_link'];
-        log('this is payment url $paymentUrl');
+        // paymentUrl = data['data']['response_data']['payment_link'];
+        // log('this is payment url $paymentUrl');
 
         notifyListeners();
         return data;
       } else {
-        _message = data['message'];
-        _status = data['status'];
+        _message = data['data']['message'];
+        _status = data['data']['status'];
         _isLoading = false;
         notifyListeners();
       }
