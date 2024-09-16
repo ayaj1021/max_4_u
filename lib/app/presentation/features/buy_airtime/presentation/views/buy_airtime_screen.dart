@@ -51,9 +51,6 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
     setState(() {
       selectedLogo = logo;
     });
-    print('Selected logo: $selectedLogo');
-    print(
-        'Available logos in products: ${retrievedProducts.map((product) => product.logo).toSet().toList()}');
   }
 
   @override
@@ -88,10 +85,6 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
     final storage = await SecureStorage();
 
     retrievedProducts = (await storage.getUserProducts())!;
-    for (var products in retrievedProducts) {
-      print('${products.name}: ${products.price}');
-      print('${products.logo}: ${products.duration}');
-    }
   }
 
   int? selectedLogoIndex;

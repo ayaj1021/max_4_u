@@ -1,10 +1,11 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/abstract_class/auth_abstract_class.dart';
 import 'package:max_4_u/app/config/base_response/updated_base_response.dart';
 import 'package:max_4_u/app/config/exception/app_exception.dart';
 import 'package:max_4_u/app/database/database.dart';
-import 'package:max_4_u/app/domain/exception_handler.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/model/user_response_model.dart';
 import 'package:max_4_u/app/service/service.dart';
@@ -47,7 +48,8 @@ class AuthProviderImpl extends ChangeNotifier
 
 //Sign up user
   @override
-  Future<void> signUp({required String phoneNumber}) async {
+  Future<UpdatedBaseResponse<dynamic>> signUp(
+      {required String phoneNumber}) async {
     state = ViewState.Busy;
     _message = 'Creating your account...';
     notifyListeners();
@@ -57,14 +59,14 @@ class AuthProviderImpl extends ChangeNotifier
       "action": "verify_receiving_medium",
       "mobile_number": phoneNumber,
     };
-    print(body);
+
     await SecureStorage().saveUserPhone(phoneNumber);
     try {
       final response = await ApiService().authPostRequest(
         data: body,
       );
       final data = response.data;
-      print('$_status');
+
       _status = data['data']['status'];
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -78,6 +80,7 @@ class AuthProviderImpl extends ChangeNotifier
         state = ViewState.Success;
 
         notifyListeners();
+        return UpdatedBaseResponse.fromSuccess(data);
       } else {
         _status = false;
 
@@ -88,17 +91,37 @@ class AuthProviderImpl extends ChangeNotifier
         _message = data['data']['error_data']['mobile_number'];
 
         notifyListeners();
+        return UpdatedBaseResponse.fromError(_message);
+      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        _message = 'Unauthorized request. Please check your credentials.';
+      } else if (e.error is SocketException) {
+        _message = 'No Internet connection or server is unreachable.';
+      } else {
+        _message = AppException.handleError(e).toString();
       }
 
-      return data;
-    } on DioException catch (e) {
-      return ExceptionHandler.handleError(e);
+      _status = false;
+      state = ViewState.Error;
+      notifyListeners();
+
+      // Ensure all errors are wrapped in an UpdatedBaseResponse
+      return UpdatedBaseResponse.fromError(_message);
+    } catch (e) {
+      // Handle any other exceptions
+      _message = 'An unexpected error occurred: $e';
+      _status = false;
+      state = ViewState.Error;
+      notifyListeners();
+
+      return UpdatedBaseResponse.fromError(_message);
     }
   }
 
 //Verify otp
   @override
-  Future<void> verifyOtp({required String otp}) async {
+  Future<UpdatedBaseResponse<dynamic>> verifyOtp({required String otp}) async {
     state = ViewState.Busy;
     _message = 'Verifying otp...';
     notifyListeners();
@@ -110,7 +133,6 @@ class AuthProviderImpl extends ChangeNotifier
       "medium_id": '$_number',
       "token": otp,
     };
-    print(body);
 
     await SecureStorage().saveUserOtp(otp);
     try {
@@ -126,23 +148,42 @@ class AuthProviderImpl extends ChangeNotifier
         state = ViewState.Success;
 
         notifyListeners();
-        return data['data'];
+        return UpdatedBaseResponse.fromSuccess(data);
       } else {
         _status = false;
         _message = data['data']['message'];
         state = ViewState.Error;
 
         notifyListeners();
+        return UpdatedBaseResponse.fromError(_message);
       }
     } on DioException catch (e) {
-      return ExceptionHandler.handleError(e);
+      if (e.response?.statusCode == 401) {
+        _message = 'Unauthorized request. Please check your credentials.';
+      } else if (e.error is SocketException) {
+        _message = 'No Internet connection or server is unreachable.';
+      } else {
+        _message = AppException.handleError(e).toString();
+      }
+
+      _status = false;
+      state = ViewState.Error;
+      notifyListeners();
+
+      return UpdatedBaseResponse.fromError(_message);
+    } catch (e) {
+      // Handle any other exceptions
+      _message = 'An unexpected error occurred: $e';
+      _status = false;
+      state = ViewState.Error;
+      notifyListeners();
+
+      return UpdatedBaseResponse.fromError(_message);
     }
   }
 
-  //To fully register a user
-
   @override
-  Future<void> registerUser({
+  Future<UpdatedBaseResponse<dynamic>> registerUser({
     required String email,
     required String password,
     required String firstName,
@@ -188,18 +229,39 @@ class AuthProviderImpl extends ChangeNotifier
         await SecureStorage().saveUserLevel(_userLevel);
 
         updateNumber(_userLevel);
-        return data['data'];
+        return UpdatedBaseResponse.fromSuccess(data);
       } else {
         _message = data['data']['message'];
         state = ViewState.Error;
         _status = data['data']['status'];
 
-        _message = data['data']['error_data']['password'];
-        _message = data['data']['error_data']['email'];
+        _message = data['data']['error_data']['password'] ??
+            data['data']['error_data']['email'];
+
         notifyListeners();
+        return UpdatedBaseResponse.fromError(_message);
       }
     } on DioException catch (e) {
-      return ExceptionHandler.handleError(e);
+      if (e.response?.statusCode == 401) {
+        _message = 'Unauthorized request. Please check your credentials.';
+      } else if (e.error is SocketException) {
+        _message = 'No Internet connection or server is unreachable.';
+      } else {
+        _message = AppException.handleError(e).toString();
+      }
+
+      _status = false;
+      state = ViewState.Error;
+      notifyListeners();
+
+      return UpdatedBaseResponse.fromError(_message);
+    } catch (e) {
+      // Handle any other exceptions
+      _message = 'An unexpected error occurred: $e';
+      _status = false;
+      state = ViewState.Error;
+      notifyListeners();
+      return UpdatedBaseResponse.fromError(_message);
     }
   }
 
@@ -216,14 +278,13 @@ class AuthProviderImpl extends ChangeNotifier
       "login_id": email,
       "password": password,
     };
-    print(body.toString());
+
     try {
       final response = await ApiService().authPostRequest(
         data: body,
       );
 
       final data = response.data;
-      debugPrint(data.toString());
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         _status = data['data']['status'];
@@ -235,43 +296,46 @@ class AuthProviderImpl extends ChangeNotifier
         updateNumber(_userLevel);
 
         notifyListeners();
-        //  return data;
 
         return UpdatedBaseResponse.fromSuccess(data);
       } else {
         _status = data['data']['status'];
         state = ViewState.Error;
 
-        _errorMessage = data['data']['message'];
-
-        _errorMessage = data['data']['error_data']['login_id'];
+        _message =
+            data['data']['message'] ?? data['data']['error_data']['login_id'];
 
         notifyListeners();
-        //return data['data'];
+
         return UpdatedBaseResponse.fromError(_message);
       }
     } on DioException catch (e) {
       if (e.response?.statusCode == 401) {
         _message = 'Unauthorized request. Please check your credentials.';
+      } else if (e.error is SocketException) {
+        _message = 'No Internet connection or server is unreachable.';
       } else {
         _message = AppException.handleError(e).toString();
       }
-      _message = AppException.handleError(e).toString();
-      //  return UpdatedBaseResponse.fromError(_message);
-      return ExceptionHandler.handleError(e);
-    }  catch (e) {
-    // Handle any other exceptions
-    _message = 'An unexpected error occurred: $e';
-    _status = false;
-    state = ViewState.Error;
-    notifyListeners();
-    return UpdatedBaseResponse.fromError(_message);
-  }
+
+      _status = false;
+      state = ViewState.Error;
+      notifyListeners();
+
+      return UpdatedBaseResponse.fromError(_message);
+    } catch (e) {
+      _message = 'An unexpected error occurred: $e';
+      _status = false;
+      state = ViewState.Error;
+      notifyListeners();
+      return UpdatedBaseResponse.fromError(_message);
+    }
   }
 
 //Forgot password user method
   @override
-  Future<void> forgotPassword({required String email}) async {
+  Future<UpdatedBaseResponse<dynamic>> forgotPassword(
+      {required String email}) async {
     state = ViewState.Busy;
     _message = 'Verifying your email...';
     notifyListeners();
@@ -298,21 +362,41 @@ class AuthProviderImpl extends ChangeNotifier
         _status = data['data']['status'];
         _message = data['data']['message'];
         notifyListeners();
-        return data['data'];
+        return UpdatedBaseResponse.fromSuccess(_message);
       } else {
         state = ViewState.Error;
         _message = data['data']['error_data']['receiving_medium'];
 
         notifyListeners();
+        return UpdatedBaseResponse.fromError(_message);
       }
     } on DioException catch (e) {
-      return ExceptionHandler.handleError(e);
+      if (e.response?.statusCode == 401) {
+        _message = 'Unauthorized request. Please check your credentials.';
+      } else if (e.error is SocketException) {
+        _message = 'No Internet connection or server is unreachable.';
+      } else {
+        _message = AppException.handleError(e).toString();
+      }
+
+      _status = false;
+      state = ViewState.Error;
+      notifyListeners();
+
+      return UpdatedBaseResponse.fromError(_message);
+    } catch (e) {
+      _message = 'An unexpected error occurred: $e';
+      _status = false;
+      state = ViewState.Error;
+      notifyListeners();
+      return UpdatedBaseResponse.fromError(_message);
     }
   }
 
   //Verify otp forgot password method
   @override
-  Future<void> verifyForgotPasswordOtp({required String otp}) async {
+  Future<UpdatedBaseResponse<dynamic>> verifyForgotPasswordOtp(
+      {required String otp}) async {
     state = ViewState.Busy;
     _message = 'Verifying your otp...';
     notifyListeners();
@@ -328,7 +412,6 @@ class AuthProviderImpl extends ChangeNotifier
 
     await SecureStorage().saveUserOtp(otp);
 
-    print(body);
     try {
       final response = await ApiService().authPostRequest(
         data: body,
@@ -342,7 +425,7 @@ class AuthProviderImpl extends ChangeNotifier
         _message = data['data']['message'];
 
         notifyListeners();
-        return data['data'];
+        return UpdatedBaseResponse.fromSuccess(_message);
       } else {
         _status = data['data']['status'];
 
@@ -350,20 +433,39 @@ class AuthProviderImpl extends ChangeNotifier
         _message = data['data']['message'];
 
         notifyListeners();
+        return UpdatedBaseResponse.fromError(_message);
       }
     } on DioException catch (e) {
-      return ExceptionHandler.handleError(e);
+      if (e.response?.statusCode == 401) {
+        _message = 'Unauthorized request. Please check your credentials.';
+      } else if (e.error is SocketException) {
+        _message = 'No Internet connection or server is unreachable.';
+      } else {
+        _message = AppException.handleError(e).toString();
+      }
+
+      _status = false;
+      state = ViewState.Error;
+      notifyListeners();
+
+      return UpdatedBaseResponse.fromError(_message);
+    } catch (e) {
+      _message = 'An unexpected error occurred: $e';
+      _status = false;
+      state = ViewState.Error;
+      notifyListeners();
+      return UpdatedBaseResponse.fromError(_message);
     }
   }
 
 //Change password method
   @override
-  Future<void> changePassword(
+  Future<UpdatedBaseResponse<dynamic>> changePassword(
       {required String newPassword, required String confirmNewPassword}) async {
     state = ViewState.Busy;
     _message = 'Changing your password...';
     notifyListeners();
-    // _email = emailController.text;
+
     _otp = await SecureStorage().getUserOtp();
     _email = await SecureStorage().getUserEmail();
 
@@ -376,7 +478,6 @@ class AuthProviderImpl extends ChangeNotifier
       "confirm_password": confirmNewPassword
     };
 
-    print(body);
     try {
       final response = await ApiService().authPostRequest(
         data: body,
@@ -387,28 +488,38 @@ class AuthProviderImpl extends ChangeNotifier
         _status = data['data']['status'];
         state = ViewState.Success;
 
-        _message = data['message'];
+        _message = data['data']['message'];
 
         notifyListeners();
-        return data['data'];
+        return UpdatedBaseResponse.fromSuccess(_message);
       } else {
-        // print(status);
         state = ViewState.Error;
-        _message = data['message'];
-
-        wrongPassword = data['error_data']['password'];
-        existEmail = data['error_data']['email'];
+        _message =
+            data['data']['message'] ?? data['data']['error_data']['password'];
 
         notifyListeners();
+        return UpdatedBaseResponse.fromError(_message);
       }
     } on DioException catch (e) {
-      return ExceptionHandler.handleError(e);
+      if (e.response?.statusCode == 401) {
+        _message = 'Unauthorized request. Please check your credentials.';
+      } else if (e.error is SocketException) {
+        _message = 'No Internet connection or server is unreachable.';
+      } else {
+        _message = AppException.handleError(e).toString();
+      }
+
+      _status = false;
+      state = ViewState.Error;
+      notifyListeners();
+
+      return UpdatedBaseResponse.fromError(_message);
+    } catch (e) {
+      _message = 'An unexpected error occurred: $e';
+      _status = false;
+      state = ViewState.Error;
+      notifyListeners();
+      return UpdatedBaseResponse.fromError(_message);
     }
   }
-
-  // _updateState() {
-  //   WidgetsBinding.instance.addPostFrameCallback((_) {
-  //     notifyListeners();
-  //   });
-  // }
 }

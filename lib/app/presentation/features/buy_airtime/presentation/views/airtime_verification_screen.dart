@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max_4_u/app/enums/data_period_enum.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/presentation/features/buy_airtime/presentation/views/airtime_confirmation_screen.dart';
 import 'package:max_4_u/app/presentation/features/buy_airtime/provider/buy_airtime_provider.dart';
@@ -204,18 +203,4 @@ class _AirtimeVerificationScreenState extends State<AirtimeVerificationScreen> {
   }
 }
 
-String _dataPeriodToString(DataPeriod data) {
-  switch (data) {
-    case DataPeriod.Daily:
-      return 'Daily';
-    case DataPeriod.Monthly:
-      return 'Monthly';
-    case DataPeriod.Weekly:
-      return 'Weekly';
-    case DataPeriod.Yearly:
-      return 'Yearly';
 
-    default:
-      return '';
-  }
-}

@@ -54,7 +54,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           body: SafeArea(
               child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

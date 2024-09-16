@@ -76,7 +76,7 @@ class _ForgotPasswordScreen1State extends State<ForgotPasswordScreen1> {
                                 email: _emailController.text.trim());
                             if (authProv.state == ViewState.Error &&
                                 context.mounted) {
-                              showMessage(context, authProv.message);
+                              showMessage(context, authProv.message, isError: true);
                               return;
                             }
 

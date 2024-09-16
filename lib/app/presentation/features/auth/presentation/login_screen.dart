@@ -1,4 +1,3 @@
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -125,8 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           password: _passwordController.text.trim());
 
                       if (authProv.status == false && context.mounted) {
-                        showMessage(context, authProv.errorMessage,
-                            isError: true);
+                        showMessage(context, authProv.message, isError: true);
                         return;
                       }
 
@@ -171,10 +169,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
                       await SecureStorage().saveUserAutoRenewal(autoRenewal!);
 
-                   //  await SecureStorage().saveUserServices(services);
+                      //  await SecureStorage().saveUserServices(services);
                       await SecureStorage().saveUserType(userType.toString());
                       await SecureStorage().saveEncryptedID(uniqueId);
-                    
+
                       await SecureStorage().saveUserBalance(balance.toString());
                       await SecureStorage().saveFirstName(firstName);
                       await SecureStorage().saveLastName(lastName);

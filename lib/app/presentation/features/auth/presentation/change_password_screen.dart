@@ -45,7 +45,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                           onTap: () => Navigator.pop(context),
                         ),
                         verticalSpace(26),
-                         Text(
+                        Text(
                           'Reset password?',
                           style: AppTextStyles.font20,
                         ),
@@ -119,7 +119,8 @@ class _ChangePasswordState extends State<ChangePassword> {
                               if (authProv.state == ViewState.Error &&
                                   context.mounted) {
                                 showMessage(
-                                    context, authProv.message.toString());
+                                    context, authProv.message.toString(),
+                                    isError: true);
                                 return;
                               }
 
@@ -163,12 +164,12 @@ class _ChangePasswordState extends State<ChangePassword> {
                     child: Image.asset('assets/images/verify_image.png'),
                   ),
                   verticalSpace(28),
-                   Text(
+                  Text(
                     'Password reset successfully',
                     style: AppTextStyles.font20,
                   ),
                   verticalSpace(13),
-                   Text(
+                  Text(
                     'Log in to access your account',
                     style: AppTextStyles.font14,
                   ),

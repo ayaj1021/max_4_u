@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 
 import 'package:max_4_u/app/config/constants.dart';
 
@@ -21,10 +20,8 @@ class ApiService {
 
   Future<Response> get(String path,
       {Map<String, dynamic>? queryParameters, String? token}) async {
-    // final storage = await SecureStorage();
     final _token = '';
-    //await storage.getUserToken();
-    //final _token = await SecureStorage().getUserToken();
+
     final response = await _dio.get(
       path,
       queryParameters: queryParameters,
@@ -34,16 +31,9 @@ class ApiService {
   }
 
   Future<Response> authPostRequest(
-      {
-      //required String path,
-      String? message,
+      {String? message,
       required Map<String, dynamic>? data,
       String? token}) async {
-    log('$data');
-    // final storage = await SecureStorage();
-    // final _token = '';
-    // await storage.getUserToken();
-    //  final _token = await SecureStorage().getUserToken();
     final response = await _dio.post(
       AppConstants.baseUrl,
       data: data,
@@ -55,42 +45,30 @@ class ApiService {
             HttpHeaders.contentTypeHeader: 'application/json',
             'Content-Type': 'application/json',
             'Site-From': 'postman',
-          }
-
-          // _buildHeaders(_token)
-
-          ),
+          }),
     );
-    log('${response.data}');
 
     return response;
   }
 
   Future<Response> servicePostRequest(
-      {
-      //required String path,
-      String? message,
+      {String? message,
       required Map<String, dynamic>? data,
       String? token}) async {
-    log('$data');
     final encryptedId = await SecureStorage().getUserEncryptedId();
     final response = await _dio.post(
       AppConstants.baseUrl,
       data: data,
       options: Options(
-
           validateStatus: (_) => true,
-          // contentType: Headers.jsonContentType,
-          // responseType: ResponseType.json,
+          contentType: Headers.jsonContentType,
+          responseType: ResponseType.json,
           headers: {
             'Content-Type': 'application/json',
             'Site-From': 'postman',
             'User-Key': encryptedId
-          }
-          //_buildHeaders(_token)
-          ),
+          }),
     );
-    debugPrint('${response.data}');
 
     return response;
   }

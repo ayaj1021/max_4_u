@@ -1,9 +1,11 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:max_4_u/app/config/base_response/updated_base_response.dart';
+import 'package:max_4_u/app/config/exception/app_exception.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
-import 'package:max_4_u/app/error_handler/error_handler.dart';
 import 'package:max_4_u/app/service/service.dart';
 
 class FundAccountProvider extends ChangeNotifier {
@@ -19,7 +21,8 @@ class FundAccountProvider extends ChangeNotifier {
   String paymentUrl = '';
   String token = '';
 
-  Future<void> initializePayment({required String amount}) async {
+  Future<UpdatedBaseResponse<dynamic>> initializePayment(
+      {required String amount}) async {
     state = ViewState.Busy;
     _message = 'Funding account...';
     notifyListeners();
@@ -29,43 +32,56 @@ class FundAccountProvider extends ChangeNotifier {
       "action": "initialize_payment",
       "amount": amount,
     };
-    log('$body');
 
     final response = await ApiService().servicePostRequest(
       data: body,
       // message: _message,
     );
     final data = response.data;
-    _status = data['data']['status'];
-    log('this is all user response $response');
+
     try {
       if (response.statusCode == 200 || response.statusCode == 201) {
-        //if (_status == true) {
         _status = data['data']['status'];
 
         _message = data['data']['message'];
         state = ViewState.Success;
         paymentUrl = data['data']['response_data']['payment_link'];
         token = data['data']['response_data']['token'];
-        log('this is payment url $paymentUrl');
 
         notifyListeners();
+        return UpdatedBaseResponse.fromSuccess(data);
       } else {
         _message = data['data']['message'];
         _status = data['data']['status'];
         state = ViewState.Error;
         notifyListeners();
+        return UpdatedBaseResponse.fromError(_message);
       }
     } on DioException catch (e) {
-      return ExceptionHandler.handleError(e);
-      // log(e.toString());
-      // _status = false;
-      // state = ViewState.Error;
-      // notifyListeners();
+      if (e.response?.statusCode == 401) {
+        _message = 'Unauthorized request. Please check your credentials.';
+      } else if (e.error is SocketException) {
+        _message = 'No Internet connection or server is unreachable.';
+      } else {
+        _message = AppException.handleError(e).toString();
+      }
+
+      _status = false;
+      state = ViewState.Error;
+      notifyListeners();
+
+      return UpdatedBaseResponse.fromError(_message);
+    } catch (e) {
+      // Handle any other exceptions
+      _message = 'An unexpected error occurred: $e';
+      _status = false;
+      state = ViewState.Error;
+      notifyListeners();
+      return UpdatedBaseResponse.fromError(_message);
     }
   }
 
-  Future<void> verifyPayment(
+  Future<UpdatedBaseResponse<dynamic>> verifyPayment(
       {required String paymentToken, required BuildContext context}) async {
     _isLoading = true;
 
@@ -80,7 +96,6 @@ class FundAccountProvider extends ChangeNotifier {
 
     final response = await ApiService().servicePostRequest(
       data: body,
-      // message: _message,
     );
 
     final data = response.data;
@@ -88,29 +103,41 @@ class FundAccountProvider extends ChangeNotifier {
     log('this is all user response $response');
     try {
       if (response.statusCode == 200 || response.statusCode == 201) {
-        // if (_status == true) {
         _status = data['data']['status'];
-        //  displayPaymentTransactionStatus(context, response['data']['message']);
 
         _message = data['data']['message'];
         _isLoading = false;
-        // paymentUrl = data['data']['response_data']['payment_link'];
-        // log('this is payment url $paymentUrl');
 
         notifyListeners();
-        return data;
+        return UpdatedBaseResponse.fromSuccess(data);
       } else {
         _message = data['data']['message'];
         _status = data['data']['status'];
         _isLoading = false;
         notifyListeners();
+        return UpdatedBaseResponse.fromError(_message);
       }
     } on DioException catch (e) {
-      return ExceptionHandler.handleError(e);
-      // log(e.toString());
-      // _status = false;
-      // state = ViewState.Error;
-      // notifyListeners();
+      if (e.response?.statusCode == 401) {
+        _message = 'Unauthorized request. Please check your credentials.';
+      } else if (e.error is SocketException) {
+        _message = 'No Internet connection or server is unreachable.';
+      } else {
+        _message = AppException.handleError(e).toString();
+      }
+
+      _status = false;
+      state = ViewState.Error;
+      notifyListeners();
+
+      return UpdatedBaseResponse.fromError(_message);
+    } catch (e) {
+      // Handle any other exceptions
+      _message = 'An unexpected error occurred: $e';
+      _status = false;
+      state = ViewState.Error;
+      notifyListeners();
+      return UpdatedBaseResponse.fromError(_message);
     }
   }
 }
