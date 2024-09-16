@@ -1,10 +1,11 @@
-import 'dart:developer';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:max_4_u/app/config/base_response/updated_base_response.dart';
+import 'package:max_4_u/app/config/exception/app_exception.dart';
 import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
-import 'package:max_4_u/app/error_handler/error_handler.dart';
 import 'package:max_4_u/app/service/service.dart';
 
 class AddCustomerProvider extends ChangeNotifier {
@@ -16,7 +17,7 @@ class AddCustomerProvider extends ChangeNotifier {
   bool _status = false;
   bool get status => _status;
 
-  Future<void> addCustomerWithNumber({
+  Future<UpdatedBaseResponse<dynamic>> addCustomerWithNumber({
     required String phoneNumber,
   }) async {
     state = ViewState.Busy;
@@ -28,7 +29,7 @@ class AddCustomerProvider extends ChangeNotifier {
       "action": "verify_receiving_medium",
       "mobile_number": phoneNumber,
     };
-    log('$body');
+
     await SecureStorage().saveCustomerPhoneNumber(phoneNumber);
     final response = await ApiService().servicePostRequest(
       data: body,
@@ -38,8 +39,6 @@ class AddCustomerProvider extends ChangeNotifier {
     _status = data['status'];
     _message = data['message'];
 
-    log('$_status');
-    log('$response');
     try {
       if (response.statusCode == 200 || response.statusCode == 201) {
         //if (_status == true) {
@@ -49,23 +48,39 @@ class AddCustomerProvider extends ChangeNotifier {
 
         notifyListeners();
 
-        return data;
+        return UpdatedBaseResponse.fromSuccess(data);
       } else {
         _status = data['status'];
         state = ViewState.Error;
         _message = data['message'];
         _message = data['error_data']['mobile_number'];
         notifyListeners();
+        return UpdatedBaseResponse.fromError(_message);
       }
     } on DioException catch (e) {
-      return ExceptionHandler.handleError(e);
-      // log(e.toString());
-      // _status = false;
-      // notifyListeners();
+      if (e.response?.statusCode == 401) {
+        _message = 'Unauthorized request. Please check your credentials.';
+      } else if (e.error is SocketException) {
+        _message = 'No Internet connection or server is unreachable.';
+      } else {
+        _message = AppException.handleError(e).toString();
+      }
+
+      _status = false;
+      state = ViewState.Error;
+      notifyListeners();
+
+      return UpdatedBaseResponse.fromError(_message);
+    } catch (e) {
+      _message = 'An unexpected error occurred: $e';
+      _status = false;
+      state = ViewState.Error;
+      notifyListeners();
+      return UpdatedBaseResponse.fromError(_message);
     }
   }
 
-  Future<void> addCustomerWithUserId({
+  Future<UpdatedBaseResponse<dynamic>> addCustomerWithUserId({
     required String userId,
   }) async {
     state = ViewState.Busy;
@@ -78,7 +93,6 @@ class AddCustomerProvider extends ChangeNotifier {
       "client_type": "existing",
       "client_id": userId,
     };
-    log('$body');
 
     final response = await ApiService().servicePostRequest(
       data: body,
@@ -89,8 +103,6 @@ class AddCustomerProvider extends ChangeNotifier {
     _status = data['status'];
     _message = data['message'];
 
-    log('$_status');
-    log('${response.data}');
     try {
       if (response.statusCode == 200 || response.statusCode == 201) {
         // if (_status == true) {
@@ -99,7 +111,7 @@ class AddCustomerProvider extends ChangeNotifier {
         _message = data['message'];
 
         notifyListeners();
-        return data;
+        return UpdatedBaseResponse.fromSuccess(data);
       } else {
         _status = data['status'];
         state = ViewState.Error;
@@ -107,16 +119,32 @@ class AddCustomerProvider extends ChangeNotifier {
         //  _message = response['data']['error_data']['mobile_number'];
 
         notifyListeners();
+        return UpdatedBaseResponse.fromError(_message);
       }
     } on DioException catch (e) {
-      return ExceptionHandler.handleError(e);
-      // log(e.toString());
-      // _status = false;
-      // notifyListeners();
+      if (e.response?.statusCode == 401) {
+        _message = 'Unauthorized request. Please check your credentials.';
+      } else if (e.error is SocketException) {
+        _message = 'No Internet connection or server is unreachable.';
+      } else {
+        _message = AppException.handleError(e).toString();
+      }
+
+      _status = false;
+      state = ViewState.Error;
+      notifyListeners();
+
+      return UpdatedBaseResponse.fromError(_message);
+    } catch (e) {
+      _message = 'An unexpected error occurred: $e';
+      _status = false;
+      state = ViewState.Error;
+      notifyListeners();
+      return UpdatedBaseResponse.fromError(_message);
     }
   }
 
-  Future<void> verifyCustomerOtp({
+  Future<UpdatedBaseResponse<dynamic>> verifyCustomerOtp({
     required String otp,
   }) async {
     state = ViewState.Busy;
@@ -133,7 +161,6 @@ class AddCustomerProvider extends ChangeNotifier {
     };
 
     await SecureStorage().saveCustomerOtp(otp);
-    log('$body');
 
     final response = await ApiService().authPostRequest(
       data: body,
@@ -142,37 +169,51 @@ class AddCustomerProvider extends ChangeNotifier {
 
     final data = response.data;
 
-    _status = data['status'];
-    _message = data['message'];
+    _status = data['data']['status'];
+    _message = data['data']['message'];
 
-    log('$_status');
-    log('${response.data}');
     try {
       if (response.statusCode == 200 || response.statusCode == 201) {
         // if (_status == true) {
-        _status = data['status'];
+        _status = data['data']['status'];
         state = ViewState.Success;
-        _message = data['message'];
+        _message = data['data']['message'];
 
         notifyListeners();
-        return data;
+        return UpdatedBaseResponse.fromSuccess(data);
       } else {
-        _status = data['status'];
+        _status = data['data']['status'];
         state = ViewState.Error;
-        _message = data['message'];
+        _message = data['data']['message'];
         //  _message = response['data']['error_data']['mobile_number'];
 
         notifyListeners();
+        return UpdatedBaseResponse.fromError(_message);
       }
     } on DioException catch (e) {
-      return ExceptionHandler.handleError(e);
-      // log(e.toString());
-      // _status = false;
-      // notifyListeners();
+      if (e.response?.statusCode == 401) {
+        _message = 'Unauthorized request. Please check your credentials.';
+      } else if (e.error is SocketException) {
+        _message = 'No Internet connection or server is unreachable.';
+      } else {
+        _message = AppException.handleError(e).toString();
+      }
+
+      _status = false;
+      state = ViewState.Error;
+      notifyListeners();
+
+      return UpdatedBaseResponse.fromError(_message);
+    } catch (e) {
+      _message = 'An unexpected error occurred: $e';
+      _status = false;
+      state = ViewState.Error;
+      notifyListeners();
+      return UpdatedBaseResponse.fromError(_message);
     }
   }
 
-  Future<void> registerCustomer({
+  Future<UpdatedBaseResponse<dynamic>> registerCustomer({
     required String email,
     required String password,
     required String firstName,
@@ -197,7 +238,6 @@ class AddCustomerProvider extends ChangeNotifier {
       "otp_code": _otp,
     };
 
-    log(body.toString());
     final response = await ApiService().servicePostRequest(
       data: body,
       // message: _message,
@@ -205,29 +245,48 @@ class AddCustomerProvider extends ChangeNotifier {
     // log(response);
 
     final data = response.data;
-    _status = data['status'];
-    _message = data['message'];
+    _status = data['data']['status'];
+    _message = data['data']['message'];
 
     try {
       if (response.statusCode == 200 || response.statusCode == 201) {
         //if (_status == true) {
-        _status = data['status'];
+        _status = data['data']['status'];
         state = ViewState.Success;
-        _message = data['message'];
+        _message = data['data']['message'];
 
         notifyListeners();
-        return data;
+        return UpdatedBaseResponse.fromSuccess(data);
       } else {
-        _message = data['message'];
+        _message = data['data']['message'];
         ViewState.Error;
-        _status = data['status'];
+        _status = data['data']['status'];
 
-        wrongPassword = data['error_data']['password'];
-        existEmail = data['error_data']['email'];
+        wrongPassword = data['data']['error_data']['password'];
+        existEmail = data['data']['error_data']['email'];
         notifyListeners();
+        return UpdatedBaseResponse.fromError(_message);
       }
     } on DioException catch (e) {
-      return ExceptionHandler.handleError(e);
+      if (e.response?.statusCode == 401) {
+        _message = 'Unauthorized request. Please check your credentials.';
+      } else if (e.error is SocketException) {
+        _message = 'No Internet connection or server is unreachable.';
+      } else {
+        _message = AppException.handleError(e).toString();
+      }
+
+      _status = false;
+      state = ViewState.Error;
+      notifyListeners();
+
+      return UpdatedBaseResponse.fromError(_message);
+    } catch (e) {
+      _message = 'An unexpected error occurred: $e';
+      _status = false;
+      state = ViewState.Error;
+      notifyListeners();
+      return UpdatedBaseResponse.fromError(_message);
     }
   }
 }

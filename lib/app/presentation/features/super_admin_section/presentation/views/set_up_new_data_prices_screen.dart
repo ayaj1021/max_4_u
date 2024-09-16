@@ -96,20 +96,12 @@ class _SetupNewDataPricesScreenState extends State<SetupNewDataPricesScreen> {
             .toSet()
             .toList();
 
+      
+
         final categories = retrievedProducts
-            .map((products) => products.category)
+            .map((product) => product.category)
             .toSet()
             .toList();
-
-        // final vendingCode = reloadData.loadData.vendingCode
-        //     ?.map((vending) => vending.code)
-        //     .toSet()
-        //     .toList();
-
-        // final vendingCodes = reloadData.loadData.vendingCode
-        //     ?.where((vending) => vending.code == serviceNames)
-        //     .toSet()
-        //     .toList();
 
         return BusyOverlay(
           show: setupPrice.state == ViewState.Busy,
@@ -155,7 +147,6 @@ class _SetupNewDataPricesScreenState extends State<SetupNewDataPricesScreen> {
                         child: DropdownButton<String>(
                           isExpanded: true,
                           elevation: 0,
-                          hint: Text('Select a service'),
                           borderRadius: BorderRadius.circular(12),
                           underline: const SizedBox(),
                           value: _selectedServices,
@@ -204,28 +195,26 @@ class _SetupNewDataPricesScreenState extends State<SetupNewDataPricesScreen> {
                         ),
                         child: DropdownButton<String>(
                           isExpanded: true,
-                          hint: Text('Select a category'),
                           elevation: 0,
                           borderRadius: BorderRadius.circular(12),
                           underline: const SizedBox(),
                           value: _selectedCategory,
                           onChanged: (newValue) {
-                            setState(() {
-                              _selectedCategory = newValue;
-                            });
+                            setState(
+                              () {
+                                _selectedCategory = newValue;
+                              },
+                            );
                           },
                           items: categories
                               .map((category) {
                                 return DropdownMenuItem(
                                   value: category,
-                                  child: Container(
-                                    margin: const EdgeInsets.only(right: 265),
-                                    child: Text(
-                                      category.toString().toUpperCase(),
-                                      style: AppTextStyles.font14.copyWith(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w400,
-                                      ),
+                                  child: Text(
+                                    "${category!.toUpperCase()}",
+                                    style: AppTextStyles.font14.copyWith(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
                                     ),
                                   ),
                                 );

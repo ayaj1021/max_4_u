@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:max_4_u/app/config/base_response/updated_base_response.dart';
+import 'package:max_4_u/app/config/exception/app_exception.dart';
 import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
-import 'package:max_4_u/app/error_handler/error_handler.dart';
 import 'package:max_4_u/app/service/service.dart';
 
 class ActivateAutoRenewalProvider extends ChangeNotifier {
@@ -16,7 +19,7 @@ class ActivateAutoRenewalProvider extends ChangeNotifier {
   bool _status = false;
   bool get status => _status;
 
-  Future<void> activateAutoRenewal({
+  Future<UpdatedBaseResponse<dynamic>> activateAutoRenewal({
     required String phoneNumber,
     required String productCode,
     required String amount,
@@ -47,30 +50,48 @@ class ActivateAutoRenewalProvider extends ChangeNotifier {
     );
     final data = response.data;
 
-    _status = data['status'];
-
     try {
       if (response.statusCode == 200 || response.statusCode == 201) {
         //if (_status == true) {
-        _status = data['status'];
+        _status = data['data']['status'];
         state = ViewState.Success;
-        _message = data['message'];
+        _message = data['data']['message'];
 
         notifyListeners();
+        return UpdatedBaseResponse.fromSuccess(data);
       } else {
         state = ViewState.Error;
-        _status = data['status'];
-        _message = data['message'];
+        _status = data['data']['status'];
+        _message = data['data']['message'] ??
+            data['data']['error_data']['start_date'] ??
+            data['data']['error_data']['end_date'];
 
-        _errorMessage =
-            data['error_data']['start_date'] ?? data['error_data']['end_date'];
-        // _message = response['data']['error_data']['start_date'];
-        // _message = response['data']['error_data']['end_date'];
+        //         _errorMessage = data['data']['error_data']['start_date'] ??
+        // data['data']['error_data']['end_date'];
 
         notifyListeners();
+        return UpdatedBaseResponse.fromError(_message);
       }
     } on DioException catch (e) {
-      return ExceptionHandler.handleError(e);
+      if (e.response?.statusCode == 401) {
+        _message = 'Unauthorized request. Please check your credentials.';
+      } else if (e.error is SocketException) {
+        _message = 'No Internet connection or server is unreachable.';
+      } else {
+        _message = AppException.handleError(e).toString();
+      }
+
+      _status = false;
+      state = ViewState.Error;
+      notifyListeners();
+
+      return UpdatedBaseResponse.fromError(_message);
+    } catch (e) {
+      _message = 'An unexpected error occurred: $e';
+      _status = false;
+      state = ViewState.Error;
+      notifyListeners();
+      return UpdatedBaseResponse.fromError(_message);
     }
   }
 }

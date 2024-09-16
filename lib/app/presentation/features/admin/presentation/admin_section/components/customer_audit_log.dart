@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max_4_u/app/model/super_admin/audit_log_model.dart';
 import 'package:max_4_u/app/presentation/features/admin/presentation/admin_section/components/log_details_screen.dart';
 import 'package:max_4_u/app/presentation/features/super_admin_section/providers/super_admin/audit_log_provider.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
@@ -9,7 +10,12 @@ import 'package:max_4_u/app/utils/white_space.dart';
 import 'package:provider/provider.dart';
 
 class CustomerAuditLog extends StatefulWidget {
-  const CustomerAuditLog({super.key});
+  const CustomerAuditLog({
+    super.key,
+    required this.searchController,
+  });
+
+  final TextEditingController searchController;
 
   @override
   State<CustomerAuditLog> createState() => _CustomerAuditLogState();
@@ -22,6 +28,25 @@ class _CustomerAuditLogState extends State<CustomerAuditLog> {
       Provider.of<AuditLogProvider>(context, listen: false).getAllAuditLog();
     });
     super.initState();
+  }
+
+  AuditLogResponseData? retrievedAuditResponse;
+
+  List<ActivityLog>? filteredCustomerResponse = [];
+
+  void _filterCustomers() {
+    final query = widget.searchController.text.toLowerCase();
+
+    setState(() {
+      filteredCustomerResponse =
+          retrievedAuditResponse?.data?.where((customer) {
+        bool matchesSearch =
+            (customer.firstName?.toLowerCase().contains(query) ?? false) ||
+                (customer.lastName?.toLowerCase().contains(query) ?? false);
+
+        return matchesSearch;
+      }).toList();
+    });
   }
 
   @override
@@ -57,7 +82,7 @@ class _CustomerAuditLogState extends State<CustomerAuditLog> {
                                       'assets/images/no_beneficiary_image.png')),
                               verticalSpace(24),
                               Text(
-                                'You have no transaction yet',
+                                'No customers yet',
                                 style: AppTextStyles.font14.copyWith(
                                     color: AppColors.textColor,
                                     fontWeight: FontWeight.w400),
@@ -69,7 +94,6 @@ class _CustomerAuditLogState extends State<CustomerAuditLog> {
                           children: List.generate(
                             auditLog.allAuditResponse.data!.length,
                             (index) {
-                              // final data =  auditLog.allAuditResponse.data![index];
                               return ListTile(
                                 leading: CircleAvatar(
                                   radius: 30,
@@ -93,8 +117,8 @@ class _CustomerAuditLogState extends State<CustomerAuditLog> {
                                 onTap: () => nextScreen(
                                   context,
                                   LogDetailsScreen(
-                                    firstName: auditLog.firstName,
-                                    lastName: auditLog.lastName,
+                                    firstName: "${auditLog.firstName}",
+                                    lastName: "${auditLog.lastName}",
                                     index: index,
                                   ),
                                 ),

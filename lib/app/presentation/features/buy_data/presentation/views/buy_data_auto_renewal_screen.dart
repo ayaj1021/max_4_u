@@ -184,7 +184,7 @@ class _BuyDataAutoRenewalScreenState extends State<BuyDataAutoRenewalScreen> {
                       );
 
                       if (activateRenewal.status == false && context.mounted) {
-                        showMessage(context, activateRenewal.errorMessage,
+                        showMessage(context, activateRenewal.message,
                             isError: true);
 
                         debugPrint(activateRenewal.message.toString());

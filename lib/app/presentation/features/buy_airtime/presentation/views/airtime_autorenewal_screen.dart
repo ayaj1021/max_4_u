@@ -183,10 +183,9 @@ class _AirtimeAutoRenewalScreenState extends State<AirtimeAutoRenewalScreen> {
                       );
 
                       if (activateRenewal.status == false && context.mounted) {
-                        showMessage(context, activateRenewal.errorMessage,
+                        showMessage(context, activateRenewal.message,
                             isError: true);
 
-                        debugPrint(activateRenewal.message.toString());
                         return;
                       }
                       if (activateRenewal.status == true && context.mounted) {
