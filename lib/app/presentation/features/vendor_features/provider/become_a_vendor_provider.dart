@@ -2,7 +2,8 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:max_4_u/app/domain/exception_handler.dart';
+import 'package:max_4_u/app/config/base_response/updated_base_response.dart';
+import 'package:max_4_u/app/config/exception/app_exception.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/service/service.dart';
 import 'package:http_parser/http_parser.dart';
@@ -26,7 +27,7 @@ class BecomeAVendorProvider extends ChangeNotifier {
   double get uploadSent => _uploadSent;
   double get uploadTotal => _uploadTotal;
 
-  Future<void> uploadNinBvn({
+  Future<UpdatedBaseResponse<dynamic>> uploadNinBvn({
     required String bvn,
     required String nin,
   }) async {
@@ -46,37 +47,54 @@ class BecomeAVendorProvider extends ChangeNotifier {
       data: body,
     );
     final data = response.data;
-    _status = data['status'];
-    _message = data['message'];
+    _status = data['data']['status'];
+    _message = data['data']['message'];
 
     log('$_status');
     log('$response');
     try {
       if (response.statusCode == 200 || response.statusCode == 201) {
         // if (_status == true) {
-        _status = data['status'];
+        _status = data['data']['status'];
         state = ViewState.Success;
-        _message = data['message'];
+        _message = data['data']['message'];
 
         notifyListeners();
-        return data;
+        return UpdatedBaseResponse.fromSuccess(data);
       } else {
-        _status = data['status'];
+        _status = data['data']['status'];
         state = ViewState.Error;
 
-        _message = data['error_data']['bvn'] ?? data['error_data']['nin'];
+        _message = data['data']['error_data']['bvn'] ??
+            data['data']['error_data']['nin'];
 
         notifyListeners();
+        return UpdatedBaseResponse.fromError(_message);
       }
     } on DioException catch (e) {
-      return ExceptionHandler.handleError(e);
-      // log(e.toString());
-      // _status = false;
-      // notifyListeners();
+      if (e.response?.statusCode == 401) {
+        _message = 'Unauthorized request. Please check your credentials.';
+      } else if (e.error is SocketException) {
+        _message = 'No Internet connection or server is unreachable.';
+      } else {
+        _message = AppException.handleError(e).toString();
+      }
+
+      _status = false;
+      state = ViewState.Error;
+      notifyListeners();
+
+      return UpdatedBaseResponse.fromError(_message);
+    } catch (e) {
+      _message = 'An unexpected error occurred: $e';
+      _status = false;
+      state = ViewState.Error;
+      notifyListeners();
+      return UpdatedBaseResponse.fromError(_message);
     }
   }
 
-  Future<void> uploadNinIdCard({
+  Future<UpdatedBaseResponse<dynamic>> uploadNinIdCard({
     required String image,
     required String fileName,
   }) async {
@@ -111,35 +129,51 @@ class BecomeAVendorProvider extends ChangeNotifier {
       },
     );
     final data = response.data;
-    _message = data['message'];
+    _message = data['data']['message'];
 
     log('$_status');
     log('$response');
 
     try {
       if (response.statusCode == 200 || response.statusCode == 201) {
-        _status = data['status'];
+        _status = data['data']['status'];
         state = ViewState.Success;
-        _message = data['message'];
+        _message = data['data']['message'];
 
         notifyListeners();
-        return data;
+        return UpdatedBaseResponse.fromSuccess(data);
       } else {
-        _status = data['status'];
+        _status = data['data']['status'];
         state = ViewState.Error;
-        _message = data['message'];
+        _message = data['data']['message'];
 
         notifyListeners();
+        return UpdatedBaseResponse.fromError(_message);
       }
     } on DioException catch (e) {
-      return ExceptionHandler.handleError(e);
-      // log(e.toString());
-      // _status = false;
-      // notifyListeners();
+      if (e.response?.statusCode == 401) {
+        _message = 'Unauthorized request. Please check your credentials.';
+      } else if (e.error is SocketException) {
+        _message = 'No Internet connection or server is unreachable.';
+      } else {
+        _message = AppException.handleError(e).toString();
+      }
+
+      _status = false;
+      state = ViewState.Error;
+      notifyListeners();
+
+      return UpdatedBaseResponse.fromError(_message);
+    } catch (e) {
+      _message = 'An unexpected error occurred: $e';
+      _status = false;
+      state = ViewState.Error;
+      notifyListeners();
+      return UpdatedBaseResponse.fromError(_message);
     }
   }
 
-  Future<void> uploadPhoto({
+  Future<UpdatedBaseResponse<dynamic>> uploadPhoto({
     required File image,
     required String fileName,
   }) async {
@@ -178,38 +212,53 @@ class BecomeAVendorProvider extends ChangeNotifier {
 
     final data = response.data;
 
-    _status = data['status'];
-    _message = data['message'];
-
     log('$_status');
     log('$response');
     try {
       if (response.statusCode == 200 || response.statusCode == 201) {
         //if (_status == true) {
-        _status = data['status'];
+        _status = data['data']['status'];
         state = ViewState.Success;
-        _message = data['message'];
+        _message = data['data']['message'];
 
         notifyListeners();
-        return data;
+
+        return UpdatedBaseResponse.fromSuccess(data);
       } else {
-        _status = data['status'];
+        _status = data['data']['status'];
         state = ViewState.Error;
-        _message = data['message'];
+        _message = data['data']['message'];
 
         notifyListeners();
+
+        return UpdatedBaseResponse.fromError(_message);
       }
     } on DioException catch (e) {
-      return ExceptionHandler.handleError(e);
-      // log(e.toString());
-      // _status = false;
-      // _message =
-      //     'An error occurred while uploading the image. Please try again.';
-      // notifyListeners();
+      if (e.response?.statusCode == 401) {
+        _message = 'Unauthorized request. Please check your credentials.';
+      } else if (e.response?.statusCode == 401) {
+        _message = 'File too large';
+      } else if (e.error is SocketException) {
+        _message = 'No Internet connection or server is unreachable.';
+      } else {
+        _message = AppException.handleError(e).toString();
+      }
+
+      _status = false;
+      state = ViewState.Error;
+      notifyListeners();
+
+      return UpdatedBaseResponse.fromError(_message);
+    } catch (e) {
+      _message = 'An unexpected error occurred: $e';
+      _status = false;
+      state = ViewState.Error;
+      notifyListeners();
+      return UpdatedBaseResponse.fromError(_message);
     }
   }
 
-  Future<void> sendBecomeVendorRequest() async {
+  Future<UpdatedBaseResponse<dynamic>> sendBecomeVendorRequest() async {
     state = ViewState.Busy;
     _message = 'Processing your request...';
     notifyListeners();
@@ -227,32 +276,49 @@ class BecomeAVendorProvider extends ChangeNotifier {
 
     final data = response.data;
 
-    _status = data['status'];
-    _message = data['message'];
+    _status = data['data']['status'];
+    _message = data['data']['message'];
 
     log('$_status');
     log('$response');
     try {
       if (response.statusCode == 200 || response.statusCode == 201) {
         //if (_status == true) {
-        _status = data['status'];
+        _status = data['data']['status'];
         state = ViewState.Success;
-        _message = data['message'];
+        _message = data['data']['message'];
 
         notifyListeners();
-        return data;
+        return UpdatedBaseResponse.fromSuccess(data);
       } else {
-        _status = data['status'];
+        _status = data['data']['status'];
         state = ViewState.Error;
-        _message = data['message'];
+        _message = data['data']['message'];
 
         notifyListeners();
+
+        return UpdatedBaseResponse.fromError(_message);
       }
     } on DioException catch (e) {
-      return ExceptionHandler.handleError(e);
-      // log(e.toString());
-      // _status = false;
-      // notifyListeners();
+      if (e.response?.statusCode == 401) {
+        _message = 'Unauthorized request. Please check your credentials.';
+      } else if (e.error is SocketException) {
+        _message = 'No Internet connection or server is unreachable.';
+      } else {
+        _message = AppException.handleError(e).toString();
+      }
+
+      _status = false;
+      state = ViewState.Error;
+      notifyListeners();
+
+      return UpdatedBaseResponse.fromError(_message);
+    } catch (e) {
+      _message = 'An unexpected error occurred: $e';
+      _status = false;
+      state = ViewState.Error;
+      notifyListeners();
+      return UpdatedBaseResponse.fromError(_message);
     }
   }
 }

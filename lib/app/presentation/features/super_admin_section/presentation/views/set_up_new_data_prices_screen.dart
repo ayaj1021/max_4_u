@@ -96,8 +96,6 @@ class _SetupNewDataPricesScreenState extends State<SetupNewDataPricesScreen> {
             .toSet()
             .toList();
 
-      
-
         final categories = retrievedProducts
             .map((product) => product.category)
             .toSet()
@@ -155,7 +153,6 @@ class _SetupNewDataPricesScreenState extends State<SetupNewDataPricesScreen> {
                               _selectedServices = newValue;
                             });
                           },
-                          // retrievedProducts.map((product) => product.serviceName).toSet().toList()}
                           items: serviceNames
                               .map((service) {
                                 return DropdownMenuItem<String>(

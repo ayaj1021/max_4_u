@@ -31,19 +31,73 @@ class FaceAuthenticationScreen extends StatefulWidget {
 
 class _FaceAuthenticationScreenState extends State<FaceAuthenticationScreen> {
   File? image;
+
+  // Future pickImage() async {
+  //   try {
+  //     final image = await ImagePicker().pickImage(source: ImageSource.camera);
+  //     if (image == null) return;
+
+  //     final imageTemporary = File(image.path);
+
+  //     setState(() {
+  //       this.image = imageTemporary;
+  //     });
+  //   } on PlatformException catch (e) {
+  //     log('Failed to pick image $e');
+  //   }
+  // }
+
   Future pickImage() async {
     try {
-      final image = await ImagePicker().pickImage(source: ImageSource.camera);
-      if (image == null) return;
+      final pickedImage =
+          await ImagePicker().pickImage(source: ImageSource.camera);
+      if (pickedImage == null) return;
 
-      final imageTemporary = File(image.path);
+      final imageTemporary = File(pickedImage.path);
 
+      // Compress the image before uploading
+      File? compressedImage = await compressImage(imageTemporary);
+
+      // Set the image to state
       setState(() {
-        this.image = imageTemporary;
+        image = compressedImage;
       });
+
+      // Upload the compressed image
+      // if (compressedImage != null) {
+      //   await uploadImage(compressedImage);
+      // }
     } on PlatformException catch (e) {
-      log('Failed to pick image $e');
+      log('Failed to pick image: $e');
     }
+  }
+
+  // Compress the image using the image package
+  Future<File?> compressImage(File imageFile) async {
+    try {
+      Uint8List imageBytes = await imageFile.readAsBytes();
+      img.Image? image = img.decodeImage(imageBytes);
+
+      if (image != null) {
+        img.Image resizedImage = img.copyResize(image,
+            width: 800); // Resize the image to 800px width
+        List<int> compressedImage = img.encodeJpg(resizedImage,
+            quality: 85); // Compress with 85% quality
+
+        // Write the compressed image to a temporary file
+        return await _writeCompressedImageToFile(compressedImage);
+      }
+    } catch (e) {
+      log('Failed to compress image: $e');
+    }
+    return null;
+  }
+
+  // Helper function to write the compressed image to a file
+  Future<File> _writeCompressedImageToFile(List<int> imageBytes) async {
+    final tempDir = Directory.systemTemp;
+    final tempFile = File('${tempDir.path}/compressed_image.jpg');
+    return await tempFile.writeAsBytes(imageBytes);
   }
 
   Future<void> _convertImage(String inputPath, String format) async {
@@ -100,7 +154,7 @@ class _FaceAuthenticationScreenState extends State<FaceAuthenticationScreen> {
                         ),
                       ),
                       horizontalSpace(80),
-                       Text(
+                      Text(
                         'Face Authentication',
                         style: AppTextStyles.font18,
                       )
@@ -119,13 +173,11 @@ class _FaceAuthenticationScreenState extends State<FaceAuthenticationScreen> {
                     ),
                   ),
                   verticalSpace(32),
-
                   Text(
                     'Tap on image below to photo',
                     style: AppTextStyles.font14.copyWith(
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.primaryColor
-                    ),
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.primaryColor),
                     textAlign: TextAlign.center,
                   ),
                   verticalSpace(17),
@@ -154,11 +206,10 @@ class _FaceAuthenticationScreenState extends State<FaceAuthenticationScreen> {
                       ),
                     ),
                   ),
-             
                   verticalSpace(31),
                   Container(
                     alignment: Alignment.center,
-                   // height: 87.h,
+                    // height: 87.h,
                     width: MediaQuery.of(context).size.width,
                     padding: const EdgeInsets.all(13),
                     decoration: BoxDecoration(
@@ -182,12 +233,13 @@ class _FaceAuthenticationScreenState extends State<FaceAuthenticationScreen> {
                             isError: true);
                         return;
                       }
-                       String fileName = image!.path.split('/').last;
+                      String fileName = image!.path.split('/').last;
 
                       await uploadPhoto.uploadPhoto(
                           image: image!, fileName: fileName);
 
                       if (uploadPhoto.status == false && context.mounted) {
+                        Navigator.pop(context);
                         showMessage(
                           context,
                           uploadPhoto.message,

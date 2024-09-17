@@ -14,6 +14,9 @@ import 'package:max_4_u/app/utils/show_message.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
 import 'package:max_4_u/app/presentation/general_widgets/widgets/button_widget.dart';
 import 'package:provider/provider.dart';
+import 'dart:typed_data';
+import 'package:image/image.dart' as img;
+
 
 class UploadIdCardScreen extends StatefulWidget {
   const UploadIdCardScreen({super.key});
@@ -27,31 +30,94 @@ class _UploadIdCardScreenState extends State<UploadIdCardScreen> {
   String? selectedImagePath;
 
 
+
+    // Method to pick an image using FilePicker and return its path
   Future<String?> pickImage() async {
     try {
-      // Pick image file
       FilePickerResult? imageResult = await FilePicker.platform.pickFiles(
         type: FileType.image,
         allowMultiple: false,
       );
 
       if (imageResult != null) {
-        // Return the path of the selected image file
-
         return imageResult.files.single.path;
       }
     } catch (error) {
       print('Error picking image: $error');
-      // Handle the error
     }
-
     return null;
   }
 
+  // Method to compress the picked image
+  Future<File?> compressImage(String imagePath) async {
+    try {
+      File imageFile = File(imagePath);
+      Uint8List imageBytes = await imageFile.readAsBytes();
+
+      img.Image? image = img.decodeImage(imageBytes);
+
+      if (image != null) {
+        // Resize and compress the image
+        img.Image resizedImage = img.copyResize(image, width: 800); // Resize to 800px width
+        List<int> compressedImage = img.encodeJpg(resizedImage, quality: 85); // Compress to 85% quality
+
+        // Write the compressed image to a temporary file
+        return await _writeCompressedImageToFile(compressedImage);
+      }
+    } catch (e) {
+      print('Error compressing image: $e');
+    }
+    return null;
+  }
+
+  // Helper function to write the compressed image to a file
+  Future<File> _writeCompressedImageToFile(List<int> imageBytes) async {
+    final tempDir = Directory.systemTemp;
+    final tempFile = File('${tempDir.path}/compressed_image.jpg');
+    return await tempFile.writeAsBytes(imageBytes);
+  }
+
+  // Method to pick the image, compress it, and set it in the state
   Future<void> pickImageFile() async {
     selectedImagePath = await pickImage();
-    setState(() {});
+
+    if (selectedImagePath != null) {
+      // Compress the selected image
+      File? compressedImage = await compressImage(selectedImagePath!);
+
+      setState(() {
+        image = compressedImage;
+      });
+    }
   }
+
+
+
+  // Future<String?> pickImage() async {
+  //   try {
+  //     // Pick image file
+  //     FilePickerResult? imageResult = await FilePicker.platform.pickFiles(
+  //       type: FileType.image,
+  //       allowMultiple: false,
+  //     );
+
+  //     if (imageResult != null) {
+  //       // Return the path of the selected image file
+
+  //       return imageResult.files.single.path;
+  //     }
+  //   } catch (error) {
+  //     print('Error picking image: $error');
+  //     // Handle the error
+  //   }
+
+  //   return null;
+  // }
+
+  // Future<void> pickImageFile() async {
+  //   selectedImagePath = await pickImage();
+  //   setState(() {});
+  // }
 
   @override
   Widget build(BuildContext context) {

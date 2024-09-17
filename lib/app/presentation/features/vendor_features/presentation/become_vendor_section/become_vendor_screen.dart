@@ -57,7 +57,7 @@ class _BecomeVendorScreenState extends State<BecomeVendorScreen> {
                               ),
                             ),
                             horizontalSpace(99),
-                             Text(
+                            Text(
                               'KYC Verification',
                               style: AppTextStyles.font18,
                             )
@@ -192,10 +192,10 @@ class _BecomeVendorScreenState extends State<BecomeVendorScreen> {
                                                   child: ButtonWidget(
                                                     text: 'Done',
                                                     onTap: () async {
-                                                   //   Navigator.pop(context);
+                                                      //   Navigator.pop(context);
                                                       await reloadData
                                                           .reloadUserData();
-                                                      nextScreen(context,
+                                                      nextScreenReplace(context,
                                                           DashBoardScreen());
                                                     },
                                                   ),
@@ -234,16 +234,16 @@ class KycVerificationSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 74.h,
-      padding: const EdgeInsets.all(13),
-      width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        color: AppColors.whiteColor,
-      ),
-      child: GestureDetector(
-        onTap: onTap,
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        height: 74.h,
+        padding: const EdgeInsets.all(13),
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: AppColors.whiteColor,
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

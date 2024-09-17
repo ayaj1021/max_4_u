@@ -93,8 +93,9 @@ class ApiService {
           'Site-From': 'postman',
           'User-Key': encryptedId
         },
+        validateStatus: (_) => true,
         contentType: Headers.jsonContentType,
-        //_buildHeaders(_token)
+        responseType: ResponseType.json,
       ),
     );
     log('${response.data}');
