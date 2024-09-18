@@ -39,7 +39,7 @@ class _AirtimeVerificationScreenState extends State<AirtimeVerificationScreen> {
       builder: (context, buyAirtime, _) {
         return BusyOverlay(
           show: buyAirtime.state == ViewState.Busy,
-          title: buyAirtime.message, 
+          title: buyAirtime.message,
           child: Scaffold(
             body: SafeArea(
               child: SingleChildScrollView(
@@ -181,7 +181,7 @@ class _AirtimeVerificationScreenState extends State<AirtimeVerificationScreen> {
                               buyAirtime.message,
                               // isError: false,
                             );
-                            nextScreenReplace(
+                            nextScreen(
                                 context,
                                 AirtimeConfirmationScreen(
                                   amount: widget.amount,
@@ -202,5 +202,3 @@ class _AirtimeVerificationScreenState extends State<AirtimeVerificationScreen> {
     );
   }
 }
-
-

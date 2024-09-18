@@ -69,23 +69,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
               child: Column(
                 children: [
-                  Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () => Navigator.pop(context),
-                        child: const Icon(
-                          Icons.arrow_back,
-                        ),
+                  Center(
+                    child: Text(
+                      'Profile',
+                      style: AppTextStyles.font20.copyWith(
+                        color: AppColors.mainTextColor,
+                        fontWeight: FontWeight.w500,
                       ),
-                      horizontalSpace(120),
-                      Text(
-                        'Profile',
-                        style: AppTextStyles.font18.copyWith(
-                          color: AppColors.mainTextColor,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                   verticalSpace(33),
                   Container(
