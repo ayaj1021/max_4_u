@@ -80,13 +80,21 @@ class _CustomersComponentState extends State<CustomersComponent> {
                               children: List.generate(
                                   getAllAppUsers.allAppUsers.data!.length,
                                   (index) {
-                                //  final data = getAllAppUsers.allAppUsers.data![index];
+                                final data =
+                                    getAllAppUsers.allAppUsers.data![index];
+                                final firstName =
+                                    EncryptData.decryptAES('${data.firstName}');
+                                final lastName =
+                                    EncryptData.decryptAES('${data.lastName}');
+                                final phoneNumber = EncryptData.decryptAES(
+                                    '${data.mobileNumber}');
                                 return Column(
                                   children: [
                                     GestureDetector(
                                       onTap: () {
                                         final userId = EncryptData.decryptAES(
                                             '${getAllAppUsers.allAppUsers.data![0].uniqueId}');
+
                                         nextScreen(
                                           context,
                                           UserDetailsScreen(
@@ -98,8 +106,8 @@ class _CustomersComponentState extends State<CustomersComponent> {
                                         );
                                       },
                                       child: SizedBox(
-                                       // height: 48.h,
-                                       // width: 332.w,
+                                        // height: 48.h,
+                                        // width: 332.w,
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
@@ -115,7 +123,7 @@ class _CustomersComponentState extends State<CustomersComponent> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  '${getAllAppUsers.firstName} ${getAllAppUsers.lastName}',
+                                                  '${firstName} ${lastName}',
                                                   style: AppTextStyles.font14
                                                       .copyWith(
                                                           fontWeight:
@@ -125,7 +133,7 @@ class _CustomersComponentState extends State<CustomersComponent> {
                                                 ),
                                                 verticalSpace(4),
                                                 Text(
-                                                  '${getAllAppUsers.phoneNumber}',
+                                                  '${phoneNumber}',
                                                   style: AppTextStyles.font16
                                                       .copyWith(
                                                           fontWeight:

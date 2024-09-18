@@ -88,6 +88,16 @@ class _AdminsComponentState extends State<AdminsComponent> {
                                 children: List.generate(
                                     getAllAppUsers.allAppAdmins.data!.length,
                                     (index) {
+                                  final data =
+                                      getAllAppUsers.allAppAdmins.data![index];
+
+                                  final adminFirstName = EncryptData.decryptAES(
+                                      '${data.firstName}');
+                                  final adminLastName = EncryptData.decryptAES(
+                                      '${data.lastName}');
+                                  final adminPhoneNumber =
+                                      EncryptData.decryptAES(
+                                          '${data.mobileNumber}');
                                   return Column(
                                     children: [
                                       SizedBox(
@@ -101,7 +111,7 @@ class _AdminsComponentState extends State<AdminsComponent> {
                                                 context,
                                                 UserDetailsScreen(
                                                   name:
-                                                      '${getAllAppUsers.adminFirstName} ${getAllAppUsers.adminLastName}',
+                                                      '${adminFirstName} ${adminLastName}',
                                                   userType: 'Admin',
                                                   userId: userId,
                                                 ));
@@ -121,7 +131,7 @@ class _AdminsComponentState extends State<AdminsComponent> {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    '${getAllAppUsers.adminFirstName} ${getAllAppUsers.adminLastName}',
+                                                    '${adminFirstName} ${adminLastName}',
                                                     style: AppTextStyles.font14
                                                         .copyWith(
                                                             fontWeight:
@@ -131,7 +141,7 @@ class _AdminsComponentState extends State<AdminsComponent> {
                                                   ),
                                                   verticalSpace(4),
                                                   Text(
-                                                    '${getAllAppUsers.adminPhoneNumber}',
+                                                    '${adminPhoneNumber}',
                                                     style: AppTextStyles.font16
                                                         .copyWith(
                                                             fontWeight:

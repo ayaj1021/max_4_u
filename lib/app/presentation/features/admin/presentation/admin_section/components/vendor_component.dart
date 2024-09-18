@@ -58,7 +58,7 @@ class _VendorsComponentState extends State<VendorsComponent> {
                           'No data',
                           style: AppTextStyles.font14.copyWith(
                               color: AppColors.textColor,
-                              fontWeight: FontWeight.w400), 
+                              fontWeight: FontWeight.w400),
                         ),
                       )
                     : getAllAppUsers.allAppVendors.data!.isEmpty
@@ -84,6 +84,15 @@ class _VendorsComponentState extends State<VendorsComponent> {
                             children: List.generate(
                                 getAllAppUsers.allAppVendors.data!.length,
                                 (index) {
+                              final data =
+                                  getAllAppUsers.allAppVendors.data![index];
+
+                              final vendorFirstName =
+                                  EncryptData.decryptAES('${data.firstName}');
+                              final vendorLastName =
+                                  EncryptData.decryptAES('${data.lastName}');
+                              final vendorPhoneNumber = EncryptData.decryptAES(
+                                  '${data.mobileNumber}');
                               return Column(
                                 children: [
                                   SizedBox(
@@ -97,7 +106,7 @@ class _VendorsComponentState extends State<VendorsComponent> {
                                             context,
                                             UserDetailsScreen(
                                               name:
-                                                  '${getAllAppUsers.vendorFirstName} ${getAllAppUsers.vendorLastName}',
+                                                  '${vendorFirstName} ${vendorLastName}',
                                               userType: 'vendor',
                                               userId: userId,
                                             ));
@@ -117,7 +126,7 @@ class _VendorsComponentState extends State<VendorsComponent> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                '${getAllAppUsers.vendorFirstName} ${getAllAppUsers.vendorLastName}',
+                                                '${vendorFirstName} ${vendorLastName}',
                                                 style: AppTextStyles.font14
                                                     .copyWith(
                                                         fontWeight:
@@ -127,7 +136,7 @@ class _VendorsComponentState extends State<VendorsComponent> {
                                               ),
                                               verticalSpace(4),
                                               Text(
-                                                '${getAllAppUsers.vendorPhoneNumber}',
+                                                '${vendorPhoneNumber}',
                                                 style: AppTextStyles.font16
                                                     .copyWith(
                                                         fontWeight:

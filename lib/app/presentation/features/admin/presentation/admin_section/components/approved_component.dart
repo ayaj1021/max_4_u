@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max_4_u/app/encryt_data/encrypt_data.dart';
 import 'package:max_4_u/app/presentation/features/admin/presentation/admin_section/components/requests_details_screen.dart';
 import 'package:max_4_u/app/provider/admin_section/get_all_vendors_requests_provider.dart';
 import 'package:max_4_u/app/presentation/features/auth/provider/auth_provider.dart';
@@ -40,11 +41,14 @@ class ApprovedComponent extends StatelessWidget {
                   getAllVendorRequest.allVendorRequest.data!.length, (index) {
                 final data = getAllVendorRequest.allVendorRequest.data![index];
 
+                final firstName = EncryptData.decryptAES('${data.firstName}');
+                final lastName = EncryptData.decryptAES('${data.lastName}');
+
                 return data.status == 'confirmed'
                     ? Column(
                         children: [
                           SizedBox(
-                           // height: 48.h,
+                            // height: 48.h,
                             width: 332.w,
                             child: GestureDetector(
                               onTap: () {
@@ -52,10 +56,10 @@ class ApprovedComponent extends StatelessWidget {
                                     context,
                                     RequestsDetailsScreen(
                                       name:
-                                          '${getAllVendorRequest.firstName} ${getAllVendorRequest.lastName}',
+                                          '${firstName} ${lastName}',
                                       phoneNumber: '',
                                       uniqueId:
-                                          '${getAllVendorRequest.uniqueId}',
+                                          '${data.uniqueId}',
                                       bvnNo: '${data.bvn}',
                                       ninNo: '${data.nin}',
                                       selfiePhoto:
@@ -66,36 +70,43 @@ class ApprovedComponent extends StatelessWidget {
                                     ));
                               },
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  CircleAvatar(
-                                    radius: 25,
-                                    backgroundImage: AssetImage(
-                                        'assets/images/profile_avatar.png'),
-                                  ),
-                                   horizontalSpace(10),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                  Row(
                                     children: [
-                                      Text(
-                                        '${getAllVendorRequest.firstName} ${getAllVendorRequest.lastName}',
-                                        //  '${getAllAppUsers.firstName} ${getAllAppUsers.lastName}',
-                                        style: AppTextStyles.font14.copyWith(
-                                            fontWeight: FontWeight.w400,
-                                            color: Color(0xff475569)),
+                                      CircleAvatar(
+                                        radius: 25,
+                                        backgroundImage: AssetImage(
+                                            'assets/images/profile_avatar.png'),
                                       ),
-                                      verticalSpace(4),
-                                      Text(
-                                        '${getAllVendorRequest.phoneNumber}',
-                                        // '${getAllAppUsers.phoneNumber}',
-                                        style: AppTextStyles.font16.copyWith(
-                                            fontWeight: FontWeight.w500,
-                                            color: Color(0xff475569)),
+                                      horizontalSpace(10),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            '${firstName} ${lastName}',
+                                            //  '${getAllAppUsers.firstName} ${getAllAppUsers.lastName}',
+                                            style: AppTextStyles.font14
+                                                .copyWith(
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Color(0xff475569)),
+                                          ),
+                                          verticalSpace(4),
+                                          Text(
+                                            '${getAllVendorRequest.phoneNumber}',
+                                            // '${getAllAppUsers.phoneNumber}',
+                                            style: AppTextStyles.font16
+                                                .copyWith(
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Color(0xff475569)),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
-                                  horizontalSpace(41),
+                                  //horizontalSpace(41),
 
                                   Text(
                                     '${data.regDate}',
@@ -103,6 +114,8 @@ class ApprovedComponent extends StatelessWidget {
                                     style: AppTextStyles.font12.copyWith(
                                         fontWeight: FontWeight.w400,
                                         color: AppColors.textColor),
+                                  
+                                    overflow: TextOverflow.ellipsis,
                                   )
                                 ],
                               ),

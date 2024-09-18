@@ -65,15 +65,14 @@ class GetAllAppUsers extends ChangeNotifier {
             AllAppUsersResponseData.fromJson(data['data']['response_data']);
         isLoading = false;
 
-        firstName = EncryptData.decryptAES(
-            '${allAppUsers.data?.first.firstName}');
-       
+        firstName =
+            EncryptData.decryptAES('${allAppUsers.data?.first.firstName}');
+
         lastName =
             EncryptData.decryptAES('${allAppUsers.data?.first.lastName}');
-        phoneNumber = EncryptData.decryptAES(
-            '${allAppUsers.data?.first.mobileNumber}');
-        email =
-            EncryptData.decryptAES('${allAppUsers.data?.first.email}');
+        phoneNumber =
+            EncryptData.decryptAES('${allAppUsers.data?.first.mobileNumber}');
+        email = EncryptData.decryptAES('${allAppUsers.data?.first.email}');
         //log('This is $allAppUsers');
         updateSearch();
 
@@ -141,12 +140,18 @@ class GetAllAppUsers extends ChangeNotifier {
             AllAppVendorsResponseData.fromJson(data['data']['response_data']);
         isLoading = false;
 
-        vendorFirstName = EncryptData.decryptAES(
-            '${allAppVendors.data?.first.firstName}');
-        vendorLastName = EncryptData.decryptAES(
-            '${allAppVendors.data?.first.lastName}');
-        vendorPhoneNumber = EncryptData.decryptAES(
-            '${allAppVendors.data?.first.mobileNumber}');
+        if (allAppVendors.data != null && allAppVendors.data!.isNotEmpty) {
+          vendorFirstName =
+              EncryptData.decryptAES('${allAppVendors.data!.first.firstName}');
+          vendorLastName =
+              EncryptData.decryptAES('${allAppVendors.data?.first.lastName}');
+          vendorPhoneNumber = EncryptData.decryptAES(
+              '${allAppVendors.data?.first.mobileNumber}');
+        } else {
+          // Handle case where the list is empty or null
+          vendorFirstName = 'Default Name'; // or handle it however you need
+        }
+
         log('This is $allAppVendors');
 
         notifyListeners();
@@ -197,12 +202,18 @@ class GetAllAppUsers extends ChangeNotifier {
             AllAppAdminsResponseData.fromJson(data['data']['response_data']);
         isLoading = false;
 
-        adminFirstName = EncryptData.decryptAES(
-            '${allAppAdmins.data?.first.firstName}');
-        adminLastName = EncryptData.decryptAES(
-            '${allAppAdmins.data?.first.lastName}');
-        adminPhoneNumber = EncryptData.decryptAES(
-            '${allAppAdmins.data?.first.mobileNumber}');
+        if (allAppAdmins.data != null && allAppAdmins.data!.isNotEmpty) {
+          adminFirstName =
+              EncryptData.decryptAES('${allAppAdmins.data?.first.firstName}');
+          adminLastName =
+              EncryptData.decryptAES('${allAppAdmins.data?.first.lastName}');
+          adminPhoneNumber = EncryptData.decryptAES(
+              '${allAppAdmins.data?.first.mobileNumber}');
+        } else {
+          // Handle case where the list is empty or null
+          vendorFirstName = 'Default Name'; // or handle it however you need
+        }
+
         log('This is $allAppAdmins');
 
         notifyListeners();
