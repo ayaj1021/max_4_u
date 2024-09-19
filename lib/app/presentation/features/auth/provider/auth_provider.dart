@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -484,6 +485,8 @@ class AuthProviderImpl extends ChangeNotifier
       );
       final data = response.data;
 
+      log(response.toString());
+
       if (response.statusCode == 200 || response.statusCode == 201) {
         _status = data['data']['status'];
         state = ViewState.Success;
@@ -494,8 +497,17 @@ class AuthProviderImpl extends ChangeNotifier
         return UpdatedBaseResponse.fromSuccess(_message);
       } else {
         state = ViewState.Error;
-        _message =
-            data['data']['message'] ?? data['data']['error_data']['password'];
+
+        var errorData = data['data']['error_data'];
+
+        //  _message =  data['data']['message'];
+        if (errorData!= null) {
+          _message = data['data']['error_data']['password'];
+        } else {
+          _message = data['data']['message'];
+        }
+        // _message =
+        //     data['data']['message'] ?? data['data']['error_data']['password'];
 
         notifyListeners();
         return UpdatedBaseResponse.fromError(_message);

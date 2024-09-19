@@ -63,6 +63,7 @@ class _BvnNinInputScreenState extends State<BvnNinInputScreen> {
                     controller: _ninController,
                     labelText: 'Your NIN',
                     textInputType: TextInputType.number,
+                    maxLength: 11,
                   ),
                   // bvn.status == false
                   //     ? Text(
@@ -77,6 +78,7 @@ class _BvnNinInputScreenState extends State<BvnNinInputScreen> {
                     controller: _bvnController,
                     labelText: 'Your BVN',
                     textInputType: TextInputType.number,
+                    maxLength: 11,
                   ),
                   // bvn.status == false
                   //     ? Text(

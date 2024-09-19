@@ -31,93 +31,146 @@ class _UploadIdCardScreenState extends State<UploadIdCardScreen> {
 
 
 
-    // Method to pick an image using FilePicker and return its path
-  Future<String?> pickImage() async {
-    try {
-      FilePickerResult? imageResult = await FilePicker.platform.pickFiles(
-        type: FileType.image,
-        allowMultiple: false,
-      );
-
-      if (imageResult != null) {
-        return imageResult.files.single.path;
-      }
-    } catch (error) {
-      print('Error picking image: $error');
-    }
-    return null;
-  }
-
-  // Method to compress the picked image
-  Future<File?> compressImage(String imagePath) async {
-    try {
-      File imageFile = File(imagePath);
-      Uint8List imageBytes = await imageFile.readAsBytes();
-
-      img.Image? image = img.decodeImage(imageBytes);
-
-      if (image != null) {
-        // Resize and compress the image
-        img.Image resizedImage = img.copyResize(image, width: 800); // Resize to 800px width
-        List<int> compressedImage = img.encodeJpg(resizedImage, quality: 85); // Compress to 85% quality
-
-        // Write the compressed image to a temporary file
-        return await _writeCompressedImageToFile(compressedImage);
-      }
-    } catch (e) {
-      print('Error compressing image: $e');
-    }
-    return null;
-  }
-
-  // Helper function to write the compressed image to a file
-  Future<File> _writeCompressedImageToFile(List<int> imageBytes) async {
-    final tempDir = Directory.systemTemp;
-    final tempFile = File('${tempDir.path}/compressed_image.jpg');
-    return await tempFile.writeAsBytes(imageBytes);
-  }
-
-  // Method to pick the image, compress it, and set it in the state
-  Future<void> pickImageFile() async {
-    selectedImagePath = await pickImage();
-
-    if (selectedImagePath != null) {
-      // Compress the selected image
-      File? compressedImage = await compressImage(selectedImagePath!);
-
-      setState(() {
-        image = compressedImage;
-      });
-    }
-  }
-
-
-
+  //   // Method to pick an image using FilePicker and return its path
   // Future<String?> pickImage() async {
   //   try {
-  //     // Pick image file
   //     FilePickerResult? imageResult = await FilePicker.platform.pickFiles(
   //       type: FileType.image,
   //       allowMultiple: false,
   //     );
 
   //     if (imageResult != null) {
-  //       // Return the path of the selected image file
-
   //       return imageResult.files.single.path;
   //     }
   //   } catch (error) {
   //     print('Error picking image: $error');
-  //     // Handle the error
   //   }
-
   //   return null;
   // }
 
+  // // Method to compress the picked image
+  // Future<File?> compressImage(String imagePath) async {
+  //   try {
+  //     File imageFile = File(imagePath);
+  //     Uint8List imageBytes = await imageFile.readAsBytes();
+
+  //     img.Image? image = img.decodeImage(imageBytes);
+
+  //     if (image != null) {
+  //       // Resize and compress the image
+  //       img.Image resizedImage = img.copyResize(image, width: 800); // Resize to 800px width
+  //       List<int> compressedImage = img.encodeJpg(resizedImage, quality: 85); // Compress to 85% quality
+
+  //       // Write the compressed image to a temporary file
+  //       return await _writeCompressedImageToFile(compressedImage);
+  //     }
+  //   } catch (e) {
+  //     print('Error compressing image: $e');
+  //   }
+  //   return null;
+  // }
+
+  // // Helper function to write the compressed image to a file
+  // Future<File> _writeCompressedImageToFile(List<int> imageBytes) async {
+  //   final tempDir = Directory.systemTemp;
+  //   final tempFile = File('${tempDir.path}/compressed_image.jpg');
+  //   return await tempFile.writeAsBytes(imageBytes);
+  // }
+
+  // // Method to pick the image, compress it, and set it in the state
   // Future<void> pickImageFile() async {
   //   selectedImagePath = await pickImage();
-  //   setState(() {});
+
+  //   if (selectedImagePath != null) {
+  //     // Compress the selected image
+  //     File? compressedImage = await compressImage(selectedImagePath!);
+
+  //     setState(() {
+  //       image = compressedImage;
+  //     });
+  //   }
   // }
+
+
+  Future<String?> pickImage() async {
+  try {
+    FilePickerResult? imageResult = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      allowMultiple: false,
+    );
+
+    if (imageResult != null && imageResult.files.single.path != null) {
+      return imageResult.files.single.path;
+    } else {
+      print('No image selected or path is null');
+      
+    }
+  } catch (error) {
+    print('Error picking image: $error');
+  }
+  return null;
+}
+
+Future<File?> compressImage(String imagePath) async {
+  try {
+    File imageFile = File(imagePath);
+
+    // Check if the image file exists
+    if (!imageFile.existsSync()) {
+      print('Image file does not exist');
+      return null;
+    }
+
+    Uint8List imageBytes = await imageFile.readAsBytes();
+    img.Image? image = img.decodeImage(imageBytes);
+
+    if (image != null) {
+      // Resize and compress the image
+      img.Image resizedImage = img.copyResize(image, width: 800); // Resize to 800px width
+      List<int> compressedImage = img.encodeJpg(resizedImage, quality: 85); // Compress to 85% quality
+
+      // Write the compressed image to a temporary file
+      return await _writeCompressedImageToFile(compressedImage);
+    } else {
+      print('Error: Could not decode image');
+    }
+  } catch (e) {
+    print('Error compressing image: $e');
+  }
+  return null;
+}
+
+Future<File> _writeCompressedImageToFile(List<int> imageBytes) async {
+  try {
+    final tempDir = Directory.systemTemp;
+    final tempFile = File('${tempDir.path}/compressed_image.jpg');
+    return await tempFile.writeAsBytes(imageBytes);
+  } catch (e) {
+    print('Error writing compressed image to file: $e');
+    rethrow; // Allow the error to propagate if needed
+  }
+}
+
+Future<void> pickImageFile() async {
+  selectedImagePath = await pickImage();
+
+  if (selectedImagePath != null) {
+    // Compress the selected image
+    File? compressedImage = await compressImage(selectedImagePath!);
+
+    if (compressedImage != null) {
+      setState(() {
+        image = compressedImage;
+      });
+    } else {
+      print('Compression failed');
+    }
+  } else {
+    print('Image picking failed or canceled');
+  }
+}
+
+
 
   @override
   Widget build(BuildContext context) {

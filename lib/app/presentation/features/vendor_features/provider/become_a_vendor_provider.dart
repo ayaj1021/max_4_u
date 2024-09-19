@@ -64,9 +64,15 @@ class BecomeAVendorProvider extends ChangeNotifier {
       } else {
         _status = data['data']['status'];
         state = ViewState.Error;
+        List errorData = data['data']['error_data'];
 
-        _message = data['data']['error_data']['bvn'] ??
-            data['data']['error_data']['nin'];
+        //  _message =  data['data']['message'];
+        if (errorData.isNotEmpty) {
+          _message = data['data']['error_data']['bvn'] ??
+              data['data']['error_data']['nin'];
+        } else {
+          _message = data['data']['message'];
+        }
 
         notifyListeners();
         return UpdatedBaseResponse.fromError(_message);

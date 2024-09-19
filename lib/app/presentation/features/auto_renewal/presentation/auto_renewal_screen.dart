@@ -127,7 +127,7 @@ class _AutoRenewalScreenState extends State<AutoRenewalScreen>
                                   child: Text(
                                     'Airtime',
                                     style: AppTextStyles.font12.copyWith(
-                                        fontWeight: FontWeight.w500,
+                                      fontWeight: FontWeight.w500,
                                         color: AppColors.textColor),
                                   ),
                                 ),

@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -48,6 +49,8 @@ class ActivateAutoRenewalProvider extends ChangeNotifier {
       data: body,
       // message: _message,
     );
+
+    log(response.toString());
     final data = response.data;
 
     try {
@@ -62,9 +65,20 @@ class ActivateAutoRenewalProvider extends ChangeNotifier {
       } else {
         state = ViewState.Error;
         _status = data['data']['status'];
-        _message = data['data']['message'] ??
-            data['data']['error_data']['start_date'] ??
-            data['data']['error_data']['end_date'];
+      //  var errorData = data['data']['error_data'];
+        var errorDatas = data['data']['error_data'];
+
+        if ( errorDatas.isNotEmpty) {
+          _message = data['data']['error_data']['start_date'] ??
+              data['data']['error_data']['end_date'] ;
+              // ??
+              // data['data']['error_data']['interval'];
+        } else {
+          _message = data['data']['message'];
+        }
+        // _message = data['data']['message'] ??
+        //     data['data']['error_data']['start_date'] ??
+        //     data['data']['error_data']['end_date'];
 
         //         _errorMessage = data['data']['error_data']['start_date'] ??
         // data['data']['error_data']['end_date'];
