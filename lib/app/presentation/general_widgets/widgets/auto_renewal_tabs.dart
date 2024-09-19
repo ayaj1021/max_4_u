@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
-import 'package:max_4_u/app/provider/cancel_auto_renewal_provider.dart';
+import 'package:max_4_u/app/presentation/features/auto_renewal/provider/cancel_auto_renewal_provider.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/presentation/features/auto_renewal/presentation/auto_renewal_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';

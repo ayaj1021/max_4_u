@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/presentation/features/buy_data/presentation/views/buy_data_screen.dart';
 import 'package:max_4_u/app/presentation/features/buy_data/presentation/views/data_confirmation_screen.dart';
-import 'package:max_4_u/app/provider/activate_auto_renewal_provider.dart';
+import 'package:max_4_u/app/presentation/features/auto_renewal/provider/activate_auto_renewal_provider.dart';
 import 'package:max_4_u/app/presentation/features/buy_data/provider/buy_data_provider.dart';
 import 'package:max_4_u/app/provider/obscure_text_provider.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';

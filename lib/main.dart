@@ -1,13 +1,9 @@
-import 'dart:async';
-import 'dart:io';
 
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/navigation/router.dart';
 import 'package:max_4_u/app/presentation/features/vendor_features/provider/generate_account_number_provider.dart';
-import 'package:max_4_u/app/provider/activate_auto_renewal_provider.dart';
+import 'package:max_4_u/app/presentation/features/auto_renewal/provider/activate_auto_renewal_provider.dart';
 import 'package:max_4_u/app/provider/add_customer_provider.dart';
 import 'package:max_4_u/app/provider/admin_section/approve_vendor_request_provider.dart';
 import 'package:max_4_u/app/provider/admin_section/deny_vendor_request_provider.dart';
@@ -16,7 +12,7 @@ import 'package:max_4_u/app/provider/admin_section/get_all_vendors_requests_prov
 import 'package:max_4_u/app/presentation/features/auth/provider/auth_provider.dart';
 import 'package:max_4_u/app/presentation/features/buy_airtime/provider/buy_airtime_provider.dart';
 import 'package:max_4_u/app/presentation/features/buy_data/provider/buy_data_provider.dart';
-import 'package:max_4_u/app/provider/cancel_auto_renewal_provider.dart';
+import 'package:max_4_u/app/presentation/features/auto_renewal/provider/cancel_auto_renewal_provider.dart';
 import 'package:max_4_u/app/provider/change_email_provider.dart';
 import 'package:max_4_u/app/provider/change_password_provider.dart';
 import 'package:max_4_u/app/provider/choose_option_provider.dart';

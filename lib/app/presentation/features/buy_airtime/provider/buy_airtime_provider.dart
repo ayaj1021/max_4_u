@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -39,7 +40,7 @@ class BuyAirtimeProvider extends ChangeNotifier {
       data: body,
     );
     final data = response.data;
-
+    log(response.toString());
     try {
       if (response.statusCode == 200 || response.statusCode == 201) {
         _status = data['data']['status'];
@@ -51,8 +52,13 @@ class BuyAirtimeProvider extends ChangeNotifier {
       } else {
         _status = data['data']['status'];
         state = ViewState.Error;
-        _message =
-            data['data']['message'] ?? data['data']['error_data']['number'];
+
+        final errorData = data['data']['error_data'];
+        if (errorData != null) {
+          _message = data['data']['error_data']['number'];
+        } else {
+          _message = data['data']['message'];
+        }
 
         notifyListeners();
         return UpdatedBaseResponse.fromError(_message);
