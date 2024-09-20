@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max_4_u/app/encryt_data/encrypt_data.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/provider/admin_section/approve_vendor_request_provider.dart';
 import 'package:max_4_u/app/provider/admin_section/deny_vendor_request_provider.dart';
@@ -256,13 +257,12 @@ class _RequestsDetailsScreenState extends State<RequestsDetailsScreen> {
                                                     child: SizedBox(
                                                       width: 300,
                                                       child: TextField(
-                                                      
                                                         maxLines: 5,
                                                         controller:
                                                             _reasonController,
                                                         decoration: InputDecoration(
-                                                            border:
-                                                                InputBorder.none,
+                                                            border: InputBorder
+                                                                .none,
                                                             hintText:
                                                                 'Enter reason for request denial'),
                                                       ),
@@ -300,7 +300,7 @@ class _RequestsDetailsScreenState extends State<RequestsDetailsScreen> {
                                                                   "Reason field is required");
                                                               return;
                                                             }
-                                                          //  Navigator.pop(context);
+                                                            //  Navigator.pop(context);
                                                             await denyVendor.denyVendorRequest(
                                                                 reason:
                                                                     _reasonController
@@ -359,12 +359,15 @@ class _RequestsDetailsScreenState extends State<RequestsDetailsScreen> {
                                 width: 160.w,
                                 child: ButtonWidget(
                                   onTap: () async {
+                                    final uniqueId =
+                                        EncryptData.decryptAES(widget.uniqueId);
                                     await approveRequest.approveVendorRequest(
-                                        userId: widget.uniqueId);
+                                        userId: uniqueId);
 
                                     if (approveRequest.status == false &&
                                         context.mounted) {
-                                      showMessage(context, denyVendor.message,
+                                      showMessage(
+                                          context, approveRequest.message,
                                           isError: true);
                                       return;
                                     }
@@ -372,7 +375,7 @@ class _RequestsDetailsScreenState extends State<RequestsDetailsScreen> {
                                         context.mounted) {
                                       showMessage(
                                         context,
-                                        denyVendor.message,
+                                        approveRequest.message,
                                       );
                                       nextScreen(context, DashBoardScreen());
                                     }
