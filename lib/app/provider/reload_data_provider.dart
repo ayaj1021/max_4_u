@@ -1,7 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:max_4_u/app/config/base_response/updated_base_response.dart';
+import 'package:max_4_u/app/config/exception/app_exception.dart';
 import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/encryt_data/encrypt_data.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
@@ -11,6 +15,12 @@ import 'package:max_4_u/app/service/service.dart';
 
 class ReloadUserDataProvider extends ChangeNotifier {
   ViewState state = ViewState.Idle;
+
+  bool _status = false;
+  bool get status => _status;
+
+  String _message = '';
+  String get message => _message;
 
   bool isLoading = false;
 
@@ -25,75 +35,107 @@ class ReloadUserDataProvider extends ChangeNotifier {
   LoadDataData loadData = LoadDataData();
 
   TransactionHistory searchTransaction = TransactionHistory();
-  Future reloadUserData() async {
+  Future<UpdatedBaseResponse<dynamic>> reloadUserData() async {
     isLoading = true;
     notifyListeners();
     final body = {
       "request_type": "user",
       "action": "load_user_data",
     };
-   
 
     final response = await ApiService().servicePostRequest(
       data: body,
       // message: _message,
     );
 
-
-
-
     try {
       isLoading = false;
 
       final data = response.data;
-      loadData = LoadDataData.fromJson(data['data']);
 
-      final firstName =
-          EncryptData.decryptAES('${loadData.userData![0].firstName}');
-      await SecureStorage().saveFirstName(firstName);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        //if (_status == true) {
+        // _status = data['data']['status'];
 
-      final lastName =
-          EncryptData.decryptAES('${loadData.userData![0].lastName}');
+        // _message = data['data']['message'];
+        state = ViewState.Success;
+        loadData = LoadDataData.fromJson(data['data']);
 
-      final uniqueId =
-          EncryptData.decryptAES('${loadData.userData![0].uniqueId}');
+        notifyListeners();
 
-      final email = EncryptData.decryptAES('${loadData.userData![0].email}');
+        final firstName =
+            EncryptData.decryptAES('${loadData.userData![0].firstName}');
+        await SecureStorage().saveFirstName(firstName);
 
-      final number =
-          EncryptData.decryptAES('${loadData.userData![0].mobileNumber}');
+        final lastName =
+            EncryptData.decryptAES('${loadData.userData![0].lastName}');
 
-      final balance = loadData.userAccount!.balance;
+        final uniqueId =
+            EncryptData.decryptAES('${loadData.userData![0].uniqueId}');
 
-      _userLevel = loadData.userData![0].level!;
+        final email = EncryptData.decryptAES('${loadData.userData![0].email}');
 
-      updateNumber(_userLevel);
+        final number =
+            EncryptData.decryptAES('${loadData.userData![0].mobileNumber}');
 
-      final beneficiary = loadData.beneficiaryData;
-      final transaction = loadData.transactionHistory;
+        final balance = loadData.userAccount!.balance;
 
-      final services = loadData.services;
+        _userLevel = loadData.userData![0].level!;
 
-      final products = loadData.products;
+        updateNumber(_userLevel);
 
-      await SecureStorage().saveUserBeneficiary(beneficiary!);
-      await SecureStorage().saveUserTransactions(transaction!);
-      await SecureStorage().saveUserProducts(products!);
-      await SecureStorage().saveUserServices(services!);
-      await SecureStorage().saveUserType(_userLevel.toString());
-      await SecureStorage().saveEncryptedID(uniqueId);
-      await SecureStorage().saveUserBalance(balance.toString());
-      await SecureStorage().saveFirstName(firstName);
-      await SecureStorage().saveLastName(lastName);
-      // await SecureStorage().saveUniqueId(uniqueId);
-      await SecureStorage().saveEmail(email);
-      await SecureStorage().savePhoneNumber(number);
+        final beneficiary = loadData.beneficiaryData;
+        final transaction = loadData.transactionHistory;
+
+        final services = loadData.services;
+
+        final products = loadData.products;
+
+        await SecureStorage().saveUserBeneficiary(beneficiary!);
+        await SecureStorage().saveUserTransactions(transaction!);
+        await SecureStorage().saveUserProducts(products!);
+        await SecureStorage().saveUserServices(services!);
+        await SecureStorage().saveUserType(_userLevel.toString());
+        await SecureStorage().saveEncryptedID(uniqueId);
+        await SecureStorage().saveUserBalance(balance.toString());
+        await SecureStorage().saveFirstName(firstName);
+        await SecureStorage().saveLastName(lastName);
+        // await SecureStorage().saveUniqueId(uniqueId);
+        await SecureStorage().saveEmail(email);
+        await SecureStorage().savePhoneNumber(number);
+        notifyListeners();
+        // return loadData;
+
+        return UpdatedBaseResponse.fromSuccess(loadData);
+      } else {
+        _message = data['data']['message'];
+        _status = data['data']['status'];
+        state = ViewState.Error;
+        notifyListeners();
+        return UpdatedBaseResponse.fromError(_message);
+      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        _message = 'Unauthorized request. Please check your credentials.';
+      } else if (e.error is SocketException) {
+        _message = 'No Internet connection or server is unreachable.';
+      } else {
+        _message = AppException.handleError(e).toString();
+      }
+
+      _status = false;
+      state = ViewState.Error;
       notifyListeners();
-      return loadData;
+
+      return UpdatedBaseResponse.fromError(_message);
     } catch (e) {
       isLoading = false;
 
+      _message = 'An unexpected error occurred: $e';
+      _status = false;
+      state = ViewState.Error;
       notifyListeners();
+      return UpdatedBaseResponse.fromError(_message);
     }
   }
 

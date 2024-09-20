@@ -53,8 +53,8 @@ class BuyAirtimeProvider extends ChangeNotifier {
         _status = data['data']['status'];
         state = ViewState.Error;
 
-        final errorData = data['data']['error_data'];
-        if (errorData != null) {
+        var errorData = data['data']['error_data'];
+        if (errorData != null || errorData.isNotEmpty) {
           _message = data['data']['error_data']['number'];
         } else {
           _message = data['data']['message'];
