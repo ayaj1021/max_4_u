@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/enums/network_dropdown.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/model/load_data_model.dart';
 import 'package:max_4_u/app/presentation/features/buy_airtime/presentation/views/airtime_verification_screen.dart';
 import 'package:max_4_u/app/presentation/features/buy_airtime/presentation/widgets/input_phone_number_beneficiary_widget.dart';
 import 'package:max_4_u/app/presentation/features/buy_airtime/presentation/widgets/select_amount_section.dart';
-import 'package:max_4_u/app/presentation/features/buy_airtime/presentation/widgets/select_network_widget.dart';
 import 'package:max_4_u/app/presentation/features/buy_airtime/provider/buy_airtime_provider.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
+import 'package:max_4_u/app/styles/app_colors.dart';
 
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/busy_overlay.dart';
@@ -55,21 +54,12 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
 
   @override
   void initState() {
-    getProduct();
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<ReloadUserDataProvider>(context, listen: false)
           .reloadUserData();
     });
     super.initState();
   }
-
-  List<String> networkProvidersImage = [
-    'assets/logo/mtn.png',
-    'assets/logo/glo.png',
-    'assets/logo/airtel.png',
-    'assets/logo/9mobile.png',
-  ];
 
   @override
   void dispose() {
@@ -79,36 +69,7 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
     super.dispose();
   }
 
-  String _selectedNetwork = networkProviders[0];
-
-  getProduct() async {
-    final storage = await SecureStorage();
-
-    retrievedProducts = (await storage.getUserProducts())!;
-  }
-
-  int? selectedLogoIndex;
-
-  var codeValues = [];
-  var networks = [];
-  getProductCodeValues() async {
-    final storage = await SecureStorage();
-    final code = await storage.getUserProducts();
-    final network = code!
-        .where((code) => code.name == 'mtn')
-        .map((code) => code.code)
-        .toList();
-
-    final productCodes = code
-        .where((code) => code.category == 'airtime')
-        .map((code) => code.code)
-        .toList();
-
-    setState(() {
-      networks = network;
-      codeValues = productCodes;
-    });
-  }
+  String? _selectedProvider;
 
   @override
   Widget build(BuildContext context) {
@@ -142,9 +103,55 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
                       ],
                     ),
                     verticalSpace(64),
-                    SelectNetworkWidget(
-                      networkProviders: networkProviders,
-                      selectedNetwork: _selectedNetwork,
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      // height: 52.h,
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: AppColors.whiteColor,
+                        border: Border.all(
+                          color: const Color(0xffCBD5E1),
+                        ),
+                      ),
+                      child: DropdownButton<String>(
+                        underline: SizedBox.shrink(),
+                        isExpanded: true,
+                        hint: Text('Select Network'),
+                        value: _selectedProvider,
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            _selectedProvider = newValue;
+                          });
+                        },
+                        items: networkProviders.map((String provider) {
+                          return DropdownMenuItem<String>(
+                            value: provider,
+                            child: Text(provider.toUpperCase()),
+                          );
+                        }).toList(),
+                      ),
+
+                      // DropdownMenu(
+                      //   hintText: 'Select network',
+                      //   width: 330.w,
+                      //   inputDecorationTheme: InputDecorationTheme(
+                      //     fillColor: AppColors.whiteColor,
+                      //     border: InputBorder.none,
+                      //   ),
+                      //   onSelected: (newValue) {
+                      //     setState(() {
+                      //       widget.selectedNetwork = newValue!;
+                      //     });
+                      //   },
+                      //   dropdownMenuEntries:
+                      //       widget.network.map((String networkProviders) {
+                      //     return DropdownMenuEntry(
+                      //       value: networkProviders,
+                      //       label: networkProviders.toUpperCase(),
+                      //     );
+                      //   }).toList(),
+                      // ),
                     ),
                     verticalSpace(30),
                     InputPhoneNumberAndBeneficiaryWidget(
@@ -154,6 +161,7 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
                       amount: amount,
                       phoneNumber: _phoneNumber,
                       amountController: _amountController,
+                      selectedNetwork: _selectedProvider.toString(),
                     ),
                     verticalSpace(68),
                     ButtonWidget(
@@ -165,19 +173,18 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
                           return;
                         }
 
-                        if (airtimeAmount.isEmpty) {
-                          showMessage(context, 'Amount is required',
-                              isError: true);
-                          return;
-                        }
+                        // if (airtimeAmount.isEmpty ?? _amountController.text.isEmpty ) {
+                        //   showMessage(context, 'Amount is required',
+                        //       isError: true);
+                        //   return;
+                        // }
 
                         nextScreen(
                             context,
                             AirtimeVerificationScreen(
-                              network: _selectedNetwork.toString(),
-                              //selectedLogo.toString(),
+                              network: _selectedProvider.toString(),
                               phoneNumber: _phoneNumber.text.trim(),
-                              amount: airtimeAmount,
+                              amount: _amountController.text,
                             ));
                       },
                     )

@@ -16,7 +16,7 @@ class ProductHelper {
           .toList();
 
       final networks = airtimeProducts.isNotEmpty ? airtimeProducts.first : '';
-      log('This is airtime networks: $networks');
+     
       return networks;
     } else {
       log('No products found.');

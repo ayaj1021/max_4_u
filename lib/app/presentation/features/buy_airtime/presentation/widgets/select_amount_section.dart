@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max_4_u/app/enums/network_dropdown.dart';
 import 'package:max_4_u/app/presentation/features/buy_airtime/presentation/views/airtime_verification_screen.dart';
 import 'package:max_4_u/app/presentation/general_widgets/widgets/text_input_field.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
@@ -14,12 +13,13 @@ class SelectAmountSection extends StatefulWidget {
       {super.key,
       required this.amount,
       required this.phoneNumber,
-      required this.amountController});
+      required this.amountController,
+      required this.selectedNetwork});
 
   final List amount;
   int? selectedIndex;
-  late String airtimeAmount;
-  String selectedNetwork = networkProviders[0];
+  String? airtimeAmount;
+  final String selectedNetwork;
   final TextEditingController phoneNumber;
   final TextEditingController amountController;
   @override
@@ -68,7 +68,7 @@ class _SelectAmountSectionState extends State<SelectAmountSection> {
                           AirtimeVerificationScreen(
                             network: '${widget.selectedNetwork}',
                             phoneNumber: widget.phoneNumber.text.trim(),
-                            amount: widget.airtimeAmount,
+                            amount: widget.airtimeAmount.toString(),
                           ));
                     }
                   },
@@ -104,7 +104,9 @@ class _SelectAmountSectionState extends State<SelectAmountSection> {
           hintText: '50-350,000',
           textInputType: TextInputType.number,
           onChanged: (p0) {
-            widget.airtimeAmount = widget.amountController.text;
+            if (widget.airtimeAmount != null) {
+              widget.amountController.text = widget.airtimeAmount.toString();
+            }
           },
         ),
       ],

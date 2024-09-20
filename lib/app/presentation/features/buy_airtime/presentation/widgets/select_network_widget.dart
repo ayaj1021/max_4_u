@@ -1,14 +1,16 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
 
 // ignore: must_be_immutable
 class SelectNetworkWidget extends StatefulWidget {
-  SelectNetworkWidget({super.key, required this.selectedNetwork, required this.networkProviders});
- late String selectedNetwork;
-  List<String> networkProviders;
+  SelectNetworkWidget(
+      {super.key, required this.selectedNetwork, required this.network});
+  String? selectedNetwork;
+  List<String> network;
 
   @override
   State<SelectNetworkWidget> createState() => _SelectNetworkWidgetState();
@@ -28,48 +30,6 @@ class _SelectNetworkWidgetState extends State<SelectNetworkWidget> {
           ),
         ),
         verticalSpace(8),
-        // Padding(
-        //   padding: const EdgeInsets.symmetric(horizontal: 20),
-        //   child: Row(
-        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //     children: List.generate(
-        //       logos.length,
-        //       (index) {
-        //         return Padding(
-        //           padding: const EdgeInsets.all(8.0),
-        //           child: Column(
-        //             children: [
-        //               InkWell(
-        //                 onTap: () {
-        //                   handleLogoSelection(
-        //                       logos[index].toString());
-        //                   setState(() {
-        //                     selectedLogoIndex = index;
-        //                   });
-        //                 },
-        //                 child: Container(
-        //                   height: 60,
-        //                   width: 60,
-        //                   padding: EdgeInsets.all(3),
-        //                   decoration: BoxDecoration(
-        //                       shape: BoxShape.circle,
-        //                       color: selectedLogoIndex == index
-        //                           ? AppColors.primaryColor
-        //                           : Colors.transparent),
-        //                   child: CircleAvatar(
-        //                       radius: 25,
-        //                       child: Image.asset(
-        //                           networkProvidersImage[index])),
-        //                 ),
-        //               ),
-        //             ],
-        //           ),
-        //         );
-        //       },
-        //     ),
-        //   ),
-        // ),
-
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           // height: 52.h,
@@ -81,27 +41,47 @@ class _SelectNetworkWidgetState extends State<SelectNetworkWidget> {
               color: const Color(0xffCBD5E1),
             ),
           ),
-          child: DropdownMenu(
-            hintText: 'Select network',
-            width: 330.w,
-            inputDecorationTheme: InputDecorationTheme(
-              fillColor: AppColors.whiteColor,
-              border: InputBorder.none,
-            ),
-            onSelected: (newValue) {
+          child: DropdownButton<String>(
+            underline: SizedBox.shrink(),
+            isExpanded: true,
+            hint: Text('Select Network'),
+            value: widget.selectedNetwork,
+            onChanged: (String? newValue) {
               setState(() {
-                widget.selectedNetwork = newValue!;
+                widget.selectedNetwork = newValue;
+                log("network ${ widget.selectedNetwork}");
               });
             },
-            dropdownMenuEntries:
-                widget.networkProviders.map((String networkProviders) {
-              return DropdownMenuEntry(
-                value: networkProviders,
-                label: networkProviders.toUpperCase(),
+            items: widget.network.map((String provider) {
+              return DropdownMenuItem<String>(
+                value: provider,
+                child: Text(provider.toUpperCase()),
               );
             }).toList(),
           ),
+
+          // DropdownMenu(
+          //   hintText: 'Select network',
+          //   width: 330.w,
+          //   inputDecorationTheme: InputDecorationTheme(
+          //     fillColor: AppColors.whiteColor,
+          //     border: InputBorder.none,
+          //   ),
+          //   onSelected: (newValue) {
+          //     setState(() {
+          //       widget.selectedNetwork = newValue!;
+          //     });
+          //   },
+          //   dropdownMenuEntries:
+          //       widget.network.map((String networkProviders) {
+          //     return DropdownMenuEntry(
+          //       value: networkProviders,
+          //       label: networkProviders.toUpperCase(),
+          //     );
+          //   }).toList(),
+          // ),
         ),
+     
       ],
     );
   }
