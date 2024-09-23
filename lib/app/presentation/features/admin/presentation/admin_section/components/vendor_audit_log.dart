@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max_4_u/app/encryt_data/encrypt_data.dart';
 import 'package:max_4_u/app/presentation/features/admin/presentation/admin_section/components/log_details_screen.dart';
 import 'package:max_4_u/app/presentation/features/super_admin_section/providers/super_admin/audit_log_provider.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
@@ -57,6 +58,12 @@ class VendorAuditLog extends StatelessWidget {
                             auditLog.allAuditResponse.data!.length,
                             (index) {
                               // final data =  auditLog.allAuditResponse.data![index];
+                              final data =
+                                  auditLog.allAuditResponse.data![index];
+                              final firstName =
+                                  EncryptData.decryptAES('${data.firstName}');
+                              final lastName =
+                                  EncryptData.decryptAES('${data.lastName}');
                               return ListTile(
                                 leading: CircleAvatar(
                                   radius: 30,
@@ -64,7 +71,7 @@ class VendorAuditLog extends StatelessWidget {
                                       'assets/images/profile_avatar.png'),
                                 ),
                                 title: Text(
-                                  ' ${auditLog.firstName} ${auditLog.lastName}',
+                                  ' ${firstName} ${lastName}',
                                   style: AppTextStyles.font14.copyWith(
                                     fontWeight: FontWeight.w400,
                                     color: Color(0xff475569),

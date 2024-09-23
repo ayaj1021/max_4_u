@@ -217,6 +217,8 @@ class _UserDetailsScreenState extends State<UserDetailsScreen>
                                                                               'No, Cancel')),
                                                                 ],
                                                               )
+                                                           
+                                                           
                                                             ],
                                                           ),
                                                         ));

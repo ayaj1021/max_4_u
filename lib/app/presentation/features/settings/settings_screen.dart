@@ -52,7 +52,7 @@ class SettingsScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SettingsOptionSection(
-                     iconData: Icons.arrow_forward_ios,
+                    iconData: Icons.arrow_forward_ios,
                     onTap: () =>
                         nextScreen(context, const ChangePasswordScreen()),
                     icon: 'assets/icons/profile_icon.png',
@@ -108,7 +108,7 @@ class SettingsScreen extends StatelessWidget {
                 color: AppColors.whiteColor,
               ),
               child: const SettingsOptionSection(
-                 iconData: Icons.arrow_forward_ios,
+                iconData: Icons.arrow_forward_ios,
                 icon: 'assets/icons/profile_icon.png',
                 settingOption: 'About Max4u',
               ),
@@ -124,7 +124,7 @@ class SettingsScreen extends StatelessWidget {
                 color: AppColors.whiteColor,
               ),
               child: SettingsOptionSection(
-                 iconData: Icons.arrow_forward_ios,
+                iconData: Icons.arrow_forward_ios,
                 onTap: () => nextScreen(context, const DeleteAccountScreen()),
                 icon: 'assets/icons/setting_icon.png',
                 settingOption: 'Delete account',
@@ -133,15 +133,67 @@ class SettingsScreen extends StatelessWidget {
             verticalSpace(152),
             ButtonWidget(
               text: 'Log out',
-              onTap: () async {
-                await SecureStorage().logoutUser();
-                showMessage(context, 'Log out successful');
-                nextScreenReplace(context, LoginScreen());
+              onTap: () {
+                logoutAlertDialog(context);
+
+                // nextScreenReplace(context, LoginScreen());
               },
             )
           ],
         ),
       )),
     );
+  }
+
+  Future<dynamic> logoutAlertDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              contentPadding: EdgeInsets.zero,
+              content: Container(
+                height: 170.h,
+                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+                width: MediaQuery.of(context).size.width,
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                child: Column(
+                  children: [
+                    Text(
+                      'Are you sure you want log out?',
+                      style: AppTextStyles.font16.copyWith(
+                        color: const Color(0xff4F4F4F),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    verticalSpace(45),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                            width: 117.w,
+                            height: 44.h,
+                            child: ButtonWidget(
+                              color: Color(0xff219653),
+                              textColor: AppColors.whiteColor,
+                              text: 'Yes, Proceed',
+                              onTap: () async {
+                                await SecureStorage().logoutUser();
+                                showMessage(context, 'Log out successful');
+                                nextScreenReplace(context, LoginScreen());
+                              },
+                            )),
+                        SizedBox(
+                            width: 117.w,
+                            height: 44.h,
+                            child: ButtonWidget(
+                                onTap: () => Navigator.pop(context),
+                                color: Color(0xffF2C94C),
+                                text: 'No, Cancel')),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ));
   }
 }

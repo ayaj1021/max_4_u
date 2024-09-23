@@ -4,10 +4,12 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max_4_u/app/presentation/features/dashboard/support/support_screen.dart';
 import 'package:max_4_u/app/presentation/features/dashboard/transaction/components/transaction_details_component.dart';
 
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
+import 'package:max_4_u/app/utils/screen_navigator.dart';
 import 'package:max_4_u/app/utils/text_capitalization_extension.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
 import 'package:max_4_u/app/presentation/general_widgets/widgets/button_widget.dart';
@@ -28,7 +30,8 @@ class TransactionDetailsScreen extends StatefulWidget {
       required this.status,
       required this.date,
       required this.type,
-      required this.number, required this.subType});
+      required this.number,
+      required this.subType});
   final String amount;
   final String referenceId;
   final String status;
@@ -80,38 +83,41 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
                 ),
               ),
               verticalSpace(20),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 20),
-               // height: 88.h,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: AppColors.whiteColor,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Any issue with this transaction?',
-                      style: AppTextStyles.font14,
-                    ),
-                    verticalSpace(5),
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.support_agent_outlined,
-                          color: AppColors.primaryColor,
-                        ),
-                        horizontalSpace(12),
-                        Text(
-                          'Contact customer service',
-                          style: AppTextStyles.font14
-                              .copyWith(color: AppColors.primaryColor),
-                        ),
-                      ],
-                    ),
-                  ],
+              GestureDetector(
+                onTap: () => nextScreen(context, SupportScreen()),
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 14, vertical: 20),
+                  // height: 88.h,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: AppColors.whiteColor,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Any issue with this transaction?',
+                        style: AppTextStyles.font14,
+                      ),
+                      verticalSpace(5),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.support_agent_outlined,
+                            color: AppColors.primaryColor,
+                          ),
+                          horizontalSpace(12),
+                          Text(
+                            'Contact customer service',
+                            style: AppTextStyles.font14
+                                .copyWith(color: AppColors.primaryColor),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
               verticalSpace(100),
@@ -278,7 +284,6 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
                                         width: 20,
                                         child: Image.asset(
                                           'assets/icons/cancel_icon.png',
-                                        
                                         ),
                                       ),
                                     ),
@@ -638,7 +643,6 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
   pw.Widget _transactionDetailsSection(String title, String value,
       [IconData? iconData]) {
     return pw.Row(
-     
       children: [
         pw.Expanded(
           child: pw.Text(
@@ -646,14 +650,13 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
             style: pw.TextStyle(fontSize: 18),
           ),
         ),
-           pw.SizedBox(width: 50),
-            pw.Expanded(
+        pw.SizedBox(width: 50),
+        pw.Expanded(
           child: pw.Text(
             ' $value',
             style: pw.TextStyle(fontSize: 18),
           ),
         ),
-      
         if (iconData != null)
           pw.Icon(pw.IconData(iconData.codePoint), size: 16),
       ],
@@ -665,7 +668,7 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
     final file = File('${directory.path}/transaction_details.pdf');
     await file.writeAsBytes(bytes);
 
-     final XFile xFile = XFile(
+    final XFile xFile = XFile(
       file.path,
       mimeType: 'application/pdf',
       name: 'transaction_details.pdf',
@@ -682,7 +685,8 @@ class TransactionsDetailsWidget extends StatelessWidget {
     required this.referenceId,
     required this.type,
     required this.date,
-    required this.number, required this.subType,
+    required this.number,
+    required this.subType,
   });
 
   final String amount;
