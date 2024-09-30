@@ -92,7 +92,7 @@ class _TransactionListSectionState extends State<TransactionListSection> {
         Column(
           children: List.generate(
             // data.length,
-            widget.filteredTransactions!.length,
+            widget.filteredTransactions?.length ?? 0,
             (index) {
               final data = widget.filteredTransactions!;
 

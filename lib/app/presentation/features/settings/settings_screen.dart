@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/presentation/features/auth/presentation/login_screen.dart';
+import 'package:max_4_u/app/presentation/features/settings/about_max4u_screen.dart';
 import 'package:max_4_u/app/presentation/features/settings/change_password_screen.dart';
 import 'package:max_4_u/app/presentation/features/settings/delete_account_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
@@ -107,7 +108,8 @@ class SettingsScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
                 color: AppColors.whiteColor,
               ),
-              child: const SettingsOptionSection(
+              child: SettingsOptionSection(
+                onTap: () => nextScreen(context, const AboutMax4uScreen()),
                 iconData: Icons.arrow_forward_ios,
                 icon: 'assets/icons/profile_icon.png',
                 settingOption: 'About Max4u',

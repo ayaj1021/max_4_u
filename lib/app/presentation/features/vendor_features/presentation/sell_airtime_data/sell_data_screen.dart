@@ -56,7 +56,7 @@ class _SellDataScreenState extends State<SellDataScreen> {
   getProduct() async {
     final storage = await SecureStorage();
 
-    retrievedProducts = (await storage.getUserProducts())!;
+    retrievedProducts = (await storage.getUserProducts()) ?? [];
     for (var products in retrievedProducts) {
       print('${products.name}: ${products.price}');
       print('${products.logo}: ${products.duration}');

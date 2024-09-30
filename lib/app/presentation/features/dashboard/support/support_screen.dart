@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/encryt_data/encrypt_data.dart';
 import 'package:max_4_u/app/presentation/features/auth/provider/auth_provider.dart';
+import 'package:max_4_u/app/presentation/features/dashboard/support/widgets/vendor_faq_section.dart';
 import 'package:max_4_u/app/provider/faq_provider.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
@@ -88,10 +89,9 @@ class _SupportScreenState extends State<SupportScreen> {
                           settingOption: '07033070280'),
                       verticalSpace(20),
                       SettingsOptionSection(
-                          iconData: Icons.copy,
-                          iconDataColor: Colors.blue,
-                          iconOnTap: () {
-                            _copyToClipboard('Max4u@gmail.com');
+                          iconData: Icons.arrow_forward_ios,
+                          onTap: () {
+                            mailSupport(email: 'maxprecursorltd@gmail.com');
                           },
                           icon: 'assets/icons/sms_icon.png',
                           settingOption: 'maxprecursorltd@gmail.com'),
@@ -148,83 +148,73 @@ class _SupportScreenState extends State<SupportScreen> {
                 //                   ),
                 //                 ),
                 //               ),
-                              // verticalSpace(6),
-                              // Text(
-                              //   'Locate using google map',
-                              //   style: AppTextStyles.font12.copyWith(
-                              //     fontWeight: FontWeight.w400,
-                              //     color: AppColors.primaryColor,
-                              //     decoration: TextDecoration.underline,
-                              //   ),
-                              // ),
-                           // ],
-                       //   ),
-                       // ],
-                     // ),
-                //     ],
-                //   ),
-                // ),
-                // verticalSpace(24),
+                // verticalSpace(6),
                 // Text(
-                //   'FAQs',
-                //   style: AppTextStyles.font18.copyWith(
+                //   'Locate using google map',
+                //   style: AppTextStyles.font12.copyWith(
                 //     fontWeight: FontWeight.w400,
+                //     color: AppColors.primaryColor,
+                //     decoration: TextDecoration.underline,
                 //   ),
                 // ),
-               // verticalSpace(9),
-                // Container(
-                //   alignment: Alignment.center,
-                //   height: 250.h,
-                //   width: MediaQuery.of(context).size.width,
-                //   padding:
-                //       const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                //   decoration: BoxDecoration(
-                //     borderRadius: BorderRadius.circular(8),
-                //     color: AppColors.whiteColor,
+                // ],
                 //   ),
-                //   child: Column(
-                //     children: [
-                //       FaqQuestionSection(
-                //         question: 'How can i become a vendor?',
-                //         iconData: Icons.add,
-                //         index: 0,
-                //         answer:
-                //             'You can be become a vendor by clicking the menu icon on the dashboard and toggling the becoming a vendor',
-                //       ),
-                //       verticalSpace(19),
-                //       FaqQuestionSection(
-                //         question: 'Do you offer other services?',
-                //         iconData: Icons.add,
-                //         index: 1,
-                //         answer:
-                //             'You can be become a vendor by clicking the menu icon on the dashboard and toggling the becoming a vendor',
-                //       ),
-                //       verticalSpace(19),
-                //       const FaqQuestionSection(
-                //         question: 'What are your rates',
-                //         iconData: Icons.add,
-                //         index: 2,
-                //         answer:
-                //             'You can be become a vendor by clicking the menu icon on the dashboard and toggling the becoming a vendor',
-                //       ),
-                //       verticalSpace(19),
-                //       const FaqQuestionSection(
-                //         question: 'Do you sell data for all networks',
-                //         iconData: Icons.add,
-                //         index: 3,
-                //         answer:
-                //             'You can be become a vendor by clicking the menu icon on the dashboard and toggling the becoming a vendor',
-                //       ),
+                // ],
+                // ),
                 //     ],
                 //   ),
                 // ),
-            
-            
-             ],
+                verticalSpace(24),
+                Text(
+                  'FAQs',
+                  style: AppTextStyles.font18.copyWith(
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                verticalSpace(9),
+                Container(
+                    alignment: Alignment.center,
+                    // height: 250.h,
+                    width: MediaQuery.of(context).size.width,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 14, vertical: 12),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: AppColors.whiteColor,
+                    ),
+                    child: authProv.userLevel == '2'
+                        ? VendorFaqSection()
+                        : VendorFaqSection()),
+              ],
             ),
           ),
         ),
       );
     }));
+  }
+}
+
+Future<void> mailSupport({required String email}) async {
+  String? encodeQueryParameters(Map<String, String> params) {
+    return params.entries
+        .map(
+          (MapEntry<String, String> e) =>
+              '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}',
+        )
+        .join('&');
+  }
+
+  final emailLaunchUri = Uri(
+    scheme: 'mailto',
+    path: email,
+    query: encodeQueryParameters(<String, String>{
+      'subject': 'Feedback',
+      'body': 'Feedback',
+    }),
+  );
+  try {
+    await launchUrl(emailLaunchUri);
+  } catch (_) {
+    print(_.toString());
   }
 }

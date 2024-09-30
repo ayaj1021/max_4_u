@@ -125,6 +125,7 @@ class _SellAirtimeScreenState extends State<SellAirtimeScreen> {
                       child: DropdownButton<String>(
                         // hint: Text('MTN'),
                         elevation: 0,
+                        isExpanded: true,
                         borderRadius: BorderRadius.circular(12),
                         underline: const SizedBox(),
                         value: _selectedNetwork,
@@ -142,17 +143,11 @@ class _SellAirtimeScreenState extends State<SellAirtimeScreen> {
                               //       _networkToString(network) as NetworkProvider;
                               // });
                             },
-                            child: Container(
-                              margin: const EdgeInsets.only(right: 255),
-                              child: Container(
-                                margin: const EdgeInsets.only(top: 8),
-                                child: Text(
-                                  networkProviders.toUpperCase(),
-                                  style: AppTextStyles.font14.copyWith(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
+                            child: Text(
+                              networkProviders.toUpperCase(),
+                              style: AppTextStyles.font14.copyWith(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
                               ),
                             ),
                           );

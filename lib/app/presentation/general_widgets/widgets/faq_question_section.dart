@@ -29,11 +29,13 @@ class FaqQuestionSection extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  question,
-                  style: AppTextStyles.font18.copyWith(
-                      color: const Color(0xff1A1A1A),
-                      fontWeight: FontWeight.w400),
+                Expanded(
+                  child: Text(
+                    question,
+                    style: AppTextStyles.font18.copyWith(
+                        color: const Color(0xff1A1A1A),
+                        fontWeight: FontWeight.w400),
+                  ),
                 ),
                 InkWell(
                   onTap: () {
