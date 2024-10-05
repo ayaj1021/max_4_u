@@ -38,6 +38,7 @@ class FundAccountProvider extends ChangeNotifier {
       // message: _message,
     );
     final data = response.data;
+    log(data.toString());
 
     try {
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -51,8 +52,19 @@ class FundAccountProvider extends ChangeNotifier {
         notifyListeners();
         return UpdatedBaseResponse.fromSuccess(data);
       } else {
-        _message = data['data']['message'];
+      //  _message = data['data']['message'];
         _status = data['data']['status'];
+
+         var errorData = data['data']['error_data'];
+
+        if (errorData != null && errorData.isNotEmpty) {
+          _message = 
+          
+          //data['data']['error_data']['number'] ??
+              data['data']['error_data']['amount'];
+        } else {
+          _message = data['data']['message'];
+        }
         state = ViewState.Error;
         notifyListeners();
         return UpdatedBaseResponse.fromError(_message);

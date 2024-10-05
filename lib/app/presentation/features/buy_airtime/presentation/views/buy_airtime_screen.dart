@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:max_4_u/app/enums/network_dropdown.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/model/load_data_model.dart';
@@ -54,6 +55,12 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
 
   @override
   void initState() {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: AppColors.primaryColor, // Set your desired status bar color here
+        statusBarIconBrightness: Brightness.light, // Set light or dark icons
+      ),
+    );
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<ReloadUserDataProvider>(context, listen: false)
           .reloadUserData();
@@ -167,17 +174,27 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
                     ButtonWidget(
                       text: 'Continue',
                       onTap: () async {
-                        if (_phoneNumber.text.isEmpty) {
+                         if (_selectedProvider == null ) {
+                          showMessage(context, 'Pls select a network',
+                              isError: true);
+                          return;
+                        }
+                        if (_phoneNumber.text.isEmpty ) {
                           showMessage(context, 'Phone number is required',
+                              isError: true);
+                          return;
+                        } if (_phoneNumber.text.length < 11 ) {
+                          showMessage(context, 'Enter a valid phone number',
                               isError: true);
                           return;
                         }
 
-                        // if (airtimeAmount.isEmpty ?? _amountController.text.isEmpty ) {
-                        //   showMessage(context, 'Amount is required',
-                        //       isError: true);
-                        //   return;
-                        // }
+                        if ( _amountController.text.isEmpty ) {
+                          showMessage(context, 'Amount is required',
+                              isError: true);
+                          return;
+                        }
+                        
 
                         nextScreen(
                             context,

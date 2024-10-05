@@ -1,5 +1,5 @@
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/navigation/router.dart';
 import 'package:max_4_u/app/presentation/features/vendor_features/provider/generate_account_number_provider.dart';
@@ -37,6 +37,12 @@ import 'package:provider/provider.dart';
 final navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
+  SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: AppColors.primaryColor, // Set your desired status bar color here
+        statusBarIconBrightness: Brightness.light, // Set light or dark icons
+      ),
+    );
   // WidgetsFlutterBinding.ensureInitialized();
   // await Firebase.initializeApp();
   // await FirebaseMessaging.instance.getInitialMessage();
@@ -88,15 +94,17 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-   // _getDeviceInfo();
+    // _getDeviceInfo();
     // _getLocation();
-   // _getIPAddress();
+    // _getIPAddress();
     // internetSubscription = InternetConnectionChecker().onStatusChange.listen((status){});
     // final hasInternet = status  == InternetConnectionStatus.connected;
 
     // setState(() => this.hasInternet = hasInternet
 
     // );
+
+    
 
     debugPrint(ipAddress);
     debugPrint(deviceModel);
@@ -105,35 +113,35 @@ class _MyAppState extends State<MyApp> {
     debugPrint(ipAddress);
   }
 
- // Future<void> _getDeviceInfo() async {
-    // final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
-    // if (Platform.isAndroid) {
-    //   final androidInfo = await deviceInfoPlugin.androidInfo;
-    //   setState(() {
-    //     deviceName = androidInfo.device;
-    //     deviceModel = androidInfo.model;
-    //     os = 'Android ${androidInfo.version.release}';
-    //   });
-    // } else if (Platform.isIOS) {
-    //   final iosInfo = await deviceInfoPlugin.iosInfo;
-    //   setState(() {
-    //     deviceName = iosInfo.name;
-    //     deviceModel = iosInfo.model;
-    //     os = 'iOS ${iosInfo.systemVersion}';
-    //   });
-    // }
+  // Future<void> _getDeviceInfo() async {
+  // final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+  // if (Platform.isAndroid) {
+  //   final androidInfo = await deviceInfoPlugin.androidInfo;
+  //   setState(() {
+  //     deviceName = androidInfo.device;
+  //     deviceModel = androidInfo.model;
+  //     os = 'Android ${androidInfo.version.release}';
+  //   });
+  // } else if (Platform.isIOS) {
+  //   final iosInfo = await deviceInfoPlugin.iosInfo;
+  //   setState(() {
+  //     deviceName = iosInfo.name;
+  //     deviceModel = iosInfo.model;
+  //     os = 'iOS ${iosInfo.systemVersion}';
+  //   });
+  // }
 //  }
 
 //  Future<void> _getIPAddress() async {
-    // final dio = Dio();
-    // final response = await dio.get('https://api.ipify.org?format=json');
-    // if (response.statusCode == 200) {
-    //   final Map<String, dynamic> data = (response.data);
-    //   setState(() {
-    //     ipAddress = data['ip'];
-    //   });
-    // }
- // }
+  // final dio = Dio();
+  // final response = await dio.get('https://api.ipify.org?format=json');
+  // if (response.statusCode == 200) {
+  //   final Map<String, dynamic> data = (response.data);
+  //   setState(() {
+  //     ipAddress = data['ip'];
+  //   });
+  // }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -182,6 +190,7 @@ class _MyAppState extends State<MyApp> {
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
               scaffoldBackgroundColor: AppColors.scaffoldBgColor2,
+              visualDensity: VisualDensity.adaptivePlatformDensity,
             ),
             routes: AppRouter.routes,
             initialRoute: '/',

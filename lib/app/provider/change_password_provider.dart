@@ -55,9 +55,17 @@ class ChangePasswordProvider extends ChangeNotifier {
         state = ViewState.Error;
         _status = false;
         // _status = response['data']['status'];
-        _message = data['data']['message'];
-        _message = data['data']['error_data']['password'];
-        _message = data['data']['error_data']['old_password'];
+        // _message = data['data']['message'];
+        // _message = data['data']['error_data']['password'];
+        // _message = data['data']['error_data']['old_password'];
+        var errorData = data['data']['error_data'];
+
+        if (errorData != null && errorData.isNotEmpty) {
+          _message = data['data']['error_data']['password'] ??
+              data['data']['error_data']['old_password'];
+        } else {
+          _message = data['data']['message'];
+        }
 
         //  _message = res['data']['response_data']['error_data']['email'];
         notifyListeners();

@@ -202,15 +202,3 @@ class _TransactionScreenState extends State<TransactionScreen> {
     );
   }
 }
-
-
-
-// I have a list of transactions that i can also filter with a search button. I want to also filter the transaction with a modalbottomsheet that has a list of values of    '
-//     All',
-//     'Successful',
-//     'Pending',
-//     'Failed',
-
-// When no value is selected from the bottomesheet it should so all the transactions that can also be filtered with the search controller, but once a value is shown in the bottom sheet it should mark where the value in the bottomsheet matches the any object in the list.
-
-// Do this in flutter

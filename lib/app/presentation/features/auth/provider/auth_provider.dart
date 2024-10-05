@@ -501,11 +501,14 @@ class AuthProviderImpl extends ChangeNotifier
         var errorData = data['data']['error_data'];
 
         //  _message =  data['data']['message'];
-        if (errorData!= null) {
+        if (errorData!= null ) {
           _message = data['data']['error_data']['password'];
         } else {
           _message = data['data']['message'];
         }
+
+         
+
         // _message =
         //     data['data']['message'] ?? data['data']['error_data']['password'];
 

@@ -89,64 +89,76 @@ class _TransactionListSectionState extends State<TransactionListSection> {
             )
           ],
         ),
-        Column(
-          children: List.generate(
-            // data.length,
-            widget.filteredTransactions?.length ?? 0,
-            (index) {
-              final data = widget.filteredTransactions!;
-
-              return InkWell(
-                onTap: () => nextScreen(
-                    context,
-                    TransactionDetailsScreen(
-                      amount: '${data[index].amountPaid}',
-                      referenceId: '${data[index].referenceId}',
-                      status: '${data[index].status}',
-                      date:
-                          '${widget.dateFormat.format(data[index].regDate as DateTime)}',
-                      type: '${data[index].type}',
-                      number: '${data[index].number}',
-                      subType: '${data[index].subType}',
-                    )),
-                child: Column(
-                  children: [
-                    TransactionSection(
-                      transactionIcon: data[index].subType!.contains('card')
-                          ? widget.icons[2]
-                          : data[index].subType!.contains('data')
-                              ? widget.icons[1]
-                              : widget.icons[0],
-                      transactionType: '${data[index].subType}'.capitalize(),
-                      transactionDate:
-                          '${widget.dateFormat.format(data[index].regDate as DateTime)}',
-                      transactionAmount: 'N${data[index].amountPaid}',
-                      transactionStatus: '${data[index].status}',
-                      transactionColor: data[index].subType!.contains('card')
-                          ? widget.colors[1]
-                          : data[index].subType!.contains('data')
-                              ? widget.colors[2]
-                              : widget.colors[0],
-                      // Color(0xffD6DDFE),
-                      transactionStatusColor: data[index].status == 'success'
-                          ? Colors.green
-                          : data[index].status == 'pending'
-                              ? Color(0xffA6B309)
-                              : Colors.red,
-                      transactionNumber:
-                          '${data[index].number ?? '${data[index].referenceId!.substring(data[index].referenceId!.length - 5)}'}',
-                    ),
-                    verticalSpace(8),
-                    Divider(
-                      color: AppColors.blackColor.withOpacity(0.1),
-                    ),
-                    verticalSpace(8),
-                  ],
+        widget.filteredTransactions!.isEmpty
+            ? Center(
+              child: Text(
+                  'Not found',
+                  style: AppTextStyles.font18.copyWith(
+                      color: AppColors.textColor, fontWeight: FontWeight.w400),
                 ),
-              );
-            },
-          ),
-        )
+            )
+            : Column(
+                children: List.generate(
+                  // data.length,
+                  widget.filteredTransactions?.length ?? 0,
+                  (index) {
+                    final data = widget.filteredTransactions!;
+
+                    return InkWell(
+                      onTap: () => nextScreen(
+                          context,
+                          TransactionDetailsScreen(
+                            amount: '${data[index].amountPaid}',
+                            referenceId: '${data[index].referenceId}',
+                            status: '${data[index].status}',
+                            date:
+                                '${widget.dateFormat.format(data[index].regDate as DateTime)}',
+                            type: '${data[index].type}',
+                            number: '${data[index].number}',
+                            subType: '${data[index].subType}',
+                          )),
+                      child: Column(
+                        children: [
+                          TransactionSection(
+                            transactionIcon:
+                                data[index].subType!.contains('card')
+                                    ? widget.icons[2]
+                                    : data[index].subType!.contains('data')
+                                        ? widget.icons[1]
+                                        : widget.icons[0],
+                            transactionType:
+                                '${data[index].subType}'.capitalize(),
+                            transactionDate:
+                                '${widget.dateFormat.format(data[index].regDate as DateTime)}',
+                            transactionAmount: 'N${data[index].amountPaid}',
+                            transactionStatus: '${data[index].status}',
+                            transactionColor:
+                                data[index].subType!.contains('card')
+                                    ? widget.colors[1]
+                                    : data[index].subType!.contains('data')
+                                        ? widget.colors[2]
+                                        : widget.colors[0],
+                            // Color(0xffD6DDFE),
+                            transactionStatusColor:
+                                data[index].status == 'success'
+                                    ? Colors.green
+                                    : data[index].status == 'pending'
+                                        ? Color(0xffA6B309)
+                                        : Colors.red,
+                            transactionNumber:
+                                '${data[index].number ?? '${data[index].referenceId!.substring(data[index].referenceId!.length - 5)}'}',
+                          ),
+                          verticalSpace(8),
+                          Divider(
+                            color: AppColors.blackColor.withOpacity(0.1),
+                          ),
+                          verticalSpace(8),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              )
       ],
     );
   }

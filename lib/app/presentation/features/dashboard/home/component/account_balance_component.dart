@@ -36,13 +36,14 @@ class _AccountBalanceWidgetState extends State<AccountBalanceWidget> {
 
   List walletType = [
     {
-      "title": "ATM Card",
-      "image": "assets/images/atm_card_icon.png",
-    },
-    {
       "title": "Account NO",
       "image": "assets/images/account_no_icon.png",
     },
+    {
+      "title": "ATM Card",
+      "image": "assets/images/atm_card_icon.png",
+    },
+    
   ];
 
   int? selectedIndex;

@@ -46,7 +46,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         ),
                       ),
                       horizontalSpace(74),
-                       Text(
+                      Text(
                         'Change Password',
                         style: AppTextStyles.font18,
                       )
@@ -70,7 +70,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     labelText: 'Confirm new password',
                     suffixIcon: Icons.visibility_outlined,
                   ),
-              
                   verticalSpace(34),
                   ButtonWidget(
                     text: 'Change password',
@@ -79,6 +78,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                           _newPasswordController.text.isEmpty ||
                           _confirmNewPasswordController.text.isEmpty) {
                         showMessage(context, 'All fields are required',
+                            isError: true);
+                        return;
+                      }
+
+                      if (_newPasswordController.text !=
+                          _confirmNewPasswordController.text) {
+                        showMessage(context, 'Passwords do not match',
                             isError: true);
                         return;
                       }
@@ -103,12 +109,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         showMessage(
                           context,
                           changePassword.message,
-                           isError: false,
+                          isError: false,
                         );
 
                         await reloadData.reloadUserData();
 
-                        nextScreen(context, DashBoardScreen());
+                        nextScreenReplace(context, DashBoardScreen());
                       }
                     },
                   )

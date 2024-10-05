@@ -113,7 +113,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     servicesIcon: servicesIcon,
                     reloadData: reloadData),
                 verticalSpace(30),
-                reloadData.loadData.userData?[0].level == '1'
+               // reloadData.loadData.userData?[0].level == '1'
+                reloadData.loadData.userData?.map((e)=> e.level) == '1'
                     ? Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

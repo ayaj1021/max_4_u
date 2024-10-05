@@ -60,7 +60,7 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
     retrievedProducts = (await storage.getUserProducts())!;
     // for (var products in retrievedProducts) {
     //   print('${products.name}: ${products.price}');
-      
+
     // }
   }
 
@@ -217,8 +217,6 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
                       ),
                     ),
                   ),
-                 
-                 
                   verticalSpace(20),
                   Stack(
                     children: [
@@ -310,6 +308,15 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
                                     validityToDuration[selectedValidity]!)
                             .length,
                         itemBuilder: (context, index) {
+                          String formatString(String input) {
+                            return input
+                                .replaceAll('_', ' ')
+                                .split(' ')
+                                .map((word) =>
+                                    word[0].toUpperCase() + word.substring(1))
+                                .join(' ');
+                          }
+
                           var filteredProducts = retrievedProducts
                               .where((product) =>
                                   product.logo == selectedLogo &&
@@ -354,10 +361,15 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
                                           fontWeight: FontWeight.bold),
                                     ),
                                     SizedBox(height: 8),
+                                    // ' ${formatString(filteredProducts[index].code!).toUpperCase()}'
                                     Text(
-                                      ' ${filteredProducts[index].code}',
+                                      ' ${formatString(filteredProducts[index].code!).toUpperCase()}',
                                       style: TextStyle(fontSize: 14),
                                     ),
+                                    // Text(
+                                    //   ' ${  filteredProducts[index].code}',
+                                    //   style: TextStyle(fontSize: 14),
+                                    // ),
                                   ],
                                 ),
                               ),
@@ -366,13 +378,22 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
                         },
                       ),
                     ),
-                  
-                  
-                  
                   verticalSpace(130),
                   ButtonWidget(
                       text: 'Continue',
                       onTap: () async {
+
+                       // selectedDataPlanIndex
+                         if (selectedDataPlanIndex == null ) {
+                          showMessage(context, 'Pls select a data bundle',
+                              isError: true);
+                          return;
+                        }
+                         if (selectedLogoIndex == null ) {
+                          showMessage(context, 'Pls select a network',
+                              isError: true);
+                          return;
+                        }
                         if (_phoneNumberController.text.isEmpty) {
                           showMessage(context, 'Phone number is required',
                               isError: true);
@@ -384,7 +405,8 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
                             network: selectedLogo.toString(),
                             amount: selectedBundlePrice.toString(),
                             phoneNumber: _phoneNumberController.text,
-                            dataBundle: selectedBundle.toString(), userType: 'user',
+                            dataBundle: selectedBundle.toString(),
+                            userType: 'user',
                           ),
                         );
                       })

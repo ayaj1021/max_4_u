@@ -40,6 +40,21 @@ class _TransactionHistoryContainerState
     final storage = await SecureStorage();
 
     retrievedTransactionHistory = (await storage.getUserTransactions())!;
+    // Assuming SecureStorage is an async operation, you'll need to await its creation
+// final storage = SecureStorage();
+
+// // Fetch user transactions safely
+// var transactionHistory = await storage.getUserTransactions();
+
+// if (transactionHistory != null) {
+//   // Assign the retrieved transactions if not null
+//   retrievedTransactionHistory = transactionHistory;
+// } else {
+//   // Handle the case when transactions are null (e.g., assign an empty list)
+//   retrievedTransactionHistory = [];
+//   print('No transactions found.');
+// }
+
   }
 
   final List icons = [

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:max_4_u/app/presentation/features/admin/presentation/admin_section/requests_screen.dart';
 import 'package:max_4_u/app/presentation/features/dashboard/users/presentation/view/users_screen.dart';
 import 'package:max_4_u/app/presentation/features/super_admin_section/users/presentation/view/super_admin_users_screen.dart';
@@ -33,6 +34,12 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 
   @override
   void initState() {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: AppColors.primaryColor, // Set your desired status bar color here
+        statusBarIconBrightness: Brightness.light, // Set light or dark icons
+      ),
+    );
    // getUserType();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<ReloadUserDataProvider>(context, listen: false)

@@ -214,7 +214,7 @@ class _DataVerificationScreenState extends State<DataVerificationScreen> {
                                     ),
                                   ),
                                   Text(
-                                    bundle.toString(),
+                                    bundle.toString().toUpperCase(),
                                     //bundle[0],
                                     style: AppTextStyles.font16.copyWith(
                                       color: AppColors.whiteColor,

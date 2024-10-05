@@ -35,7 +35,7 @@ class AccountNoPaymentScreen extends StatelessWidget {
                         Icons.arrow_back,
                       ),
                     ),
-                    horizontalSpace(70),
+                    horizontalSpace(50),
                     Text(
                       'Bank Account(Fund Wallet)',
                       style: AppTextStyles.font18,

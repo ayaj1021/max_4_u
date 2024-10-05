@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/presentation/features/notification/widgets/transaction_details_component.dart';
@@ -21,6 +22,13 @@ class NotificationScreen extends StatefulWidget {
 class _NotificationScreenState extends State<NotificationScreen> {
   @override
   void initState() {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor:
+            AppColors.primaryColor, // Set your desired status bar color here
+        statusBarIconBrightness: Brightness.light, // Set light or dark icons
+      ),
+    );
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<GetNotificationProvider>(context, listen: false)
           .getAllNotification();
@@ -67,7 +75,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           )
                         : getNot.allNotifications.data == null
                             ? SizedBox.shrink()
-                            : getNot.allNotifications.data!.transactions!.isEmpty
+                            : getNot.allNotifications.data!.transactions!
+                                    .isEmpty
                                 ? Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment:
@@ -91,8 +100,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                     children: [
                                       Column(
                                         children: List.generate(
-                                            getNot.allNotifications.data!.transactions!
-                                                .length, (index) {
+                                            getNot.allNotifications.data!
+                                                .transactions!.length, (index) {
                                           final data = getNot.allNotifications
                                               .data!.transactions![index];
                                           return Column(
