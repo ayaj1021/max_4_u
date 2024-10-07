@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/encryt_data/encrypt_data.dart';
 import 'package:max_4_u/app/model/load_data_model.dart';
@@ -31,6 +32,13 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     getServices();
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor:
+            AppColors.primaryColor, // Set your desired status bar color here
+        statusBarIconBrightness: Brightness.light, // Set light or dark icons
+      ),
+    );
 
     super.initState();
   }
@@ -64,6 +72,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ClipRRect(borderRadius: BorderRadius.zero, child: const SideDrawer()),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: AppColors.primaryColor,
+        ),
         leading: Builder(builder: (context) {
           return IconButton(
             icon: Image.asset(
@@ -113,8 +124,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     servicesIcon: servicesIcon,
                     reloadData: reloadData),
                 verticalSpace(30),
-               // reloadData.loadData.userData?[0].level == '1'
-                reloadData.loadData.userData?.map((e)=> e.level) == '1'
+                //  reloadData.loadData.userData?.map((e) => e.level) == 1
+                reloadData.loadData.userData?[0].level == '1'
                     ? Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -156,4 +167,3 @@ class _HomeScreenState extends State<HomeScreen> {
     //  });
   }
 }
-

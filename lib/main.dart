@@ -36,13 +36,16 @@ import 'package:provider/provider.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
+// Future<bool> checkConnection() async {
+//   try {
+//     final result = await InternetAddress.lookup('api.max4u.com.ng');
+//     return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
+//   } on SocketException catch (_) {
+//     return false;
+//   }
+// }
+
 void main() async {
-  SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        statusBarColor: AppColors.primaryColor, // Set your desired status bar color here
-        statusBarIconBrightness: Brightness.light, // Set light or dark icons
-      ),
-    );
   // WidgetsFlutterBinding.ensureInitialized();
   // await Firebase.initializeApp();
   // await FirebaseMessaging.instance.getInitialMessage();
@@ -104,8 +107,6 @@ class _MyAppState extends State<MyApp> {
 
     // );
 
-    
-
     debugPrint(ipAddress);
     debugPrint(deviceModel);
     debugPrint(os);
@@ -145,6 +146,13 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor:
+            AppColors.primaryColor, // Set your desired status bar color here
+        statusBarIconBrightness: Brightness.dark, // Set light or dark icons
+      ),
+    );
     return ScreenUtilInit(
       designSize: const Size(390, 844),
       minTextAdapt: true,
@@ -189,8 +197,9 @@ class _MyAppState extends State<MyApp> {
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
+              colorScheme:
+                  ColorScheme.fromSeed(seedColor: AppColors.primaryColor),
               scaffoldBackgroundColor: AppColors.scaffoldBgColor2,
-              visualDensity: VisualDensity.adaptivePlatformDensity,
             ),
             routes: AppRouter.routes,
             initialRoute: '/',

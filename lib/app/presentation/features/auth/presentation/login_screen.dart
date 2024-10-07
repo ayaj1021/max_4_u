@@ -57,6 +57,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor:
+            AppColors.primaryColor, // Set your desired status bar color here
+        statusBarIconBrightness: Brightness.dark, // Set light or dark icons
+      ),
+    );
     return Consumer3<AuthProviderImpl, ObscureTextProvider,
             ReloadUserDataProvider>(
         builder: (context, authProv, obscure, reloadData, _) {

@@ -22,13 +22,6 @@ class NotificationScreen extends StatefulWidget {
 class _NotificationScreenState extends State<NotificationScreen> {
   @override
   void initState() {
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        statusBarColor:
-            AppColors.primaryColor, // Set your desired status bar color here
-        statusBarIconBrightness: Brightness.light, // Set light or dark icons
-      ),
-    );
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<GetNotificationProvider>(context, listen: false)
           .getAllNotification();
@@ -38,6 +31,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor:
+            AppColors.primaryColor, // Set your desired status bar color here
+        statusBarIconBrightness: Brightness.dark, // Set light or dark icons
+      ),
+    );
     return Consumer<GetNotificationProvider>(
       builder: (context, getNot, _) {
         return BusyOverlay(

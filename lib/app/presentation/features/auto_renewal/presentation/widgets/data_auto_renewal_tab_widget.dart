@@ -25,6 +25,14 @@ class DataAutoRenewalTabWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String formatString(String input) {
+      return input
+          .replaceAll('_', ' ')
+          .split(' ')
+          .map((word) => word[0].toUpperCase() + word.substring(1))
+          .join(' ');
+    }
+
     return Container(
       //   height: 174.h,
       width: MediaQuery.of(context).size.width,
@@ -123,7 +131,8 @@ class DataAutoRenewalTabWidget extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '${data[index].productCode}'.toUpperCase(),
+                    '${formatString(data[index].productCode.toString())}'
+                        .toUpperCase(),
                     style: AppTextStyles.font16.copyWith(
                       fontWeight: FontWeight.w500,
                       color: AppColors.mainTextColor,

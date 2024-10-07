@@ -21,36 +21,13 @@ class DashBoardScreen extends StatefulWidget {
 }
 
 class _DashBoardScreenState extends State<DashBoardScreen> {
-  // String userType = '';
-
-  // getUserType() async {
-  //   final userLevel = await SecureStorage().getUserLevel();
-  //   print('this is dashboard user level: $userLevel');
-  //   setState(() {
-  //     userType = userLevel;
-  //   });
-  //  // return userLevel;
- // }
-
   @override
   void initState() {
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        statusBarColor: AppColors.primaryColor, // Set your desired status bar color here
-        statusBarIconBrightness: Brightness.light, // Set light or dark icons
-      ),
-    );
-   // getUserType();
+    // getUserType();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<ReloadUserDataProvider>(context, listen: false)
           .reloadUserData();
     });
-
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   final authProvider =
-    //       Provider.of<AuthProviderImpl>(context, listen: false);
-    //   authProvider.loginUser(email: '', password: '');
-    // });
 
     super.initState();
   }
@@ -134,12 +111,19 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor:
+            AppColors.primaryColor, // Set your desired status bar color here
+        statusBarIconBrightness: Brightness.dark, // Set light or dark icons
+      ),
+    );
     return Consumer2<AuthProviderImpl, ReloadUserDataProvider>(
       builder: (context, authProv, reloadData, _) {
         return Scaffold(
           body: _getBody(
-           // userLevel: userType,
-             userLevel: authProv.userLevel,
+            // userLevel: userType,
+            userLevel: authProv.userLevel,
             selectedIndex: _selectedIndex,
           ),
           //pages[_selectedIndex],

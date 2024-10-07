@@ -13,9 +13,9 @@ class ApiService {
   String? message;
 
   ApiService({Dio? dio}) : _dio = dio ?? Dio() {
-    _dio.options..baseUrl = AppConstants.baseUrl;
-    //..connectTimeout = const Duration(seconds: 60)
-    // ..receiveTimeout = const Duration(seconds: 60);
+    _dio.options..baseUrl = AppConstants.baseUrl
+    ..connectTimeout = const Duration(seconds: 60)
+    ..receiveTimeout = const Duration(seconds: 60);
   }
 
   Future<Response> get(String path,
@@ -51,27 +51,73 @@ class ApiService {
     return response;
   }
 
-  Future<Response> servicePostRequest(
-      {String? message,
-      required Map<String, dynamic>? data,
-      String? token}) async {
+  // Future<Response> servicePostRequest(
+  //     {String? message,
+  //     required Map<String, dynamic>? data,
+  //     String? token}) async {
+  //   final encryptedId = await SecureStorage().getUserEncryptedId();
+  //   final response = await _dio.post(
+  //     AppConstants.baseUrl,
+  //     data: data,
+  //     options: Options(
+  //         validateStatus: (_) => true,
+  //         contentType: Headers.jsonContentType,
+  //         responseType: ResponseType.json,
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //           'Site-From': 'postman',
+  //           'User-Key': encryptedId
+  //         }),
+  //   );
+
+
+
+  //   return response;
+  // }
+
+Future<Response> servicePostRequest({
+  required Map<String, dynamic> data,
+  String? message,
+  String? token,
+}) async {
+  try {
+    // Fetch encrypted user ID from secure storage
     final encryptedId = await SecureStorage().getUserEncryptedId();
+
+    // Prepare headers
+    final headers = {
+      'Content-Type': 'application/json',
+      'Site-From': 'postman',
+      'User-Key': encryptedId,
+      if (token != null) 'Authorization': 'Bearer $token', // Include token if provided
+    };
+
+    // Make the POST request
     final response = await _dio.post(
       AppConstants.baseUrl,
       data: data,
       options: Options(
-          validateStatus: (_) => true,
-          contentType: Headers.jsonContentType,
-          responseType: ResponseType.json,
-          headers: {
-            'Content-Type': 'application/json',
-            'Site-From': 'postman',
-            'User-Key': encryptedId
-          }),
+        headers: headers,
+        contentType: Headers.jsonContentType,
+        responseType: ResponseType.json,
+        validateStatus: (_) => true, // Allow all status codes
+      ),
     );
 
     return response;
+  } on DioException catch (e) {
+    // Handle Dio-specific errors
+    print('Dio Error: ${e.message}');
+    rethrow;
+  } catch (e) {
+    // Handle any other unexpected errors
+    print('Unexpected Error: $e');
+    rethrow;
   }
+}
+
+
+
 
   Future<Response> uploadFileServicePostRequest(
       {

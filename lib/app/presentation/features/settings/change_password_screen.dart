@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
-import 'package:max_4_u/app/presentation/features/dashboard/dashboard_screen.dart';
+import 'package:max_4_u/app/presentation/features/auth/presentation/login_screen.dart';
 import 'package:max_4_u/app/provider/change_password_provider.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
@@ -114,7 +114,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
                         await reloadData.reloadUserData();
 
-                        nextScreenReplace(context, DashBoardScreen());
+                        nextScreenReplace(context, LoginScreen());
                       }
                     },
                   )

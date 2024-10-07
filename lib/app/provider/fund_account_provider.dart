@@ -35,7 +35,6 @@ class FundAccountProvider extends ChangeNotifier {
 
     final response = await ApiService().servicePostRequest(
       data: body,
-      // message: _message,
     );
     final data = response.data;
     log(data.toString());
@@ -52,16 +51,13 @@ class FundAccountProvider extends ChangeNotifier {
         notifyListeners();
         return UpdatedBaseResponse.fromSuccess(data);
       } else {
-      //  _message = data['data']['message'];
+        //  _message = data['data']['message'];
         _status = data['data']['status'];
 
-         var errorData = data['data']['error_data'];
+        var errorData = data['data']['error_data'];
 
         if (errorData != null && errorData.isNotEmpty) {
-          _message = 
-          
-          //data['data']['error_data']['number'] ??
-              data['data']['error_data']['amount'];
+          _message = data['data']['error_data']['amount'];
         } else {
           _message = data['data']['message'];
         }
