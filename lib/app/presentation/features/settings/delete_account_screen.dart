@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
-import 'package:max_4_u/app/presentation/features/onboarding/onboard_screen.dart';
+import 'package:max_4_u/app/presentation/features/settings/confirm_delete_account_password_screen.dart';
 import 'package:max_4_u/app/provider/delete_account_provider.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/busy_overlay.dart';
 import 'package:max_4_u/app/utils/screen_navigator.dart';
-import 'package:max_4_u/app/utils/show_message.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
 import 'package:max_4_u/app/presentation/general_widgets/widgets/button_widget.dart';
 import 'package:provider/provider.dart';
@@ -227,23 +226,26 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                           width: 130.w,
                           child: ButtonWidget(
                             text: 'Confirm',
-                            onTap: () async {
+                            onTap: () {
                               // Navigator.pop(context);
-                              await deleteAcct.deleteAccount();
-                              if (deleteAcct.status == false &&
-                                  context.mounted) {
-                                showMessage(context, deleteAcct.message,
-                                    isError: true);
-                                return;
-                              }
+                              // await deleteAcct.deleteAccount();
+                              // if (deleteAcct.status == false &&
+                              //     context.mounted) {
+                              //   showMessage(context, deleteAcct.message,
+                              //       isError: true);
+                              //   return;
+                              // }
 
-                              if (deleteAcct.status == true &&
-                                  context.mounted) {
-                                showMessage(context, deleteAcct.message);
+                              // if (deleteAcct.status == true &&
+                              //     context.mounted) {
+                              //   showMessage(context, deleteAcct.message);
 
-                                nextScreenReplace(
-                                    context, const OnboardScreen());
-                              }
+                              //   nextScreenReplace(
+                              //       context, const OnboardScreen());
+                              // }
+
+                              nextScreen(context,
+                                  ConfirmDeleteAccountPasswordScreen());
                             },
                           ),
                         ),
