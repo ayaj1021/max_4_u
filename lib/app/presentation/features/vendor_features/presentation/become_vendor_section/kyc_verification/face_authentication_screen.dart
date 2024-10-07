@@ -47,7 +47,7 @@ class _FaceAuthenticationScreenState extends State<FaceAuthenticationScreen> {
   //   }
   // }
 
-  Future pickImage() async {
+  Future pickImage() async {  
     try {
       final pickedImage =
           await ImagePicker().pickImage(source: ImageSource.camera);

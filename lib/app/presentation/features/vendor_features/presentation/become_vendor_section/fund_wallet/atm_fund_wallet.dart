@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/presentation/features/vendor_features/presentation/become_vendor_section/fund_wallet/payment_gateway_screen.dart';
 import 'package:max_4_u/app/provider/fund_account_provider.dart';
+import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/busy_overlay.dart';
 import 'package:max_4_u/app/utils/screen_navigator.dart';
@@ -32,6 +33,7 @@ class _AtmFundWalletState extends State<AtmFundWallet> {
                 child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
@@ -54,6 +56,11 @@ class _AtmFundWalletState extends State<AtmFundWallet> {
                     labelText: 'Amount to pay',
                     hintText: 'e.g 2500',
                     textInputType: TextInputType.number,
+                  ),
+                  verticalSpace(10),
+                  Text(
+                    'Additional charges will be added for this transaction.',
+                    style: AppTextStyles.font14.copyWith(color: AppColors.greyColor),
                   ),
                   verticalSpace(40),
                   // Container(

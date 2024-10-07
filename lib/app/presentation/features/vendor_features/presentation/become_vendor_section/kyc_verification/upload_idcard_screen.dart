@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,9 +16,7 @@ import 'package:max_4_u/app/utils/show_message.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
 import 'package:max_4_u/app/presentation/general_widgets/widgets/button_widget.dart';
 import 'package:provider/provider.dart';
-import 'dart:typed_data';
 import 'package:image/image.dart' as img;
-
 
 class UploadIdCardScreen extends StatefulWidget {
   const UploadIdCardScreen({super.key});
@@ -30,9 +27,6 @@ class UploadIdCardScreen extends StatefulWidget {
 
 class _UploadIdCardScreenState extends State<UploadIdCardScreen> {
   File? image;
-  String? selectedImagePath;
-
-
 
   //   // Method to pick an image using FilePicker and return its path
   // Future<String?> pickImage() async {
@@ -94,7 +88,6 @@ class _UploadIdCardScreenState extends State<UploadIdCardScreen> {
   //   }
   // }
 
-
 //   Future<String?> pickImage() async {
 //   try {
 //     FilePickerResult? imageResult = await FilePicker.platform.pickFiles(
@@ -106,7 +99,7 @@ class _UploadIdCardScreenState extends State<UploadIdCardScreen> {
 //       return imageResult.files.single.path;
 //     } else {
 //       print('No image selected or path is null');
-      
+
 //     }
 //   } catch (error) {
 //     print('Error picking image: $error');
@@ -114,13 +107,11 @@ class _UploadIdCardScreenState extends State<UploadIdCardScreen> {
 //   return null;
 // }
 
-
-  Future pickImage() async {  
+  Future pickImage() async {
     try {
       final pickedImage =
           await ImagePicker().pickImage(source: ImageSource.gallery);
       if (pickedImage == null) return;
-
       final imageTemporary = File(pickedImage.path);
 
       // Compress the image before uploading
@@ -140,66 +131,84 @@ class _UploadIdCardScreenState extends State<UploadIdCardScreen> {
     }
   }
 
-Future<File?> compressImage(File imagePath) async {
-  try {
-    File imageFile = File(imagePath.path);
+// Future<File?> compressImage(File imagePath) async {
+//   try {
+//     File imageFile = File(imagePath.path);
 
-    // Check if the image file exists
-    if (!imageFile.existsSync()) {
-      print('Image file does not exist');
-      return null;
+//     // Check if the image file exists
+//     if (!imageFile.existsSync()) {
+//       print('Image file does not exist');
+//       return null;
+//     }
+
+//     Uint8List imageBytes = await imageFile.readAsBytes();
+//     img.Image? image = img.decodeImage(imageBytes);
+
+//     if (image != null) {
+//       // Resize and compress the image
+//       img.Image resizedImage = img.copyResize(image, width: 800); // Resize to 800px width
+//       List<int> compressedImage = img.encodeJpg(resizedImage, quality: 85); // Compress to 85% quality
+
+//       // Write the compressed image to a temporary file
+//       return await _writeCompressedImageToFile(compressedImage);
+//     } else {
+//       print('Error: Could not decode image');
+//     }
+//   } catch (e) {
+//     print('Error compressing image: $e');
+//   }
+//   return null;
+// }
+
+  Future<File?> compressImage(File imageFile) async {
+    try {
+      Uint8List imageBytes = await imageFile.readAsBytes();
+      img.Image? image = img.decodeImage(imageBytes);
+
+      if (image != null) {
+        img.Image resizedImage = img.copyResize(image,
+            width: 800); // Resize the image to 800px width
+        List<int> compressedImage = img.encodeJpg(resizedImage,
+            quality: 85); // Compress with 85% quality
+
+        // Write the compressed image to a temporary file
+        return await _writeCompressedImageToFile(compressedImage);
+      }
+    } catch (e) {
+      log('Failed to compress image: $e');
     }
+    return null;
+  }
 
-    Uint8List imageBytes = await imageFile.readAsBytes();
-    img.Image? image = img.decodeImage(imageBytes);
-
-    if (image != null) {
-      // Resize and compress the image
-      img.Image resizedImage = img.copyResize(image, width: 800); // Resize to 800px width
-      List<int> compressedImage = img.encodeJpg(resizedImage, quality: 85); // Compress to 85% quality
-
-      // Write the compressed image to a temporary file
-      return await _writeCompressedImageToFile(compressedImage);
-    } else {
-      print('Error: Could not decode image');
+  Future<File> _writeCompressedImageToFile(List<int> imageBytes) async {
+    try {
+      final tempDir = Directory.systemTemp;
+      final tempFile = File('${tempDir.path}/compressed_image.jpg');
+      return await tempFile.writeAsBytes(imageBytes);
+    } catch (e) {
+      print('Error writing compressed image to file: $e');
+      rethrow; // Allow the error to propagate if needed
     }
-  } catch (e) {
-    print('Error compressing image: $e');
   }
-  return null;
-}
 
-Future<File> _writeCompressedImageToFile(List<int> imageBytes) async {
-  try {
-    final tempDir = Directory.systemTemp;
-    final tempFile = File('${tempDir.path}/compressed_image.jpg');
-    return await tempFile.writeAsBytes(imageBytes);
-  } catch (e) {
-    print('Error writing compressed image to file: $e');
-    rethrow; // Allow the error to propagate if needed
-  }
-}
+// Future<void> pickImageFile() async {
+//   selectedImagePath = await pickImage();
 
-Future<void> pickImageFile() async {
-  selectedImagePath = await pickImage();
+//   if (selectedImagePath != null) {
+//     // Compress the selected image
+//     File? compressedImage = await compressImage(selectedImagePath);
 
-  if (selectedImagePath != null) {
-    // Compress the selected image
-    File? compressedImage = await compressImage(selectedImagePath as File);
-
-    if (compressedImage != null) {
-      setState(() {
-        image = compressedImage;
-      });
-    } else {
-      print('Compression failed');
-    }
-  } else {
-    print('Image picking failed or canceled');
-  }
-}
-
-
+//     if (compressedImage != null) {
+//       setState(() {
+//         image = compressedImage;
+//       });
+//     } else {
+//       print('Compression failed');
+//     }
+//   } else {
+//     print('Image picking failed or canceled');
+//   }
+// }
 
   @override
   Widget build(BuildContext context) {
@@ -252,14 +261,16 @@ Future<void> pickImageFile() async {
                             borderRadius: BorderRadius.circular(12),
                             color: AppColors.whiteColor,
                           ),
-                          child: selectedImagePath != null
+                          child: image != null
                               ? Image.file(
-                                  File(selectedImagePath!),
+                                  image!,
+                                  //  File(selectedImagePath!),
                                   fit: BoxFit.cover,
                                 )
                               : GestureDetector(
-                                  onTap: () async {
-                                    await pickImageFile();
+                                  onTap: () {
+                                    pickImage();
+                                    // await pickImageFile();
                                   },
                                   child: Center(
                                     child: Container(
@@ -307,19 +318,17 @@ Future<void> pickImageFile() async {
                         ButtonWidget(
                             text: 'Submit',
                             onTap: () async {
-                              if (selectedImagePath == null) {
+                              if (image == null) {
                                 showMessage(context, 'ID is required',
                                     isError: true);
                                 return;
                               }
 
                               // final imagePath = image;
-                              String fileName =
-                                  selectedImagePath!.split('/').last;
+                              String fileName = image!.path.split('/').last;
 
                               await uploadImage.uploadNinIdCard(
-                                  image: selectedImagePath!,
-                                  fileName: fileName);
+                                  image: image!.path, fileName: fileName);
 
                               if (uploadImage.status == false &&
                                   context.mounted) {
