@@ -67,8 +67,9 @@ class AuthProviderImpl extends ChangeNotifier
         data: body,
       );
       final data = response.data;
+      log(data.toString());
 
-      _status = data['data']['status'];
+      // _status = data['data']['status'];
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         state = ViewState.Success;
@@ -86,10 +87,13 @@ class AuthProviderImpl extends ChangeNotifier
         _status = false;
 
         state = ViewState.Error;
-        _message = data['data']['message'];
         _status = data['data']['status'];
-
-        _message = data['data']['error_data']['mobile_number'];
+        var errordata = data['data']['error_data'];
+        if (errordata != null && errordata.isNotEmpty) {
+          _message = data['data']['error_data']['mobile_number'];
+        } else {
+          _message = data['data']['message'];
+        }
 
         notifyListeners();
         return UpdatedBaseResponse.fromError(_message);

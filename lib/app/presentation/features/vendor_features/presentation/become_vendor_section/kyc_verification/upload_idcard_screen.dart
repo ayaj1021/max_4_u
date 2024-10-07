@@ -1,8 +1,11 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/presentation/features/vendor_features/presentation/become_vendor_section/become_vendor_screen.dart';
 import 'package:max_4_u/app/presentation/features/vendor_features/provider/become_a_vendor_provider.dart';
@@ -92,28 +95,54 @@ class _UploadIdCardScreenState extends State<UploadIdCardScreen> {
   // }
 
 
-  Future<String?> pickImage() async {
-  try {
-    FilePickerResult? imageResult = await FilePicker.platform.pickFiles(
-      type: FileType.image,
-      allowMultiple: false,
-    );
+//   Future<String?> pickImage() async {
+//   try {
+//     FilePickerResult? imageResult = await FilePicker.platform.pickFiles(
+//       type: FileType.image,
+//       allowMultiple: false,
+//     );
 
-    if (imageResult != null && imageResult.files.single.path != null) {
-      return imageResult.files.single.path;
-    } else {
-      print('No image selected or path is null');
+//     if (imageResult != null && imageResult.files.single.path != null) {
+//       return imageResult.files.single.path;
+//     } else {
+//       print('No image selected or path is null');
       
-    }
-  } catch (error) {
-    print('Error picking image: $error');
-  }
-  return null;
-}
+//     }
+//   } catch (error) {
+//     print('Error picking image: $error');
+//   }
+//   return null;
+// }
 
-Future<File?> compressImage(String imagePath) async {
+
+  Future pickImage() async {  
+    try {
+      final pickedImage =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (pickedImage == null) return;
+
+      final imageTemporary = File(pickedImage.path);
+
+      // Compress the image before uploading
+      File? compressedImage = await compressImage(imageTemporary);
+
+      // Set the image to state
+      setState(() {
+        image = compressedImage;
+      });
+
+      // Upload the compressed image
+      // if (compressedImage != null) {
+      //   await uploadImage(compressedImage);
+      // }
+    } on PlatformException catch (e) {
+      log('Failed to pick image: $e');
+    }
+  }
+
+Future<File?> compressImage(File imagePath) async {
   try {
-    File imageFile = File(imagePath);
+    File imageFile = File(imagePath.path);
 
     // Check if the image file exists
     if (!imageFile.existsSync()) {
@@ -156,7 +185,7 @@ Future<void> pickImageFile() async {
 
   if (selectedImagePath != null) {
     // Compress the selected image
-    File? compressedImage = await compressImage(selectedImagePath!);
+    File? compressedImage = await compressImage(selectedImagePath as File);
 
     if (compressedImage != null) {
       setState(() {
