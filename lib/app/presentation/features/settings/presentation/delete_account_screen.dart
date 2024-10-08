@@ -227,22 +227,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                           child: ButtonWidget(
                             text: 'Confirm',
                             onTap: () {
-                              // Navigator.pop(context);
-                              // await deleteAcct.deleteAccount();
-                              // if (deleteAcct.status == false &&
-                              //     context.mounted) {
-                              //   showMessage(context, deleteAcct.message,
-                              //       isError: true);
-                              //   return;
-                              // }
-
-                              // if (deleteAcct.status == true &&
-                              //     context.mounted) {
-                              //   showMessage(context, deleteAcct.message);
-
-                              //   nextScreenReplace(
-                              //       context, const OnboardScreen());
-                              // }
+                              Navigator.pop(context);
 
                               nextScreen(context,
                                   ConfirmDeleteAccountPasswordScreen());
