@@ -31,13 +31,12 @@ class BuyDataProvider extends ChangeNotifier {
       "number": phoneNumber,
     };
 
-    final response = await ApiService().servicePostRequest(
-      data: body,
-    );
-
-    final data = response.data;
-
     try {
+      final response = await ApiService().servicePostRequest(
+        data: body,
+      );
+
+      final data = response.data;
       if (response.statusCode == 200 || response.statusCode == 201) {
         _status = data['data']['status'];
         state = ViewState.Success;

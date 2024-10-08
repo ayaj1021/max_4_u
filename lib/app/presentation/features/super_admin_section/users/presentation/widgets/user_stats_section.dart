@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/presentation/general_widgets/widgets/user_stats_widget.dart';
-import 'package:max_4_u/app/provider/admin_section/get_all_app_users_provider.dart';
+import 'package:max_4_u/app/presentation/features/admin/provider/get_all_app_users_provider.dart';
 
 class UserStatsSection extends StatelessWidget {
   const UserStatsSection({

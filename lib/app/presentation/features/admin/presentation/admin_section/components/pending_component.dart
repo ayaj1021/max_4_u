@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/encryt_data/encrypt_data.dart';
 import 'package:max_4_u/app/presentation/features/admin/presentation/admin_section/components/requests_details_screen.dart';
 
-import 'package:max_4_u/app/provider/admin_section/get_all_vendors_requests_provider.dart';
+import 'package:max_4_u/app/presentation/features/admin/provider/get_all_vendors_requests_provider.dart';
 import 'package:max_4_u/app/presentation/features/auth/provider/auth_provider.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';

@@ -4,7 +4,7 @@ import 'package:max_4_u/app/model/admin/get_all_app_users_model.dart';
 import 'package:max_4_u/app/presentation/features/super_admin_section/users/presentation/widgets/consumer_vendor_admin_stats_section.dart';
 import 'package:max_4_u/app/presentation/features/super_admin_section/users/presentation/widgets/user_stats_section.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
-import 'package:max_4_u/app/provider/admin_section/get_all_app_users_provider.dart';
+import 'package:max_4_u/app/presentation/features/admin/provider/get_all_app_users_provider.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
 import 'package:provider/provider.dart';

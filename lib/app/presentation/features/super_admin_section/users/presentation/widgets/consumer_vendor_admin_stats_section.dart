@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/presentation/features/admin/presentation/admin_section/components/admin_component.dart';
 import 'package:max_4_u/app/presentation/features/admin/presentation/admin_section/components/consumer_component.dart';
 import 'package:max_4_u/app/presentation/features/admin/presentation/admin_section/components/vendor_component.dart';
-import 'package:max_4_u/app/provider/admin_section/get_all_app_users_provider.dart';
+import 'package:max_4_u/app/presentation/features/admin/provider/get_all_app_users_provider.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';

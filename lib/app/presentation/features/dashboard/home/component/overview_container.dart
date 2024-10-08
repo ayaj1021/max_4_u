@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/database/database.dart';
-import 'package:max_4_u/app/provider/get_all_customers_provider.dart';
+import 'package:max_4_u/app/presentation/features/admin/provider/get_all_customers_provider.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';

@@ -43,12 +43,11 @@ class ReloadUserDataProvider extends ChangeNotifier {
       "action": "load_user_data",
     };
 
-    final response = await ApiService().servicePostRequest(
-      data: body,
-      // message: _message,
-    );
-
     try {
+      final response = await ApiService().servicePostRequest(
+        data: body,
+        // message: _message,
+      );
       isLoading = false;
 
       final data = response.data;

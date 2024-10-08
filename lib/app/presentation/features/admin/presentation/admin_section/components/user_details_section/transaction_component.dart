@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:max_4_u/app/provider/admin_section/get_all_app_users_provider.dart';
+import 'package:max_4_u/app/presentation/features/admin/provider/get_all_app_users_provider.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/presentation/features/dashboard/home/component/transaction_history_component.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';

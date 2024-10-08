@@ -29,14 +29,14 @@ class GenerateAccountProvider extends ChangeNotifier {
     };
     log('$body');
 
-    final response = await ApiService().servicePostRequest(
-      data: body,
-      // message: _message,
-    );
-    final data = response.data;
-    _status = data['data']['status'];
-    log('this is all user response $response');
     try {
+      final response = await ApiService().servicePostRequest(
+        data: body,
+        // message: _message,
+      );
+      final data = response.data;
+      _status = data['data']['status'];
+      log('this is all user response $response');
       if (response.statusCode == 200 || response.statusCode == 201) {
         //if (_status == true) {
         _status = data['data']['status'];

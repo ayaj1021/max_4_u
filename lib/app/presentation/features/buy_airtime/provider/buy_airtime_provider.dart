@@ -36,12 +36,12 @@ class BuyAirtimeProvider extends ChangeNotifier {
       "amount": amount,
     };
 
-    final response = await ApiService().servicePostRequest(
-      data: body,
-    );
-    final data = response.data;
-    log(response.toString());
     try {
+      final response = await ApiService().servicePostRequest(
+        data: body,
+      );
+      final data = response.data;
+      log(response.toString());
       if (response.statusCode == 200 || response.statusCode == 201) {
         _status = data['data']['status'];
         state = ViewState.Success;

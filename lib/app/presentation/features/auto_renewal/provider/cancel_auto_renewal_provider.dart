@@ -31,14 +31,13 @@ class CancelAutoRenewalProvider extends ChangeNotifier {
 
     debugPrint(body.toString());
 
-    final response = await ApiService().servicePostRequest(
-      data: body,
-      // message: _message,
-    );
-
-    final data = response.data;
-
     try {
+      final response = await ApiService().servicePostRequest(
+        data: body,
+        // message: _message,
+      );
+
+      final data = response.data;
       if (response.statusCode == 200 || response.statusCode == 201) {
         // if (_status == true) {
         _status = data['data']['status'];

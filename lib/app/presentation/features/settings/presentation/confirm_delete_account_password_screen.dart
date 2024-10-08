@@ -3,7 +3,7 @@ import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/presentation/features/onboarding/onboard_screen.dart';
 import 'package:max_4_u/app/presentation/general_widgets/widgets/button_widget.dart';
 import 'package:max_4_u/app/presentation/general_widgets/widgets/text_input_field.dart';
-import 'package:max_4_u/app/provider/delete_account_provider.dart';
+import 'package:max_4_u/app/presentation/features/settings/provider/delete_account_provider.dart';
 import 'package:max_4_u/app/provider/obscure_text_provider.dart';
 
 import 'package:max_4_u/app/styles/app_text_styles.dart';

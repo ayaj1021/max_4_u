@@ -9,7 +9,7 @@ import 'package:max_4_u/app/presentation/features/dashboard/support/support_scre
 import 'package:max_4_u/app/presentation/features/auth/provider/auth_provider.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/database/database.dart';
-import 'package:max_4_u/app/presentation/features/settings/settings_screen.dart';
+import 'package:max_4_u/app/presentation/features/settings/presentation/settings_screen.dart';
 import 'package:max_4_u/app/presentation/features/super_admin_section/presentation/views/set_up_new_data_prices_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';

@@ -45,15 +45,14 @@ class ActivateAutoRenewalProvider extends ChangeNotifier {
     };
     debugPrint(body.toString());
 
-    final response = await ApiService().servicePostRequest(
-      data: body,
-      // message: _message,
-    );
-
-    log(response.toString());
-    final data = response.data;
-
     try {
+      final response = await ApiService().servicePostRequest(
+        data: body,
+        // message: _message,
+      );
+
+      log(response.toString());
+      final data = response.data;
       if (response.statusCode == 200 || response.statusCode == 201) {
         //if (_status == true) {
         _status = data['data']['status'];
@@ -65,14 +64,14 @@ class ActivateAutoRenewalProvider extends ChangeNotifier {
       } else {
         state = ViewState.Error;
         _status = data['data']['status'];
-      //  var errorData = data['data']['error_data'];
+        //  var errorData = data['data']['error_data'];
         var errorDatas = data['data']['error_data'];
 
-        if ( errorDatas.isNotEmpty) {
+        if (errorDatas.isNotEmpty) {
           _message = data['data']['error_data']['start_date'] ??
-              data['data']['error_data']['end_date'] ;
-              // ??
-              // data['data']['error_data']['interval'];
+              data['data']['error_data']['end_date'];
+          // ??
+          // data['data']['error_data']['interval'];
         } else {
           _message = data['data']['message'];
         }

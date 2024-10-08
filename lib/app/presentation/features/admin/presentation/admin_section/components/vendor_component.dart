@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/encryt_data/encrypt_data.dart';
 import 'package:max_4_u/app/presentation/features/admin/presentation/admin_section/components/user_details_section/user_details_screen.dart';
-import 'package:max_4_u/app/provider/admin_section/get_all_app_users_provider.dart';
+import 'package:max_4_u/app/presentation/features/admin/provider/get_all_app_users_provider.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/screen_navigator.dart';

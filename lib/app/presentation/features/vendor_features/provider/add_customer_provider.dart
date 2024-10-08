@@ -30,6 +30,9 @@ class AddCustomerProvider extends ChangeNotifier {
       "mobile_number": phoneNumber,
     };
 
+
+    try {
+
     await SecureStorage().saveCustomerPhoneNumber(phoneNumber);
     final response = await ApiService().servicePostRequest(
       data: body,
@@ -38,8 +41,6 @@ class AddCustomerProvider extends ChangeNotifier {
     final data = response.data;
     _status = data['data']['status'];
     _message = data['data']['message'];
-
-    try {
       if (response.statusCode == 200 || response.statusCode == 201) {
         //if (_status == true) {
         _status = data['data']['status'];

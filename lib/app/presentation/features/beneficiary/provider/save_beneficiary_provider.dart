@@ -31,16 +31,16 @@ class SaveBeneficiaryProvider extends ChangeNotifier {
     };
     log('$body');
 
-    final response = await ApiService().servicePostRequest(
-      data: body,
-      // message: _message,
-    );
-
-    final data = response.data;
-
-    log('$_status');
-    log('$response');
     try {
+      final response = await ApiService().servicePostRequest(
+        data: body,
+        // message: _message,
+      );
+
+      final data = response.data;
+
+      log('$_status');
+      log('$response');
       _status = data['data']['status'];
       if (response.statusCode == 200 || response.statusCode == 201) {
         //  if (_status == true) {

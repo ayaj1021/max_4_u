@@ -4,7 +4,7 @@ import 'package:max_4_u/app/enums/view_state_enum.dart';
 import 'package:max_4_u/app/presentation/features/vendor_features/presentation/customers_section/add_customer_id_screen.dart';
 import 'package:max_4_u/app/presentation/features/vendor_features/presentation/customers_section/add_customer_number_screen.dart';
 import 'package:max_4_u/app/presentation/features/vendor_features/presentation/customers_section/customer_details_page.dart';
-import 'package:max_4_u/app/provider/get_all_customers_provider.dart';
+import 'package:max_4_u/app/presentation/features/admin/provider/get_all_customers_provider.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/busy_overlay.dart';

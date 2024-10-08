@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
-import 'package:max_4_u/app/provider/add_customer_provider.dart';
+import 'package:max_4_u/app/presentation/features/vendor_features/provider/add_customer_provider.dart';
 import 'package:max_4_u/app/provider/obscure_text_provider.dart';
 import 'package:max_4_u/app/presentation/features/dashboard/dashboard_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';

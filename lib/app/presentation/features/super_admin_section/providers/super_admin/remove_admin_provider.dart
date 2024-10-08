@@ -26,15 +26,15 @@ class RemoveAdminProvider extends ChangeNotifier {
     };
     log('$body');
 
-    final response = await ApiService().servicePostRequest(
-      data: body,
-      // message: _message,
-    );
-
-    final data = response.data;
-    _status = data['status'];
-    log('this is all user response ${response.data}');
     try {
+      final response = await ApiService().servicePostRequest(
+        data: body,
+        // message: _message,
+      );
+
+      final data = response.data;
+      _status = data['status'];
+      log('this is all user response ${response.data}');
       if (response.statusCode == 200 || response.statusCode == 201) {
         //if (_status == true) {
         _status = data['status'];

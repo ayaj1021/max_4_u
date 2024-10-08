@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
-import 'package:max_4_u/app/presentation/features/settings/confirm_delete_account_password_screen.dart';
-import 'package:max_4_u/app/provider/delete_account_provider.dart';
+import 'package:max_4_u/app/presentation/features/settings/presentation/confirm_delete_account_password_screen.dart';
+import 'package:max_4_u/app/presentation/features/settings/provider/delete_account_provider.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
 import 'package:max_4_u/app/utils/busy_overlay.dart';
