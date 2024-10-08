@@ -33,18 +33,17 @@ class FundAccountProvider extends ChangeNotifier {
       "amount": amount,
     };
 
-    final response = await ApiService().servicePostRequest(
-      data: body,
-    );
-    final data = response.data;
-    log(data.toString());
-
     try {
+      final response = await ApiService().servicePostRequest(
+        data: body,
+      );
+      final data = response.data;
+      log(data.toString());
       if (response.statusCode == 200 || response.statusCode == 201) {
+        state = ViewState.Success;
         _status = data['data']['status'];
 
         _message = data['data']['message'];
-        state = ViewState.Success;
         paymentUrl = data['data']['response_data']['payment_link'];
         token = data['data']['response_data']['token'];
 
@@ -52,7 +51,7 @@ class FundAccountProvider extends ChangeNotifier {
         return UpdatedBaseResponse.fromSuccess(data);
       } else {
         //  _message = data['data']['message'];
-        _status = data['data']['status'];
+        _status = false;
 
         var errorData = data['data']['error_data'];
 
@@ -102,14 +101,14 @@ class FundAccountProvider extends ChangeNotifier {
     };
     log('$body');
 
-    final response = await ApiService().servicePostRequest(
-      data: body,
-    );
-
-    final data = response.data;
-    _status = data['data']['status'];
-    log('this is all user response $response');
     try {
+      final response = await ApiService().servicePostRequest(
+        data: body,
+      );
+
+      final data = response.data;
+      _status = data['data']['status'];
+      log('this is all user response $response');
       if (response.statusCode == 200 || response.statusCode == 201) {
         _status = data['data']['status'];
 

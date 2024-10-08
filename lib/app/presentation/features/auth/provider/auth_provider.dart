@@ -74,8 +74,6 @@ class AuthProviderImpl extends ChangeNotifier
       if (response.statusCode == 200 || response.statusCode == 201) {
         state = ViewState.Success;
 
-        notifyListeners();
-
         _status = data['data']['status'];
         _message = data['data']['message'];
 

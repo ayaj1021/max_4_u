@@ -43,16 +43,16 @@ class BecomeAVendorProvider extends ChangeNotifier {
     };
     log('$body');
 
-    final response = await ApiService().servicePostRequest(
-      data: body,
-    );
-    final data = response.data;
-    _status = data['data']['status'];
-    _message = data['data']['message'];
-
-    log('$_status');
-    log('$response');
     try {
+      final response = await ApiService().servicePostRequest(
+        data: body,
+      );
+      final data = response.data;
+      _status = data['data']['status'];
+      _message = data['data']['message'];
+
+      log('$_status');
+      log('$response');
       if (response.statusCode == 200 || response.statusCode == 201) {
         // if (_status == true) {
         _status = data['data']['status'];
@@ -121,26 +121,25 @@ class BecomeAVendorProvider extends ChangeNotifier {
     });
     log('${body}');
 
-    final response = await ApiService().uploadFileServicePostRequest(
-      data: body,
-      onSendProgress: (sent, total) {
-        log('count: $sent, total $total');
-        _uploadSent = ((sent / total) * 100);
-        print(((sent / total) * 100));
-        // _uploadSent = sent;
-        _uploadTotal = ((total / total) * 100);
-        ;
-        notifyListeners();
-        print('$sent, $total');
-      },
-    );
-    final data = response.data;
-    _message = data['data']['message'];
-
-    log('$_status');
-    log('$response');
-
     try {
+      final response = await ApiService().uploadFileServicePostRequest(
+        data: body,
+        onSendProgress: (sent, total) {
+          log('count: $sent, total $total');
+          _uploadSent = ((sent / total) * 100);
+          print(((sent / total) * 100));
+          // _uploadSent = sent;
+          _uploadTotal = ((total / total) * 100);
+          ;
+          notifyListeners();
+          print('$sent, $total');
+        },
+      );
+      log('$response');
+      final data = response.data;
+      _message = data['data']['message'];
+
+      log('$_status');
       if (response.statusCode == 200 || response.statusCode == 201) {
         _status = data['data']['status'];
         state = ViewState.Success;
@@ -202,25 +201,25 @@ class BecomeAVendorProvider extends ChangeNotifier {
     });
     log('$body');
 
-    final response = await ApiService().uploadFileServicePostRequest(
-      data: body,
-      onSendProgress: (sent, total) {
-        log('count: $sent, total $total');
-        _uploadSent = ((sent / total) * 100);
-        print(((sent / total) * 100));
-        // _uploadSent = sent;
-        _uploadTotal = ((total / total) * 100);
-        ;
-        notifyListeners();
-        print('$sent, $total');
-      },
-    );
-
-    final data = response.data;
-
-    log('$_status');
-    log('$response');
     try {
+      final response = await ApiService().uploadFileServicePostRequest(
+        data: body,
+        onSendProgress: (sent, total) {
+          log('count: $sent, total $total');
+          _uploadSent = ((sent / total) * 100);
+          print(((sent / total) * 100));
+          // _uploadSent = sent;
+          _uploadTotal = ((total / total) * 100);
+          ;
+          notifyListeners();
+          print('$sent, $total');
+        },
+      );
+
+      final data = response.data;
+
+      log('$_status');
+      log('$response');
       if (response.statusCode == 200 || response.statusCode == 201) {
         //if (_status == true) {
         _status = data['data']['status'];

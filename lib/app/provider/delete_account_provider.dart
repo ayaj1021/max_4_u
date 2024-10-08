@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -16,7 +17,8 @@ class DeleteAccountProvider extends ChangeNotifier {
   bool _status = false;
   bool get status => _status;
 
-  Future<UpdatedBaseResponse<dynamic>> deleteAccount() async {
+  Future<UpdatedBaseResponse<dynamic>> deleteAccount(
+      {required String password}) async {
     state = ViewState.Busy;
     _message = 'Deleting your account...';
     notifyListeners();
@@ -24,6 +26,7 @@ class DeleteAccountProvider extends ChangeNotifier {
     final body = {
       "request_type": "user",
       "action": "delete_account",
+      "password": password
     };
     debugPrint(body.toString());
     try {
@@ -32,6 +35,7 @@ class DeleteAccountProvider extends ChangeNotifier {
       );
 
       final data = response.data;
+      log(data.toString());
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         // if (_status == true) {

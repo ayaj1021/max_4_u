@@ -60,51 +60,9 @@ class _AtmFundWalletState extends State<AtmFundWallet> {
                   verticalSpace(10),
                   Text(
                     'Additional charges will be added for this transaction.',
-                    style: AppTextStyles.font14.copyWith(color: AppColors.greyColor),
+                    style: AppTextStyles.font14
+                        .copyWith(color: AppColors.greyColor),
                   ),
-                  verticalSpace(40),
-                  // Container(
-                  //   padding: const EdgeInsets.symmetric(horizontal: 15),
-                  //   height: 52.h,
-                  //   width: MediaQuery.of(context).size.width,
-                  //   decoration: BoxDecoration(
-                  //     borderRadius: BorderRadius.circular(12),
-                  //     color: AppColors.whiteColor,
-                  //     border: Border.all(
-                  //       color: const Color(0xffCBD5E1),
-                  //     ),
-                  //   ),
-                  //   child: DropdownButton<PaymentPlatform>(
-                  //     elevation: 0,
-                  //     borderRadius: BorderRadius.circular(12),
-                  //     underline: const SizedBox(),
-                  //     value: _selectedPayment,
-                  //     onChanged: (newValue) {
-                  //       setState(() {
-                  //         _selectedPayment = newValue!;
-                  //       });
-                  //     },
-                  //     items: PaymentPlatform.values
-                  //         .map((PaymentPlatform paymentPlatform) {
-                  //       return DropdownMenuItem(
-                  //         value: paymentPlatform,
-                  //         child: Container(
-                  //           margin: const EdgeInsets.only(right: 240),
-                  //           child: Container(
-                  //             margin: const EdgeInsets.only(top: 8),
-                  //             child: Text(
-                  //               _paymentToString(paymentPlatform),
-                  //               style: AppTextStyles.font14.copyWith(
-                  //                 fontSize: 14,
-                  //                 fontWeight: FontWeight.w400,
-                  //               ),
-                  //             ),
-                  //           ),
-                  //         ),
-                  //       );
-                  //     }).toList(),
-                  //   ),
-                  // ),
                   verticalSpace(80),
                   ButtonWidget(
                       text: 'Fund account',
