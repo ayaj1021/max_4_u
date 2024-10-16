@@ -26,8 +26,8 @@ class BuyAirtimeScreen extends StatefulWidget {
 }
 
 class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
-  final _amountController = TextEditingController();
-  final _phoneNumber = TextEditingController();
+  late TextEditingController _amountController;
+  late TextEditingController _phoneNumber;
 
   final amount = [
     '100',
@@ -53,11 +53,16 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
     });
   }
 
+  final ValueNotifier<bool> _isLoginEnabled = ValueNotifier(false);
+
   @override
   void initState() {
+    _phoneNumber = TextEditingController()..addListener(_listener);
+    _amountController = TextEditingController()..addListener(_listener);
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
-        statusBarColor: AppColors.primaryColor, // Set your desired status bar color here
+        statusBarColor:
+            AppColors.primaryColor, // Set your desired status bar color here
         statusBarIconBrightness: Brightness.light, // Set light or dark icons
       ),
     );
@@ -66,6 +71,12 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
           .reloadUserData();
     });
     super.initState();
+  }
+
+  void _listener() {
+    _isLoginEnabled.value = _selectedProvider != null &&
+        _phoneNumber.text.isNotEmpty &&
+        _amountController.text.isNotEmpty;
   }
 
   @override
@@ -138,27 +149,6 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
                           );
                         }).toList(),
                       ),
-
-                      // DropdownMenu(
-                      //   hintText: 'Select network',
-                      //   width: 330.w,
-                      //   inputDecorationTheme: InputDecorationTheme(
-                      //     fillColor: AppColors.whiteColor,
-                      //     border: InputBorder.none,
-                      //   ),
-                      //   onSelected: (newValue) {
-                      //     setState(() {
-                      //       widget.selectedNetwork = newValue!;
-                      //     });
-                      //   },
-                      //   dropdownMenuEntries:
-                      //       widget.network.map((String networkProviders) {
-                      //     return DropdownMenuEntry(
-                      //       value: networkProviders,
-                      //       label: networkProviders.toUpperCase(),
-                      //     );
-                      //   }).toList(),
-                      // ),
                     ),
                     verticalSpace(30),
                     InputPhoneNumberAndBeneficiaryWidget(
@@ -171,40 +161,55 @@ class _BuyAirtimeScreenState extends State<BuyAirtimeScreen> {
                       selectedNetwork: _selectedProvider.toString(),
                     ),
                     verticalSpace(68),
-                    ButtonWidget(
-                      text: 'Continue',
-                      onTap: () async {
-                         if (_selectedProvider == null ) {
-                          showMessage(context, 'Pls select a network',
-                              isError: true);
-                          return;
-                        }
-                        if (_phoneNumber.text.isEmpty ) {
-                          showMessage(context, 'Phone number is required',
-                              isError: true);
-                          return;
-                        } if (_phoneNumber.text.length < 11 ) {
-                          showMessage(context, 'Enter a valid phone number',
-                              isError: true);
-                          return;
-                        }
+                    ValueListenableBuilder(
+                        valueListenable: _isLoginEnabled,
+                        builder: (context, r, c) {
+                          return ButtonWidget(
+                            color: r
+                                ? AppColors.primaryColor
+                                : AppColors.greyColor,
+                            text: 'Continue',
+                            onTap: () async {
+                              if (_selectedProvider == null ||
+                                  _phoneNumber.text.isEmpty ||
+                                  _amountController.text.isEmpty) {
+                                return;
+                              } else {
+                                if (_selectedProvider == null) {
+                                  showMessage(context, 'Pls select a network',
+                                      isError: true);
+                                  return;
+                                }
+                                if (_phoneNumber.text.isEmpty) {
+                                  showMessage(
+                                      context, 'Phone number is required',
+                                      isError: true);
+                                  return;
+                                }
+                                if (_phoneNumber.text.length < 11) {
+                                  showMessage(
+                                      context, 'Enter a valid phone number',
+                                      isError: true);
+                                  return;
+                                }
 
-                        if ( _amountController.text.isEmpty ) {
-                          showMessage(context, 'Amount is required',
-                              isError: true);
-                          return;
-                        }
-                        
+                                if (_amountController.text.isEmpty) {
+                                  showMessage(context, 'Amount is required',
+                                      isError: true);
+                                  return;
+                                }
 
-                        nextScreen(
-                            context,
-                            AirtimeVerificationScreen(
-                              network: _selectedProvider.toString(),
-                              phoneNumber: _phoneNumber.text.trim(),
-                              amount: _amountController.text,
-                            ));
-                      },
-                    )
+                                nextScreen(
+                                    context,
+                                    AirtimeVerificationScreen(
+                                      network: _selectedProvider.toString(),
+                                      phoneNumber: _phoneNumber.text.trim(),
+                                      amount: _amountController.text,
+                                    ));
+                              }
+                            },
+                          );
+                        }),
                   ],
                 ),
               ),

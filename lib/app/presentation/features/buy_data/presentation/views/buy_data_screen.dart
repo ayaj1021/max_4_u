@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/database/database.dart';
@@ -24,28 +26,16 @@ class BuyDataScreen extends StatefulWidget {
 }
 
 class _BuyDataScreenState extends State<BuyDataScreen> {
-  final _phoneNumberController = TextEditingController();
-
-  @override
-  void dispose() {
-    _phoneNumberController.dispose();
-    super.dispose();
-  }
+  late TextEditingController _phoneNumberController;
+  final ValueNotifier<bool> _isBuyDataEnabled = ValueNotifier(false);
 
   var codeValues = [];
   var networks = [];
   List<Product> retrievedProducts = [];
 
-  List<String> durationMap = [
-    'Daily',
-    'Weekly',
-    'Monthly',
-    '3 Months',
-    'Yearly',
-  ];
-
   @override
   void initState() {
+    _phoneNumberController = TextEditingController()..addListener(_listener);
     getProduct();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<ReloadUserDataProvider>(context, listen: false)
@@ -54,20 +44,28 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
     super.initState();
   }
 
+  void _listener() {
+    _isBuyDataEnabled.value = selectedLogo != null &&
+        _phoneNumberController.text.isNotEmpty &&
+        selectedLogoIndex != null &&
+        selectedBundlePrice != null &&
+        selectedDataPlanIndex != null;
+  }
+
   getProduct() async {
     final storage = await SecureStorage();
 
     retrievedProducts = (await storage.getUserProducts())!;
-    // for (var products in retrievedProducts) {
-    //   print('${products.name}: ${products.price}');
-
-    // }
   }
 
   String? selectedLogo;
   String? selectedValidity;
   String? selectedBundle;
   String? selectedBundlePrice;
+
+  int? selectedLogoIndex;
+  int? selectedValidityIndex;
+  int? selectedDataPlanIndex;
 
   final Map<String, String> validityToDuration = {
     'Daily': '1',
@@ -88,22 +86,13 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
     setState(() {
       selectedValidity = validity;
     });
-
-    String duration = validityToDuration[validity]!;
-
-    var filteredProducts = retrievedProducts
-        .where((product) =>
-            product.duration == duration && product.logo == selectedLogo)
-        .toList();
-    for (var product in filteredProducts) {
-      print(
-          'Selected Product: ${product.name}, Duration: ${product.duration}, Code: ${product.code}');
-    }
   }
 
-  int? selectedLogoIndex;
-  int? selectedValidityIndex;
-  int? selectedDataPlanIndex;
+  @override
+  void dispose() {
+    _phoneNumberController.dispose();
+    super.dispose();
+  }
 
   final List<String> dataValidityProvider = [
     'Daily',
@@ -112,7 +101,6 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
     '3 Months',
     'Yearly',
   ];
-  //String _selectedDuration = 'Daily';
 
   void handleBundleSelection(String bundle) {
     setState(() {
@@ -131,9 +119,6 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
       selectedLogo = logo;
       selectedValidity = null;
     });
-    print('Selected logo: $selectedLogo');
-    print(
-        'Available logos in products: ${retrievedProducts.map((product) => product.logo).toSet().toList()}');
   }
 
   @override
@@ -217,40 +202,7 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
                       ),
                     ),
                   ),
-                  verticalSpace(20),
-                  Stack(
-                    children: [
-                      TextInputField(
-                        controller: _phoneNumberController,
-                        textInputType: TextInputType.number,
-                        labelText: 'Phone Number',
-                        hintText: 'Receiver\'s number',
-                        maxLength: 11,
-                      ),
-                      Positioned(
-                        right: 0,
-                        child: GestureDetector(
-                          onTap: () async {
-                            var number = await Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (context) => BeneficiaryScreen()));
-
-                            if (number != null) {
-                              _phoneNumberController.text = number;
-                            }
-                          },
-                          child: Text(
-                            'select from beneficiary',
-                            style: AppTextStyles.font12.copyWith(
-                              color: AppColors.secondaryColor,
-                              fontWeight: FontWeight.w500,
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
+                  
                   verticalSpace(27),
                   if (selectedLogo != null)
                     Container(
@@ -361,15 +313,10 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
                                           fontWeight: FontWeight.bold),
                                     ),
                                     SizedBox(height: 8),
-                                    // ' ${formatString(filteredProducts[index].code!).toUpperCase()}'
                                     Text(
                                       ' ${formatString(filteredProducts[index].code!).toUpperCase()}',
                                       style: TextStyle(fontSize: 14),
                                     ),
-                                    // Text(
-                                    //   ' ${  filteredProducts[index].code}',
-                                    //   style: TextStyle(fontSize: 14),
-                                    // ),
                                   ],
                                 ),
                               ),
@@ -378,37 +325,86 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
                         },
                       ),
                     ),
-                  verticalSpace(130),
-                  ButtonWidget(
-                      text: 'Continue',
-                      onTap: () async {
 
-                       // selectedDataPlanIndex
-                         if (selectedDataPlanIndex == null ) {
-                          showMessage(context, 'Pls select a data bundle',
-                              isError: true);
-                          return;
-                        }
-                         if (selectedLogoIndex == null ) {
-                          showMessage(context, 'Pls select a network',
-                              isError: true);
-                          return;
-                        }
-                        if (_phoneNumberController.text.isEmpty) {
-                          showMessage(context, 'Phone number is required',
-                              isError: true);
-                          return;
-                        }
-                        nextScreen(
-                          context,
-                          DataVerificationScreen(
-                            network: selectedLogo.toString(),
-                            amount: selectedBundlePrice.toString(),
-                            phoneNumber: _phoneNumberController.text,
-                            dataBundle: selectedBundle.toString(),
-                            userType: 'user',
+                    verticalSpace(20),
+                  Stack(
+                    children: [
+                      TextInputField(
+                        controller: _phoneNumberController,
+                        textInputType: TextInputType.number,
+                        labelText: 'Phone Number',
+                        hintText: 'Receiver\'s number',
+                        maxLength: 11,
+                      ),
+                      Positioned(
+                        right: 0,
+                        child: GestureDetector(
+                          onTap: () async {
+                            var number = await Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (context) => BeneficiaryScreen()));
+
+                            if (number != null) {
+                              _phoneNumberController.text = number;
+                            }
+                          },
+                          child: Text(
+                            'select from beneficiary',
+                            style: AppTextStyles.font12.copyWith(
+                              color: AppColors.secondaryColor,
+                              fontWeight: FontWeight.w500,
+                              decoration: TextDecoration.underline,
+                            ),
                           ),
-                        );
+                        ),
+                      )
+                    ],
+                  ),
+                  verticalSpace(130),
+                  ValueListenableBuilder(
+                      valueListenable: _isBuyDataEnabled,
+                      builder: (context, r, c) {
+                        return ButtonWidget(
+                            color: r
+                                ? AppColors.primaryColor
+                                : AppColors.greyColor,
+                            text: 'Continue',
+                            onTap: () async {
+                              log(r.toString());
+                              if (selectedDataPlanIndex == null ||
+                                  selectedLogoIndex == null ||
+                                  _phoneNumberController.text.isEmpty) {
+                              } else {
+                                // selectedDataPlanIndex
+                                if (selectedDataPlanIndex == null) {
+                                  showMessage(
+                                      context, 'Pls select a data bundle',
+                                      isError: true);
+                                  return;
+                                }
+                                if (selectedLogoIndex == null) {
+                                  showMessage(context, 'Pls select a network',
+                                      isError: true);
+                                  return;
+                                }
+                                if (_phoneNumberController.text.isEmpty) {
+                                  showMessage(
+                                      context, 'Phone number is required',
+                                      isError: true);
+                                  return;
+                                }
+                                nextScreen(
+                                  context,
+                                  DataVerificationScreen(
+                                    network: selectedLogo.toString(),
+                                    amount: selectedBundlePrice.toString(),
+                                    phoneNumber: _phoneNumberController.text,
+                                    dataBundle: selectedBundle.toString(),
+                                    userType: 'user',
+                                  ),
+                                );
+                              }
+                            });
                       })
                 ],
               ),

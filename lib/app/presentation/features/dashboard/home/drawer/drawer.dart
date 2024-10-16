@@ -8,6 +8,7 @@ import 'package:max_4_u/app/presentation/features/dashboard/profile/profile_scre
 import 'package:max_4_u/app/presentation/features/dashboard/support/support_screen.dart';
 import 'package:max_4_u/app/presentation/features/vendor_features/presentation/become_vendor_section/become_vendor_screen.dart';
 import 'package:max_4_u/app/presentation/features/auth/provider/auth_provider.dart';
+import 'package:max_4_u/app/presentation/general_widgets/widgets/button_widget.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
 import 'package:max_4_u/app/presentation/features/settings/presentation/settings_screen.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
@@ -263,9 +264,10 @@ class _SideDrawerState extends State<SideDrawer> {
                 ),
                 ListTile(
                   onTap: () async {
-                    await SecureStorage().logoutUser();
-                    showMessage(context, 'Log out successful');
-                    nextScreenReplace(context, LoginScreen());
+                    // await SecureStorage().logoutUser();
+                    // showMessage(context, 'Log out successful');
+                    // nextScreenReplace(context, LoginScreen());
+                    logoutAlertDialog(context);
                   },
                   leading: SizedBox(
                       height: 24,
@@ -284,4 +286,57 @@ class _SideDrawerState extends State<SideDrawer> {
       },
     );
   }
+
+  Future<dynamic> logoutAlertDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              contentPadding: EdgeInsets.zero,
+              content: Container(
+                height: 170.h,
+                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+                width: MediaQuery.of(context).size.width,
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                child: Column(
+                  children: [
+                    Text(
+                      'Are you sure you want log out?',
+                      style: AppTextStyles.font16.copyWith(
+                        color: const Color(0xff4F4F4F),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    verticalSpace(45),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                            width: 117.w,
+                            height: 44.h,
+                            child: ButtonWidget(
+                              color: Color(0xff219653),
+                              textColor: AppColors.whiteColor,
+                              text: 'Yes, Proceed',
+                              onTap: () async {
+                                await SecureStorage().logoutUser();
+                                showMessage(context, 'Log out successful');
+                                nextScreenReplace(context, LoginScreen());
+                              },
+                            )),
+                        SizedBox(
+                            width: 117.w,
+                            height: 44.h,
+                            child: ButtonWidget(
+                                onTap: () => Navigator.pop(context),
+                                color: Color(0xffF2C94C),
+                                text: 'No, Cancel')),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ));
+  }
+
 }
