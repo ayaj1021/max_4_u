@@ -35,6 +35,7 @@ class BuyAirtimeProvider extends ChangeNotifier {
       "number": phoneNumber,
       "amount": amount,
     };
+    log(body.toString());
 
     try {
       final response = await ApiService().servicePostRequest(

@@ -174,24 +174,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         )
                       : SizedBox(),
-                  authProv.userLevel == '5'
-                      ? ListTile(
-                          onTap: () {
-                            context
-                                .pushNamed(SetupNewDataPricesScreen.routeName);
-                          },
-                          leading: SizedBox(
-                              height: 24,
-                              width: 24,
-                              child: Image.asset(
-                                  'assets/icons/setup_prices_icon.png')),
-                          title: Text(
-                            'Set Up Prices',
-                            style: AppTextStyles.font16
-                                .copyWith(fontWeight: FontWeight.w500),
-                          ),
-                        )
-                      : SizedBox(),
+                  // authProv.userLevel == '5'
+                  //     ? ListTile(
+                  //         onTap: () {
+                  //           context
+                  //               .pushNamed(SetupNewDataPricesScreen.routeName);
+                  //         },
+                  //         leading: SizedBox(
+                  //             height: 24,
+                  //             width: 24,
+                  //             child: Image.asset(
+                  //                 'assets/icons/setup_prices_icon.png')),
+                  //         title: Text(
+                  //           'Set Up Prices',
+                  //           style: AppTextStyles.font16
+                  //               .copyWith(fontWeight: FontWeight.w500),
+                  //         ),
+                  //       )
+                  //     : SizedBox(),
                   authProv.userLevel == '1'
                       ? ListTile(
                           onTap: () {
