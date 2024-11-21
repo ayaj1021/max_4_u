@@ -78,6 +78,7 @@ class LocalNotificationService {
         tz.local,
       ),
       details,
+      // ignore: deprecated_member_use
       androidAllowWhileIdle: true,
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,

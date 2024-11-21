@@ -238,7 +238,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
-  Future<void> _authenticate() async {
+  Future<void> authenticate() async {
     final email = await SecureStorage().getUserEmail();
     final password = await SecureStorage().getUserPassword();
 

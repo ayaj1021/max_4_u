@@ -164,7 +164,7 @@ class _TransactionListSectionState extends State<TransactionListSection> {
   }
 }
 
-String _monthToString(Months month) {
+String monthToString(Months month) {
   switch (month) {
     case Months.January:
       return 'January';

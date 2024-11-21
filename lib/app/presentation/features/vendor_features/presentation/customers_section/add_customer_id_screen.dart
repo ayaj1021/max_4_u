@@ -33,6 +33,7 @@ class _AddCustomerIdScreenState extends State<AddCustomerIdScreen> {
                 padding:
                     const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       children: [
@@ -43,13 +44,27 @@ class _AddCustomerIdScreenState extends State<AddCustomerIdScreen> {
                           ),
                         ),
                         horizontalSpace(120),
-                         Text(
+                        Text(
                           'User ID',
                           style: AppTextStyles.font18,
                         ),
                       ],
                     ),
-                    verticalSpace(107),
+                 
+                    verticalSpace(34),
+                    Text(
+                      'Enter User ID',
+                      style: AppTextStyles.font20
+                          .copyWith(fontWeight: FontWeight.w500),
+                    ),
+                    verticalSpace(14),
+                    Text(
+                      'Input customers ID number to get started',
+                      style: AppTextStyles.font14.copyWith(
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.textColor,
+                      ),
+                    ),
                     TextInputField(
                       controller: _userIdController,
                       hintText: 'Enter User ID',

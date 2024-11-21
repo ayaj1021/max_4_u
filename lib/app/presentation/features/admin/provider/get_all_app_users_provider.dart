@@ -47,7 +47,6 @@ class GetAllAppUsers extends ChangeNotifier {
         "name": ""
       }
     };
-    log('$body');
 
     try {
       final response = await ApiService().servicePostRequest(

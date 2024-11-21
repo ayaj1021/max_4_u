@@ -347,7 +347,7 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
 
 //Function to save and download data as image
 
-  Future<void> _captureAndDownloadImage() async {
+  Future<void> captureAndDownloadImage() async {
     try {
       RenderRepaintBoundary boundary = _globalKey.currentContext!
           .findRenderObject() as RenderRepaintBoundary;
@@ -373,7 +373,7 @@ class _TransactionDetailsScreenState extends State<TransactionDetailsScreen> {
 
   //function to save and download data as pdf
 
-  Future<void> _generateAndDownloadPDF() async {
+  Future<void> generateAndDownloadPDF() async {
     final iconData = await rootBundle.load('assets/icons/success_icon.png');
     final iconImage = pw.MemoryImage(iconData.buffer.asUint8List());
     final pdf = pw.Document();

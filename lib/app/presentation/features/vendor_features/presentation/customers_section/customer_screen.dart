@@ -68,7 +68,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                       context: context,
                       builder: (context) {
                         return Container(
-                          height: 193.h,
+                          height: 300,
                           width: MediaQuery.of(context).size.width,
                           padding: const EdgeInsets.all(25),
                           decoration: BoxDecoration(
@@ -149,6 +149,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
+                            verticalSpace(124),
                             SizedBox(
                                 height: 92.h,
                                 width: 92.w,
@@ -187,6 +188,8 @@ class _CustomerScreenState extends State<CustomerScreen> {
                               Column(
                                 children: List.generate(
                                     getAllCustomer.data.length, (index) {
+                                  final data = getAllCustomer.data[index];
+
                                   return Column(
                                     children: [
                                       ListTile(
@@ -194,13 +197,11 @@ class _CustomerScreenState extends State<CustomerScreen> {
                                             context,
                                             CustomerDetailsPage(
                                               firstName:
-                                                  '${getAllCustomer.firstName}',
-                                              lastName:
-                                                  '${getAllCustomer.lastName} ',
+                                                  '${data['first_name']}',
+                                              lastName: '${data['last_name']} ',
                                               phoneNumber:
-                                                  '${getAllCustomer.mobileNumber}',
-                                              uniqueId:
-                                                  '${getAllCustomer.uniqueId}',
+                                                  '${data['mobile_number']}',
+                                              uniqueId: '${data['unique_id']}',
                                             )),
                                         contentPadding: EdgeInsets.zero,
                                         // leading: Text(

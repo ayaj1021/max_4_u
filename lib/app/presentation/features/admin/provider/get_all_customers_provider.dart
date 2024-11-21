@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -33,6 +34,7 @@ class GetAllCustomersProvider extends ChangeNotifier {
         data: body,
         // message: _message,
       );
+      log(response.data);
 
       final data = response.data;
       _status = data['data']['status'];

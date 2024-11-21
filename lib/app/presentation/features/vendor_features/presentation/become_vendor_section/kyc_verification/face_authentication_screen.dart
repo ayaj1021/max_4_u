@@ -100,7 +100,7 @@ class _FaceAuthenticationScreenState extends State<FaceAuthenticationScreen> {
     return await tempFile.writeAsBytes(imageBytes);
   }
 
-  Future<void> _convertImage(String inputPath, String format) async {
+  Future<void> convertImage(String inputPath, String format) async {
     final outputPath = path.join(
       (await getTemporaryDirectory()).path,
       '${path.basenameWithoutExtension(inputPath)}.$format',

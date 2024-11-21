@@ -30,17 +30,15 @@ class AddCustomerProvider extends ChangeNotifier {
       "mobile_number": phoneNumber,
     };
 
-
     try {
-
-    await SecureStorage().saveCustomerPhoneNumber(phoneNumber);
-    final response = await ApiService().servicePostRequest(
-      data: body,
-      // message: _message,
-    );
-    final data = response.data;
-    _status = data['data']['status'];
-    _message = data['data']['message'];
+      await SecureStorage().saveCustomerPhoneNumber(phoneNumber);
+      final response = await ApiService().servicePostRequest(
+        data: body,
+        // message: _message,
+      );
+      final data = response.data;
+      _status = data['data']['status'];
+      _message = data['data']['message'];
       if (response.statusCode == 200 || response.statusCode == 201) {
         //if (_status == true) {
         _status = data['data']['status'];
@@ -56,10 +54,10 @@ class AddCustomerProvider extends ChangeNotifier {
 
         var errorData = data['data']['error_data'];
 
-        if (errorData != null) {
-          _message = data['data']['error_data']['mobile_number'];
-        } else {
+        if (errorData == null || errorData.isEmpty) {
           _message = data['data']['message'];
+        } else {
+          _message = data['data']['error_data']['mobile_number'];
         }
 
         notifyListeners();
@@ -102,28 +100,27 @@ class AddCustomerProvider extends ChangeNotifier {
       "client_id": userId,
     };
 
-    final response = await ApiService().servicePostRequest(
-      data: body,
-      // message: _message,
-    );
-    final data = response.data;
-
-    _status = data['status'];
-    _message = data['message'];
-
     try {
+      final response = await ApiService().servicePostRequest(
+        data: body,
+        // message: _message,
+      );
+      final data = response.data;
+
+      _status = data['data']['status'];
+      _message = data['data']['message'];
       if (response.statusCode == 200 || response.statusCode == 201) {
         // if (_status == true) {
-        _status = data['status'];
+        _status = data['data']['status'];
         state = ViewState.Success;
-        _message = data['message'];
+        _message = data['data']['message'];
 
         notifyListeners();
         return UpdatedBaseResponse.fromSuccess(data);
       } else {
-        _status = data['status'];
+        _status = data['data']['status'];
         state = ViewState.Error;
-        _message = data['message'];
+        _message = data['data']['message'];
         //  _message = response['data']['error_data']['mobile_number'];
 
         notifyListeners();
@@ -168,19 +165,18 @@ class AddCustomerProvider extends ChangeNotifier {
       "token": otp,
     };
 
-    await SecureStorage().saveCustomerOtp(otp);
-
-    final response = await ApiService().authPostRequest(
-      data: body,
-      // message: _message,
-    );
-
-    final data = response.data;
-
-    _status = data['data']['status'];
-    _message = data['data']['message'];
-
     try {
+      await SecureStorage().saveCustomerOtp(otp);
+
+      final response = await ApiService().authPostRequest(
+        data: body,
+        // message: _message,
+      );
+
+      final data = response.data;
+
+      _status = data['data']['status'];
+      _message = data['data']['message'];
       if (response.statusCode == 200 || response.statusCode == 201) {
         // if (_status == true) {
         _status = data['data']['status'];
@@ -246,19 +242,16 @@ class AddCustomerProvider extends ChangeNotifier {
       "otp_code": _otp,
     };
 
-    final response = await ApiService().servicePostRequest(
-      data: body,
-      // message: _message,
-    );
-    // log(response);
-
-    final data = response.data;
-    _status = data['data']['status'];
-    _message = data['data']['message'];
-
     try {
+      final response = await ApiService().servicePostRequest(
+        data: body,
+        // message: _message,
+      );
+
+      final data = response.data;
+      _status = data['data']['status'];
+      _message = data['data']['message'];
       if (response.statusCode == 200 || response.statusCode == 201) {
-        //if (_status == true) {
         _status = data['data']['status'];
         state = ViewState.Success;
         _message = data['data']['message'];

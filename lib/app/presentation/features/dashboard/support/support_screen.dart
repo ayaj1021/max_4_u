@@ -20,7 +20,7 @@ class SupportScreen extends StatefulWidget {
 }
 
 class _SupportScreenState extends State<SupportScreen> {
-  Future<void> _makePhoneCall(String phoneNumber) async {
+  Future<void> makePhoneCall(String phoneNumber) async {
     final Uri launchUri = Uri(
       scheme: 'tel',
       path: phoneNumber,
@@ -28,7 +28,7 @@ class _SupportScreenState extends State<SupportScreen> {
     await launchUrl(launchUri);
   }
 
-  void _copyToClipboard(text) {
+  void copyToClipboard(text) {
     Clipboard.setData(ClipboardData(text: text));
   }
 

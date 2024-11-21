@@ -70,6 +70,8 @@ class _AddCustomerNumberScreenState extends State<AddCustomerNumberScreen> {
               TextInputField(
                 controller: _phoneNumberController,
                 labelText: 'Phone number',
+                maxLength: 11,
+                textInputType: TextInputType.number,
               ),
               verticalSpace(64),
               ButtonWidget(

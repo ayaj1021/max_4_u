@@ -35,7 +35,7 @@ class _CustomerAuditLogState extends State<CustomerAuditLog> {
 
   List<ActivityLog>? filteredCustomerResponse = [];
 
-  void _filterCustomers() {
+  void filterCustomers() {
     final query = widget.searchController.text.toLowerCase();
 
     setState(() {
