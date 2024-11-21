@@ -120,8 +120,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
     DateFormat dateFormat = DateFormat('MMMM d, yyyy h:mm a');
     return Consumer<ReloadUserDataProvider>(
       builder: (context, reloadData, _) {
-
-        
         final dataList = reloadData.loadData.transactionHistory?.data!;
 
         return Scaffold(

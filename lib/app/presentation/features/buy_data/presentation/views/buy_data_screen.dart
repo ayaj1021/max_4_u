@@ -202,7 +202,6 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
                       ),
                     ),
                   ),
-                  
                   verticalSpace(27),
                   if (selectedLogo != null)
                     Container(
@@ -278,10 +277,6 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
                           final price = filteredProducts[index].price;
                           return InkWell(
                             onTap: () {
-                              print(
-                                ' ${filteredProducts[index].code}',
-                              );
-
                               setState(() {
                                 selectedDataPlanIndex = index;
                               });
@@ -325,8 +320,7 @@ class _BuyDataScreenState extends State<BuyDataScreen> {
                         },
                       ),
                     ),
-
-                    verticalSpace(20),
+                  verticalSpace(20),
                   Stack(
                     children: [
                       TextInputField(
