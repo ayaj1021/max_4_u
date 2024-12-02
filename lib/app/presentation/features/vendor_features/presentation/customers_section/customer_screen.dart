@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max_4_u/app/enums/view_state_enum.dart';
+import 'package:max_4_u/app/encryt_data/encrypt_data.dart';
 import 'package:max_4_u/app/presentation/features/vendor_features/presentation/customers_section/add_customer_id_screen.dart';
 import 'package:max_4_u/app/presentation/features/vendor_features/presentation/customers_section/add_customer_number_screen.dart';
 import 'package:max_4_u/app/presentation/features/vendor_features/presentation/customers_section/customer_details_page.dart';
 import 'package:max_4_u/app/presentation/features/admin/provider/get_all_customers_provider.dart';
 import 'package:max_4_u/app/styles/app_colors.dart';
 import 'package:max_4_u/app/styles/app_text_styles.dart';
-import 'package:max_4_u/app/utils/busy_overlay.dart';
 import 'package:max_4_u/app/utils/screen_navigator.dart';
 import 'package:max_4_u/app/utils/white_space.dart';
 import 'package:provider/provider.dart';
@@ -110,6 +109,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                                   ),
                                 ),
                               ),
+                           
                             ],
                           ),
                         );
@@ -140,6 +140,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                   ],
                 ),
               ),
+                 verticalSpace(25),
 
               Consumer<GetAllCustomersProvider>(
                   builder: (context, getAllCustomer, _) {
@@ -165,82 +166,67 @@ class _CustomerScreenState extends State<CustomerScreen> {
                           ],
                         ),
                       )
-                    : BusyOverlay(
-                        show: getAllCustomer.state == ViewState.Busy,
-                        child: Container(
+                    : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
                           height: MediaQuery.of(context).size.height,
-                          width: MediaQuery.of(context).size.height,
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 17, horizontal: 14),
-                          decoration: BoxDecoration(
-                              color: const Color(0XFFE8E8E8),
-                              borderRadius: BorderRadius.circular(8)),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              verticalSpace(17),
-                              // ElevatedButton(
-                              //   onPressed: () {
-                              //     log('${getAllCustomer.data}');
-                              //   },
-                              //   child: Text(''),
-                              // ),
-                              Column(
-                                children: List.generate(
-                                    getAllCustomer.data.length, (index) {
-                                  final data = getAllCustomer.data[index];
-
-                                  return Column(
-                                    children: [
-                                      ListTile(
-                                        onTap: () => nextScreen(
-                                            context,
-                                            CustomerDetailsPage(
-                                              firstName:
-                                                  '${data['first_name']}',
-                                              lastName: '${data['last_name']} ',
-                                              phoneNumber:
-                                                  '${data['mobile_number']}',
-                                              uniqueId: '${data['unique_id']}',
-                                            )),
-                                        contentPadding: EdgeInsets.zero,
-                                        // leading: Text(
-                                        //   getAllCustomer.firstName,
-                                        //   style:
-                                        //       AppTextStyles.font14.copyWith(
-                                        //     color: AppColors.textColor,
-                                        //     fontWeight: FontWeight.w400,
-                                        //   ),
-                                        // ),
-                                        title: Text(
-                                          '${getAllCustomer.firstName} ${getAllCustomer.lastName} ',
-                                          style: AppTextStyles.font14.copyWith(
-                                            color: AppColors.textColor,
-                                            fontWeight: FontWeight.w400,
-                                          ),
+                          child: ListView.builder(
+                              shrinkWrap: true,
+                              controller: ScrollController(),
+                              itemCount: getAllCustomer.data.length,
+                              itemBuilder: (_, index) {
+                                final data = getAllCustomer.data[index];
+                                final firstName = EncryptData.decryptAES(data['first_name']);
+                                final lastName = EncryptData.decryptAES(data['last_name']);
+                                final phoneNumber = EncryptData.decryptAES(data['mobile_number']);
+                                final uniqueId = EncryptData.decryptAES(data['unique_id']);
+                                return Column(
+                                  children: [
+                                    ListTile(
+                                      contentPadding: EdgeInsets.zero,
+                                      onTap: () => nextScreen(
+                                          context,
+                                          CustomerDetailsPage(
+                                            firstName:
+                                                '${firstName}',
+                                            lastName:
+                                                '${lastName} ',
+                                            phoneNumber:
+                                                '${phoneNumber}',
+                                            uniqueId:
+                                                '${uniqueId}',
+                                          )),
+                                      title: Text(
+                                        '${firstName} ${lastName} ',
+                                        style:
+                                            AppTextStyles.font14.copyWith(
+                                          color: AppColors.textColor,
+                                          fontWeight: FontWeight.w400,
                                         ),
-                                        subtitle: Text(
-                                          '${getAllCustomer.mobileNumber}',
-                                          style: AppTextStyles.font16.copyWith(
-                                            color: AppColors.subTextColor,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        trailing: const Icon(Icons.more_vert),
                                       ),
-                                      //verticalSpace(5),
-                                      Divider(
-                                        color: AppColors.blackColor
-                                            .withOpacity(0.1),
-                                      )
-                                    ],
-                                  );
-                                }),
-                              ),
-                            ],
-                          ),
+                                      subtitle: Text(
+                                        '${phoneNumber}',
+                                        style:
+                                            AppTextStyles.font16.copyWith(
+                                          color: AppColors.subTextColor,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      trailing:
+                                          const Icon(Icons.more_vert),
+                                    ),
+                                    //verticalSpace(5),
+                                    Divider(
+                                      color: AppColors.blackColor
+                                          .withOpacity(0.1),
+                                    )
+                                  ],
+                                );
+                              }),
                         ),
-                      );
+                      ],
+                    );
               })
             ],
           ),

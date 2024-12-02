@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -32,11 +31,11 @@ class GetAllCustomersProvider extends ChangeNotifier {
     try {
       final response = await ApiService().servicePostRequest(
         data: body,
-        // message: _message,
       );
-      log(response.data);
+      // debugPrint(response.data);
 
       final data = response.data;
+      // debugPrint(data);
       _status = data['data']['status'];
       if (response.statusCode == 200 || response.statusCode == 201) {
         // if (_status == true) {

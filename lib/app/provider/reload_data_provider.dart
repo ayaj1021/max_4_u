@@ -46,11 +46,12 @@ class ReloadUserDataProvider extends ChangeNotifier {
     try {
       final response = await ApiService().servicePostRequest(
         data: body,
-        // message: _message,
+      
       );
       isLoading = false;
 
       final data = response.data;
+      //log(data);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         //if (_status == true) {

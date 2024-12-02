@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:max_4_u/app/database/database.dart';
 import 'package:max_4_u/app/presentation/features/admin/provider/get_all_customers_provider.dart';
@@ -38,10 +39,10 @@ class _OverViewContainerState extends State<OverViewContainer> {
   Widget build(BuildContext context) {
     return Consumer2<GetAllCustomersProvider, ReloadUserDataProvider>(
         builder: (context, getCustomers, reloadData, _) {
+        //  log(reloadData.loadData.transactionHistory?.data!.length ?? 0);
       return reloadData.loadData.transactionHistory?.data == null
           ? SizedBox.shrink()
           : Container(
-            //  height: 103.h,
               width: MediaQuery.of(context).size.width,
               padding: const EdgeInsets.symmetric(vertical: 23, horizontal: 19),
               decoration: BoxDecoration(

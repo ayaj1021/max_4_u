@@ -141,6 +141,7 @@ class _CustomerDetailsPageState extends State<CustomerDetailsPage>
                             decoration:
                                 const BoxDecoration(color: Color(0xffDADBDD)),
                             child: TabBar(
+                              dividerColor: Colors.transparent,
                               indicator: BoxDecoration(
                                   color: const Color(0xffB0D3EB),
                                   borderRadius: BorderRadius.circular(6)),
