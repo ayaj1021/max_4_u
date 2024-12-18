@@ -90,7 +90,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                                 onTap: () => nextScreen(
                                     context, AddCustomerNumberScreen()),
                                 child: Text(
-                                  'Add Using Phone Number/Email',
+                                  'Add Using Phone Number',
                                   style: AppTextStyles.font14.copyWith(
                                     fontWeight: FontWeight.w500,
                                     color: AppColors.subTextColor,

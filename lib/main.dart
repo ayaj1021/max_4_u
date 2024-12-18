@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/navigation/router.dart';
+import 'package:max_4_u/app/presentation/features/admin/provider/get_user_transactions_by_id_provider.dart';
 import 'package:max_4_u/app/presentation/features/vendor_features/provider/generate_account_number_provider.dart';
 import 'package:max_4_u/app/presentation/features/auto_renewal/provider/activate_auto_renewal_provider.dart';
 import 'package:max_4_u/app/presentation/features/vendor_features/provider/add_customer_provider.dart';
@@ -193,6 +194,7 @@ class _MyAppState extends State<MyApp> {
             ChangeNotifierProvider(create: (_) => ChangeEmailProvider()),
             ChangeNotifierProvider(create: (_) => ChooseOptionsProvider()),
             ChangeNotifierProvider(create: (_) => ObscureTextProvider()),
+            ChangeNotifierProvider(create: (_) => GetUserTransactionProvider()),
           ],
           child: MaterialApp(
             debugShowCheckedModeBanner: false,

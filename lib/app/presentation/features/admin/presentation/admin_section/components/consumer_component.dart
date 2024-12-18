@@ -88,6 +88,8 @@ class _CustomersComponentState extends State<CustomersComponent> {
                                     EncryptData.decryptAES('${data.lastName}');
                                 final phoneNumber = EncryptData.decryptAES(
                                     '${data.mobileNumber}');
+                                final email =
+                                    EncryptData.decryptAES('${data.email}');
                                 return Column(
                                   children: [
                                     GestureDetector(
@@ -98,10 +100,13 @@ class _CustomersComponentState extends State<CustomersComponent> {
                                         nextScreen(
                                           context,
                                           UserDetailsScreen(
-                                            name:
-                                                '${getAllAppUsers.firstName} ${getAllAppUsers.lastName}',
+                                            name: '${firstName} ${lastName}',
                                             userType: 'Consumer',
                                             userId: userId,
+                                            firstName: '${firstName} ',
+                                            lastName: '${lastName} ',
+                                            phoneNumber: '${phoneNumber} ',
+                                            email: '${email} ', data: [],
                                           ),
                                         );
                                       },

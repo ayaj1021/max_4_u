@@ -13,8 +13,9 @@ import 'package:provider/provider.dart';
 
 class TransactionHistoryContainer extends StatefulWidget {
   const TransactionHistoryContainer({
-    super.key,
+    super.key, 
   });
+
 
   @override
   State<TransactionHistoryContainer> createState() =>
@@ -142,7 +143,7 @@ class _TransactionHistoryContainerState
 
                                   // Color(0xffDEEDF7),
                                   transactionNumber:
-                                      '${data.number ?? '${data.referenceId!.substring(data.referenceId!.length - 5)}'}',
+                                      '${data.number ?? '' '${data.referenceId?.substring(data.referenceId!.length - 5) ?? ''} '}',
                                 ),
                                 verticalSpace(2),
                                 Divider(

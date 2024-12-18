@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:max_4_u/app/database/database.dart';
@@ -26,14 +28,21 @@ class _TransactionScreenState extends State<TransactionScreen> {
   final _searchController = TextEditingController();
 
   TransactionHistory? retrievedTransactionHistory;
+  final ScrollController _scrollController = ScrollController();
   bool isSearching = false;
+
+  int _currentPage = 1;
+  //  final int _itemsPerPage = 10;
   @override
   void initState() {
     getTransactions();
+    _scrollController.addListener(_scrollListener);
     _searchController.addListener(_filterTransactions);
 
     super.initState();
   }
+
+  bool _isLoadingMore = false;
 
   List<Transaction>? filteredTransactions = [];
 
@@ -189,6 +198,8 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                 allItems: (p) {
                                   filterAllTransactions(selectedStatus: p);
                                 },
+                                scrollController: _scrollController,
+                                isLoading: _isLoadingMore,
                               ),
                   ],
                 ),
@@ -198,5 +209,23 @@ class _TransactionScreenState extends State<TransactionScreen> {
         );
       },
     );
+  }
+
+  Future<void> _scrollListener() async {
+    if (_isLoadingMore) return;
+      
+    
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      setState(() {
+        _isLoadingMore = true;
+      });
+      _currentPage = _currentPage + 1;
+      await filteredTransactions;
+      setState(() {
+        _isLoadingMore = false;
+      });
+      log(' call');
+    }
   }
 }

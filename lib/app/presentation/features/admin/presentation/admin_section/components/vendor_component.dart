@@ -93,6 +93,9 @@ class _VendorsComponentState extends State<VendorsComponent> {
                                   EncryptData.decryptAES('${data.lastName}');
                               final vendorPhoneNumber = EncryptData.decryptAES(
                                   '${data.mobileNumber}');
+
+                              final vendorEmail =
+                                  EncryptData.decryptAES('${data.email}');
                               return Column(
                                 children: [
                                   SizedBox(
@@ -109,6 +112,11 @@ class _VendorsComponentState extends State<VendorsComponent> {
                                                   '${vendorFirstName} ${vendorLastName}',
                                               userType: 'vendor',
                                               userId: userId,
+                                              firstName: '${vendorFirstName}',
+                                              lastName: '${vendorLastName}',
+                                              phoneNumber:
+                                                  '${vendorPhoneNumber}',
+                                              email: '${vendorEmail}', data: [],
                                             ));
                                       },
                                       child: Row(

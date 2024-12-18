@@ -6,33 +6,45 @@ import 'package:max_4_u/app/utils/white_space.dart';
 import 'package:provider/provider.dart';
 
 class DetailsComponent extends StatelessWidget {
-  const DetailsComponent({super.key});
+  const DetailsComponent(
+      {super.key,
+      required this.firstName,
+      required this.lastName,
+      required this.phoneNumber,
+      required this.email});
+  final String firstName;
+  final String lastName;
+  final String phoneNumber;
+  final String email;
 
   @override
   Widget build(BuildContext context) {
     return Consumer<GetAllAppUsers>(builder: (context, getAllAppUsers, _) {
-      //  final data = getAllAppUsers
       return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CustomerDetailsWidget(
-            title: 'First Name',
-            value: '${getAllAppUsers.firstName}',
-          ),
-          verticalSpace(16),
-          CustomerDetailsWidget(
-            title: 'Last Name',
-            value: '${getAllAppUsers.lastName}',
-          ),
-           verticalSpace(16),
-          CustomerDetailsWidget(
-            title: 'Phone Number',
-            value: '${getAllAppUsers.phoneNumber}',
-          ),
-            verticalSpace(16),
-          CustomerDetailsWidget(
-            title: 'Email',
-            value: '${getAllAppUsers.email}',
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CustomerDetailsWidget(
+                title: 'First Name',
+                value: '${firstName}',
+              ),
+              verticalSpace(16),
+              CustomerDetailsWidget(
+                title: 'Last Name',
+                value: '${lastName}',
+              ),
+              verticalSpace(16),
+              CustomerDetailsWidget(
+                title: 'Phone Number',
+                value: '${phoneNumber}',
+              ),
+              verticalSpace(16),
+              CustomerDetailsWidget(
+                title: 'Email',
+                value: '${email}',
+              ),
+            ],
           ),
         ],
       );

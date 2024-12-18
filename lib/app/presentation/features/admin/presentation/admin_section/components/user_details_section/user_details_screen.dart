@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max_4_u/app/enums/view_state_enum.dart';
+import 'package:max_4_u/app/model/user_response_model.dart';
 import 'package:max_4_u/app/presentation/features/admin/presentation/admin_section/components/user_details_section/details_component.dart';
-import 'package:max_4_u/app/presentation/features/admin/presentation/admin_section/components/user_details_section/transaction_component.dart';
+import 'package:max_4_u/app/presentation/features/admin/presentation/admin_section/components/user_details_section/user_transaction_component.dart';
 import 'package:max_4_u/app/presentation/features/super_admin_section/users/presentation/view/super_admin_users_screen.dart';
 import 'package:max_4_u/app/presentation/features/auth/provider/auth_provider.dart';
 import 'package:max_4_u/app/provider/reload_data_provider.dart';
@@ -26,10 +27,19 @@ class UserDetailsScreen extends StatefulWidget {
     required this.name,
     required this.userType,
     required this.userId,
+    required this.firstName,
+    required this.lastName,
+    required this.phoneNumber,
+    required this.email, required this.data,
   });
   final String name;
+  final String firstName;
+  final String lastName;
+  final String phoneNumber;
+  final String email;
   final String userType;
   final String userId;
+   final List<Transaction> data;
 
   @override
   State<UserDetailsScreen> createState() => _UserDetailsScreenState();
@@ -217,8 +227,6 @@ class _UserDetailsScreenState extends State<UserDetailsScreen>
                                                                               'No, Cancel')),
                                                                 ],
                                                               )
-                                                           
-                                                           
                                                             ],
                                                           ),
                                                         ));
@@ -524,8 +532,13 @@ class _UserDetailsScreenState extends State<UserDetailsScreen>
                               child: TabBarView(
                                   controller: _tabController,
                                   children: [
-                                DetailsComponent(),
-                                TransactionsComponent(),
+                                DetailsComponent(
+                                  firstName: widget.firstName,
+                                  lastName: widget.lastName,
+                                  phoneNumber: widget.phoneNumber,
+                                  email: widget.email,
+                                ),
+                                UserTransactionsComponent(data: [],),
                               ])),
                         ],
                       ),

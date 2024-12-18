@@ -64,8 +64,8 @@ class GetAllAppUsers extends ChangeNotifier {
             AllAppUsersResponseData.fromJson(data['data']['response_data']);
         isLoading = false;
 
-        firstName =
-            EncryptData.decryptAES('${allAppUsers.data?.first.firstName}');
+        firstName = EncryptData.decryptAES(
+            '${allAppUsers.data?.map((e) => e.firstName)}');
 
         lastName =
             EncryptData.decryptAES('${allAppUsers.data?.first.lastName}');

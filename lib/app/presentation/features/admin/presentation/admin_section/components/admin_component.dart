@@ -98,6 +98,8 @@ class _AdminsComponentState extends State<AdminsComponent> {
                                   final adminPhoneNumber =
                                       EncryptData.decryptAES(
                                           '${data.mobileNumber}');
+                                  final adminEmail =
+                                      EncryptData.decryptAES('${data.email}');
                                   return Column(
                                     children: [
                                       SizedBox(
@@ -105,8 +107,9 @@ class _AdminsComponentState extends State<AdminsComponent> {
                                         width: 332.w,
                                         child: GestureDetector(
                                           onTap: () {
-                                            final userId = EncryptData.decryptAES(
-                                                '${getAllAppUsers.allAppAdmins.data![0].uniqueId}');
+                                            final userId =
+                                                EncryptData.decryptAES(
+                                                    '${data.uniqueId}');
                                             nextScreen(
                                                 context,
                                                 UserDetailsScreen(
@@ -114,6 +117,13 @@ class _AdminsComponentState extends State<AdminsComponent> {
                                                       '${adminFirstName} ${adminLastName}',
                                                   userType: 'Admin',
                                                   userId: userId,
+                                                  firstName:
+                                                      '${adminFirstName}',
+                                                  lastName: '${adminLastName}',
+                                                  phoneNumber:
+                                                      '${adminPhoneNumber}',
+                                                  email: '${adminEmail}',
+                                                  data: [],
                                                 ));
                                           },
                                           child: Row(
