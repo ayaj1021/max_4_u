@@ -30,7 +30,8 @@ class UserDetailsScreen extends StatefulWidget {
     required this.firstName,
     required this.lastName,
     required this.phoneNumber,
-    required this.email, required this.data,
+    required this.email,
+    required this.data,
   });
   final String name;
   final String firstName;
@@ -39,7 +40,7 @@ class UserDetailsScreen extends StatefulWidget {
   final String email;
   final String userType;
   final String userId;
-   final List<Transaction> data;
+  final List<Transaction> data;
 
   @override
   State<UserDetailsScreen> createState() => _UserDetailsScreenState();
@@ -538,7 +539,10 @@ class _UserDetailsScreenState extends State<UserDetailsScreen>
                                   phoneNumber: widget.phoneNumber,
                                   email: widget.email,
                                 ),
-                                UserTransactionsComponent(data: [],),
+                                UserTransactionsComponent(
+                                  data: [],
+                                  userId: widget.userId,
+                                ),
                               ])),
                         ],
                       ),

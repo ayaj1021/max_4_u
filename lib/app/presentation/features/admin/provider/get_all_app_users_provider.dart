@@ -61,17 +61,10 @@ class GetAllAppUsers extends ChangeNotifier {
         _status = data['data']['status'];
 
         allAppUsers =
-            AllAppUsersResponseData.fromJson(data['data']['response_data']);
+            // AllAppUsersResponseData.fromJson(data['data']['response_data']);
+            AllAppUsersResponseData.fromJson(data);
         isLoading = false;
 
-        firstName = EncryptData.decryptAES(
-            '${allAppUsers.data?.map((e) => e.firstName)}');
-
-        lastName =
-            EncryptData.decryptAES('${allAppUsers.data?.first.lastName}');
-        phoneNumber =
-            EncryptData.decryptAES('${allAppUsers.data?.first.mobileNumber}');
-        email = EncryptData.decryptAES('${allAppUsers.data?.first.email}');
         //log('This is $allAppUsers');
         updateSearch();
 
@@ -93,9 +86,11 @@ class GetAllAppUsers extends ChangeNotifier {
 
   updateSearch() {
     if (searchedText.isEmpty) {
-      searchUsers.data?.addAll(allAppUsers.data!);
+      searchUsers.data?.responseData?.data
+          ?.addAll(allAppUsers.data!.responseData!.data!);
     } else {
-      searchUsers.data!.addAll(allAppUsers.data!
+      searchUsers.data!.responseData?.data?.addAll(allAppUsers
+          .data!.responseData!.data!
           .where((element) =>
               element.firstName!.toLowerCase().contains(searchedText))
           .toList());

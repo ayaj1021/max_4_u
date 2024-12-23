@@ -22,12 +22,14 @@ class CustomerDetailsPage extends StatefulWidget {
       required this.firstName,
       required this.lastName,
       required this.phoneNumber,
-      required this.uniqueId});
+      required this.uniqueId,
+      required this.userId});
 
   final String firstName;
   final String lastName;
   final String phoneNumber;
   final String uniqueId;
+  final String userId;
 
   @override
   State<CustomerDetailsPage> createState() => _CustomerDetailsPageState();
@@ -92,7 +94,7 @@ class _CustomerDetailsPageState extends State<CustomerDetailsPage>
                             Icons.arrow_back,
                           ),
                         ),
-                         Text(
+                        Text(
                           'Details',
                           style: AppTextStyles.font18,
                         ),
@@ -179,7 +181,9 @@ class _CustomerDetailsPageState extends State<CustomerDetailsPage>
                                   phoneNumber: widget.phoneNumber,
                                   uniqueId: widget.uniqueId,
                                 ),
-                                CustomerTransactionScreen(),
+                                CustomerTransactionScreen(
+                                  userId: widget.userId,
+                                ),
                               ],
                             ),
                           ),

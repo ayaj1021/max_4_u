@@ -73,7 +73,7 @@ class _AdminsComponentState extends State<AdminsComponent> {
                               ),
                               verticalSpace(24),
                               Text(
-                                'No admins yet',
+                                'No Admin yet',
                                 style: AppTextStyles.font14.copyWith(
                                     color: AppColors.textColor,
                                     fontWeight: FontWeight.w400),

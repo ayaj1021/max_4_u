@@ -57,7 +57,9 @@ class _CustomersComponentState extends State<CustomersComponent> {
                                 fontWeight: FontWeight.w400),
                           ),
                         )
-                      : getAllAppUsers.allAppUsers.data!.isEmpty
+                      : getAllAppUsers.allAppUsers.data!.responseData?.data
+                                  ?.isEmpty ??
+                              true
                           ? Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -78,24 +80,24 @@ class _CustomersComponentState extends State<CustomersComponent> {
                             )
                           : Column(
                               children: List.generate(
-                                  getAllAppUsers.allAppUsers.data!.length,
-                                  (index) {
-                                final data =
-                                    getAllAppUsers.allAppUsers.data![index];
-                                final firstName =
-                                    EncryptData.decryptAES('${data.firstName}');
+                                  getAllAppUsers.allAppUsers.data!.responseData
+                                          ?.data?.length ??
+                                      0, (index) {
+                                final data = getAllAppUsers.allAppUsers.data!
+                                    .responseData?.data?[index];
+                                final firstName = EncryptData.decryptAES(
+                                    '${data?.firstName}');
                                 final lastName =
-                                    EncryptData.decryptAES('${data.lastName}');
+                                    EncryptData.decryptAES('${data?.lastName}');
                                 final phoneNumber = EncryptData.decryptAES(
-                                    '${data.mobileNumber}');
+                                    '${data?.mobileNumber}');
                                 final email =
-                                    EncryptData.decryptAES('${data.email}');
+                                    EncryptData.decryptAES('${data?.email}');
                                 return Column(
                                   children: [
                                     GestureDetector(
                                       onTap: () {
-                                        final userId = EncryptData.decryptAES(
-                                            '${getAllAppUsers.allAppUsers.data![0].uniqueId}');
+                                        final userId = '${data?.id}';
 
                                         nextScreen(
                                           context,
@@ -106,7 +108,8 @@ class _CustomersComponentState extends State<CustomersComponent> {
                                             firstName: '${firstName} ',
                                             lastName: '${lastName} ',
                                             phoneNumber: '${phoneNumber} ',
-                                            email: '${email} ', data: [],
+                                            email: '${email} ',
+                                            data: [],
                                           ),
                                         );
                                       },
@@ -159,7 +162,9 @@ class _CustomersComponentState extends State<CustomersComponent> {
                                                             49),
                                                     color: getAllAppUsers
                                                                 .allAppUsers
-                                                                .data![index]
+                                                                .data!
+                                                                .responseData
+                                                                ?.data?[index]
                                                                 .status ==
                                                             'active'
                                                         ? Color(0xff27AE60)
@@ -171,27 +176,27 @@ class _CustomersComponentState extends State<CustomersComponent> {
                                                   children: [
                                                     CircleAvatar(
                                                       radius: 2,
-                                                      backgroundColor:
-                                                          getAllAppUsers
-                                                                      .allAppUsers
-                                                                      .data![
-                                                                          index]
-                                                                      .status ==
-                                                                  'active'
-                                                              ? Color(
-                                                                  0xff27AE60)
-                                                              : Color(
-                                                                  0xff4D4C4A),
+                                                      backgroundColor: getAllAppUsers
+                                                                  .allAppUsers
+                                                                  .data!
+                                                                  .responseData
+                                                                  ?.data?[index]
+                                                                  .status ==
+                                                              'active'
+                                                          ? Color(0xff27AE60)
+                                                          : Color(0xff4D4C4A),
                                                     ),
                                                     horizontalSpace(6),
                                                     Text(
-                                                      '${getAllAppUsers.allAppUsers.data![index].status}',
+                                                      '${getAllAppUsers.allAppUsers.data!.responseData?.data?[index].status}',
                                                       style: AppTextStyles.font12.copyWith(
                                                           fontWeight:
                                                               FontWeight.w600,
                                                           color: getAllAppUsers
                                                                       .allAppUsers
-                                                                      .data![
+                                                                      .data!
+                                                                      .responseData
+                                                                      ?.data?[
                                                                           index]
                                                                       .status ==
                                                                   'active'

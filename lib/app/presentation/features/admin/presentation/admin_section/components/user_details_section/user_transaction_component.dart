@@ -10,8 +10,10 @@ import 'package:max_4_u/app/utils/white_space.dart';
 import 'package:provider/provider.dart';
 
 class UserTransactionsComponent extends StatefulWidget {
-  const UserTransactionsComponent({super.key, required this.data});
+  const UserTransactionsComponent(
+      {super.key, required this.data, required this.userId});
   final List<Transaction> data;
+  final String userId;
 
   @override
   State<UserTransactionsComponent> createState() =>
@@ -23,7 +25,7 @@ class _UserTransactionsComponentState extends State<UserTransactionsComponent> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<GetUserTransactionProvider>(context, listen: false)
-          .userTransactionsById(userId: '1');
+          .userTransactionsById(userId: widget.userId);
     });
 
     super.initState();
@@ -61,9 +63,9 @@ class _UserTransactionsComponentState extends State<UserTransactionsComponent> {
                               itemCount: dataList.length,
                               // userTransaction.userTransactions.data?.responseData?.length,
                               itemBuilder: (_, index) {
-                                final data = userTransaction
-                                    .userTransactions.data?.responseData?[index];
-          
+                                final data = userTransaction.userTransactions
+                                    .data?.responseData?[index];
+
                                 return Column(children: [
                                   TransactionSection(
                                     transactionIcon: icons[2],
@@ -83,7 +85,8 @@ class _UserTransactionsComponentState extends State<UserTransactionsComponent> {
                                   ),
                                   verticalSpace(8),
                                   Divider(
-                                    color: AppColors.blackColor.withOpacity(0.1),
+                                    color:
+                                        AppColors.blackColor.withOpacity(0.1),
                                   )
                                 ]);
                               }),

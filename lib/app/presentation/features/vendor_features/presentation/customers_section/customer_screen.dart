@@ -109,7 +109,6 @@ class _CustomerScreenState extends State<CustomerScreen> {
                                   ),
                                 ),
                               ),
-                           
                             ],
                           ),
                         );
@@ -140,7 +139,7 @@ class _CustomerScreenState extends State<CustomerScreen> {
                   ],
                 ),
               ),
-                 verticalSpace(25),
+              verticalSpace(25),
 
               Consumer<GetAllCustomersProvider>(
                   builder: (context, getAllCustomer, _) {
@@ -167,66 +166,65 @@ class _CustomerScreenState extends State<CustomerScreen> {
                         ),
                       )
                     : Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height,
-                          child: ListView.builder(
-                              shrinkWrap: true,
-                              controller: ScrollController(),
-                              itemCount: getAllCustomer.data.length,
-                              itemBuilder: (_, index) {
-                                final data = getAllCustomer.data[index];
-                                final firstName = EncryptData.decryptAES(data['first_name']);
-                                final lastName = EncryptData.decryptAES(data['last_name']);
-                                final phoneNumber = EncryptData.decryptAES(data['mobile_number']);
-                                final uniqueId = EncryptData.decryptAES(data['unique_id']);
-                                return Column(
-                                  children: [
-                                    ListTile(
-                                      contentPadding: EdgeInsets.zero,
-                                      onTap: () => nextScreen(
-                                          context,
-                                          CustomerDetailsPage(
-                                            firstName:
-                                                '${firstName}',
-                                            lastName:
-                                                '${lastName} ',
-                                            phoneNumber:
-                                                '${phoneNumber}',
-                                            uniqueId:
-                                                '${uniqueId}',
-                                          )),
-                                      title: Text(
-                                        '${firstName} ${lastName} ',
-                                        style:
-                                            AppTextStyles.font14.copyWith(
-                                          color: AppColors.textColor,
-                                          fontWeight: FontWeight.w400,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height,
+                            child: ListView.builder(
+                                shrinkWrap: true,
+                                controller: ScrollController(),
+                                itemCount: getAllCustomer.data.length,
+                                itemBuilder: (_, index) {
+                                  final data = getAllCustomer.data[index];
+                                  final firstName = EncryptData.decryptAES(
+                                      data['first_name']);
+                                  final lastName =
+                                      EncryptData.decryptAES(data['last_name']);
+                                  final phoneNumber = EncryptData.decryptAES(
+                                      data['mobile_number']);
+                                  final uniqueId =
+                                      EncryptData.decryptAES(data['unique_id']);
+
+                                  return Column(
+                                    children: [
+                                      ListTile(
+                                        contentPadding: EdgeInsets.zero,
+                                        onTap: () => nextScreen(
+                                            context,
+                                            CustomerDetailsPage(
+                                              firstName: '${firstName}',
+                                              lastName: '${lastName} ',
+                                              phoneNumber: '${phoneNumber}',
+                                              uniqueId: '${uniqueId}',
+                                              userId: '${data['id']}',
+                                            )),
+                                        title: Text(
+                                          '${firstName} ${lastName} ',
+                                          style: AppTextStyles.font14.copyWith(
+                                            color: AppColors.textColor,
+                                            fontWeight: FontWeight.w400,
+                                          ),
                                         ),
-                                      ),
-                                      subtitle: Text(
-                                        '${phoneNumber}',
-                                        style:
-                                            AppTextStyles.font16.copyWith(
-                                          color: AppColors.subTextColor,
-                                          fontWeight: FontWeight.w500,
+                                        subtitle: Text(
+                                          '${phoneNumber}',
+                                          style: AppTextStyles.font16.copyWith(
+                                            color: AppColors.subTextColor,
+                                            fontWeight: FontWeight.w500,
+                                          ),
                                         ),
+                                        trailing: const Icon(Icons.more_vert),
                                       ),
-                                      trailing:
-                                          const Icon(Icons.more_vert),
-                                    ),
-                                    //verticalSpace(5),
-                                    Divider(
-                                      color: AppColors.blackColor
-                                          .withOpacity(0.1),
-                                    )
-                                  ],
-                                );
-                              }),
-                        ),
-                      ],
-                    );
+                                      //verticalSpace(5),
+                                      Divider(
+                                        color: AppColors.blackColor
+                                            .withOpacity(0.1),
+                                      )
+                                    ],
+                                  );
+                                }),
+                          ),
+                        ],
+                      );
               })
             ],
           ),

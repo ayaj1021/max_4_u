@@ -24,7 +24,8 @@ class UserStatsSection extends StatelessWidget {
         children: [
           UsersStatsWidget(
               title: 'Total Users',
-              number: '${getAllAppUsers.allAppUsers.totalData ?? 0}'),
+              number:
+                  '${getAllAppUsers.allAppUsers.data?.responseData?.totalData ?? 0}'),
           //horizontalSpace(15),
           SizedBox(
             height: 34,
@@ -33,7 +34,8 @@ class UserStatsSection extends StatelessWidget {
           //horizontalSpace(15),
           UsersStatsWidget(
               title: 'Active Users',
-              number: '${getAllAppUsers.allAppUsers.totalActiveConsumer ?? 0}'),
+              number:
+                  '${getAllAppUsers.allAppUsers.data?.responseData?.totalActiveConsumer ?? 0}'),
           // horizontalSpace(15),
           SizedBox(
             height: 34,
@@ -42,7 +44,8 @@ class UserStatsSection extends StatelessWidget {
           // horizontalSpace(24),
           UsersStatsWidget(
               title: 'Inactive Users',
-              number: '${getAllAppUsers.allAppUsers.totalInactiveConsumer ?? 0}'),
+              number:
+                  '${getAllAppUsers.allAppUsers.data?.responseData?.totalInactiveConsumer ?? 0}'),
         ],
       ),
     );

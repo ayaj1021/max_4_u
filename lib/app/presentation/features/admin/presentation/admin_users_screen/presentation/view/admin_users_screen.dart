@@ -54,8 +54,7 @@ class _AdminUserScreenState extends State<AdminUserScreen>
     usersList = users;
 
     super.initState();
-    _tabController =
-        TabController(length:  2, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
   }
 
   void runFilter(String enteredKeyword) {
@@ -182,11 +181,14 @@ class _AdminUserScreenState extends State<AdminUserScreen>
                                                   color:
                                                       AppColors.subTextColor),
                                               child: Text(
-                                                getAllAppUsers.allAppUsers
-                                                            .totalConsumer ==
+                                                getAllAppUsers
+                                                            .allAppUsers
+                                                            .data
+                                                            ?.responseData
+                                                            ?.totalConsumer ==
                                                         null
                                                     ? ''
-                                                    : '${getAllAppUsers.allAppUsers.totalConsumer}',
+                                                    : '${getAllAppUsers.allAppUsers.data?.responseData?.totalConsumer}',
                                                 style: AppTextStyles.font12
                                                     .copyWith(
                                                         fontSize: 10,
@@ -227,11 +229,14 @@ class _AdminUserScreenState extends State<AdminUserScreen>
                                                   color:
                                                       AppColors.subTextColor),
                                               child: Text(
-                                                getAllAppUsers.allAppUsers
-                                                            .totalVendor ==
+                                                getAllAppUsers
+                                                            .allAppUsers
+                                                            .data
+                                                            ?.responseData
+                                                            ?.totalVendor ==
                                                         null
                                                     ? ''
-                                                    : '${getAllAppUsers.allAppUsers.totalVendor}',
+                                                    : '${getAllAppUsers.allAppUsers.data?.responseData?.totalVendor}',
                                                 style: AppTextStyles.font12
                                                     .copyWith(
                                                         fontSize: 10,
@@ -244,7 +249,6 @@ class _AdminUserScreenState extends State<AdminUserScreen>
                                           ],
                                         ),
                                       ),
-                                      
                                     ],
                                   ),
                                 ),

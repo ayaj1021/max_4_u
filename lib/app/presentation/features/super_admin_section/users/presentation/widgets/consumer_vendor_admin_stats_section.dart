@@ -67,16 +67,18 @@ class ConsumerVendorAdminStatsSection extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                       // horizontalSpace(4),
+                        // horizontalSpace(4),
                         CircleAvatar(
                           //  height: 12.h,
                           // width: 12.w,
                           radius: 9,
                           backgroundColor: AppColors.subTextColor,
                           child: Text(
-                            getAllAppUsers.allAppUsers.totalConsumer == null
+                            getAllAppUsers.allAppUsers.data?.responseData
+                                        ?.totalConsumer ==
+                                    null
                                 ? ''
-                                : '${getAllAppUsers.allAppUsers.totalConsumer}',
+                                : '${getAllAppUsers.allAppUsers.data?.responseData?.totalConsumer}',
                             style: AppTextStyles.font12.copyWith(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w500,
@@ -107,9 +109,11 @@ class ConsumerVendorAdminStatsSection extends StatelessWidget {
                           radius: 9,
                           backgroundColor: AppColors.subTextColor,
                           child: Text(
-                            getAllAppUsers.allAppUsers.totalVendor == null
+                            getAllAppUsers.allAppUsers.data?.responseData
+                                        ?.totalVendor ==
+                                    null
                                 ? ''
-                                : '${getAllAppUsers.allAppUsers.totalVendor}',
+                                : '${getAllAppUsers.allAppUsers.data?.responseData?.totalVendor}',
                             style: AppTextStyles.font12.copyWith(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w500,

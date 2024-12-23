@@ -103,8 +103,9 @@ class _VendorsComponentState extends State<VendorsComponent> {
                                     width: 332.w,
                                     child: GestureDetector(
                                       onTap: () {
-                                        final userId = EncryptData.decryptAES(
-                                            '${getAllAppUsers.allAppUsers.data![0].uniqueId}');
+                                        final userId =
+                                            '${getAllAppUsers.allAppUsers.data?.responseData?.data?.map((e) => e.id)}';
+
                                         nextScreen(
                                             context,
                                             UserDetailsScreen(
@@ -116,7 +117,8 @@ class _VendorsComponentState extends State<VendorsComponent> {
                                               lastName: '${vendorLastName}',
                                               phoneNumber:
                                                   '${vendorPhoneNumber}',
-                                              email: '${vendorEmail}', data: [],
+                                              email: '${vendorEmail}',
+                                              data: [],
                                             ));
                                       },
                                       child: Row(

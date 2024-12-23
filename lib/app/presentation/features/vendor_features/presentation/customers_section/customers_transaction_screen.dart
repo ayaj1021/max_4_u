@@ -9,7 +9,8 @@ import 'package:max_4_u/app/utils/white_space.dart';
 import 'package:provider/provider.dart';
 
 class CustomerTransactionScreen extends StatefulWidget {
-  const CustomerTransactionScreen({super.key});
+  const CustomerTransactionScreen({super.key, required this.userId});
+  final String userId;
 
   @override
   State<CustomerTransactionScreen> createState() =>
@@ -21,7 +22,7 @@ class _CustomerTransactionScreenState extends State<CustomerTransactionScreen> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<GetUserTransactionProvider>(context, listen: false)
-          .userTransactionsById(userId: '1');
+          .userTransactionsById(userId: widget.userId);
     });
 
     super.initState();
