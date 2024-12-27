@@ -84,12 +84,6 @@ class _AtmFundWalletState extends State<AtmFundWallet> {
                         }
 
                         if (fundAcct.status == true && context.mounted) {
-                          // showMessage(
-                          //   context,
-                          //   fundAcct.message,
-                          //   // isError: false,
-                          // );
-
                           nextScreen(
                               context,
                               PaymentGatewayScreen(

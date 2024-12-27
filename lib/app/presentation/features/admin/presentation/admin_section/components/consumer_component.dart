@@ -91,6 +91,8 @@ class _CustomersComponentState extends State<CustomersComponent> {
                                     EncryptData.decryptAES('${data?.lastName}');
                                 final phoneNumber = EncryptData.decryptAES(
                                     '${data?.mobileNumber}');
+                                final uniqueId =
+                                    EncryptData.decryptAES('${data?.uniqueId}');
                                 final email =
                                     EncryptData.decryptAES('${data?.email}');
                                 return Column(
@@ -110,6 +112,8 @@ class _CustomersComponentState extends State<CustomersComponent> {
                                             phoneNumber: '${phoneNumber} ',
                                             email: '${email} ',
                                             data: [],
+                                            status: '${data?.status}',
+                                            uniqueId: uniqueId,
                                           ),
                                         );
                                       },

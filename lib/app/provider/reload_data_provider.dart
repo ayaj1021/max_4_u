@@ -46,18 +46,12 @@ class ReloadUserDataProvider extends ChangeNotifier {
     try {
       final response = await ApiService().servicePostRequest(
         data: body,
-      
       );
       isLoading = false;
 
       final data = response.data;
-      //log(data);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        //if (_status == true) {
-        // _status = data['data']['status'];
-
-        // _message = data['data']['message'];
         state = ViewState.Success;
         loadData = LoadDataData.fromJson(data['data']);
 
@@ -100,11 +94,10 @@ class ReloadUserDataProvider extends ChangeNotifier {
         await SecureStorage().saveUserBalance(balance.toString());
         await SecureStorage().saveFirstName(firstName);
         await SecureStorage().saveLastName(lastName);
-        // await SecureStorage().saveUniqueId(uniqueId);
+
         await SecureStorage().saveEmail(email);
         await SecureStorage().savePhoneNumber(number);
         notifyListeners();
-        // return loadData;
 
         return UpdatedBaseResponse.fromSuccess(loadData);
       } else {

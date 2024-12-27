@@ -100,6 +100,8 @@ class _AdminsComponentState extends State<AdminsComponent> {
                                           '${data.mobileNumber}');
                                   final adminEmail =
                                       EncryptData.decryptAES('${data.email}');
+                                  final uniqueId = EncryptData.decryptAES(
+                                      '${data.uniqueId}');
                                   return Column(
                                     children: [
                                       SizedBox(
@@ -124,6 +126,8 @@ class _AdminsComponentState extends State<AdminsComponent> {
                                                       '${adminPhoneNumber}',
                                                   email: '${adminEmail}',
                                                   data: [],
+                                                  status: '${data.status}',
+                                                  uniqueId: uniqueId,
                                                 ));
                                           },
                                           child: Row(

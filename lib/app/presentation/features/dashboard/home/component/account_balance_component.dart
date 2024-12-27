@@ -43,7 +43,6 @@ class _AccountBalanceWidgetState extends State<AccountBalanceWidget> {
       "title": "ATM Card",
       "image": "assets/images/atm_card_icon.png",
     },
-    
   ];
 
   int? selectedIndex;
@@ -56,7 +55,7 @@ class _AccountBalanceWidgetState extends State<AccountBalanceWidget> {
       String totalBalance = NumberFormat('#,##0').format(accountBalance);
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 32),
-       // height: 125.h,
+        // height: 125.h,
         width: 358.w,
         decoration: BoxDecoration(
           color: AppColors.primaryColor,

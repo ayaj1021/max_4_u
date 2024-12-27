@@ -64,6 +64,7 @@ class CustomerDetailsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           title,
@@ -73,9 +74,12 @@ class CustomerDetailsWidget extends StatelessWidget {
           ),
         ),
         horizontalSpace(8),
-        Text(
-          value,
-          style: AppTextStyles.font16.copyWith(color: AppColors.mainTextColor),
+        Expanded(
+          child: Text(
+            value,
+            style:
+                AppTextStyles.font14.copyWith(color: AppColors.mainTextColor),
+          ),
         )
       ],
     );

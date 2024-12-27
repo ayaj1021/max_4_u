@@ -93,6 +93,8 @@ class _VendorsComponentState extends State<VendorsComponent> {
                                   EncryptData.decryptAES('${data.lastName}');
                               final vendorPhoneNumber = EncryptData.decryptAES(
                                   '${data.mobileNumber}');
+                              final uniqueId =
+                                  EncryptData.decryptAES('${data.uniqueId}');
 
                               final vendorEmail =
                                   EncryptData.decryptAES('${data.email}');
@@ -119,6 +121,8 @@ class _VendorsComponentState extends State<VendorsComponent> {
                                                   '${vendorPhoneNumber}',
                                               email: '${vendorEmail}',
                                               data: [],
+                                              status: '${data.status}',
+                                              uniqueId: uniqueId,
                                             ));
                                       },
                                       child: Row(

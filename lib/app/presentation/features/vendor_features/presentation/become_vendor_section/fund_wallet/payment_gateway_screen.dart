@@ -15,6 +15,8 @@ class PaymentGatewayScreen extends StatefulWidget {
 
 class _PaymentGatewayScreenState extends State<PaymentGatewayScreen> {
   late WebViewController controller;
+  bool isLoading = true;
+  double loadingProgress = 0.0;
 
   @override
   void initState() {
@@ -26,31 +28,32 @@ class _PaymentGatewayScreenState extends State<PaymentGatewayScreen> {
       ..setNavigationDelegate(
         NavigationDelegate(
           onProgress: (int progress) {
-            // Update loading bar.
-            const CircularProgressIndicator();
+            setState(() {
+              loadingProgress = progress / 100;
+            });
           },
-          onPageStarted: (String url) {},
+          onPageStarted: (String url) {
+            setState(() {
+              isLoading = true;
+            });
+          },
           onPageFinished: (String url) {
-            // Future.delayed(Duration(seconds: 10), () {
-            // Provider.of<FundAccountProvider>(context, listen: false)
-            //     .verifyPayment(paymentToken: widget.token, context: context).then((value) => nextScreen(context, DashBoardScreen()));
-            // log(widget.token);
-            //  }).then((value) => nextScreen(context, DashBoardScreen()));
+            setState(() {
+              isLoading = false;
+            });
           },
           onNavigationRequest: (request) {
             if (request.url.startsWith('https://www.youtube.com/')) {
               return NavigationDecision.prevent;
             }
-           nextScreen(context, FundAccountValidationScreen(token: widget.token,));
+            nextScreen(
+                context,
+                FundAccountValidationScreen(
+                  token: widget.token,
+                ));
             return NavigationDecision.navigate;
           },
           onWebResourceError: (WebResourceError error) {},
-          // onNavigationRequest: (NavigationRequest request) {
-          //   if (request.url.startsWith('https://www.youtube.com/')) {
-          //     return NavigationDecision.prevent;
-          //   }
-          //   return NavigationDecision.navigate;
-          // },
         ),
       );
   }
@@ -58,7 +61,24 @@ class _PaymentGatewayScreenState extends State<PaymentGatewayScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: WebViewWidget(controller: controller),
+      body: Stack(
+        children: [
+          WebViewWidget(controller: controller),
+          if (isLoading)
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(
+                    value: loadingProgress,
+                  ),
+                  SizedBox(height: 10),
+                  Text('Loading... ${loadingProgress.toStringAsFixed(0)}%')
+                ],
+              ),
+            )
+        ],
+      ),
     );
   }
 }
