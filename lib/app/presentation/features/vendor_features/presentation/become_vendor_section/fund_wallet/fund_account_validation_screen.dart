@@ -52,7 +52,8 @@ class _FundAccountValidationScreenState
                     : Container(
                         height: 253.h,
                         width: 343.w,
-                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 20),
                         decoration: BoxDecoration(
                             color: AppColors.whiteColor,
                             borderRadius: BorderRadius.circular(24)),
@@ -71,15 +72,13 @@ class _FundAccountValidationScreenState
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
-                          
-                           
                             verticalSpace(20),
                             ButtonWidget(
-                              text: 'Continue',
-                              onTap: ()async { 
-                                await reloadData.reloadUserData();
-                                nextScreenReplace(context, DashBoardScreen());}
-                            )
+                                text: 'Continue',
+                                onTap: () async {
+                                  await reloadData.reloadUserData();
+                                  nextScreenReplace(context, DashBoardScreen());
+                                })
                           ],
                         ),
                       )
